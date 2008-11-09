@@ -1,0 +1,246 @@
+/*UI GENERATION - 1.05*/
+
+/*MAIN WINDOW*/
+"add" = "Add";
+"remove" = "Remove";
+"clearall" = "Clear All";
+"info" = "Info";
+"preview" = "Preview";
+"convertto" = "Convert To:";
+"advancedsettings" = "Advanced Settings...";
+"quality" = "Quality";
+"customworkflowsdestinations" = "Custom Workflows/Destinations...";
+"saveto" = "Save To:";
+"wheretheoriginalfileis" = "where the original file is.";
+"edit" = "Edit...";
+"stitchfilestogether" = "Stitch Files Together";
+"whendone" = "When Done:";
+"addtoitunes" = "Add to iTunes";
+"asaudiobook" = "  ...as Audiobook";
+"asringtone" = "  ...as iPhone Ringtone";
+"opendestination" = "Open Destination Folder";
+"putcomputertosleep" = "Put Computer to Sleep";
+"shutdowncomputer" = "Shut Down Computer";
+"quitfilmredux" = "Quit FilmRedux";
+"runscript" = "Run Script...";
+
+"Tinyquality" = "Tiny";
+"Lowquality" = "Low";
+"Standardquality" = "Standard";
+"Highquality" = "High";
+"Gonutsquality" = "Go Nuts";
+"ipodscreen" = "iPod Screen";
+"iphonescreen" = "iPhone Screen";
+"maxruntimeexceeded" = "Max Runtime Exceeded!";
+"h264encoding" = "H.264 Video (slower but better)";
+"h264codec" = "H.264 (Flash 9+)";
+"flvcodec" = "FLV (Flash 7+)";
+"do51" = "Keep Surround track (if possible)";
+
+
+/*ADVANCED PANEL*/
+"audio" = "Audio";
+"oneoffs" = "One-Offs";
+"bitrate" = "Bitrate";
+
+
+"dont" = "Don't! You'll screw it all up!";
+"channels" = "Channels:";
+"stereo" = "Stereo";
+"mono" = "Mono";
+"5.1" = "5.1";
+"bitrate" = "Bitrate:";
+"kbps" = "kbps";
+"fit" = "Fit each file into:";
+"megabyte" = "MB";
+"decoder" = "Decoder:";
+"audiotrack" = "Audio Track #:";
+"volume" = "Volume:";
+"normalize" = "Normalize:";
+
+"advancedaudiochanges" = "Making changes to the Bitrate or Audio Hz will override the Quality slider's automatic settings.";
+
+"extraffmpegflags" = "Extra FFmpeg Flags: ";
+"extraoggencflags" = "Extra oggenc Flags: ";
+"extrafaacflags" = "Extra afconvert Flags: ";
+"extralameflags" = "Extra LAME Flags: ";
+"extraflacflags" = "Extra FLAC Flags: ";
+
+"loadsettings" = "Load Settings...";
+"savesettings" = "Save Settings...";
+
+"oneoffstext" = "Changes made on this tab will affect EVERY file in the list. 
+Normally, they're meant for when converting just a single file (hence the name 'One-Offs'), but could be useful otherwise.";
+"trim" = "Trim";
+"selecttotrim" = "Select a file to Trim";
+"startat" = "Start at:";
+"endat" = "End at:";
+"title" = "Title:";
+"album" = "Album:";
+"artist" = "Artist:";
+"track" = "Track#";
+"year" = "Year:";
+"genre" = "Genre:";
+"comment" = "Comment:";
+"sameasoriginalfile" = "same as original file";
+"ditto" = "ditto";
+"viewselectedfilestags" = "View Selected File's Tags";
+
+"infotext" = "Select a file in the file list to view information about it.";
+"containerinfo" = "Container Info";
+"format" = "Format:";
+"length" = "Length:";
+"size" = "Size:";
+"audioinfo" = "Audio Info";
+"codec" = "Codec:";
+"samplerate" = "Sample Rate:";
+"bitdepth" = "Bit Depth:";
+
+
+
+
+"...files" = " Files";
+"file" = " File";
+"filespace" = " File ";
+"spaceofspace" = " of ";
+"dragfiles" = "Drop video and audio files below";
+"checkingfiles" = "Checking Files...";
+"auto" = "Auto";
+"stepspace" = "Step ";
+"quit" = "Quit";
+
+"start" = "Start";
+"pause" = "Pause";
+"paused" = "Paused.";
+"resume" = "Resume";
+"resuming" = "Resuming...";
+"cancel" = "Cancel";
+"stop" = "Stop";
+"continue" = "Continue";
+"yes" = "Yes";
+"ok" = "OK";
+"showlog" = "Show Log";
+"delete" = "Delete";
+"totalruntimecolonspace" = "Total Runtime: ";
+"none" = "None";
+"fast" = "Fast";
+"good" = "Good";
+"best" = "Best";
+
+"error" = "Error";
+"totalcolonspace" = "Total: ";
+"startatcolonspace" = "Start at: ";
+"endatcolonspace" = "End at: ";
+
+"fitfordvd" = "Fit everything for a single DVD";
+"simplemenu" = "Simple Menu";
+
+"downloading" = "Downloading...";
+"downloadsites" = "Downloading server list...";
+"downloadfailed" = "Download failed.";
+"downloadfailedretrying" = "Download failed. Retrying...";
+"trymanualdownload" = "The automatic download failed.
+Please try the 'Install Manually...' option instead.";
+"done" = "Done!";
+
+"tmploc" = "Choose a location for conversion scratch space.";
+"saveloc" = "Choose a destination location for your converted file(s).";
+"scriptloc" = "Select an AppleScript .scpt to run upon queue completion.";
+"settingssave" = "Choose a name and location for the settings file.";
+"replacementaudio" = "Choose a file with audio to use as a replacement audio track.";
+
+"newqueue" = "New Queue";
+"newqueuetext" = "Creating a new queue will start a separate instance of FilmRedux (with its own controls) on top of the current window.";
+
+"nofiles" = "No Files in List";
+"nofilestext" = "Um...you need to have some files in the list in order for something to happen.";
+"nofilesbutton" = "How silly of me";
+
+"namestitched" = "Please provide a name for your finished Stitched file.";
+
+"startingfile" = "Starting File ";
+"startingconversion" = "Starting Conversion...";
+"convertingfiles" = "Converting Files...";
+"finishingfile" = "Finishing File ";
+"normalizingfile" = "Normalizing File ";
+"preparingfile" = "Preparing File ";
+"finishing" = "Finishing...";
+"cancelling" = "Cancelling...";
+"burning" = "Burning...";
+"waitingfordisc" = "Waiting for a disc...";
+"blankcd" = "
+Please insert a blank CD...";
+
+"lessthanspace" = "Less Than ";
+"aboutspace" = "About ";
+"spaceminutespace" = " minute ";
+"spaceminutesspace" = " minutes ";
+"badestimate" = "Turns out I was wrong. Keep hope alive.";
+"remainingforfilespace" = "left for File ";
+"remainingforthebatch" = "left for the batch";
+"remainingforstitching" = "left for Stitching";
+"alacstep2" = "Working on File ";
+"runningscript" = "Running Script...";
+
+"addandclickstarttostart" = "Add files, then click Start to convert.";
+"clickstarttostart" = "Click Start to begin converting.";
+"waitingformorefiles" = "Waiting for more files...";
+"waitingforfiles" = "Waiting for files...";
+"alreadydone" = "Queue Already Complete.";
+"alreadydonetext" = "This list of files has already been converted. Do you want to convert them again?";
+"disabledtable" = "Files can't be added to or removed from a Stitching or CD burning process once conversion has started.";
+"resettitle" = "Reset FilmRedux?";
+"resettext" = "This will remove all preference files, 'Extras', and registration information, bringing FilmRedux back to 'Factory Defaults'.
+THIS IS NOT A STANDARD TROUBLESHOOTING STEP!
+Only do this if you absolutely must, or if you are instructed to.";
+"sureyouwannaquit" = "Are you sure you want to Quit?";
+"sureyouwannaclearlog" = "Delete all log files?";
+"clearlogtext" = "All archived log files will be deleted from FilmRedux's log folder.";
+"quittext" = "Quitting during the conversion process will cancel conversion and clear the queue.";
+"sureyouwannacancel" = "Are you sure you want to Cancel?";
+
+"novlc" = "VLC was not found. It can be downloaded at http://videolan.org";
+"allerrorstitle" = "Errors during conversion";
+"allerrorstext" = "Errors prevented every conversion from completing. Select a file in the list and click the Info toolbar button to view the specific error.
+Click the Show Log button for detailed information.";
+"previewerror" = "There was an error creating the Preview.";
+"someerrorstitle" = "Some errors during conversion";
+"someerrorstext" = "Errors prevented some conversions from completing. Select a file in the list and click the Info toolbar button to view the specific error.
+Click the Show Log button for detailed information.";
+"errorsendedbatch" = "Errors cancelled the batch conversion";
+"filecomplete" = "File Complete";
+"conversioncomplete" = "Conversion Complete!";
+"triallimitreached" = "
+(60 second Trial limit reached)";
+"elapsedtimecolonspace" = "Elapsed Time: ";
+
+"fatalsystemerror" = "Fatal System Error";
+
+"falalsystemerrortext" = "Critical components of Mac OS X are missing or damaged on your system. Without them, FilmRedux is unable to continue.
+The affected components is/are:
+
+";
+"standardadditionsfull" = "Critical components of Mac OS X are missing or damaged on your system. Without them, FilmRedux is unable to continue.
+The affected components is/are:
+
+AppleScript's Standard Additions. This may require a reinstallation of Mac OS X.
+
+FilmRedux will now quit.";
+"tmpdirerror" = "- /tmp Temporary Directory. Try Repairing Permissions using Disk Utility.
+";
+"headerror" = "- UNIX command 'head' - This is caused by additional Perl software overwriting the built-in 'head' command. 
+";
+"patherror" = "- UNIX $PATH. If you have modified your $PATH, make sure it contains '/usr/bin:/bin:/usr/sbin:/sbin'. 
+";
+"uucodeerror" = "- uuencode/uudecode. This may require a reinstallation of Mac OS X.
+";
+"gziperror" = "- gzip compression library. This may require a reinstallation of Mac OS X.
+";
+"bziperror" = "- bzip2 compression library. This may require a reinstallation of Mac OS X.
+";
+"iderror" = "- UNIX command 'id'. This may require a reinstallation of Mac OS X.
+";
+"perlerror" = "- Perl scripting library. This may require a reinstallation of Mac OS X.
+";
+"willnowquit" = "
+FilmRedux will now quit.";
