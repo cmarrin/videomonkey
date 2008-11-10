@@ -19,6 +19,30 @@
 			4910FE420EC79ED4001B578B /* VideoMonkey */,
 		);
 		perUserDictionary = {
+			"PBXConfiguration.PBXBreakpointsDataSource.v1:1CA23EDF0692099D00951B8B" = {
+				PBXFileTableDataSourceColumnSortingDirectionKey = "-1";
+				PBXFileTableDataSourceColumnSortingKey = PBXBreakpointsDataSource_BreakpointID;
+				PBXFileTableDataSourceColumnWidthsKey = (
+					20,
+					20,
+					367,
+					20,
+					266,
+					266,
+					196,
+					20,
+				);
+				PBXFileTableDataSourceColumnsKey = (
+					PBXBreakpointsDataSource_ActionID,
+					PBXBreakpointsDataSource_TypeID,
+					PBXBreakpointsDataSource_BreakpointID,
+					PBXBreakpointsDataSource_UseID,
+					PBXBreakpointsDataSource_LocationID,
+					PBXBreakpointsDataSource_ConditionID,
+					PBXBreakpointsDataSource_IgnoreCountID,
+					PBXBreakpointsDataSource_ContinueID,
+				);
+			};
 			PBXConfiguration.PBXFileTableDataSource3.PBXFileTableDataSource = {
 				PBXFileTableDataSourceColumnSortingDirectionKey = "-1";
 				PBXFileTableDataSourceColumnSortingKey = PBXFileDataSource_Filename_ColumnID;
@@ -45,6 +69,12 @@
 			PBXWorkspaceStateSaveDate = 247972813;
 		};
 		perUserProjectItems = {
+			491000160EC87C1A001B578B /* PBXBookmark */ = 491000160EC87C1A001B578B /* PBXBookmark */;
+			491000170EC87C1A001B578B /* PBXBookmark */ = 491000170EC87C1A001B578B /* PBXBookmark */;
+			491000180EC87C1A001B578B /* PBXBookmark */ = 491000180EC87C1A001B578B /* PBXBookmark */;
+			491000190EC87C1A001B578B /* PBXBookmark */ = 491000190EC87C1A001B578B /* PBXBookmark */;
+			4910001A0EC87C1A001B578B /* PBXBookmark */ = 4910001A0EC87C1A001B578B /* PBXBookmark */;
+			4910001B0EC87C1B001B578B /* PBXBookmark */ = 4910001B0EC87C1B001B578B /* PBXBookmark */;
 			4910FF2A0EC7C311001B578B = 4910FF2A0EC7C311001B578B /* PBXBookmark */;
 			4910FF2B0EC7C311001B578B = 4910FF2B0EC7C311001B578B /* PBXBookmark */;
 			4910FF2C0EC7C311001B578B = 4910FF2C0EC7C311001B578B /* PBXBookmark */;
@@ -131,10 +161,45 @@
 			4910FF970EC7C443001B578B /* PBXBookmark */ = 4910FF970EC7C443001B578B /* PBXBookmark */;
 			4910FF980EC7C443001B578B /* PBXBookmark */ = 4910FF980EC7C443001B578B /* PBXBookmark */;
 			4910FF990EC7C443001B578B /* PBXBookmark */ = 4910FF990EC7C443001B578B /* PBXBookmark */;
+			4910FF9D0EC7FD9E001B578B /* PBXBookmark */ = 4910FF9D0EC7FD9E001B578B /* PBXBookmark */;
+			4910FF9E0EC7FDB0001B578B /* PBXBookmark */ = 4910FF9E0EC7FDB0001B578B /* PBXBookmark */;
+			4910FF9F0EC7FDB0001B578B /* PBXBookmark */ = 4910FF9F0EC7FDB0001B578B /* PBXBookmark */;
+			4910FFA00EC7FDB0001B578B /* PBXBookmark */ = 4910FFA00EC7FDB0001B578B /* PBXBookmark */;
+			4910FFA10EC7FDB0001B578B /* PBXBookmark */ = 4910FFA10EC7FDB0001B578B /* PBXBookmark */;
+			4910FFA20EC80443001B578B /* PBXBookmark */ = 4910FFA20EC80443001B578B /* PBXBookmark */;
+			4910FFA40EC8044E001B578B /* PBXBookmark */ = 4910FFA40EC8044E001B578B /* PBXBookmark */;
+			4910FFA50EC8044E001B578B /* PBXBookmark */ = 4910FFA50EC8044E001B578B /* PBXBookmark */;
+			4910FFA60EC80450001B578B /* PBXBookmark */ = 4910FFA60EC80450001B578B /* PBXBookmark */;
+			4910FFA70EC80450001B578B /* PBXBookmark */ = 4910FFA70EC80450001B578B /* PBXBookmark */;
+			4910FFA80EC80462001B578B /* PBXBookmark */ = 4910FFA80EC80462001B578B /* PBXBookmark */;
 		};
 		sourceControlManager = 4910FE540EC79EDC001B578B /* Source Control */;
 		userBuildSettings = {
 		};
+	};
+	491000160EC87C1A001B578B /* PBXBookmark */ = {
+		isa = PBXBookmark;
+		fRef = 4910FFC00EC87BB3001B578B /* ready.png */;
+	};
+	491000170EC87C1A001B578B /* PBXBookmark */ = {
+		isa = PBXBookmark;
+		fRef = 4910FFBD0EC87BB3001B578B /* ok.png */;
+	};
+	491000180EC87C1A001B578B /* PBXBookmark */ = {
+		isa = PBXBookmark;
+		fRef = 4910FFC00EC87BB3001B578B /* ready.png */;
+	};
+	491000190EC87C1A001B578B /* PBXBookmark */ = {
+		isa = PBXBookmark;
+		fRef = 4910FFBD0EC87BB3001B578B /* ok.png */;
+	};
+	4910001A0EC87C1A001B578B /* PBXBookmark */ = {
+		isa = PBXBookmark;
+		fRef = 4910FFBD0EC87BB3001B578B /* ok.png */;
+	};
+	4910001B0EC87C1B001B578B /* PBXBookmark */ = {
+		isa = PBXBookmark;
+		fRef = 4910FFBD0EC87BB3001B578B /* ok.png */;
 	};
 	4910FE420EC79ED4001B578B /* VideoMonkey */ = {
 		isa = PBXExecutable;
@@ -170,6 +235,223 @@
 	4910FE550EC79EDC001B578B /* Code sense */ = {
 		isa = PBXCodeSenseManager;
 		indexTemplatePath = "";
+	};
+	4910FE840EC7B38F001B578B /* burntbottom.png */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = image.png;
+		name = burntbottom.png;
+		path = /Users/cmarrin/Projects/svn/videomonkey/trunk/burntbottom.png;
+		sourceTree = "<absolute>";
+	};
+	4910FE990EC7B38F001B578B /* selectbar.png */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = image.png;
+		name = selectbar.png;
+		path = /Users/cmarrin/Projects/svn/videomonkey/trunk/selectbar.png;
+		sourceTree = "<absolute>";
+	};
+	4910FE9A0EC7B38F001B578B /* tiny3g.png */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = image.png;
+		name = tiny3g.png;
+		path = /Users/cmarrin/Projects/svn/videomonkey/trunk/tiny3g.png;
+		sourceTree = "<absolute>";
+	};
+	4910FE9B0EC7B38F001B578B /* tinyappletv.png */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = image.png;
+		name = tinyappletv.png;
+		path = /Users/cmarrin/Projects/svn/videomonkey/trunk/tinyappletv.png;
+		sourceTree = "<absolute>";
+	};
+	4910FE9C0EC7B38F001B578B /* tinycd.png */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = image.png;
+		name = tinycd.png;
+		path = /Users/cmarrin/Projects/svn/videomonkey/trunk/tinycd.png;
+		sourceTree = "<absolute>";
+	};
+	4910FE9D0EC7B38F001B578B /* tinydv.png */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = image.png;
+		name = tinydv.png;
+		path = /Users/cmarrin/Projects/svn/videomonkey/trunk/tinydv.png;
+		sourceTree = "<absolute>";
+	};
+	4910FE9E0EC7B38F001B578B /* tinyfile.png */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = image.png;
+		name = tinyfile.png;
+		path = /Users/cmarrin/Projects/svn/videomonkey/trunk/tinyfile.png;
+		sourceTree = "<absolute>";
+	};
+	4910FE9F0EC7B390001B578B /* tinyflac.png */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = image.png;
+		name = tinyflac.png;
+		path = /Users/cmarrin/Projects/svn/videomonkey/trunk/tinyflac.png;
+		sourceTree = "<absolute>";
+	};
+	4910FEA00EC7B390001B578B /* tinyflash.png */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = image.png;
+		name = tinyflash.png;
+		path = /Users/cmarrin/Projects/svn/videomonkey/trunk/tinyflash.png;
+		sourceTree = "<absolute>";
+	};
+	4910FEA10EC7B390001B578B /* tinyiphone.png */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = image.png;
+		name = tinyiphone.png;
+		path = /Users/cmarrin/Projects/svn/videomonkey/trunk/tinyiphone.png;
+		sourceTree = "<absolute>";
+	};
+	4910FEA20EC7B390001B578B /* tinyipod.png */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = image.png;
+		name = tinyipod.png;
+		path = /Users/cmarrin/Projects/svn/videomonkey/trunk/tinyipod.png;
+		sourceTree = "<absolute>";
+	};
+	4910FEA30EC7B390001B578B /* tinyitunes.png */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = image.png;
+		name = tinyitunes.png;
+		path = /Users/cmarrin/Projects/svn/videomonkey/trunk/tinyitunes.png;
+		sourceTree = "<absolute>";
+	};
+	4910FEA40EC7B390001B578B /* tinynano.png */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = image.png;
+		name = tinynano.png;
+		path = /Users/cmarrin/Projects/svn/videomonkey/trunk/tinynano.png;
+		sourceTree = "<absolute>";
+	};
+	4910FEA50EC7B390001B578B /* tinyogg.png */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = image.png;
+		name = tinyogg.png;
+		path = /Users/cmarrin/Projects/svn/videomonkey/trunk/tinyogg.png;
+		sourceTree = "<absolute>";
+	};
+	4910FEA60EC7B390001B578B /* tinyps3.png */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = image.png;
+		name = tinyps3.png;
+		path = /Users/cmarrin/Projects/svn/videomonkey/trunk/tinyps3.png;
+		sourceTree = "<absolute>";
+	};
+	4910FEA70EC7B390001B578B /* tinypsp.png */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = image.png;
+		name = tinypsp.png;
+		path = /Users/cmarrin/Projects/svn/videomonkey/trunk/tinypsp.png;
+		sourceTree = "<absolute>";
+	};
+	4910FEA80EC7B390001B578B /* tinytivo.png */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = image.png;
+		name = tinytivo.png;
+		path = /Users/cmarrin/Projects/svn/videomonkey/trunk/tinytivo.png;
+		sourceTree = "<absolute>";
+	};
+	4910FEA90EC7B390001B578B /* tinywav.png */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = image.png;
+		name = tinywav.png;
+		path = /Users/cmarrin/Projects/svn/videomonkey/trunk/tinywav.png;
+		sourceTree = "<absolute>";
+	};
+	4910FEAA0EC7B390001B578B /* tinywii.png */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = image.png;
+		name = tinywii.png;
+		path = /Users/cmarrin/Projects/svn/videomonkey/trunk/tinywii.png;
+		sourceTree = "<absolute>";
+	};
+	4910FEAB0EC7B390001B578B /* tinywma.png */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = image.png;
+		name = tinywma.png;
+		path = /Users/cmarrin/Projects/svn/videomonkey/trunk/tinywma.png;
+		sourceTree = "<absolute>";
+	};
+	4910FEAC0EC7B390001B578B /* tinyxbox360.png */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = image.png;
+		name = tinyxbox360.png;
+		path = /Users/cmarrin/Projects/svn/videomonkey/trunk/tinyxbox360.png;
+		sourceTree = "<absolute>";
+	};
+	4910FEAD0EC7B390001B578B /* tivo.png */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = image.png;
+		name = tivo.png;
+		path = /Users/cmarrin/Projects/svn/videomonkey/trunk/tivo.png;
+		sourceTree = "<absolute>";
+	};
+	4910FEAE0EC7B390001B578B /* toolbaraudio.png */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = image.png;
+		name = toolbaraudio.png;
+		path = /Users/cmarrin/Projects/svn/videomonkey/trunk/toolbaraudio.png;
+		sourceTree = "<absolute>";
+	};
+	4910FEAF0EC7B390001B578B /* toolbarinfo.png */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = image.png;
+		name = toolbarinfo.png;
+		path = /Users/cmarrin/Projects/svn/videomonkey/trunk/toolbarinfo.png;
+		sourceTree = "<absolute>";
+	};
+	4910FEB00EC7B390001B578B /* toolbaroneoff.png */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = image.png;
+		name = toolbaroneoff.png;
+		path = /Users/cmarrin/Projects/svn/videomonkey/trunk/toolbaroneoff.png;
+		sourceTree = "<absolute>";
+	};
+	4910FEB10EC7B390001B578B /* topbar.png */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = image.png;
+		name = topbar.png;
+		path = /Users/cmarrin/Projects/svn/videomonkey/trunk/topbar.png;
+		sourceTree = "<absolute>";
+	};
+	4910FEB20EC7B390001B578B /* wav.png */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = image.png;
+		name = wav.png;
+		path = /Users/cmarrin/Projects/svn/videomonkey/trunk/wav.png;
+		sourceTree = "<absolute>";
+	};
+	4910FEB30EC7B390001B578B /* wii.png */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = image.png;
+		name = wii.png;
+		path = /Users/cmarrin/Projects/svn/videomonkey/trunk/wii.png;
+		sourceTree = "<absolute>";
+	};
+	4910FEB40EC7B390001B578B /* wma.png */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = image.png;
+		name = wma.png;
+		path = /Users/cmarrin/Projects/svn/videomonkey/trunk/wma.png;
+		sourceTree = "<absolute>";
+	};
+	4910FEB50EC7B390001B578B /* xbox360.png */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = image.png;
+		name = xbox360.png;
+		path = /Users/cmarrin/Projects/svn/videomonkey/trunk/xbox360.png;
+		sourceTree = "<absolute>";
+	};
+	4910FF010EC7C1D8001B578B /* error.png */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = image.png;
+		name = error.png;
+		path = /Users/cmarrin/Projects/svn/videomonkey/trunk/icons/error.png;
+		sourceTree = "<absolute>";
 	};
 	4910FF2A0EC7C311001B578B /* PBXBookmark */ = {
 		isa = PBXBookmark;
@@ -540,6 +822,50 @@
 	4910FF990EC7C443001B578B /* PBXBookmark */ = {
 		isa = PBXBookmark;
 		fRef = 4910FF000EC7C1D8001B578B /* delete.icns */;
+	};
+	4910FF9D0EC7FD9E001B578B /* PBXBookmark */ = {
+		isa = PBXBookmark;
+		fRef = 4910FF000EC7C1D8001B578B /* delete.icns */;
+	};
+	4910FF9E0EC7FDB0001B578B /* PBXBookmark */ = {
+		isa = PBXBookmark;
+		fRef = 4910FF000EC7C1D8001B578B /* delete.icns */;
+	};
+	4910FF9F0EC7FDB0001B578B /* PBXBookmark */ = {
+		isa = PBXBookmark;
+		fRef = 4910FE840EC7B38F001B578B /* burntbottom.png */;
+	};
+	4910FFA00EC7FDB0001B578B /* PBXBookmark */ = {
+		isa = PBXBookmark;
+		fRef = 4910FF000EC7C1D8001B578B /* delete.icns */;
+	};
+	4910FFA10EC7FDB0001B578B /* PBXBookmark */ = {
+		isa = PBXBookmark;
+		fRef = 4910FE840EC7B38F001B578B /* burntbottom.png */;
+	};
+	4910FFA20EC80443001B578B /* PBXBookmark */ = {
+		isa = PBXBookmark;
+		fRef = 4910FE840EC7B38F001B578B /* burntbottom.png */;
+	};
+	4910FFA40EC8044E001B578B /* PBXBookmark */ = {
+		isa = PBXBookmark;
+		fRef = 4910FF000EC7C1D8001B578B /* delete.icns */;
+	};
+	4910FFA50EC8044E001B578B /* PBXBookmark */ = {
+		isa = PBXBookmark;
+		fRef = 4910FE840EC7B38F001B578B /* burntbottom.png */;
+	};
+	4910FFA60EC80450001B578B /* PBXBookmark */ = {
+		isa = PBXBookmark;
+		fRef = 4910FE840EC7B38F001B578B /* burntbottom.png */;
+	};
+	4910FFA70EC80450001B578B /* PBXBookmark */ = {
+		isa = PBXBookmark;
+		fRef = 4910FE840EC7B38F001B578B /* burntbottom.png */;
+	};
+	4910FFA80EC80462001B578B /* PBXBookmark */ = {
+		isa = PBXBookmark;
+		fRef = 4910FE840EC7B38F001B578B /* burntbottom.png */;
 	};
 	8D1107260486CEB800E47090 /* VideoMonkey */ = {
 		activeExec = 0;
