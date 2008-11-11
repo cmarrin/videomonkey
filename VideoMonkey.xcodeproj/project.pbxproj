@@ -28,6 +28,7 @@
 		491000110EC87BB3001B578B /* wii.png in Resources */ = {isa = PBXBuildFile; fileRef = 4910FFDC0EC87BB3001B578B /* wii.png */; };
 		491000120EC87BB3001B578B /* wma.png in Resources */ = {isa = PBXBuildFile; fileRef = 4910FFDD0EC87BB3001B578B /* wma.png */; };
 		491000130EC87BB3001B578B /* xbox360.png in Resources */ = {isa = PBXBuildFile; fileRef = 4910FFDE0EC87BB3001B578B /* xbox360.png */; };
+		491000680EC8AA16001B578B /* ConversionParams.m in Sources */ = {isa = PBXBuildFile; fileRef = 491000670EC8AA16001B578B /* ConversionParams.m */; };
 		4910FF120EC7C1D8001B578B /* add.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4910FEFA0EC7C1D8001B578B /* add.icns */; };
 		4910FF130EC7C1D8001B578B /* advanced.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 4910FEFB0EC7C1D8001B578B /* advanced.tiff */; };
 		4910FF140EC7C1D8001B578B /* burn.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4910FEFC0EC7C1D8001B578B /* burn.icns */; };
@@ -96,6 +97,8 @@
 		29B97324FDCFA39411CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
 		32CA4F630368D1EE00C91783 /* VideoMonkey_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoMonkey_Prefix.pch; sourceTree = "<group>"; };
+		491000660EC8AA16001B578B /* ConversionParams.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ConversionParams.h; path = classes/ConversionParams.h; sourceTree = "<group>"; };
+		491000670EC8AA16001B578B /* ConversionParams.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ConversionParams.m; path = classes/ConversionParams.m; sourceTree = "<group>"; };
 		4910FEFA0EC7C1D8001B578B /* add.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = add.icns; path = icons/add.icns; sourceTree = "<group>"; };
 		4910FEFB0EC7C1D8001B578B /* advanced.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = advanced.tiff; path = icons/advanced.tiff; sourceTree = "<group>"; };
 		4910FEFC0EC7C1D8001B578B /* burn.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = burn.icns; path = icons/burn.icns; sourceTree = "<group>"; };
@@ -189,6 +192,8 @@
 		080E96DDFE201D6D7F000001 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				491000660EC8AA16001B578B /* ConversionParams.h */,
+				491000670EC8AA16001B578B /* ConversionParams.m */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -479,6 +484,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8D11072D0486CEB800E47090 /* main.m in Sources */,
+				491000680EC8AA16001B578B /* ConversionParams.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
