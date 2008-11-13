@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		1DDD58160DA1D0A300B32029 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1DDD58140DA1D0A300B32029 /* MainMenu.xib */; };
 		491000000EC87BB3001B578B /* tinyipod.png in Resources */ = {isa = PBXBuildFile; fileRef = 4910FFCB0EC87BB3001B578B /* tinyipod.png */; };
 		491000010EC87BB3001B578B /* tinyitunes.png in Resources */ = {isa = PBXBuildFile; fileRef = 4910FFCC0EC87BB3001B578B /* tinyitunes.png */; };
 		491000020EC87BB3001B578B /* tinynano.png in Resources */ = {isa = PBXBuildFile; fileRef = 4910FFCD0EC87BB3001B578B /* tinynano.png */; };
@@ -29,6 +28,8 @@
 		491000120EC87BB3001B578B /* wma.png in Resources */ = {isa = PBXBuildFile; fileRef = 4910FFDD0EC87BB3001B578B /* wma.png */; };
 		491000130EC87BB3001B578B /* xbox360.png in Resources */ = {isa = PBXBuildFile; fileRef = 4910FFDE0EC87BB3001B578B /* xbox360.png */; };
 		491000680EC8AA16001B578B /* ConversionParams.m in Sources */ = {isa = PBXBuildFile; fileRef = 491000670EC8AA16001B578B /* ConversionParams.m */; };
+		4910018A0ECBE470001B578B /* MainMenu.nib in Resources */ = {isa = PBXBuildFile; fileRef = 491001880ECBE470001B578B /* MainMenu.nib */; };
+		491001D70ECBEEBC001B578B /* AppController.m in Sources */ = {isa = PBXBuildFile; fileRef = 491001D60ECBEEBC001B578B /* AppController.m */; };
 		4910FF120EC7C1D8001B578B /* add.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4910FEFA0EC7C1D8001B578B /* add.icns */; };
 		4910FF130EC7C1D8001B578B /* advanced.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 4910FEFB0EC7C1D8001B578B /* advanced.tiff */; };
 		4910FF140EC7C1D8001B578B /* burn.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4910FEFC0EC7C1D8001B578B /* burn.icns */; };
@@ -93,13 +94,15 @@
 		089C165DFE840E0CC02AAC07 /* English */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
 		13E42FB307B3F0F600E4EEF1 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = /System/Library/Frameworks/CoreData.framework; sourceTree = "<absolute>"; };
-		1DDD58150DA1D0A300B32029 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		29B97316FDCFA39411CA2CEA /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		29B97324FDCFA39411CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
 		32CA4F630368D1EE00C91783 /* VideoMonkey_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoMonkey_Prefix.pch; sourceTree = "<group>"; };
 		491000660EC8AA16001B578B /* ConversionParams.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ConversionParams.h; path = classes/ConversionParams.h; sourceTree = "<group>"; };
 		491000670EC8AA16001B578B /* ConversionParams.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ConversionParams.m; path = classes/ConversionParams.m; sourceTree = "<group>"; };
+		491001890ECBE470001B578B /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = English.lproj/MainMenu.nib; sourceTree = "<group>"; };
+		491001D50ECBEEBC001B578B /* AppController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppController.h; path = classes/AppController.h; sourceTree = "<group>"; };
+		491001D60ECBEEBC001B578B /* AppController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppController.m; path = classes/AppController.m; sourceTree = "<group>"; };
 		4910FEFA0EC7C1D8001B578B /* add.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = add.icns; path = icons/add.icns; sourceTree = "<group>"; };
 		4910FEFB0EC7C1D8001B578B /* advanced.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = advanced.tiff; path = icons/advanced.tiff; sourceTree = "<group>"; };
 		4910FEFC0EC7C1D8001B578B /* burn.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = burn.icns; path = icons/burn.icns; sourceTree = "<group>"; };
@@ -197,6 +200,8 @@
 			children = (
 				491000660EC8AA16001B578B /* ConversionParams.h */,
 				491000670EC8AA16001B578B /* ConversionParams.m */,
+				491001D50ECBEEBC001B578B /* AppController.h */,
+				491001D60ECBEEBC001B578B /* AppController.m */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -236,6 +241,7 @@
 				29B97317FDCFA39411CA2CEA /* Resources */,
 				29B97323FDCFA39411CA2CEA /* Frameworks */,
 				19C28FACFE9D520D11CA2CBB /* Products */,
+				491001880ECBE470001B578B /* MainMenu.nib */,
 			);
 			name = VideoMonkey;
 			sourceTree = "<group>";
@@ -256,7 +262,6 @@
 				4910FE7F0EC7B304001B578B /* Images */,
 				8D1107310486CEB800E47090 /* Info.plist */,
 				089C165CFE840E0CC02AAC07 /* InfoPlist.strings */,
-				1DDD58140DA1D0A300B32029 /* MainMenu.xib */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -402,7 +407,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */,
-				1DDD58160DA1D0A300B32029 /* MainMenu.xib in Resources */,
 				4910FF120EC7C1D8001B578B /* add.icns in Resources */,
 				4910FF130EC7C1D8001B578B /* advanced.tiff in Resources */,
 				4910FF140EC7C1D8001B578B /* burn.icns in Resources */,
@@ -477,6 +481,7 @@
 				491000110EC87BB3001B578B /* wii.png in Resources */,
 				491000120EC87BB3001B578B /* wma.png in Resources */,
 				491000130EC87BB3001B578B /* xbox360.png in Resources */,
+				4910018A0ECBE470001B578B /* MainMenu.nib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -489,6 +494,7 @@
 			files = (
 				8D11072D0486CEB800E47090 /* main.m in Sources */,
 				491000680EC8AA16001B578B /* ConversionParams.m in Sources */,
+				491001D70ECBEEBC001B578B /* AppController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -503,12 +509,12 @@
 			name = InfoPlist.strings;
 			sourceTree = "<group>";
 		};
-		1DDD58140DA1D0A300B32029 /* MainMenu.xib */ = {
+		491001880ECBE470001B578B /* MainMenu.nib */ = {
 			isa = PBXVariantGroup;
 			children = (
-				1DDD58150DA1D0A300B32029 /* English */,
+				491001890ECBE470001B578B /* English */,
 			);
-			name = MainMenu.xib;
+			name = MainMenu.nib;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */

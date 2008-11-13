@@ -3,7 +3,7 @@
 //  VideoMonkey
 //
 //  Created by Chris Marrin on 11/9/08.
-//  Copyright Apple 2008. All rights reserved.
+//  Copyright Chris Marrin 2008. All rights reserved.
 //
 
 #import <Cocoa/Cocoa.h>

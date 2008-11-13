@@ -1,3 +1,11 @@
+//
+//  ConversionParams.h
+//  ConversionParams
+//
+//  Created by Chris Marrin on 11/12/08.
+//  Copyright Chris Marrin 2008. All rights reserved.
+//
+
 #import <Cocoa/Cocoa.h>
 //#import <Cocoa/NSTabViewItem.h>
 

@@ -1,3 +1,11 @@
+//
+//  ConversionParams.m
+//  ConversionParams
+//
+//  Created by Chris Marrin on 11/12/08.
+//  Copyright Chris Marrin 2008. All rights reserved.
+//
+
 #import "ConversionParams.h"
 
 @implementation ConversionTab
