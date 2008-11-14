@@ -11,6 +11,8 @@
 
 @interface AppController : NSObject {
 @private
+	IBOutlet NSMutableArray *m_files;
+    IBOutlet NSArrayController *m_arrayController;
 }
 
 @end
