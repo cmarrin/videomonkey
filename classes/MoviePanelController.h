@@ -1,5 +1,5 @@
 //
-//  AppController.h
+//  MoviePanelController.h
 //  VideoMonkey
 //
 //  Created by Chris Marrin on 11/12/08.
@@ -7,10 +7,12 @@
 //
 
 #import <Cocoa/Cocoa.h>
+#import <QTKit/QTMovieView.h>
 
 
-@interface AppController : NSObject {
+@interface MoviePanelController : NSObject {
 @private
+    IBOutlet QTMovieView* m_movieView;
 }
 
 @end
