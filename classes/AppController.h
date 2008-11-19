@@ -11,8 +11,9 @@
 
 @interface AppController : NSObject {
 @private
-	IBOutlet NSMutableArray *m_files;
-    IBOutlet NSArrayController *m_arrayController;
+    IBOutlet NSTableView* m_fileListView;
+    NSMutableArray* m_files;
+    int m_draggedRow;
 }
 
 @end
