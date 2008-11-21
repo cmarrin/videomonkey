@@ -66,6 +66,8 @@
     if ([rows count] > 1)	// don't allow dragging with more than one row
         return NO;
     
+    // get rid of any selections
+    [m_fileListView deselectAll:nil];
     m_draggedRow = [[rows objectAtIndex: 0] intValue];
     // the NSArray "rows" is actually an array of the indecies dragged
     
@@ -110,10 +112,10 @@
             [m_files removeObjectAtIndex: m_draggedRow];
             
             // insert the new string (same one that got dragger) into the array
-            if (row >= [m_files count])
+            if (row > [m_files count])
                 [m_files addObject: aString];
             else
-                [m_files insertObject: aString atIndex: row];
+                [m_files insertObject: aString atIndex: (row > m_draggedRow) ? (row-1) : row];
         
             [m_fileListView reloadData];
         }
@@ -131,8 +133,6 @@
             }
         }
     }
-    
-    [m_fileListView selectRow: row byExtendingSelection: NO];	// select the row
     
     return YES;
 }
