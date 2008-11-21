@@ -1,0 +1,67 @@
+Building ffmpeg
+---------------
+
+Video Monkey uses the ffmpeg command line tool. It is included as a resource in the videomonkey app. Here is how to build it statically, so it doesn't require any extra dylibs installed. When built this way, it still relys on the following dylibs, but they should be part of the OSX install (at least they are part of Leopard 10.5.4). Here is the output from otool -L:
+
+	/usr/lib/libz.1.dylib (compatibility version 1.0.0, current version 1.2.3)
+	/usr/lib/libbz2.1.0.dylib (compatibility version 1.0.0, current version 1.0.4)
+	/usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 111.1.1)
+	/usr/lib/libgcc_s.1.dylib (compatibility version 1.0.0, current version 1.0.0)
+
+
+Support libs
+------------
+
+Before building ffmpeg from source, install the following libraries:
+
+libfaac    - http://voxel.dl.sourceforge.net/sourceforge/faac/faac-1.26.zip
+libfaad    - http://internap.dl.sourceforge.net/sourceforge/faac/faad2-2.6.1.zip
+libmp3lame - http://superb-east.dl.sourceforge.net/sourceforge/lame/lame-398-2.tar.gz
+libx264    - ftp://ftp.videolan.org/pub/videolan/x264/snapshots//x264-snapshot-20081119-2245.tar.bz2
+libogg     - http://downloads.xiph.org/releases/ogg/libogg-1.1.3.tar.gz
+libvorbis  - http://downloads.xiph.org/releases/vorbis/libvorbis-1.2.0.tar.gz
+libtheora  - http://downloads.xiph.org/releases/theora/libtheora-1.0.zip
+
+After downloading and extracting the source, go into each directory in turn and build. For libfaac and libfaad, first run:
+
+    ./bootstrap
+
+in addition to the next 3 steps. For the rest, just run these three steps:
+
+    ./configure --disable-shared
+    make
+    sudo make install
+
+Make sure to build libogg and libvorbis before libtheora. It depends on them. The --disable-shared flag is important to prevent ffmpeg from linking with the dynamic libraries. libx264 doesn't need this flag, it builds statically by default. But it doesn't hurt to include it.
+
+
+XVid
+----
+
+Building xvid is sadly tricky. The simplest way I have found is to first download the source as usual from:
+
+    http://downloads.xvid.org/downloads/xvidcore-1.1.3.tar.gz
+
+extract the source code, then go to the build/generic directory and run:
+
+    ./configure --enable-macosx_module --disable-shared
+
+then download this file:
+
+    http://rob.opendot.cl/wp-content/files/platform.inc
+
+and replace the file with the same name in the current directory. Then build with:
+
+    make
+    sudo make install
+
+
+FFMpeg
+------
+
+Once you have everything built, you can build ffmpeg by going into its directory and doing the following:
+
+    ./configure --enable-gpl --disable-ffplay --disable-ffserver --enable-libfaac --enable-libfaad --enable-libmp3lame --enable-libvorbis --enable-libtheora --enable-libx264 --enable-libxvid
+    make
+
+No need to do a 'sudo make install' unless you also want to be able to run ffmpeg from the Terminal. You should now have a statically linked executable called ffmpeg in the ffmpeg directory.
