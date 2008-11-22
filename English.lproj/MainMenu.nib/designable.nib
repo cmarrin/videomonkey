@@ -2,13 +2,14 @@
 <archive type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="7.03">
 	<data>
 		<int key="IBDocument.SystemTarget">1050</int>
-		<string key="IBDocument.SystemVersion">9E17</string>
-		<string key="IBDocument.InterfaceBuilderVersion">677</string>
-		<string key="IBDocument.AppKitVersion">949.31</string>
+		<string key="IBDocument.SystemVersion">9F33</string>
+		<string key="IBDocument.InterfaceBuilderVersion">676</string>
+		<string key="IBDocument.AppKitVersion">949.34</string>
 		<string key="IBDocument.HIToolboxVersion">352.00</string>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
-			<integer value="539"/>
+			<integer value="372"/>
+			<integer value="1015"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -1289,9 +1290,9 @@
 												<reference key="NSControlView" ref="668207334"/>
 												<int key="NSButtonFlags">-2038415105</int>
 												<int key="NSButtonFlags2">36</int>
-												<object class="NSCustomResource" key="NSNormalImage">
+												<object class="NSCustomResource" key="NSNormalImage" id="775976577">
 													<string key="NSClassName">NSImage</string>
-													<string key="NSResourceName">tinyitunes</string>
+													<string key="NSResourceName">tinyps3</string>
 												</object>
 												<string key="NSAlternateContents"/>
 												<string key="NSKeyEquivalent"/>
@@ -1305,10 +1306,7 @@
 													<int key="NSKeyEquivModMask">1048576</int>
 													<int key="NSMnemonicLoc">2147483647</int>
 													<int key="NSState">1</int>
-													<object class="NSCustomResource" key="NSImage">
-														<string key="NSClassName">NSImage</string>
-														<string key="NSResourceName">tinyps3</string>
-													</object>
+													<reference key="NSImage" ref="775976577"/>
 													<reference key="NSOnImage" ref="35465992"/>
 													<reference key="NSMixedImage" ref="502551668"/>
 													<string key="NSAction">_popUpItemAction:</string>
@@ -12122,20 +12120,20 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 			<object class="NSWindowTemplate" id="461588446">
 				<int key="NSWindowStyleMask">271</int>
 				<int key="NSWindowBacking">2</int>
-				<string key="NSWindowRect">{{196, 130}, {480, 380}}</string>
+				<string key="NSWindowRect">{{196, -67}, {534, 577}}</string>
 				<int key="NSWTFlags">-469762048</int>
 				<string key="NSWindowTitle">Movie</string>
 				<string key="NSWindowClass">NSWindow</string>
 				<nil key="NSViewClass"/>
 				<string key="NSWindowContentMaxSize">{3.40282e+38, 3.40282e+38}</string>
 				<object class="NSView" key="NSWindowView" id="947487714">
-					<nil key="NSNextResponder"/>
+					<reference key="NSNextResponder"/>
 					<int key="NSvFlags">256</int>
 					<object class="NSMutableArray" key="NSSubviews">
 						<bool key="EncodedWithXMLCoder">YES</bool>
 						<object class="QTMovieView" id="933784279">
 							<reference key="NSNextResponder" ref="947487714"/>
-							<int key="NSvFlags">282</int>
+							<int key="NSvFlags">4378</int>
 							<object class="NSMutableSet" key="NSDragTypes">
 								<bool key="EncodedWithXMLCoder">YES</bool>
 								<object class="NSMutableArray" key="set.sortedObjects">
@@ -12146,16 +12144,86 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 									<string>QTMoviePasteboardType</string>
 								</object>
 							</object>
-							<string key="NSFrame">{{0, 76}, {480, 304}}</string>
+							<string key="NSFrame">{{0, 115}, {534, 461}}</string>
 							<reference key="NSSuperview" ref="947487714"/>
 							<reference key="kCoderFillColor" ref="709913553"/>
 							<boolean value="YES" key="kCoderControllerVisible" id="5"/>
-							<boolean value="NO" key="kCoderPreservesAspectRatio" id="6"/>
-							<nil key="kCoderMovie"/>
-							<reference key="kCoderEditable" ref="6"/>
+							<reference key="kCoderPreservesAspectRatio" ref="5"/>
+							<object class="QTMovie" key="kCoderMovie">
+								<object class="NSMutableData" key="kCoderMovie">
+									<bytes key="NS.bytes">AAAPVm1vb3YAAABsbXZoZAAAAADFQ3XnxU1HBgAAAlgAAAr/AAEAAAEAAAAAAAAAAAAAAAAA2xQAAAAA
+AAAAAAAAAAAAANxdAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMAAAON
+dHJhawAAAFx0a2hkAAAAD8VDdefFQ3XnAAAAAQAAAAAAAAr/AAAAAAAAAAAAAAAAAQAAAAABAAAAAAAA
+AAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAJGVkdHMAAAAcZWxzdAAAAAAAAAAB
+AAAK/wAAAAAAAQAAAAAC+W1kaWEAAAAgbWRoZAAAAADFQ3XnxUN15wAArEQAAyg3AAAAAAAAADpoZGxy
+AAAAAG1obHJzb3VuYXBwbBAAAAAAAQG9GUFwcGxlIFNvdW5kIE1lZGlhIEhhbmRsZXIAAAKXbWluZgAA
+ABBzbWhkAAAAAAAAAAAAAAA5aGRscgAAAABkaGxyYWxpc2FwcGwQAAABAAEB1xhBcHBsZSBBbGlhcyBE
+YXRhIEhhbmRsZXIAAAFWZGluZgAAAU5kcmVmAAAAAAAAAAEAAAE+YWxpcwAAAAAAAAAAATIAAgAADE1h
+Y2ludG9zaCBIRAAAAAAAAAAAAAAAAAAAAMUFN4pIKwAAADJNQgpzYW1wbGUubW92AAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAO3W+xUzMLwAAAAAAAAAA////
+/wAASSAAAAAAAAAAAAAAAAAAEAAIAADFBZn6AAAAEQAIAADFTTyvAAAADgAWAAoAcwBhAG0AcABsAGUA
+LgBtAG8AdgAPABoADABNAGEAYwBpAG4AdABvAHMAaAAgAEgARAASADdVc2Vycy9jbWFycmluL1Byb2pl
+Y3RzL3N2bi92aWRlb21vbmtleS90cnVuay9zYW1wbGUubW92AAATAAEvAAAVAAIADv//AAAAAADwc3Ri
+bAAAAFxzdHNkAAAAAAAAAAEAAABMc293dAAAAAAAAAABAAEAAAAAAAAAAgAQ//8AAKxEAAAAAAABAAAA
+AgAAAAQAAAACAAAAGGNoYW4AAAAAAGUAAgAAAAAAAAAAAAAAGHN0dHMAAAAAAAAAAQADKDcAAAABAAAA
+KHN0c2MAAAAAAAAAAgAAAAEAAFYiAAAAAQAAAAoAACEFAAAAAQAAABRzdHN6AAAAAAAAAAEAAyg3AAAA
+OHN0Y28AAAAAAAAACgAADR4AAWWmAAK+LgAEzOEABt/wAAjtxwALDTsADQ9cAA9CtQARsGYAAAAMdWR0
+YQAAAAAAAAtJdHJhawAAAFx0a2hkAAAAD8VDdefFQ3XnAAAAAgAAAAAAAAr/AAAAAAAAAAAAAAAAAAAA
+AAABAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAQAAAAAJwAAABYAAAAAAARHRhcHQAAAAUY2xl
+ZgAAAAACcAAAAWAAAAAAABRwcm9mAAAAAAJwAAABYAAAAAAAFGVub2YAAAAAAnAAAAFgAAAAAAAkZWR0
+cwAAABxlbHN0AAAAAAAAAAEAAAr/AAAAAAABAAAAAApxbWRpYQAAACBtZGhkAAAAAMVDdefFQ3XnAAAC
+WAAACv8AAAAAAAAAOmhkbHIAAAAAbWhscnZpZGVhcHBsEAAAAAABAcAZQXBwbGUgVmlkZW8gTWVkaWEg
+SGFuZGxlcgAACg9taW5mAAAAFHZtaGQAAAABAECAAIAAgAAAAAA5aGRscgAAAABkaGxyYWxpc2FwcGwQ
+AAABAAEB1xhBcHBsZSBBbGlhcyBEYXRhIEhhbmRsZXIAAAFWZGluZgAAAU5kcmVmAAAAAAAAAAEAAAE+
+YWxpcwAAAAAAAAAAATIAAgAADE1hY2ludG9zaCBIRAAAAAAAAAAAAAAAAAAAAMUFN4pIKwAAADJNQgpz
+YW1wbGUubW92AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAO3W+xUzMLwAAAAAAAAAA/////wAASSAAAAAAAAAAAAAAAAAAEAAIAADFBZn6AAAAEQAIAADFTTyv
+AAAADgAWAAoAcwBhAG0AcABsAGUALgBtAG8AdgAPABoADABNAGEAYwBpAG4AdABvAHMAaAAgAEgARAAS
+ADdVc2Vycy9jbWFycmluL1Byb2plY3RzL3N2bi92aWRlb21vbmtleS90cnVuay9zYW1wbGUubW92AAAT
+AAEvAAAVAAIADv//AAAAAAhkc3RibAAAAKdzdHNkAAAAAAAAAAEAAACXYXZjMQAAAAAAAAABAAEAAWFw
+cGwAAAIAAAACAAJwAWAASAAAAEgAAAAAAAAAAQVILjI2NAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+ABj//wAAABJjb2xybmNsYwAGAAEABgAAACthdmNDAU1AH//hABQnTUAfqRgThbYA1BgEGtsK173wEAEA
+BCjeCcgAAAAAAAAAUHN0dHMAAAAAAAAACAAAAAEAAAAMAAAADwAAABkAAAABAAAAGgAAACcAAAAZAAAA
+AQAAABoAAAAnAAAAGQAAAAEAAAAaAAAAEAAAABkAAAOAY3R0cwAAAAAAAABuAAAAAQAAAAAAAAABAAAA
+GQAAAAH////nAAAAAQAAABkAAAAB////5wAAAAEAAAAZAAAAAf///+cAAAABAAAAGQAAAAH////nAAAA
+AQAAABkAAAAB////5wAAAAEAAAAZAAAAAf///+cAAAABAAAAGQAAAAH////nAAAAAQAAABkAAAAB////
+5wAAAAEAAAAZAAAAAf///+cAAAABAAAAGQAAAAH////nAAAAAQAAABkAAAAB////5wAAAAEAAAAZAAAA
+Af///+cAAAABAAAAGQAAAAH////nAAAAAQAAABkAAAAB////5wAAAAEAAAAZAAAAAf///+cAAAABAAAA
+GQAAAAH////nAAAAAgAAAAAAAAABAAAAGQAAAAH////nAAAAAQAAABkAAAAB////5wAAAAEAAAAZAAAA
+Af///+cAAAABAAAAGQAAAAH////nAAAAAQAAABkAAAAB////5wAAAAEAAAAZAAAAAf///+cAAAABAAAA
+GQAAAAH////nAAAAAQAAABkAAAAB////5wAAAAEAAAAZAAAAAf///+cAAAABAAAAGQAAAAH////nAAAA
+AQAAABkAAAAB////5wAAAAEAAAAZAAAAAf///+cAAAABAAAAGQAAAAH////nAAAAAQAAABkAAAAB////
+5wAAAAEAAAAZAAAAAf///+cAAAABAAAAGQAAAAH////nAAAAAQAAABkAAAAB////5wAAAAIAAAAAAAAA
+AQAAABkAAAAB////5wAAAAEAAAAZAAAAAf///+cAAAABAAAAGQAAAAH////nAAAAAQAAABkAAAAB////
+5wAAAAEAAAAZAAAAAf///+cAAAABAAAAGQAAAAH////nAAAAAQAAABkAAAAB////5wAAAAEAAAAZAAAA
+Af///+cAAAABAAAAGQAAAAH////nAAAAAQAAABkAAAAB////5wAAAAEAAAAZAAAAAf///+cAAAACAAAA
+AAAAAAEAAAAZAAAAAf///+cAAAABAAAAGQAAAAH////nAAAAAQAAABkAAAAB////5wAAAAEAAAAZAAAA
+Af///+cAAAABAAAAGQAAAAH////nAAAAAQAAABkAAAAB////5wAAAAEAAAAZAAAAAf///+cAAAABAAAA
+GQAAAAH////nAAAAAQAAABkAAAAB////5wAAACBjc2xnAAAAAAAAABn////nAAAAGQAAAAAAAAr/AAAA
+IHN0c3MAAAAAAAAABAAAAAEAAAAjAAAARwAAAF8AAAB9c2R0cAAAAAAAQAhACEAIQAhACEAIQAhACEAI
+QAhACEAIQAhACEAIQAgIAEAIQAhACEAIQAhACEAIQAhACEAIQAhACEAIQAhACEAIQAgIAEAIQAhACEAI
+QAhACEAIQAhACEAIQAgIAEAIQAhACEAIQAhACEAIQAhACAAAAPRzdHNjAAAAAAAAABMAAAABAAAACAAA
+AAEAAAACAAAABQAAAAEAAAADAAAABwAAAAEAAAAEAAAABQAAAAEAAAAFAAAABwAAAAEAAAAGAAAABQAA
+AAEAAAAHAAAABwAAAAEAAAAIAAAABQAAAAEAAAAJAAAABwAAAAEAAAAKAAAABQAAAAEAAAALAAAABwAA
+AAEAAAAMAAAABQAAAAEAAAANAAAABwAAAAEAAAAOAAAABQAAAAEAAAAPAAAABwAAAAEAAAAQAAAABQAA
+AAEAAAARAAAABwAAAAEAAAASAAAABQAAAAEAAAATAAAABAAAAAEAAAHYc3RzegAAAAAAAAAAAAAAcQAA
+Ix0AAAsWAAAF1gAAD6cAAAZ9AAAPrQAAB64AAA5UAAAHSgAAEjsAAAuBAAATKAAADiEAABLUAAARBgAA
+FUQAAA2oAAAP8QAAClAAABJjAAAM4QAAE6UAAAtBAAASBQAACVEAABFLAAAJ3AAADWoAAAdSAAAQ6wAA
+CYMAABHRAAAJ0wAADusAABmsAAAX+QAADsoAABaSAAAM/QAAFmQAAA81AAAVJAAACc0AABe2AAAL0AAA
+EtMAAAkzAAATYQAAC+YAABWiAAALNgAAERgAAAoUAAASeQAACYMAABDRAAAHZAAAEk8AAAiHAAAXCgAA
+B4QAABFCAAAHmwAACeMAAAXXAAAPIgAABQIAABNyAAAFhgAADU4AAE27AAAbhQAADpAAABxDAAAPbQAA
+G/YAABB/AAAfFAAAEl0AACACAAARUwAAHvMAAA/rAAAcWgAADwYAACGzAAASLwAAF4QAAA6hAAAX9wAA
+DNAAAB9mAAAKVAAAD9sAAB55AAALXQAABJ4AABWzAAAGTQAADSYAAAeJAAAJsQAABLsAAA7SAAAETAAA
+EjIAAAdwAAAZyAAAIIsAACCdAAAEFwAAGG0AAA2oAAAAXHN0Y28AAAAAAAAAEwAEFrYABIaSAAYlaQAG
+mNMACDh4AAiUmgAKRk8ACsYeAAxlwwAMzpQADmfkAA64EQAQmz0AEUTVABI0egAS0q4AExtRABNpPgAT
+wX8AAAAMdWR0YQAAAAAAAAAMdWR0YQAAAAA</bytes>
+								</object>
+							</object>
+							<boolean value="NO" key="kCoderEditable" id="6"/>
 						</object>
 					</object>
-					<string key="NSFrameSize">{480, 380}</string>
+					<string key="NSFrameSize">{534, 577}</string>
+					<reference key="NSSuperview"/>
 				</object>
 				<string key="NSScreenRect">{{0, 0}, {1920, 1178}}</string>
 				<string key="NSMaxSize">{3.40282e+38, 3.40282e+38}</string>
@@ -19972,8 +20040,8 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilderKit</string>
 					<string>com.apple.InterfaceBuilderKit</string>
-					<string>{{37, 742}, {480, 380}}</string>
-					<string>{{37, 742}, {480, 380}}</string>
+					<string>{{37, 545}, {534, 577}}</string>
+					<string>{{37, 545}, {534, 577}}</string>
 					<reference ref="6"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
