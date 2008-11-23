@@ -17,7 +17,7 @@ void ffmpeg_destroyContext(ffmpeg_Context);
 int ffmpeg_addInputFile(ffmpeg_Context, const char*);
 int ffmpeg_addOutputFile(ffmpeg_Context, const char*);
 
-int ffmpeg_setParam(ffmpeg_Context, const char* name, const char* value);
+void ffmpeg_setParam(ffmpeg_Context, const char* name, const char* value);
 
 void ffmpeg_startEncode(ffmpeg_Context);
 void ffmpeg_pauseEncode(ffmpeg_Context);
