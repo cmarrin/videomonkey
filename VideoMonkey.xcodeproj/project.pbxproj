@@ -84,7 +84,7 @@
 		4910FFFD0EC87BB3001B578B /* tinyflac.png in Resources */ = {isa = PBXBuildFile; fileRef = 4910FFC80EC87BB3001B578B /* tinyflac.png */; };
 		4910FFFE0EC87BB3001B578B /* tinyflash.png in Resources */ = {isa = PBXBuildFile; fileRef = 4910FFC90EC87BB3001B578B /* tinyflash.png */; };
 		4910FFFF0EC87BB3001B578B /* tinyiphone.png in Resources */ = {isa = PBXBuildFile; fileRef = 4910FFCA0EC87BB3001B578B /* tinyiphone.png */; };
-		499A30E40ED9A2FF000C0AAF /* cmdutils.c in Sources */ = {isa = PBXBuildFile; fileRef = 499A30E20ED9A2FF000C0AAF /* cmdutils.c */; };
+		499A31770EDD97EB000C0AAF /* Transcoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 499A31760EDD97EB000C0AAF /* Transcoder.m */; };
 		49BC89A90ECD245F00027F1D /* MoviePanelController.m in Sources */ = {isa = PBXBuildFile; fileRef = 49BC89A70ECD245F00027F1D /* MoviePanelController.m */; };
 		49BC8CAA0ED6892400027F1D /* EncodeWorking0.png in Resources */ = {isa = PBXBuildFile; fileRef = 49BC8CA10ED6892400027F1D /* EncodeWorking0.png */; };
 		49BC8CAB0ED6892400027F1D /* EncodeWorking1.png in Resources */ = {isa = PBXBuildFile; fileRef = 49BC8CA20ED6892400027F1D /* EncodeWorking1.png */; };
@@ -95,7 +95,6 @@
 		49BC8CB00ED6892400027F1D /* Pause.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 49BC8CA70ED6892400027F1D /* Pause.tiff */; };
 		49BC8CB10ED6892400027F1D /* Play.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 49BC8CA80ED6892400027F1D /* Play.tiff */; };
 		49BC8CB20ED6892400027F1D /* Stop.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 49BC8CA90ED6892400027F1D /* Stop.tiff */; };
-		49BC8D6B0ED8515A00027F1D /* avencode.c in Sources */ = {isa = PBXBuildFile; fileRef = 49BC8D5C0ED7CE4500027F1D /* avencode.c */; };
 		49FC93830ECB3CCD0058CDBB /* QTKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 49FC93820ECB3CCD0058CDBB /* QTKit.framework */; };
 		8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165CFE840E0CC02AAC07 /* InfoPlist.strings */; };
 		8D11072D0486CEB800E47090 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; settings = {ATTRIBUTES = (); }; };
@@ -189,8 +188,8 @@
 		4910FFDC0EC87BB3001B578B /* wii.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = wii.png; path = images/wii.png; sourceTree = "<group>"; };
 		4910FFDD0EC87BB3001B578B /* wma.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = wma.png; path = images/wma.png; sourceTree = "<group>"; };
 		4910FFDE0EC87BB3001B578B /* xbox360.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = xbox360.png; path = images/xbox360.png; sourceTree = "<group>"; };
-		499A30E20ED9A2FF000C0AAF /* cmdutils.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = cmdutils.c; sourceTree = "<group>"; };
-		499A30E30ED9A2FF000C0AAF /* cmdutils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = cmdutils.h; sourceTree = "<group>"; };
+		499A31750EDD97EB000C0AAF /* Transcoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Transcoder.h; path = classes/Transcoder.h; sourceTree = "<group>"; };
+		499A31760EDD97EB000C0AAF /* Transcoder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Transcoder.m; path = classes/Transcoder.m; sourceTree = "<group>"; };
 		49BC89A70ECD245F00027F1D /* MoviePanelController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MoviePanelController.m; path = classes/MoviePanelController.m; sourceTree = "<group>"; };
 		49BC89A80ECD245F00027F1D /* MoviePanelController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MoviePanelController.h; path = classes/MoviePanelController.h; sourceTree = "<group>"; };
 		49BC8CA10ED6892400027F1D /* EncodeWorking0.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = EncodeWorking0.png; path = icons/EncodeWorking0.png; sourceTree = "<group>"; };
@@ -202,8 +201,6 @@
 		49BC8CA70ED6892400027F1D /* Pause.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = Pause.tiff; path = icons/Pause.tiff; sourceTree = "<group>"; };
 		49BC8CA80ED6892400027F1D /* Play.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = Play.tiff; path = icons/Play.tiff; sourceTree = "<group>"; };
 		49BC8CA90ED6892400027F1D /* Stop.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = Stop.tiff; path = icons/Stop.tiff; sourceTree = "<group>"; };
-		49BC8D5C0ED7CE4500027F1D /* avencode.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = avencode.c; sourceTree = "<group>"; };
-		49BC8D5D0ED7CE4500027F1D /* avencode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = avencode.h; sourceTree = "<group>"; };
 		49FC93820ECB3CCD0058CDBB /* QTKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QTKit.framework; path = /System/Library/Frameworks/QTKit.framework; sourceTree = "<absolute>"; };
 		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8D1107320486CEB800E47090 /* VideoMonkey.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VideoMonkey.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -231,6 +228,8 @@
 				491001D60ECBEEBC001B578B /* AppController.m */,
 				49BC89A70ECD245F00027F1D /* MoviePanelController.m */,
 				49BC89A80ECD245F00027F1D /* MoviePanelController.h */,
+				499A31750EDD97EB000C0AAF /* Transcoder.h */,
+				499A31760EDD97EB000C0AAF /* Transcoder.m */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -277,12 +276,8 @@
 		29B97315FDCFA39411CA2CEA /* Other Sources */ = {
 			isa = PBXGroup;
 			children = (
-				499A30E20ED9A2FF000C0AAF /* cmdutils.c */,
-				499A30E30ED9A2FF000C0AAF /* cmdutils.h */,
 				32CA4F630368D1EE00C91783 /* VideoMonkey_Prefix.pch */,
 				29B97316FDCFA39411CA2CEA /* main.m */,
-				49BC8D5C0ED7CE4500027F1D /* avencode.c */,
-				49BC8D5D0ED7CE4500027F1D /* avencode.h */,
 			);
 			name = "Other Sources";
 			sourceTree = "<group>";
@@ -547,8 +542,7 @@
 				491000680EC8AA16001B578B /* ConversionParams.m in Sources */,
 				491001D70ECBEEBC001B578B /* AppController.m in Sources */,
 				49BC89A90ECD245F00027F1D /* MoviePanelController.m in Sources */,
-				49BC8D6B0ED8515A00027F1D /* avencode.c in Sources */,
-				499A30E40ED9A2FF000C0AAF /* cmdutils.c in Sources */,
+				499A31770EDD97EB000C0AAF /* Transcoder.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

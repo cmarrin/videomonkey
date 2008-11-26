@@ -21,7 +21,6 @@ void ffmpeg_setParam(ffmpeg_Context, const char* name, const char* value);
 
 void ffmpeg_startEncode(ffmpeg_Context);
 void ffmpeg_pauseEncode(ffmpeg_Context);
-void ffmpeg_cancelEncode(ffmpeg_Context);
 
 float ffmpeg_getProgress(ffmpeg_Context);
 float ffmpeg_getFloatParam(ffmpeg_Context, const char* name);
