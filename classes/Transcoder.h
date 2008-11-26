@@ -11,31 +11,38 @@
 
 #import <unistd.h>
 
+@class AppController;
+
 @interface OutputFile : NSObject {
   @private
-    float bitrate;
-    NSString* filename;
+    float m_bitrate;
+    NSString* m_filename;
 }
+
+-(void) setFilename: (NSString*) filename;
+-(NSString*) filename;
+-(void) setBitrate: (float) bitrate;
+-(float) bitrate: (float) bitrate;
 
 @end
 
 @interface Transcoder : NSObject {
   @private
     pid_t m_process;
-    NSMutableArray/*<NSString>*/* m_inputFiles;
-    NSMutableArray/*<OutputFile>*/* m_outputFiles;
+    NSMutableArray* m_inputFiles;
+    NSMutableArray* m_outputFiles;
+    float m_bitrate;
+    AppController* m_appController;
 }
 
-- (BOOL) addInputFile: (NSString*) filename;
-- (BOOL) addOutputFile: (NSString*) filename;
-- (void) setBitRate: (float) rate;
-- (BOOL) startEncode;
-- (BOOL) pauseEncode;
+-(Transcoder*) initWithController: (AppController*) controller;
+-(void) setAppController: (AppController*) appController;
 
-/*
-float ffmpeg_getProgress(ffmpeg_Context);
-float ffmpeg_getFloatParam(ffmpeg_Context, const char* name);
-const char* ffmpeg_getStringParam(ffmpeg_Context, const char* name);
-*/
+-(int) addInputFile: (NSString*) filename;
+-(int) addOutputFile: (NSString*) filename;
+-(void) setBitrate: (float) rate;
+-(float) bitrate;
+-(BOOL) startEncode;
+-(BOOL) pauseEncode;
 
 @end

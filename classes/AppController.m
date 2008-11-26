@@ -7,6 +7,7 @@
 //
 
 #import "AppController.h"
+#import "Transcoder.h"
 
 #define FileListItemType @"FileListItemType"
 
@@ -33,6 +34,15 @@
 {
 	// Register to accept filename drag/drop
 	[m_fileListView registerForDraggedTypes:[NSArray arrayWithObjects:NSFilenamesPboardType, FileListItemType, nil]];
+    
+    NSXMLDocument* doc = [[NSXMLDocument alloc] initWithXMLString: @"<foo bar='abc'><baz def='xyz'/></foo>" options: 0 error: nil];
+    NSXMLElement* elt = [doc rootElement];
+    NSXMLNode* node = [elt attributeForName: @"bar"];
+    NSLog(@"*** root=%@\n", [node stringValue]);
+    
+    // Testing
+    Transcoder* transcoder = [[Transcoder alloc] initWithController:self];
+    [transcoder startEncode];
 }
 
 // dataSource methods

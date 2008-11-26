@@ -84,6 +84,7 @@
 		4910FFFD0EC87BB3001B578B /* tinyflac.png in Resources */ = {isa = PBXBuildFile; fileRef = 4910FFC80EC87BB3001B578B /* tinyflac.png */; };
 		4910FFFE0EC87BB3001B578B /* tinyflash.png in Resources */ = {isa = PBXBuildFile; fileRef = 4910FFC90EC87BB3001B578B /* tinyflash.png */; };
 		4910FFFF0EC87BB3001B578B /* tinyiphone.png in Resources */ = {isa = PBXBuildFile; fileRef = 4910FFCA0EC87BB3001B578B /* tinyiphone.png */; };
+		49557AB00EDDDAE400C851C0 /* ffmpeg in Resources */ = {isa = PBXBuildFile; fileRef = 49557AAF0EDDDAE400C851C0 /* ffmpeg */; };
 		499A31770EDD97EB000C0AAF /* Transcoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 499A31760EDD97EB000C0AAF /* Transcoder.m */; };
 		49BC89A90ECD245F00027F1D /* MoviePanelController.m in Sources */ = {isa = PBXBuildFile; fileRef = 49BC89A70ECD245F00027F1D /* MoviePanelController.m */; };
 		49BC8CAA0ED6892400027F1D /* EncodeWorking0.png in Resources */ = {isa = PBXBuildFile; fileRef = 49BC8CA10ED6892400027F1D /* EncodeWorking0.png */; };
@@ -188,6 +189,7 @@
 		4910FFDC0EC87BB3001B578B /* wii.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = wii.png; path = images/wii.png; sourceTree = "<group>"; };
 		4910FFDD0EC87BB3001B578B /* wma.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = wma.png; path = images/wma.png; sourceTree = "<group>"; };
 		4910FFDE0EC87BB3001B578B /* xbox360.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = xbox360.png; path = images/xbox360.png; sourceTree = "<group>"; };
+		49557AAF0EDDDAE400C851C0 /* ffmpeg */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; name = ffmpeg; path = bin/ffmpeg; sourceTree = "<group>"; };
 		499A31750EDD97EB000C0AAF /* Transcoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Transcoder.h; path = classes/Transcoder.h; sourceTree = "<group>"; };
 		499A31760EDD97EB000C0AAF /* Transcoder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Transcoder.m; path = classes/Transcoder.m; sourceTree = "<group>"; };
 		49BC89A70ECD245F00027F1D /* MoviePanelController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MoviePanelController.m; path = classes/MoviePanelController.m; sourceTree = "<group>"; };
@@ -285,6 +287,7 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				49557AAE0EDDDAD100C851C0 /* Executables */,
 				4910FEF90EC7C1C1001B578B /* Icons */,
 				4910FE7F0EC7B304001B578B /* Images */,
 				8D1107310486CEB800E47090 /* Info.plist */,
@@ -398,6 +401,14 @@
 				4910FF110EC7C1D8001B578B /* sofar9.png */,
 			);
 			name = Icons;
+			sourceTree = "<group>";
+		};
+		49557AAE0EDDDAD100C851C0 /* Executables */ = {
+			isa = PBXGroup;
+			children = (
+				49557AAF0EDDDAE400C851C0 /* ffmpeg */,
+			);
+			name = Executables;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -528,6 +539,7 @@
 				49BC8CB00ED6892400027F1D /* Pause.tiff in Resources */,
 				49BC8CB10ED6892400027F1D /* Play.tiff in Resources */,
 				49BC8CB20ED6892400027F1D /* Stop.tiff in Resources */,
+				49557AB00EDDDAE400C851C0 /* ffmpeg in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -607,30 +619,10 @@
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				HEADER_SEARCH_PATHS = (
-					.,
-					./ffmpeg,
-				);
-				LIBRARY_SEARCH_PATHS = (
-					./ffmpeg/libswscale,
-					./ffmpeg/libpostproc,
-					./ffmpeg/libavutil,
-					./ffmpeg/libavformat,
-					./ffmpeg/libavfilter,
-					./ffmpeg/libavdevice,
-					./ffmpeg/libavcodec,
-				);
+				HEADER_SEARCH_PATHS = "";
+				LIBRARY_SEARCH_PATHS = "";
 				ONLY_ACTIVE_ARCH = YES;
-				OTHER_LDFLAGS = (
-					"-lswscale",
-					"-lpostproc",
-					"-lavutil",
-					"-lavformat",
-					"-lavfilter",
-					"-lavdevice",
-					"-lavcodec",
-					"-lz",
-				);
+				OTHER_LDFLAGS = "";
 				PREBINDING = NO;
 				SDKROOT = macosx10.5;
 			};
