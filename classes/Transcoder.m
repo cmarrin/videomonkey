@@ -85,7 +85,7 @@
     [inputArg appendString: [m_inputFiles objectAtIndex:0]];
     
     NSTask* task = [[NSTask alloc] init];
-    NSMutableArray* args = [NSMutableArray arrayWithObjects: inputArg, @"/tmp/foo.mov", nil];
+    NSMutableArray* args = [NSMutableArray arrayWithObjects: @"-y", @"-i", [m_inputFiles objectAtIndex:0], @"-sameq", @"/tmp/foo.mov", nil];
     [task setArguments: args];
     [task setLaunchPath: ffmpegPath];
     
