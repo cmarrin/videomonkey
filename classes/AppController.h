@@ -16,4 +16,8 @@
     int m_draggedRow;
 }
 
+- (IBAction)startConvert:(id)sender;
+- (IBAction)pauseConvert:(id)sender;
+- (IBAction)stopConvert:(id)sender;
+
 @end

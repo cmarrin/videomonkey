@@ -16,10 +16,7 @@
 - (id)init
 {
     if (self = [super init])
-    {
         m_files = [[NSMutableArray alloc] init];
-        [m_files addObject:@"This is a String"];
-    }
     
     return self;
 }
@@ -39,10 +36,6 @@
     NSXMLElement* elt = [doc rootElement];
     NSXMLNode* node = [elt attributeForName: @"bar"];
     NSLog(@"*** root=%@\n", [node stringValue]);
-    
-    // Testing
-    Transcoder* transcoder = [[Transcoder alloc] initWithController:self];
-    [transcoder startEncode];
 }
 
 // dataSource methods
@@ -145,6 +138,23 @@
     }
     
     return YES;
+}
+
+- (IBAction)startConvert:(id)sender
+{
+    Transcoder* transcoder = [[Transcoder alloc] initWithController:self];
+    [transcoder addInputFile: [m_files objectAtIndex:0]];
+    [transcoder startEncode];
+}
+
+- (IBAction)pauseConvert:(id)sender
+{
+    printf("*** pause\n");
+}
+
+- (IBAction)stopConvert:(id)sender
+{
+    printf("*** stop\n");
 }
 
 @end

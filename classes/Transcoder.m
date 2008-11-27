@@ -41,6 +41,8 @@
 {
     self = [super init];
     [self setAppController: controller];
+    m_inputFiles = [[NSMutableArray alloc] init];
+    m_outputFiles = [[NSMutableArray alloc] init];
     return self;
 }
     
@@ -79,8 +81,11 @@
     NSMutableString* ffmpegPath = [NSMutableString stringWithString: [[NSBundle mainBundle] resourcePath]];
     [ffmpegPath appendString:@"/ffmpeg"];
     
+    NSMutableString* inputArg = [NSMutableString stringWithString: @"-i "];
+    [inputArg appendString: [m_inputFiles objectAtIndex:0]];
+    
     NSTask* task = [[NSTask alloc] init];
-    NSMutableArray* args = [NSMutableArray arrayWithObjects:nil, nil];
+    NSMutableArray* args = [NSMutableArray arrayWithObjects: inputArg, @"/tmp/foo.mov", nil];
     [task setArguments: args];
     [task setLaunchPath: ffmpegPath];
     
