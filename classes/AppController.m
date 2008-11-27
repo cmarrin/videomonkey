@@ -44,6 +44,22 @@
     return [m_files count];
 }
 
+static NSString* formatLength(double length)
+{
+    int ms = (int) round(fmod(length, 1) * 1000);
+    int hrs = (int) length;
+    int sec = hrs % 60;
+    hrs /= 60;
+    int min = hrs % 60;
+    hrs /= 60;
+    if (hrs == 0 && min == 0)
+        return [NSString stringWithFormat:@"%.2fs", ((double) sec + ((double) ms / 1000.0))];
+    else if (hrs == 0)
+        return [NSString stringWithFormat:@"%dm %ds", min, sec];
+    else
+        return [NSString stringWithFormat:@"%dh %dm", hrs, min];
+}
+
 - (id)tableView: (NSTableView *)aTableView
     objectValueForTableColumn: (NSTableColumn *)aTableColumn
     row: (int)rowIndex
@@ -51,9 +67,9 @@
     if ([[aTableColumn identifier] isEqualToString: @"image"])
         return nil;
     if ([[aTableColumn identifier] isEqualToString: @"filename"])
-        return [m_files objectAtIndex: rowIndex];
+        return [[m_files objectAtIndex: rowIndex] inputFilename];
     if ([[aTableColumn identifier] isEqualToString: @"length"])
-        return [NSNumber numberWithFloat: 27.3];
+        return formatLength([[m_files objectAtIndex: rowIndex] playTime]);
     return nil;
 }
 
@@ -78,7 +94,7 @@
     [pboard declareTypes: [NSArray arrayWithObjects: NSFilenamesPboardType, FileListItemType, nil] owner: self];
     
     // put the string value into the paste board
-    [pboard setString: [m_files objectAtIndex: m_draggedRow] forType: FileListItemType];
+    [pboard setString: [[m_files objectAtIndex: m_draggedRow] filename] forType: FileListItemType];
     
     return YES;
 }
@@ -112,14 +128,17 @@
         if (aString) {
             // handle move of an item in the table
             // remove the index that got dragged, now that we are accepting the dragging
+            id obj = [m_files objectAtIndex: m_draggedRow];
+            [obj retain];
             [m_files removeObjectAtIndex: m_draggedRow];
             
             // insert the new string (same one that got dragger) into the array
             if (row > [m_files count])
-                [m_files addObject: aString];
+                [m_files addObject: obj];
             else
-                [m_files insertObject: aString atIndex: (row > m_draggedRow) ? (row-1) : row];
+                [m_files insertObject: obj atIndex: (row > m_draggedRow) ? (row-1) : row];
         
+            [obj release];
             [m_fileListView reloadData];
         }
         else {
@@ -127,10 +146,13 @@
             NSArray *filenames = [pboard propertyListForType:NSFilenamesPboardType];
             if (filenames) {
                 for (int i= 0; i < [filenames count]; i++) {
+                    Transcoder* transcoder = [[Transcoder alloc] initWithController:self];
+                    [transcoder addInputFile: [filenames objectAtIndex:i]];
+                    
                     if (row < 0)
-                        [m_files addObject:[filenames objectAtIndex:i]];
+                        [m_files addObject:transcoder];
                     else
-                        [m_files insertObject: [filenames objectAtIndex:i] atIndex: row];
+                        [m_files insertObject: transcoder atIndex: row];
                 }
                 [m_fileListView reloadData];
             }
@@ -142,9 +164,8 @@
 
 - (IBAction)startConvert:(id)sender
 {
-    Transcoder* transcoder = [[Transcoder alloc] initWithController:self];
-    [transcoder addInputFile: [m_files objectAtIndex:0]];
-    [transcoder startEncode];
+    if ([m_files count] > 0)
+        [[m_files objectAtIndex: 0] startEncode];
 }
 
 - (IBAction)pauseConvert:(id)sender

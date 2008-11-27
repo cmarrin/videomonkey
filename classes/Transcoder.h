@@ -13,16 +13,61 @@
 
 @class AppController;
 
-@interface OutputFile : NSObject {
-  @private
-    float m_bitrate;
+typedef enum FormatType {
+    F_MPEG4,
+    F_WM,
+    F_NONE
+} FormatType;
+
+typedef enum VideoCodecType {
+    VC_H264,
+    VC_NONE
+} VideoCodecType;
+
+typedef enum AudioCodecType {
+    AC_PCM,
+    AC_NONE
+} AudioCodecType;
+
+@interface TranscoderFileInfo : NSObject {
+  @public
+    // General
+    FormatType m_format;
+    double m_playTime;
+    double m_bitrate;
+    
+    // Video
+    int m_videaStreamKind;
+    int m_videoTrack;
+    NSString* m_videoLanguage;
+    VideoCodecType m_videoCodec;
+    NSString* m_videoProfile;
+    BOOL m_videoInterlaced;
+    int m_width;
+    int m_height;
+    double m_pixelAspectRatio;
+    double m_screenAspectRatio;
+    double m_frameRate;
+    
+    // Audio
+    int m_audioStreamKind;
+    int m_audioTrack;
+    NSString* m_audioLanguage;
+    AudioCodecType m_audioCodec;
+    double m_audioSamplingRate;
+    int m_channels;
+    int m_audioBitrate;
+
     NSString* m_filename;
 }
 
+-(void) setFormat: (NSString*) format;
+-(void) setVideoLanguage: (NSString*) lang;
+-(void) setVideoCodec: (NSString*) codec;
+-(void) setVideoProfile: (NSString*) profile;
+-(void) setAudioLanguage: (NSString*) lang;
+-(void) setAudioCodec: (NSString*) codec;
 -(void) setFilename: (NSString*) filename;
--(NSString*) filename;
--(void) setBitrate: (float) bitrate;
--(float) bitrate: (float) bitrate;
 
 @end
 
@@ -41,7 +86,9 @@
 -(int) addInputFile: (NSString*) filename;
 -(int) addOutputFile: (NSString*) filename;
 -(void) setBitrate: (float) rate;
--(float) bitrate;
+-(double) bitrate;
+-(double) playTime;
+-(NSString*) inputFilename;
 -(BOOL) startEncode;
 -(BOOL) pauseEncode;
 

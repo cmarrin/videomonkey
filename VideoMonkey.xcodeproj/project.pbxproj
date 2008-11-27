@@ -87,6 +87,9 @@
 		494917A90EDE07AF0083743F /* VideoMonkey.icns in Resources */ = {isa = PBXBuildFile; fileRef = 494917A80EDE07AF0083743F /* VideoMonkey.icns */; };
 		49557AB00EDDDAE400C851C0 /* ffmpeg in Resources */ = {isa = PBXBuildFile; fileRef = 49557AAF0EDDDAE400C851C0 /* ffmpeg */; };
 		499A31770EDD97EB000C0AAF /* Transcoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 499A31760EDD97EB000C0AAF /* Transcoder.m */; };
+		499A31D10EDEE3D3000C0AAF /* mediainfo in Resources */ = {isa = PBXBuildFile; fileRef = 499A31D00EDEE3D3000C0AAF /* mediainfo */; };
+		499A31D30EDEE3E4000C0AAF /* mediainfo-inform.csv in Resources */ = {isa = PBXBuildFile; fileRef = 499A31D20EDEE3E4000C0AAF /* mediainfo-inform.csv */; };
+		499A31D50EDEE41B000C0AAF /* AtomicParsley in Resources */ = {isa = PBXBuildFile; fileRef = 499A31D40EDEE41B000C0AAF /* AtomicParsley */; };
 		49BC89A90ECD245F00027F1D /* MoviePanelController.m in Sources */ = {isa = PBXBuildFile; fileRef = 49BC89A70ECD245F00027F1D /* MoviePanelController.m */; };
 		49BC8CAA0ED6892400027F1D /* EncodeWorking0.png in Resources */ = {isa = PBXBuildFile; fileRef = 49BC8CA10ED6892400027F1D /* EncodeWorking0.png */; };
 		49BC8CAB0ED6892400027F1D /* EncodeWorking1.png in Resources */ = {isa = PBXBuildFile; fileRef = 49BC8CA20ED6892400027F1D /* EncodeWorking1.png */; };
@@ -194,6 +197,9 @@
 		49557AAF0EDDDAE400C851C0 /* ffmpeg */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; name = ffmpeg; path = bin/ffmpeg; sourceTree = "<group>"; };
 		499A31750EDD97EB000C0AAF /* Transcoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Transcoder.h; path = classes/Transcoder.h; sourceTree = "<group>"; };
 		499A31760EDD97EB000C0AAF /* Transcoder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Transcoder.m; path = classes/Transcoder.m; sourceTree = "<group>"; };
+		499A31D00EDEE3D3000C0AAF /* mediainfo */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; name = mediainfo; path = bin/mediainfo; sourceTree = "<group>"; };
+		499A31D20EDEE3E4000C0AAF /* mediainfo-inform.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "mediainfo-inform.csv"; sourceTree = "<group>"; };
+		499A31D40EDEE41B000C0AAF /* AtomicParsley */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; name = AtomicParsley; path = bin/AtomicParsley; sourceTree = "<group>"; };
 		49BC89A70ECD245F00027F1D /* MoviePanelController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MoviePanelController.m; path = classes/MoviePanelController.m; sourceTree = "<group>"; };
 		49BC89A80ECD245F00027F1D /* MoviePanelController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MoviePanelController.h; path = classes/MoviePanelController.h; sourceTree = "<group>"; };
 		49BC8CA10ED6892400027F1D /* EncodeWorking0.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = EncodeWorking0.png; path = icons/EncodeWorking0.png; sourceTree = "<group>"; };
@@ -289,6 +295,7 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				499A31D20EDEE3E4000C0AAF /* mediainfo-inform.csv */,
 				49557AAE0EDDDAD100C851C0 /* Executables */,
 				4910FEF90EC7C1C1001B578B /* Icons */,
 				4910FE7F0EC7B304001B578B /* Images */,
@@ -409,6 +416,8 @@
 		49557AAE0EDDDAD100C851C0 /* Executables */ = {
 			isa = PBXGroup;
 			children = (
+				499A31D40EDEE41B000C0AAF /* AtomicParsley */,
+				499A31D00EDEE3D3000C0AAF /* mediainfo */,
 				49557AAF0EDDDAE400C851C0 /* ffmpeg */,
 			);
 			name = Executables;
@@ -544,6 +553,9 @@
 				49BC8CB20ED6892400027F1D /* Stop.tiff in Resources */,
 				49557AB00EDDDAE400C851C0 /* ffmpeg in Resources */,
 				494917A90EDE07AF0083743F /* VideoMonkey.icns in Resources */,
+				499A31D10EDEE3D3000C0AAF /* mediainfo in Resources */,
+				499A31D30EDEE3E4000C0AAF /* mediainfo-inform.csv in Resources */,
+				499A31D50EDEE41B000C0AAF /* AtomicParsley in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
