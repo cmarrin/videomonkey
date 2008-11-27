@@ -94,7 +94,7 @@ static NSString* formatLength(double length)
     [pboard declareTypes: [NSArray arrayWithObjects: NSFilenamesPboardType, FileListItemType, nil] owner: self];
     
     // put the string value into the paste board
-    [pboard setString: [[m_files objectAtIndex: m_draggedRow] filename] forType: FileListItemType];
+    [pboard setString: [[m_files objectAtIndex: m_draggedRow] inputFilename] forType: FileListItemType];
     
     return YES;
 }
