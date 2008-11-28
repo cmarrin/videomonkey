@@ -1,13 +1,22 @@
 Building ffmpeg
 ---------------
 
-Video Monkey uses the ffmpeg command line tool. It is included as a resource in the videomonkey app. Here is how to build it statically, so it doesn't require any extra dylibs installed. When built this way, it still relys on the following dylibs, but they should be part of the OSX install (at least they are part of Leopard 10.5.4). Here is the output from otool -L:
+Video Monkey uses the ffmpeg command line tool. It is included as a resource in the videomonkey app.
+So you don't need these instructions unless you want to change that executable for some reason.
+
+Here is how to build ffmpeg statically, so it doesn't require any extra dylibs installed. When built this 
+way, it still relys on the following dylibs, but they should be part of the OSX install (at least 
+they are part of Leopard 10.5.4). Here is the output from otool -L:
 
 	/usr/lib/libz.1.dylib (compatibility version 1.0.0, current version 1.2.3)
 	/usr/lib/libbz2.1.0.dylib (compatibility version 1.0.0, current version 1.0.4)
 	/usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 111.1.1)
 	/usr/lib/libgcc_s.1.dylib (compatibility version 1.0.0, current version 1.0.0)
 
+The ffmpeg code is included as source because I've created a custom version which outputs progress
+in a way that is easier to use with VideoMonkey. There's a script to build ffmpeg itself, but this does
+not include the download and building of all the required support libraries. So, to build ffmpeg you
+first download and build all those and then run the script. Details follow.
 
 Support libs
 ------------
@@ -32,7 +41,9 @@ in addition to the next 3 steps. For the rest, just run these three steps:
     make
     sudo make install
 
-Make sure to build libogg and libvorbis before libtheora. It depends on them. The --disable-shared flag is important to prevent ffmpeg from linking with the dynamic libraries. libx264 doesn't need this flag, it builds statically by default. But it doesn't hurt to include it.
+Make sure to build libogg and libvorbis before libtheora. It depends on them. The --disable-shared flag is 
+important to prevent ffmpeg from linking with the dynamic libraries. libx264 doesn't need this flag, it 
+builds statically by default. But it doesn't hurt to include it.
 
 
 XVid
@@ -59,9 +70,11 @@ and replace the file with the same name in the current directory. Then build wit
 FFMpeg
 ------
 
-Once you have everything built, you can build ffmpeg by going into its directory and doing the following:
+Once you have everything built, you can build ffmpeg by running the script:
 
-    ./configure --enable-gpl --disable-ffplay --disable-ffserver --enable-libfaac --enable-libfaad --enable-libmp3lame --enable-libvorbis --enable-libtheora --enable-libx264 --enable-libxvid
-    make
+    cd <videomonkey directory>
+    ./build_ffmpeg.sh
 
-No need to do a 'sudo make install' unless you also want to be able to run ffmpeg from the Terminal. You should now have a statically linked executable called ffmpeg in the ffmpeg directory.
+This should leave you with a copy of ffmpeg in the newly created ffmpeg/ subdir. This should be identical to
+the one in the bin directory, unless you've changed it.
+
