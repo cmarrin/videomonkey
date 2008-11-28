@@ -17,6 +17,8 @@
         m_format = F_MPEG4;
     else if ([format isEqualToString: @"Windows Media"])
         m_format = F_WM;
+    else if ([format isEqualToString: @"Wave"])
+        m_format = F_WAV;
     else
         m_format = F_NONE;
 }
@@ -175,6 +177,21 @@
     if ([m_inputFiles count] > 0)
         return ((TranscoderFileInfo*) [m_inputFiles objectAtIndex: 0])->m_filename;
     return nil;
+}
+
+-(int) outputFileSize
+{
+    // The m_bitrate property holds the desired bitrate. If it is 0, the user wants the
+    // output bitrate to match the input bitrate.
+    double playTime = [self playTime];
+    double bitrate = 0;
+    
+    if (m_bitrate > 0)
+        bitrate = m_bitrate;
+    else if ([m_inputFiles count] > 0)
+        bitrate = ((TranscoderFileInfo*) [m_inputFiles objectAtIndex: 0])->m_bitrate;
+        
+    return (int) (playTime * bitrate / 8);
 }
 
 - (BOOL) startEncode

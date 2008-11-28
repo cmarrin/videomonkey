@@ -16,6 +16,7 @@
 typedef enum FormatType {
     F_MPEG4,
     F_WM,
+    F_WAV,
     F_NONE
 } FormatType;
 
@@ -89,6 +90,8 @@ typedef enum AudioCodecType {
 -(double) bitrate;
 -(double) playTime;
 -(NSString*) inputFilename;
+-(int) outputFileSize;
+
 -(BOOL) startEncode;
 -(BOOL) pauseEncode;
 

@@ -44,10 +44,10 @@
     return [m_files count];
 }
 
-static NSString* formatLength(double length)
+static NSString* formatDuration(double duration)
 {
-    int ms = (int) round(fmod(length, 1) * 1000);
-    int hrs = (int) length;
+    int ms = (int) round(fmod(duration, 1) * 1000);
+    int hrs = (int) duration;
     int sec = hrs % 60;
     hrs /= 60;
     int min = hrs % 60;
@@ -60,6 +60,18 @@ static NSString* formatLength(double length)
         return [NSString stringWithFormat:@"%dh %dm", hrs, min];
 }
 
+static NSString* formatFileSize(int size)
+{
+    if (size < 10000)
+        return [NSString stringWithFormat:@"%dB", size];
+    else if (size < 1000000)
+        return [NSString stringWithFormat:@"%.1fKB", (double) size/1000.0];
+    else if (size < 1000000000)
+        return [NSString stringWithFormat:@"%.1fMB", (double) size/1000000.0];
+    else
+        return [NSString stringWithFormat:@"%.1fGB", (double) size/1000000000.0];
+}
+
 - (id)tableView: (NSTableView *)aTableView
     objectValueForTableColumn: (NSTableColumn *)aTableColumn
     row: (int)rowIndex
@@ -68,8 +80,10 @@ static NSString* formatLength(double length)
         return nil;
     if ([[aTableColumn identifier] isEqualToString: @"filename"])
         return [[m_files objectAtIndex: rowIndex] inputFilename];
-    if ([[aTableColumn identifier] isEqualToString: @"length"])
-        return formatLength([[m_files objectAtIndex: rowIndex] playTime]);
+    if ([[aTableColumn identifier] isEqualToString: @"filesize"])
+        return formatFileSize([[m_files objectAtIndex: rowIndex] outputFileSize]);
+    if ([[aTableColumn identifier] isEqualToString: @"duration"])
+        return formatDuration([[m_files objectAtIndex: rowIndex] playTime]);
     return nil;
 }
 
