@@ -192,4 +192,14 @@ static NSString* formatFileSize(int size)
     printf("*** stop\n");
 }
 
+-(void) setProgressFor: (Transcoder*) transcoder to: (double) progress
+{
+    [m_totalProgressBar setDoubleValue: progress];
+}
+
+-(void) encodeFinished: (Transcoder*) transcoder
+{
+    [m_totalProgressBar setDoubleValue: 0];
+}
+
 @end

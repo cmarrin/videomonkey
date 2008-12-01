@@ -13,27 +13,10 @@
 
 @class AppController;
 
-typedef enum FormatType {
-    F_MPEG4,
-    F_WM,
-    F_WAV,
-    F_NONE
-} FormatType;
-
-typedef enum VideoCodecType {
-    VC_H264,
-    VC_NONE
-} VideoCodecType;
-
-typedef enum AudioCodecType {
-    AC_PCM,
-    AC_NONE
-} AudioCodecType;
-
 @interface TranscoderFileInfo : NSObject {
   @public
     // General
-    FormatType m_format;
+    NSString* m_format;
     double m_playTime;
     double m_bitrate;
     
@@ -41,7 +24,7 @@ typedef enum AudioCodecType {
     int m_videaStreamKind;
     int m_videoTrack;
     NSString* m_videoLanguage;
-    VideoCodecType m_videoCodec;
+    NSString* m_videoCodec;
     NSString* m_videoProfile;
     BOOL m_videoInterlaced;
     int m_width;
@@ -54,7 +37,7 @@ typedef enum AudioCodecType {
     int m_audioStreamKind;
     int m_audioTrack;
     NSString* m_audioLanguage;
-    AudioCodecType m_audioCodec;
+    NSString* m_audioCodec;
     double m_audioSamplingRate;
     int m_channels;
     int m_audioBitrate;
@@ -77,8 +60,13 @@ typedef enum AudioCodecType {
     pid_t m_process;
     NSMutableArray* m_inputFiles;
     NSMutableArray* m_outputFiles;
-    float m_bitrate;
+    double m_bitrate;
+    double m_totalDuration;
     AppController* m_appController;
+    
+    NSTask* m_task;
+    NSPipe* m_pipe;
+    NSMutableString* m_buffer;
 }
 
 -(Transcoder*) initWithController: (AppController*) controller;
@@ -94,5 +82,8 @@ typedef enum AudioCodecType {
 
 -(BOOL) startEncode;
 -(BOOL) pauseEncode;
+
+-(void) processRead: (NSNotification*) note;
+-(void) handleResponse: (NSString*) response;
 
 @end
