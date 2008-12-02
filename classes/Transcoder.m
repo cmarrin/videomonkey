@@ -117,6 +117,16 @@
     m_inputFiles = [[NSMutableArray alloc] init];
     m_outputFiles = [[NSMutableArray alloc] init];
     m_buffer = [[NSMutableString alloc] init];
+    
+    // This creates a progress bar for the table cell
+    NSProgressIndicator * progress = [[[NSProgressIndicator alloc] init] autorelease];
+    m_progressBar = [NSDictionary dictionaryWithObjectsAndKeys: progress, @"control", 0];
+    
+    // testing. set the bar to a value
+    [progress setMinValue:0];
+    [progress setMaxValue:1];
+    [progress setDoubleValue:0.6];
+    
     return self;
 }
     
@@ -186,6 +196,11 @@
         bitrate = ((TranscoderFileInfo*) [m_inputFiles objectAtIndex: 0])->m_bitrate;
         
     return (int) (playTime * bitrate / 8);
+}
+
+-(NSDictionary*) progressBar
+{
+    return m_progressBar;
 }
 
 - (BOOL) startEncode

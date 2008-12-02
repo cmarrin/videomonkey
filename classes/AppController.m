@@ -8,6 +8,7 @@
 
 #import "AppController.h"
 #import "Transcoder.h"
+#import "ProgressCell.h"
 
 #define FileListItemType @"FileListItemType"
 
@@ -36,6 +37,9 @@
     NSXMLElement* elt = [doc rootElement];
     NSXMLNode* node = [elt attributeForName: @"bar"];
     NSLog(@"*** root=%@\n", [node stringValue]);
+    
+    // Setup ProgressCell
+    [[m_fileListView tableColumnWithIdentifier: @"progress"] setDataCell: [[ProgressCell alloc] init]];    
 }
 
 // dataSource methods
@@ -78,6 +82,8 @@ static NSString* formatFileSize(int size)
 {
     if ([[aTableColumn identifier] isEqualToString: @"image"])
         return nil;
+    if ([[aTableColumn identifier] isEqualToString: @"progress"])
+        return [[m_files objectAtIndex: rowIndex] progressBar];
     if ([[aTableColumn identifier] isEqualToString: @"filename"])
         return [[m_files objectAtIndex: rowIndex] inputFilename];
     if ([[aTableColumn identifier] isEqualToString: @"filesize"])

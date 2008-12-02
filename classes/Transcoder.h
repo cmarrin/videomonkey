@@ -67,6 +67,7 @@
     NSTask* m_task;
     NSPipe* m_pipe;
     NSMutableString* m_buffer;
+    NSDictionary* m_progressBar;
 }
 
 -(Transcoder*) initWithController: (AppController*) controller;
@@ -79,6 +80,7 @@
 -(double) playTime;
 -(NSString*) inputFilename;
 -(int) outputFileSize;
+-(NSDictionary*) progressBar;
 
 -(BOOL) startEncode;
 -(BOOL) pauseEncode;
