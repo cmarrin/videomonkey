@@ -83,7 +83,7 @@ static NSString* formatFileSize(int size)
     if ([[aTableColumn identifier] isEqualToString: @"image"])
         return nil;
     if ([[aTableColumn identifier] isEqualToString: @"progress"])
-        return [[m_files objectAtIndex: rowIndex] progressBar];
+        return [NSNumber numberWithDouble: [[m_files objectAtIndex: rowIndex] progress]];
     if ([[aTableColumn identifier] isEqualToString: @"filename"])
         return [[m_files objectAtIndex: rowIndex] inputFilename];
     if ([[aTableColumn identifier] isEqualToString: @"filesize"])

@@ -118,16 +118,6 @@
     m_outputFiles = [[NSMutableArray alloc] init];
     m_buffer = [[NSMutableString alloc] init];
     
-    // This creates a progress bar for the table cell
-    NSProgressIndicator * progress = [[[NSProgressIndicator alloc] init] autorelease];
-    m_progressBar = [NSDictionary dictionaryWithObjectsAndKeys: progress, @"control", 0];
-    
-    // testing. set the bar to a value
-    [progress setMinValue:0];
-    [progress setMaxValue:100];
-    [progress setDoubleValue:40];
-    [progress setIndeterminate: NO];
-    
     return self;
 }
     
@@ -177,6 +167,11 @@
     return -1;
 }
 
+-(double) progress
+{
+    return m_progress;
+}
+
 -(NSString*) inputFilename
 {
     if ([m_inputFiles count] > 0)
@@ -197,11 +192,6 @@
         bitrate = ((TranscoderFileInfo*) [m_inputFiles objectAtIndex: 0])->m_bitrate;
         
     return (int) (playTime * bitrate / 8);
-}
-
--(NSDictionary*) progressBar
-{
-    return m_progressBar;
 }
 
 - (BOOL) startEncode
@@ -311,14 +301,17 @@ static NSDictionary* makeDictionary(NSString* s)
     NSDictionary* dictionary = makeDictionary(response);
     
     // see if we're done
-    if ([[dictionary objectForKey: @"#progress"] isEqualToString:@"done"])
+    if ([[dictionary objectForKey: @"#progress"] isEqualToString:@"done"]) {
+        m_progress = 1;
         [m_appController setProgressFor: self to: 1];
+    }
     else {
         // parse out the time
         id val = [dictionary objectForKey: @"time"];
         if (val && [val isKindOfClass: [NSString class]]) {
             double time = [val doubleValue];
-            [m_appController setProgressFor: self to: time / [self playTime]];
+            m_progress = time / [self playTime];
+            [m_appController setProgressFor: self to: m_progress];
         }
     }
     

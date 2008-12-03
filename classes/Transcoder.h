@@ -62,12 +62,12 @@
     NSMutableArray* m_outputFiles;
     double m_bitrate;
     double m_totalDuration;
+    double m_progress;
     AppController* m_appController;
     
     NSTask* m_task;
     NSPipe* m_pipe;
     NSMutableString* m_buffer;
-    NSDictionary* m_progressBar;
 }
 
 -(Transcoder*) initWithController: (AppController*) controller;
@@ -78,9 +78,9 @@
 -(void) setBitrate: (float) rate;
 -(double) bitrate;
 -(double) playTime;
+-(double) progress;
 -(NSString*) inputFilename;
 -(int) outputFileSize;
--(NSDictionary*) progressBar;
 
 -(BOOL) startEncode;
 -(BOOL) pauseEncode;
