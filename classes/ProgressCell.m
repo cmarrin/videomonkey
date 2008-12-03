@@ -32,7 +32,7 @@
 
         // Make the indicator a bit smaller. The setControlSize method
         // doesn’t work in this scenario.
-        cellFrame.origin.y += cellFrame.size.height / 3;
+        cellFrame.origin.y += cellFrame.size.height / 4;
         cellFrame.size.height /= 1.5;
 
         [progress setFrame: cellFrame];

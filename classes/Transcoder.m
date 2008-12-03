@@ -124,6 +124,7 @@
     [m_progressIndicator setMinValue:0];
     [m_progressIndicator setMaxValue:1];
     [m_progressIndicator setIndeterminate: NO];
+    [m_progressIndicator setBezeled: NO];
 
     return self;
 }

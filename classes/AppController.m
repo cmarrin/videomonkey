@@ -35,6 +35,8 @@
     
     // Setup ProgressCell
     [[m_fileListView tableColumnWithIdentifier: @"progress"] setDataCell: [[ProgressCell alloc] init]];
+
+    [m_totalProgressBar setUsesThreadedAnimation:YES];
 }
 
 // dataSource methods
@@ -217,14 +219,12 @@ static NSImage* getFileStatusImage(FileStatus status)
 -(void) setProgressFor: (Transcoder*) transcoder to: (double) progress
 {
     [m_totalProgressBar setDoubleValue: progress];
-    [m_totalProgressBar displayIfNeeded];
     [m_fileListView reloadData];
 }
 
 -(void) encodeFinished: (Transcoder*) transcoder
 {
-    [m_totalProgressBar setDoubleValue: 0];
-    [m_totalProgressBar displayIfNeeded];
+    [m_totalProgressBar setDoubleValue: 1];
     [m_fileListView reloadData];
 }
 
