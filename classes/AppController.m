@@ -33,11 +33,6 @@
 	// Register to accept filename drag/drop
 	[m_fileListView registerForDraggedTypes:[NSArray arrayWithObjects:NSFilenamesPboardType, FileListItemType, nil]];
     
-    NSXMLDocument* doc = [[NSXMLDocument alloc] initWithXMLString: @"<foo bar='abc'><baz def='xyz'/></foo>" options: 0 error: nil];
-    NSXMLElement* elt = [doc rootElement];
-    NSXMLNode* node = [elt attributeForName: @"bar"];
-    NSLog(@"*** root=%@\n", [node stringValue]);
-    
     // Setup ProgressCell
     [[m_fileListView tableColumnWithIdentifier: @"progress"] setDataCell: [[ProgressCell alloc] init]];
 }
@@ -104,7 +99,7 @@ static NSImage* getFileStatusImage(FileStatus status)
     if ([[aTableColumn identifier] isEqualToString: @"image"])
         return getFileStatusImage([[m_files objectAtIndex: rowIndex] inputFileStatus]);
     if ([[aTableColumn identifier] isEqualToString: @"progress"])
-        return [NSNumber numberWithDouble: [[m_files objectAtIndex: rowIndex] progress]];
+        return [NSValue valueWithPointer:[[m_files objectAtIndex: rowIndex] progressIndicator]];
     if ([[aTableColumn identifier] isEqualToString: @"filename"])
         return [[m_files objectAtIndex: rowIndex] inputFilename];
     if ([[aTableColumn identifier] isEqualToString: @"filesize"])

@@ -119,6 +119,12 @@
     m_buffer = [[NSMutableString alloc] init];
     m_fileStatus = FS_INVALID;
     
+    // init the progress indicator
+    m_progressIndicator = [[NSProgressIndicator alloc] init];
+    [m_progressIndicator setMinValue:0];
+    [m_progressIndicator setMaxValue:1];
+    [m_progressIndicator setIndeterminate: NO];
+
     return self;
 }
     
@@ -173,6 +179,11 @@
 -(double) progress
 {
     return m_progress;
+}
+
+-(NSProgressIndicator*) progressIndicator
+{
+    return m_progressIndicator;
 }
 
 -(FileStatus) inputFileStatus
@@ -320,6 +331,7 @@ static NSDictionary* makeDictionary(NSString* s)
     // see if we're done
     if ([[dictionary objectForKey: @"#progress"] isEqualToString:@"done"]) {
         m_progress = 1;
+        [m_progressIndicator setDoubleValue: m_progress];
         [m_appController setProgressFor: self to: 1];
     }
     else {
@@ -328,6 +340,7 @@ static NSDictionary* makeDictionary(NSString* s)
         if (val && [val isKindOfClass: [NSString class]]) {
             double time = [val doubleValue];
             m_progress = time / [self playTime];
+            [m_progressIndicator setDoubleValue: m_progress];
             [m_appController setProgressFor: self to: m_progress];
         }
     }

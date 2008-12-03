@@ -12,8 +12,6 @@
 #define kControl @"control"
 
 @interface ProgressCell : NSCell {
-  @private
-    NSProgressIndicator* m_progressIndicator;
 }
 
 // Initialize.

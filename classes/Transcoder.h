@@ -71,6 +71,7 @@ typedef enum { FS_INVALID, FS_VALID, FS_ENCODING, FS_FAILED, FS_SUCCEEDED } File
     NSTask* m_task;
     NSPipe* m_pipe;
     NSMutableString* m_buffer;
+    NSProgressIndicator* m_progressIndicator;
 }
 
 -(Transcoder*) initWithController: (AppController*) controller;
@@ -82,6 +83,7 @@ typedef enum { FS_INVALID, FS_VALID, FS_ENCODING, FS_FAILED, FS_SUCCEEDED } File
 -(double) bitrate;
 -(double) playTime;
 -(double) progress;
+-(NSProgressIndicator*) progressIndicator;
 -(FileStatus) inputFileStatus;
 -(NSString*) inputFilename;
 -(int) outputFileSize;
