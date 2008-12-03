@@ -117,6 +117,7 @@
     m_inputFiles = [[NSMutableArray alloc] init];
     m_outputFiles = [[NSMutableArray alloc] init];
     m_buffer = [[NSMutableString alloc] init];
+    m_fileStatus = FS_INVALID;
     
     return self;
 }
@@ -133,11 +134,13 @@
     
     if (![self _validateInputFile: file ]) {
         [file release];
+        m_fileStatus = FS_INVALID;
         return -1;
     }
 
     [m_inputFiles addObject: file];
     [file release];
+    m_fileStatus = FS_VALID;
     return [m_inputFiles count] - 1;    
 }
 
@@ -172,6 +175,11 @@
     return m_progress;
 }
 
+-(FileStatus) inputFileStatus
+{
+    return m_fileStatus;
+}
+
 -(NSString*) inputFilename
 {
     if ([m_inputFiles count] > 0)
@@ -196,6 +204,7 @@
 
 - (BOOL) startEncode
 {
+
     NSMutableString* ffmpegPath = [NSMutableString stringWithString: [[NSBundle mainBundle] resourcePath]];
     [ffmpegPath appendString:@"/ffmpeg"];
     
@@ -218,17 +227,34 @@
     [m_pipe retain];
     [m_task setStandardError: [m_pipe fileHandleForWriting]];
     
+    // add notifications
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(processFinishEncode:) name:NSTaskDidTerminateNotification object:m_task];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(processRead:) name:NSFileHandleReadCompletionNotification object:[m_pipe fileHandleForReading]];
+
     [[m_pipe fileHandleForReading] readInBackgroundAndNotify];
     
     [m_task launch];
     
+    m_fileStatus = FS_ENCODING;
     return YES;
 }
 
 - (BOOL) pauseEncode
 {
     return NO;
+}
+
+-(void) processFinishEncode: (NSNotification*) note
+{
+    // TODO: deal with return code
+    
+    // task ended
+    [m_task release];
+    [m_pipe release];
+    
+    // notify the AppController we're done
+    m_fileStatus = FS_SUCCEEDED;
+    [m_appController encodeFinished: self];
 }
 
 -(void) processRead: (NSNotification*) note
@@ -268,15 +294,6 @@
         // read another buffer
 		[[note object] readInBackgroundAndNotify];
     }
-    else {
-		// task ended
-        [m_task release];
-        [m_pipe release];
-        [m_buffer release];
-        
-        // notify the AppController we're done
-        [m_appController encodeFinished: self];
-	}
 }
 
 static NSDictionary* makeDictionary(NSString* s)

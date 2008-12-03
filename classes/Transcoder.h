@@ -13,6 +13,8 @@
 
 @class AppController;
 
+typedef enum { FS_INVALID, FS_VALID, FS_ENCODING, FS_FAILED, FS_SUCCEEDED } FileStatus;
+
 @interface TranscoderFileInfo : NSObject {
   @public
     // General
@@ -63,6 +65,7 @@
     double m_bitrate;
     double m_totalDuration;
     double m_progress;
+    FileStatus m_fileStatus;
     AppController* m_appController;
     
     NSTask* m_task;
@@ -79,12 +82,14 @@
 -(double) bitrate;
 -(double) playTime;
 -(double) progress;
+-(FileStatus) inputFileStatus;
 -(NSString*) inputFilename;
 -(int) outputFileSize;
 
 -(BOOL) startEncode;
 -(BOOL) pauseEncode;
 
+-(void) processFinishEncode: (NSNotification*) note;
 -(void) processRead: (NSNotification*) note;
 -(void) handleResponse: (NSString*) response;
 

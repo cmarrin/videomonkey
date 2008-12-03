@@ -35,7 +35,6 @@
     // Removing subviews is tricky, if the progress bar gets removed when it gets
     // 100%, it could get re-created on resize. This is perhaps kludgy and should
     // be fixed.
-    printf("********* drawing progress bar\n");
     if([m_progressIndicator doubleValue] < 100) {
         if(![m_progressIndicator superview])
             [controlView addSubview: m_progressIndicator];
@@ -51,7 +50,6 @@
 
 - (void)setObjectValue:(id < NSCopying >) object
 {
-    NSLog(@"********* setting progress bar %@\n", object);
     NSObject* obj = (NSObject*) object;
     if ([obj isKindOfClass: [NSNumber class]])
         [m_progressIndicator setDoubleValue:[(NSNumber*) obj doubleValue]];

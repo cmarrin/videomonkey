@@ -76,12 +76,33 @@ static NSString* formatFileSize(int size)
         return [NSString stringWithFormat:@"%.1fGB", (double) size/1000000000.0];
 }
 
+static NSImage* getResourceImage(NSString* name, NSString* ext)
+{
+    NSString* path = [[NSBundle mainBundle] pathForResource:name ofType:ext];
+    return [[NSImage alloc] initWithContentsOfFile:path]; 
+}
+
+static NSImage* getFileStatusImage(FileStatus status)
+{
+    NSString* name = nil;
+    switch(status)
+    {
+        case FS_INVALID:    name = @"invalid";     break;
+        case FS_VALID:      name = @"ready";       break;
+        case FS_ENCODING:   name = @"converting";  break;
+        case FS_FAILED:     name = @"error";       break;
+        case FS_SUCCEEDED:  name = @"ok";          break;
+    }
+    
+    return name ? getResourceImage(name, @"png") : nil;
+}
+
 - (id)tableView: (NSTableView *)aTableView
     objectValueForTableColumn: (NSTableColumn *)aTableColumn
     row: (int)rowIndex
 {
     if ([[aTableColumn identifier] isEqualToString: @"image"])
-        return nil;
+        return getFileStatusImage([[m_files objectAtIndex: rowIndex] inputFileStatus]);
     if ([[aTableColumn identifier] isEqualToString: @"progress"])
         return [NSNumber numberWithDouble: [[m_files objectAtIndex: rowIndex] progress]];
     if ([[aTableColumn identifier] isEqualToString: @"filename"])
@@ -201,12 +222,14 @@ static NSString* formatFileSize(int size)
 -(void) setProgressFor: (Transcoder*) transcoder to: (double) progress
 {
     [m_totalProgressBar setDoubleValue: progress];
+    [m_totalProgressBar displayIfNeeded];
     [m_fileListView reloadData];
 }
 
 -(void) encodeFinished: (Transcoder*) transcoder
 {
     [m_totalProgressBar setDoubleValue: 0];
+    [m_totalProgressBar displayIfNeeded];
     [m_fileListView reloadData];
 }
 
