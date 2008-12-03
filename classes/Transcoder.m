@@ -124,8 +124,9 @@
     
     // testing. set the bar to a value
     [progress setMinValue:0];
-    [progress setMaxValue:1];
-    [progress setDoubleValue:0.6];
+    [progress setMaxValue:100];
+    [progress setDoubleValue:40];
+    [progress setIndeterminate: NO];
     
     return self;
 }
