@@ -39,7 +39,7 @@
     NSLog(@"*** root=%@\n", [node stringValue]);
     
     // Setup ProgressCell
-    [[m_fileListView tableColumnWithIdentifier: @"progress"] setDataCell: [[ProgressCell alloc] init]];    
+    [[m_fileListView tableColumnWithIdentifier: @"progress"] setDataCell: [[ProgressCell alloc] init]];
 }
 
 // dataSource methods
@@ -201,11 +201,13 @@ static NSString* formatFileSize(int size)
 -(void) setProgressFor: (Transcoder*) transcoder to: (double) progress
 {
     [m_totalProgressBar setDoubleValue: progress];
+    [m_fileListView reloadData];
 }
 
 -(void) encodeFinished: (Transcoder*) transcoder
 {
     [m_totalProgressBar setDoubleValue: 0];
+    [m_fileListView reloadData];
 }
 
 @end
