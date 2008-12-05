@@ -21,7 +21,7 @@
   *  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
   *
   
-gcc -O3 -L/sw/lib -I/sw/include/mjpegtools -lmjpegutils yuvadjust.c -o yuvadjust
+gcc -O3 -L/usr/local/lib -I/usr/local/include/mjpegtools -lmjpegutils yuvadjust.c -o yuvadjust
 	
   */
 

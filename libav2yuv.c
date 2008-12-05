@@ -9,7 +9,7 @@
 // av_read_frame() API call, which simplifies the reading of video frames 
 // considerably. 
 //
-//gcc -O3 -I/usr/local/include -I/usr/local/include/mjpegtools -lavcodec -lavformat -lavutil -lmjpegutils libav2yuv.c -o libav2yuv
+//gcc -O3 -I/usr/local/include -I/usr/local/include/mjpegtools -lavcodec -lavformat -lavutil -lmjpegutils -lswscale -lmp3lame -lz -ltheora -logg -lvorbis -lx264 -lxvidcore -lfaac -lfaad -lvorbisenc -lbz2 libav2yuv.c -o libav2yuv
 //
 // I really should put history here
 // 7th July 2008 - Added Force Format option 
@@ -24,6 +24,7 @@
 
 #include <libavcodec/avcodec.h>
 #include <libavformat/avformat.h>
+#include <libswscale/swscale.h>
 
 #include <stdio.h>
 #include <string.h>
