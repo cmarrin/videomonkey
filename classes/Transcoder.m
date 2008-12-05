@@ -216,7 +216,6 @@
 
 - (BOOL) startEncode
 {
-
     NSMutableString* ffmpegPath = [NSMutableString stringWithString: [[NSBundle mainBundle] resourcePath]];
     [ffmpegPath appendString:@"/ffmpeg"];
     
