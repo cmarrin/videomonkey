@@ -21,6 +21,7 @@ typedef enum { FS_INVALID, FS_VALID, FS_ENCODING, FS_FAILED, FS_SUCCEEDED } File
     NSString* m_format;
     double m_playTime;
     double m_bitrate;
+    BOOL m_isQuicktime;
     
     // Video
     int m_videaStreamKind;
@@ -59,7 +60,6 @@ typedef enum { FS_INVALID, FS_VALID, FS_ENCODING, FS_FAILED, FS_SUCCEEDED } File
 
 @interface Transcoder : NSObject {
   @private
-    pid_t m_process;
     NSMutableArray* m_inputFiles;
     NSMutableArray* m_outputFiles;
     double m_bitrate;
@@ -85,8 +85,13 @@ typedef enum { FS_INVALID, FS_VALID, FS_ENCODING, FS_FAILED, FS_SUCCEEDED } File
 -(double) progress;
 -(NSProgressIndicator*) progressIndicator;
 -(FileStatus) inputFileStatus;
--(NSString*) inputFilename;
+-(NSString*) inputFileName;
+-(int) inputVideoWidth;
+-(int) inputVideoHeight;
+-(NSString*) outputFileName;
 -(int) outputFileSize;
+
+-(NSString*) ffmpeg_vcodec;
 
 -(BOOL) startEncode;
 -(BOOL) pauseEncode;

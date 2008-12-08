@@ -95,12 +95,14 @@
     
     // We always have a General line.
     NSArray* general = [[components objectAtIndex:0] componentsSeparatedByString:@","];
-    if ([general count] != 4)
+    if ([general count] != 5)
         return NO;
         
     [info setFormat: [general objectAtIndex:1]];
-    info->m_playTime = [[general objectAtIndex:2] doubleValue] / 1000;
-    info->m_bitrate = [[general objectAtIndex:3] doubleValue];
+    info->m_isQuicktime = [[general objectAtIndex:2] isEqualToString:@"QuickTime"];
+    info->m_playTime = [[general objectAtIndex:3] doubleValue] / 1000;
+    info->m_bitrate = [[general objectAtIndex:4] doubleValue];
+    
     
     if ([info->m_format length] == 0)
         return NO;
@@ -192,10 +194,39 @@
     return m_fileStatus;
 }
 
--(NSString*) inputFilename
+-(NSString*) inputFileName
 {
     if ([m_inputFiles count] > 0)
         return ((TranscoderFileInfo*) [m_inputFiles objectAtIndex: 0])->m_filename;
+    return nil;
+}
+
+-(NSString*) outputFileName
+{
+    if ([m_outputFiles count] > 0)
+        return ((TranscoderFileInfo*) [m_outputFiles objectAtIndex: 0])->m_filename;
+    return nil;
+}
+
+-(int) inputVideoWidth
+{
+    return ([m_inputFiles count] > 0) ? ((TranscoderFileInfo*) [m_inputFiles objectAtIndex: 0])->m_width : 0;
+}
+
+-(int) inputVideoHeight
+{
+    return ([m_inputFiles count] > 0) ? ((TranscoderFileInfo*) [m_inputFiles objectAtIndex: 0])->m_height : 0;
+}
+
+-(NSString*) ffmpeg_vcodec
+{
+    if ([m_inputFiles count] == 0)
+        return nil;
+    
+    NSString* vcodec = ((TranscoderFileInfo*) [m_inputFiles objectAtIndex: 0])->m_videoCodec;
+    if ([vcodec isEqualToString:@"h264"])
+        return @"libx264";
+        
     return nil;
 }
 
@@ -323,6 +354,34 @@ static NSDictionary* makeDictionary(NSString* s)
 
 -(void) handleResponse: (NSString*) response
 {
+    if (![response hasPrefix:@"#progress:"])
+        return;
+        
+    NSDictionary* dictionary = makeDictionary(response);
+    
+    // see if we're done
+    if ([[dictionary objectForKey: @"#progress"] isEqualToString:@"done"]) {
+        m_progress = 1;
+        [m_progressIndicator setDoubleValue: m_progress];
+        [m_appController setProgressFor: self to: 1];
+    }
+    else {
+        // parse out the time
+        id val = [dictionary objectForKey: @"time"];
+        if (val && [val isKindOfClass: [NSString class]]) {
+            double time = [val doubleValue];
+            m_progress = time / [self playTime];
+            [m_progressIndicator setDoubleValue: m_progress];
+            [m_appController setProgressFor: self to: m_progress];
+        }
+    }
+    
+    [dictionary release];
+}
+
+-(void) processResponse_ffmpeg: (NSString*) response
+{
+    // for now we ignore everything but the progress lines, which 
     if (![response hasPrefix:@"#progress:"])
         return;
         

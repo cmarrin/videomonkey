@@ -14,13 +14,17 @@
 @private
     IBOutlet NSTableView* m_fileListView;
     IBOutlet NSProgressIndicator* m_totalProgressBar;
+    IBOutlet NSTextView* m_saveToPathTextView;
     NSMutableArray* m_files;
     int m_draggedRow;
+    NSString* m_savePath;
 }
 
 -(IBAction)startConvert:(id)sender;
 -(IBAction)pauseConvert:(id)sender;
 -(IBAction)stopConvert:(id)sender;
+-(IBAction)changeSaveToText:(id)sender;
+-(IBAction)selectSaveToPath:(id)sender;
 
 -(void) setProgressFor: (Transcoder*) transcoder to: (double) progress;
 -(void) encodeFinished: (Transcoder*) transcoder;

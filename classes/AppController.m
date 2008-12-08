@@ -103,7 +103,7 @@ static NSImage* getFileStatusImage(FileStatus status)
     if ([[aTableColumn identifier] isEqualToString: @"progress"])
         return [NSValue valueWithPointer:[[m_files objectAtIndex: rowIndex] progressIndicator]];
     if ([[aTableColumn identifier] isEqualToString: @"filename"])
-        return [[m_files objectAtIndex: rowIndex] inputFilename];
+        return [[m_files objectAtIndex: rowIndex] inputFileName];
     if ([[aTableColumn identifier] isEqualToString: @"filesize"])
         return formatFileSize([[m_files objectAtIndex: rowIndex] outputFileSize]);
     if ([[aTableColumn identifier] isEqualToString: @"duration"])
@@ -132,7 +132,7 @@ static NSImage* getFileStatusImage(FileStatus status)
     [pboard declareTypes: [NSArray arrayWithObjects: NSFilenamesPboardType, FileListItemType, nil] owner: self];
     
     // put the string value into the paste board
-    [pboard setString: [[m_files objectAtIndex: m_draggedRow] inputFilename] forType: FileListItemType];
+    [pboard setString: [[m_files objectAtIndex: m_draggedRow] inputFileName] forType: FileListItemType];
     
     return YES;
 }
@@ -214,6 +214,24 @@ static NSImage* getFileStatusImage(FileStatus status)
 - (IBAction)stopConvert:(id)sender
 {
     printf("*** stop\n");
+}
+
+-(IBAction)changeSaveToText:(id)sender
+{
+}
+
+-(IBAction)selectSaveToPath:(id)sender
+{
+    NSOpenPanel* panel = [NSOpenPanel openPanel];
+    [panel setCanChooseFiles:NO];
+    [panel setCanChooseDirectories:YES];
+    [panel setCanCreateDirectories:YES];
+    [panel setTitle:@"Choose a Folder"];
+    [panel setPrompt:@"Choose"];
+    if ([panel runModalForTypes: nil] == NSOKButton) {
+        m_savePath = [[panel filenames] objectAtIndex:0];
+        [m_savePath retain];
+    }
 }
 
 -(void) setProgressFor: (Transcoder*) transcoder to: (double) progress
