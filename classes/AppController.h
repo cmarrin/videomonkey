@@ -14,7 +14,7 @@
 @private
     IBOutlet NSTableView* m_fileListView;
     IBOutlet NSProgressIndicator* m_totalProgressBar;
-    IBOutlet NSTextView* m_saveToPathTextView;
+    IBOutlet NSTextField* m_saveToPathTextField;
     NSMutableArray* m_files;
     int m_draggedRow;
     NSString* m_savePath;

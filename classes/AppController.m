@@ -218,6 +218,11 @@ static NSImage* getFileStatusImage(FileStatus status)
 
 -(IBAction)changeSaveToText:(id)sender
 {
+    [m_savePath release];
+    m_savePath = [m_saveToPathTextField stringValue];
+    [m_savePath retain];
+    [m_saveToPathTextField abortEditing];
+    [m_saveToPathTextField setStringValue:m_savePath];
 }
 
 -(IBAction)selectSaveToPath:(id)sender
@@ -231,6 +236,7 @@ static NSImage* getFileStatusImage(FileStatus status)
     if ([panel runModalForTypes: nil] == NSOKButton) {
         m_savePath = [[panel filenames] objectAtIndex:0];
         [m_savePath retain];
+        [m_saveToPathTextField setStringValue:m_savePath];
     }
 }
 
