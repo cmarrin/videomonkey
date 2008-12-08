@@ -18,6 +18,7 @@
     NSMutableArray* m_files;
     int m_draggedRow;
     NSString* m_savePath;
+    NSString* m_outputFileSuffix;
 }
 
 -(IBAction)startConvert:(id)sender;

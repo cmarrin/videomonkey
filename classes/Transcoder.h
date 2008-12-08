@@ -79,6 +79,7 @@ typedef enum { FS_INVALID, FS_VALID, FS_ENCODING, FS_FAILED, FS_SUCCEEDED } File
 
 -(int) addInputFile: (NSString*) filename;
 -(int) addOutputFile: (NSString*) filename;
+-(void) changeOutputFileName: (NSString*) filename;
 -(void) setBitrate: (float) rate;
 -(double) bitrate;
 -(double) playTime;

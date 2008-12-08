@@ -19,6 +19,8 @@
     if (self = [super init])
         m_files = [[NSMutableArray alloc] init];
     
+    // TODO: need a way to determine the output file suffix
+    m_outputFileSuffix = @"mp4";
     return self;
 }
 
@@ -92,6 +94,31 @@ static NSImage* getFileStatusImage(FileStatus status)
     }
     
     return name ? getResourceImage(name, @"png") : nil;
+}
+
+static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, NSString* suffix)
+{
+    // extract filename
+    NSString* lastComponent = [inputFileName lastPathComponent];
+    NSString* inputPath = [inputFileName stringByDeletingLastPathComponent];
+    NSString* baseName = [lastComponent stringByDeletingPathExtension];
+
+    if (!savePath)
+        savePath = inputPath;
+        
+    // now make sure the file doesn't exist
+    NSString* filename;
+    for (int i = 0; i < 10000; ++i) {
+        if (i == 0)
+            filename = [NSString stringWithFormat: @"%@%@.%@", savePath, baseName, suffix];
+        else
+            filename = [NSString stringWithFormat: @"%@%@_%d.%@", savePath, baseName, i, suffix];
+            
+        if (![[NSFileManager defaultManager] fileExistsAtPath: filename])
+            break;
+    }
+    
+    return filename;
 }
 
 - (id)tableView: (NSTableView *)aTableView
@@ -186,6 +213,7 @@ static NSImage* getFileStatusImage(FileStatus status)
                 for (int i= 0; i < [filenames count]; i++) {
                     Transcoder* transcoder = [[Transcoder alloc] initWithController:self];
                     [transcoder addInputFile: [filenames objectAtIndex:i]];
+                    [transcoder addOutputFile: getOutputFileName([filenames objectAtIndex:i], m_savePath, m_outputFileSuffix)];
                     
                     if (row < 0)
                         [m_files addObject:transcoder];
@@ -216,6 +244,15 @@ static NSImage* getFileStatusImage(FileStatus status)
     printf("*** stop\n");
 }
 
+-(void) changeOutputFileName
+{
+    NSEnumerator* e = [m_files objectEnumerator];
+    Transcoder* transcoder;
+    
+    while ((transcoder = (Transcoder*) [e nextObject]))
+        [transcoder changeOutputFileName: getOutputFileName([transcoder inputFileName], m_savePath, m_outputFileSuffix)];
+}
+
 -(IBAction)changeSaveToText:(id)sender
 {
     [m_savePath release];
@@ -223,6 +260,7 @@ static NSImage* getFileStatusImage(FileStatus status)
     [m_savePath retain];
     [m_saveToPathTextField abortEditing];
     [m_saveToPathTextField setStringValue:m_savePath];
+    [self changeOutputFileName];
 }
 
 -(IBAction)selectSaveToPath:(id)sender
@@ -237,6 +275,7 @@ static NSImage* getFileStatusImage(FileStatus status)
         m_savePath = [[panel filenames] objectAtIndex:0];
         [m_savePath retain];
         [m_saveToPathTextField setStringValue:m_savePath];
+        [self changeOutputFileName];
     }
 }
 

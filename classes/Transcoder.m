@@ -162,6 +162,12 @@
     return [m_outputFiles count] - 1;    
 }
 
+-(void) changeOutputFileName: (NSString*) filename
+{
+    if ([m_outputFiles count] > 0)
+        ((TranscoderFileInfo*) [m_outputFiles objectAtIndex: 0])->m_filename = filename;
+}
+
 - (void) setBitrate: (float) rate
 {
     m_bitrate = rate;
