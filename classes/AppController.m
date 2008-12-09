@@ -16,11 +16,15 @@
 
 - (id)init
 {
-    if (self = [super init])
+    if (self = [super init]) {
         m_files = [[NSMutableArray alloc] init];
-    
-    // TODO: need a way to determine the output file suffix
-    m_outputFileSuffix = @"mp4";
+        
+        m_commands = [NSDictionary dictionaryWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"commands" ofType:@"plist"]];
+        [m_commands retain];
+        
+        // TODO: need a way to determine the output file suffix
+        m_outputFileSuffix = @"mp4";
+    }
     return self;
 }
 
@@ -279,22 +283,53 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
     }
 }
 
+static NSString* _validateCommandString(NSString* s)
+{
+    // Make sure that a single space surrounds ';', '|' and '&' characters
+    s = [s stringByReplacingOccurrencesOfString:@";" withString:@" ; "];
+    s = [s stringByReplacingOccurrencesOfString:@"|" withString:@" | "];
+    s = [s stringByReplacingOccurrencesOfString:@"&" withString:@" & "];
+    
+    // Make sure there are no multiple adjascent spaces
+    while (1) {
+        int sizeBefore = [s length];
+        s = [s stringByReplacingOccurrencesOfString:@"  " withString:@" "];
+        int sizeAfter = [s length];
+        if (sizeBefore == sizeAfter)
+            break;
+    }
+    
+    // Make sure the first or last thing in the string is not ';', '|' or '&', or space
+    while(1) {
+        int sizeBefore = [s length];
+        s = [s stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+        s = [s stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@";|&"]];
+        int sizeAfter = [s length];
+        if (sizeBefore == sizeAfter)
+            break;
+    }
+    
+    return s;
+}
+
 -(NSString*) jobForDevice: (NSString*) name type: (NSString*) type
 {
     NSDictionary* commands = [m_commands valueForKey: @"commands"];
-    NSString* job = [[[m_commands valueForKey: @"jobs"] valueForKey: type] valueForKey: name];
+    NSString* job = _validateCommandString([[[m_commands valueForKey: @"jobs"] valueForKey: type] valueForKey: name]);
     
     // job is a list of strings separated by spaces. If a string starts with '!' it is replaced by an
     // entry from commands. Otherwise it is output as is
-    NSMutableString* command;
+    NSMutableString* command = [[NSMutableString alloc] init];
     NSArray* joblist = [job componentsSeparatedByString:@" "];
     NSEnumerator* e = [joblist objectEnumerator];
     NSString* s;
     
-    while ((s = (NSString*) [e nextObject]))
+    while ((s = (NSString*) [e nextObject])) {
         [command appendString: ([s characterAtIndex:0] == '!') ? [commands valueForKey: [s substringFromIndex:1]] : s];
+        [command appendString: @" "];
+    }
     
-    return  command;
+    return  _validateCommandString(command);
 }
 
 -(void) setProgressFor: (Transcoder*) transcoder to: (double) progress

@@ -8,6 +8,7 @@
 
 #import "Transcoder.h"
 #import "AppController.h"
+#import "Command.h"
 
 @implementation TranscoderFileInfo
 
@@ -118,7 +119,6 @@
     [self setAppController: controller];
     m_inputFiles = [[NSMutableArray alloc] init];
     m_outputFiles = [[NSMutableArray alloc] init];
-    m_buffer = [[NSMutableString alloc] init];
     m_fileStatus = FS_INVALID;
     
     // init the progress indicator
@@ -259,49 +259,43 @@
     
     NSArray* elements = [job componentsSeparatedByString:@" "];
     
-    // get rid of empty strings
+    NSMutableArray* commands = [[NSMutableArray alloc] init];
+    NSEnumerator* enumerator = [elements objectEnumerator];
+    NSString* s;
+    NSMutableString* commandString = [[NSMutableString alloc] init];
+    CommandOutputType type = OT_NONE;
     
-    // collect each element up to a ';' (wait) '&' (continue) or '|' (pipe) into a command
+    while (s = (NSString*) [enumerator nextObject]) {
+        // collect each element up to a ';' (wait) '&' (continue) or '|' (pipe) into a command
+        if ([s isEqualToString:@";"])
+            type = OT_WAIT;
+        else if ([s isEqualToString:@"|"])
+            type = OT_PIPE;
+        else if ([s isEqualToString:@"&"])
+            type = OT_CONTINUE;
+    
+        if (type == OT_NONE) {
+            [commandString appendString:s];
+            [commandString appendString:@" "];
+        }
+        else {
+            // make a Command object for this command
+            [commands addObject:[[Command alloc] initWithTranscoder:self command:commandString outputType:type finishId: @""]];
+            type = OT_NONE;
+            [commandString setString:@""];
+        }
+    }
+    
+    // add the last command (we know there will be a last command because we know the job can't end in one of the end chars)
+    [commands addObject:[[Command alloc] initWithTranscoder:self command:commandString outputType:OT_CONTINUE finishId: @""]];
 
-    // make a Command object for each command
-    
     // execute each command in turn
-
-
-
-
-
-
-    NSMutableString* ffmpegPath = [NSMutableString stringWithString: [[NSBundle mainBundle] resourcePath]];
-    [ffmpegPath appendString:@"/ffmpeg"];
+    enumerator = [commands objectEnumerator];
+    Command* command;
     
-    m_task = [[NSTask alloc] init];
-    [m_task retain];
-    NSString* inputFilename = ((TranscoderFileInfo*) [m_inputFiles objectAtIndex:0])->m_filename;
-    NSMutableArray* args = [NSMutableArray arrayWithObjects: 
-                                            @"-nobanner", 
-                                            @"-stream_messages", 
-                                            @"-v", @"-1",
-                                            @"-y", 
-                                            @"-i", inputFilename, 
-                                            @"-sameq", 
-                                            @"/tmp/foo.mov", // output file
-                                            nil];
-    [m_task setArguments: args];
-    [m_task setLaunchPath: ffmpegPath];
-    
-    m_pipe = [NSPipe pipe];
-    [m_pipe retain];
-    [m_task setStandardError: [m_pipe fileHandleForWriting]];
-    
-    // add notifications
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(processFinishEncode:) name:NSTaskDidTerminateNotification object:m_task];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(processRead:) name:NSFileHandleReadCompletionNotification object:[m_pipe fileHandleForReading]];
+    while(command = (Command*) [enumerator nextObject])
+        [command execute];
 
-    [[m_pipe fileHandleForReading] readInBackgroundAndNotify];
-    
-    [m_task launch];
-    
     m_fileStatus = FS_ENCODING;
     return YES;
 }
@@ -311,125 +305,18 @@
     return NO;
 }
 
--(void) processFinishEncode: (NSNotification*) note
+-(void) setProgressForCommand: (Command*) command to: (double) value
 {
-    // TODO: deal with return code
-    
-    // task ended
-    [m_task release];
-    [m_pipe release];
-    
-    // notify the AppController we're done
-    m_fileStatus = FS_SUCCEEDED;
-    [m_appController encodeFinished: self];
+    // TODO: need to give each command a percentage of the progress
+    m_progress = value;
+    [m_progressIndicator setDoubleValue: m_progress];
+    [m_appController setProgressFor: self to: m_progress];
 }
 
--(void) processRead: (NSNotification*) note
+-(void) commandFinished: (Command*) command
 {
-    if (![[note name] isEqualToString:NSFileHandleReadCompletionNotification])
-        return;
-
-	NSData	*data = [[note userInfo] objectForKey:NSFileHandleNotificationDataItem];
-	
-	if([data length]) {
-		NSString* string = [[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding] autorelease];
-        
-        NSArray* components = [string componentsSeparatedByString: @"\n"];
-        int i;
-        assert([components count] > 0);
-        for (i = 0; i < [components count]-1; ++i) {
-            [m_buffer appendString:[components objectAtIndex:i]];
-            
-            // process string
-            [self handleResponse: m_buffer];
-            
-            // clear string
-            [m_buffer setString: @""];
-        }
-        
-        // if string ends in \n, it is complete, so send it too.
-        if ([string hasSuffix:@"\n"]) {
-            [m_buffer appendString:[components objectAtIndex:[components count]-1]];
-            [self handleResponse: m_buffer];
-            [m_buffer setString: @""];
-        }
-        else {
-            // put remaining component in m_buffer for next time
-            [m_buffer setString: [components objectAtIndex:[components count]-1]];
-        }
-        
-        // read another buffer
-		[[note object] readInBackgroundAndNotify];
-    }
-}
-
-static NSDictionary* makeDictionary(NSString* s)
-{
-    NSMutableDictionary* dictionary = [[NSMutableDictionary alloc] init];
-    NSArray* elements = [s componentsSeparatedByString:@";"];
-    for (int i = 0; i < [elements count]; ++i) {
-        NSArray* values = [[elements objectAtIndex:i] componentsSeparatedByString:@":"];
-        if ([values count] != 2)
-            continue;
-        [dictionary setValue: [values objectAtIndex:1] forKey: [values objectAtIndex:0]];
-    }
-    
-    return dictionary;
-}
-
--(void) handleResponse: (NSString*) response
-{
-    if (![response hasPrefix:@"#progress:"])
-        return;
-        
-    NSDictionary* dictionary = makeDictionary(response);
-    
-    // see if we're done
-    if ([[dictionary objectForKey: @"#progress"] isEqualToString:@"done"]) {
-        m_progress = 1;
-        [m_progressIndicator setDoubleValue: m_progress];
-        [m_appController setProgressFor: self to: 1];
-    }
-    else {
-        // parse out the time
-        id val = [dictionary objectForKey: @"time"];
-        if (val && [val isKindOfClass: [NSString class]]) {
-            double time = [val doubleValue];
-            m_progress = time / [self playTime];
-            [m_progressIndicator setDoubleValue: m_progress];
-            [m_appController setProgressFor: self to: m_progress];
-        }
-    }
-    
-    [dictionary release];
-}
-
--(void) processResponse_ffmpeg: (NSString*) response
-{
-    // for now we ignore everything but the progress lines, which 
-    if (![response hasPrefix:@"#progress:"])
-        return;
-        
-    NSDictionary* dictionary = makeDictionary(response);
-    
-    // see if we're done
-    if ([[dictionary objectForKey: @"#progress"] isEqualToString:@"done"]) {
-        m_progress = 1;
-        [m_progressIndicator setDoubleValue: m_progress];
-        [m_appController setProgressFor: self to: 1];
-    }
-    else {
-        // parse out the time
-        id val = [dictionary objectForKey: @"time"];
-        if (val && [val isKindOfClass: [NSString class]]) {
-            double time = [val doubleValue];
-            m_progress = time / [self playTime];
-            [m_progressIndicator setDoubleValue: m_progress];
-            [m_appController setProgressFor: self to: m_progress];
-        }
-    }
-    
-    [dictionary release];
+    if ([(NSString*) [command finishId] isEqualToString:@"done"])
+        [m_appController encodeFinished:self];
 }
 
 @end

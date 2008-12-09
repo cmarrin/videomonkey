@@ -12,6 +12,7 @@
 #import <unistd.h>
 
 @class AppController;
+@class Command;
 
 typedef enum { FS_INVALID, FS_VALID, FS_ENCODING, FS_FAILED, FS_SUCCEEDED } FileStatus;
 
@@ -70,7 +71,6 @@ typedef enum { FS_INVALID, FS_VALID, FS_ENCODING, FS_FAILED, FS_SUCCEEDED } File
     
     NSTask* m_task;
     NSPipe* m_pipe;
-    NSMutableString* m_buffer;
     NSProgressIndicator* m_progressIndicator;
 }
 
@@ -97,8 +97,7 @@ typedef enum { FS_INVALID, FS_VALID, FS_ENCODING, FS_FAILED, FS_SUCCEEDED } File
 -(BOOL) startEncode;
 -(BOOL) pauseEncode;
 
--(void) processFinishEncode: (NSNotification*) note;
--(void) processRead: (NSNotification*) note;
--(void) handleResponse: (NSString*) response;
+-(void) setProgressForCommand: (Command*) command to: (double) value;
+-(void) commandFinished: (Command*) command;
 
 @end
