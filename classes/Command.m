@@ -11,19 +11,22 @@
 
 @implementation Command
 
--(void) initWithTranscoder: (Transcoder*) transcoder
+-(void) initWithTranscoder: (Transcoder*) transcoder outputType: (OutputType) type
 {
     self = [super init];
     if (self) {
-        self->m_transcoder = transcoder;
-        
+        m_transcoder = transcoder;
+        m_outputType = type;
         m_task = [[NSTask alloc] init];
-        m_pipe = [NSPipe pipe];
+        m_messagePipe = [NSPipe pipe];
+        
+        if (m_outputType == OT_PIPE)
+            m_outputPipe = [NSPipe pipe];
     }
 }
 
--(void) _runNextCommand
-{
+-(void) runCommand: (NSString*) command
+{        
     // build the environment
     NSMutableDictionary* env = [[NSMutableDictionary alloc] init];
     
@@ -59,30 +62,47 @@
     [env setValue: [NSNumber numberWithDouble: [m_transcoder bitrate]] forKey: @"bitrate"];
     [env setValue: [m_transcoder ffmpeg_vcodec] forKey: @"ffmpeg_vcodec"];
 
-    // execute the first command
-    NSArray* args = [NSArray arrayWithObjects: @"-c", [m_commands objectAtIndex:0], nil];
-    [m_commands removeObjectAtIndex: 0];
+    // setup args and command
+    NSMutableArray* args = [NSMutableArray arrayWithArray: [command componentsSeparatedByString:@" "]];
+    NSString* launchPath = [args objectAtIndex:0];
+    if ([launchPath characterAtIndex:0] == '$')
+        launchPath = [env valueForKey: [cmd substringFromIndex: 1]];
     
+    [args removeObjectAtIndex: 0];
+    
+    // execute the command
     [m_task setArguments: args];
     [m_task setEnvironment:env];
-    [m_task setLaunchPath: @"/bin/sh"];
-    [m_task setStandardError: [m_pipe fileHandleForWriting]];
+    [m_task setLaunchPath: launchPath];
+    [m_task setStandardError: [m_messagePipe fileHandleForWriting]];
     
+    if (m_outputType == OT_PIPE)
+        [m_task setStandardOutput: m_outputPipe];
+        
     // add notifications
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(processFinishEncode:) name:NSTaskDidTerminateNotification object:m_task];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(processRead:) name:NSFileHandleReadCompletionNotification object:[m_pipe fileHandleForReading]];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(processRead:) name:NSFileHandleReadCompletionNotification object:[m_messagePipe fileHandleForReading]];
 
-    [[m_pipe fileHandleForReading] readInBackgroundAndNotify];
+    [[m_messagePipe fileHandleForReading] readInBackgroundAndNotify];
     
     [m_task launch];
+    if (m_outputType == OT_WAIT)
+        [m_task waitUntilExit];
 }
 
--(void) runCommand: (NSString*) command
+-(NSPipe*) outputPipe
 {
-    // split the command into separate lines
-    m_commands = [[NSMutableArray alloc] init];
-    [m_commands addObjectsFromArray: [command componentsSeparatedByString:@";"]];
-    [self _runNextCommand];
+    return m_outputPipe;
+}
+
+-(void) setInputPipe: (NSPipe*) pipe
+{
+    [m_task setStandardInput: [pipe fileHandleForReading]];
+}
+
+-(BOOL) needsToWait
+{
+    return m_outputType == OT_WAIT;
 }
 
 @end

@@ -253,6 +253,25 @@
 
 - (BOOL) startEncode
 {
+    // assemble command
+    // TODO: for now just do a stock encode
+    NSString* job = [m_appController jobForDevice: @"iphone" type: @"quicktime"];
+    
+    NSArray* elements = [job componentsSeparatedByString:@" "];
+    
+    // get rid of empty strings
+    
+    // collect each element up to a ';' (wait) '&' (continue) or '|' (pipe) into a command
+
+    // make a Command object for each command
+    
+    // execute each command in turn
+
+
+
+
+
+
     NSMutableString* ffmpegPath = [NSMutableString stringWithString: [[NSBundle mainBundle] resourcePath]];
     [ffmpegPath appendString:@"/ffmpeg"];
     

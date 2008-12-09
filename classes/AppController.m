@@ -279,6 +279,24 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
     }
 }
 
+-(NSString*) jobForDevice: (NSString*) name type: (NSString*) type
+{
+    NSDictionary* commands = [m_commands valueForKey: @"commands"];
+    NSString* job = [[[m_commands valueForKey: @"jobs"] valueForKey: type] valueForKey: name];
+    
+    // job is a list of strings separated by spaces. If a string starts with '!' it is replaced by an
+    // entry from commands. Otherwise it is output as is
+    NSMutableString* command;
+    NSArray* joblist = [job componentsSeparatedByString:@" "];
+    NSEnumerator* e = [joblist objectEnumerator];
+    NSString* s;
+    
+    while ((s = (NSString*) [e nextObject]))
+        [command appendString: ([s characterAtIndex:0] == '!') ? [commands valueForKey: [s substringFromIndex:1]] : s];
+    
+    return  command;
+}
+
 -(void) setProgressFor: (Transcoder*) transcoder to: (double) progress
 {
     [m_totalProgressBar setDoubleValue: progress];

@@ -19,6 +19,7 @@
     int m_draggedRow;
     NSString* m_savePath;
     NSString* m_outputFileSuffix;
+    NSDictionary* m_commands;
 }
 
 -(IBAction)startConvert:(id)sender;
@@ -26,6 +27,8 @@
 -(IBAction)stopConvert:(id)sender;
 -(IBAction)changeSaveToText:(id)sender;
 -(IBAction)selectSaveToPath:(id)sender;
+
+-(NSString*) jobForDevice: (NSString*) name type: (NSString*) type;
 
 -(void) setProgressFor: (Transcoder*) transcoder to: (double) progress;
 -(void) encodeFinished: (Transcoder*) transcoder;

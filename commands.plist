@@ -10,11 +10,21 @@
 		<string>$movtoy4m -w $input_video_width -h $input_video_height $input_file </string>
 		<key>yuv_to_ffmpeg</key>
 		<string>$ffmpeg -y -i - -i $tmp_audio_file -vcodec $ffmpeg_vcodec -b $bitrate $output_file</string>
+		<key>ffmpeg</key>
+		<string>$ffmpeg -y -i $input_file -vcodec $ffmpeg_vcodec -b $bitrate $output_file</string>
 	</dict>
-	<key>map</key>
+	<key>jobs</key>
 	<dict>
-		<key>quicktime_iphone</key>
-		<string>quicktime_to_audio_file ; quicktime_to_yuv | yuv_to_ffmpeg</string>
+		<key>quicktime</key>
+		<dict>
+			<key>iphone</key>
+			<string>!quicktime_to_audio_file ; !quicktime_to_yuv | !yuv_to_ffmpeg</string>
+		</dict>
+		<key>normal</key>
+		<dict>
+			<key>iphone</key>
+			<string>!ffmpeg</string>
+		</dict>
 	</dict>
 </dict>
 </plist>
