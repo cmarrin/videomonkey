@@ -34,7 +34,7 @@ typedef enum { FS_INVALID, FS_VALID, FS_ENCODING, FS_FAILED, FS_SUCCEEDED } File
     int m_width;
     int m_height;
     double m_pixelAspectRatio;
-    double m_screenAspectRatio;
+    double m_displayAspectRatio;
     double m_frameRate;
     
     // Audio
@@ -44,7 +44,7 @@ typedef enum { FS_INVALID, FS_VALID, FS_ENCODING, FS_FAILED, FS_SUCCEEDED } File
     NSString* m_audioCodec;
     double m_audioSamplingRate;
     int m_channels;
-    int m_audioBitrate;
+    double m_audioBitrate;
 
     NSString* m_filename;
 }

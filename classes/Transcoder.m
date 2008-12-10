@@ -103,13 +103,50 @@
     info->m_isQuicktime = [[general objectAtIndex:2] isEqualToString:@"QuickTime"];
     info->m_playTime = [[general objectAtIndex:3] doubleValue] / 1000;
     info->m_bitrate = [[general objectAtIndex:4] doubleValue];
-    
-    
+
     if ([info->m_format length] == 0)
         return NO;
         
-    // TODO: CFM - do video and audio
+    // Do video if it's there
+    int offset = 1;
+    if ([[components objectAtIndex:offset] hasPrefix: @"-Video-"]) {
+        NSArray* video = [[components objectAtIndex:offset] componentsSeparatedByString:@","];
+        offset = 2;
+        
+        // -Video-,%StreamKindID%,%ID%,%Language%,%Format%,%Codec_Profile%,%ScanType%,%ScanOrder%,%Width%,%Height%,%PixelAspectRatio%,%DisplayAspectRatio%,%FrameRate%
+
+        if ([video count] != 13)
+            return NO;
+        info->m_videaStreamKind = [[video objectAtIndex:1] intValue];
+        info->m_videoTrack = [[video objectAtIndex:2] intValue];
+        info->m_videoLanguage = [video objectAtIndex:3];
+        info->m_videoCodec = [video objectAtIndex:4];
+        info->m_videoProfile = [video objectAtIndex:5];
+        info->m_videoInterlaced = [[video objectAtIndex:6] isEqualToString:@"Interlace"];
+        info->m_width = [[video objectAtIndex:8] intValue];
+        info->m_height = [[video objectAtIndex:9] intValue];
+        info->m_pixelAspectRatio = [[video objectAtIndex:10] doubleValue];
+        info->m_displayAspectRatio = [[video objectAtIndex:11] doubleValue];
+        info->m_frameRate = [[video objectAtIndex:12] doubleValue];
+    }
     
+    // Do audio if it's there
+    if ([[components objectAtIndex:offset] hasPrefix: @"-Audio-"]) {
+        NSArray* audio = [[components objectAtIndex:offset] componentsSeparatedByString:@","];
+
+        // -Audio-,%StreamKindID%,%ID%,%Language%,%Format%,%SamplingRate%,%Channels%,%BitRate%
+        if ([audio count] != 8)
+            return NO;
+            
+        info->m_audioStreamKind = [[audio objectAtIndex:1] intValue];
+        info->m_audioTrack = [[audio objectAtIndex:2] intValue];
+        info->m_audioLanguage = [audio objectAtIndex:3];
+        info->m_audioCodec = [audio objectAtIndex:4];
+        info->m_audioSamplingRate = [[audio objectAtIndex:5] doubleValue];
+        info->m_channels = [[audio objectAtIndex:6] intValue];
+        info->m_audioBitrate = [[audio objectAtIndex:7] doubleValue];
+    }
+
     return YES;
 }
 
