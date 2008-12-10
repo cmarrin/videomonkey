@@ -31,4 +31,7 @@ typedef enum { OT_NONE, OT_WAIT, OT_CONTINUE, OT_PIPE } CommandOutputType;
 -(BOOL) needsToWait;
 -(id) finishId;
 
+-(void) processRead: (NSNotification*) note;
+-(void) processFinishEncode: (NSNotification*) note;
+
 @end

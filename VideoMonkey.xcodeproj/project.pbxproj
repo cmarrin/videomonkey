@@ -80,8 +80,8 @@
 		4910FFFD0EC87BB3001B578B /* tinyflac.png in Resources */ = {isa = PBXBuildFile; fileRef = 4910FFC80EC87BB3001B578B /* tinyflac.png */; };
 		4910FFFE0EC87BB3001B578B /* tinyflash.png in Resources */ = {isa = PBXBuildFile; fileRef = 4910FFC90EC87BB3001B578B /* tinyflash.png */; };
 		4910FFFF0EC87BB3001B578B /* tinyiphone.png in Resources */ = {isa = PBXBuildFile; fileRef = 4910FFCA0EC87BB3001B578B /* tinyiphone.png */; };
+		492D2F660EEF430F00AEB740 /* bin in Resources */ = {isa = PBXBuildFile; fileRef = 492D2F5E0EEF430F00AEB740 /* bin */; };
 		494917A90EDE07AF0083743F /* VideoMonkey.icns in Resources */ = {isa = PBXBuildFile; fileRef = 494917A80EDE07AF0083743F /* VideoMonkey.icns */; };
-		49557AB00EDDDAE400C851C0 /* ffmpeg in Resources */ = {isa = PBXBuildFile; fileRef = 49557AAF0EDDDAE400C851C0 /* ffmpeg */; };
 		49636A490EE7078200F7B6D2 /* invalid.png in Resources */ = {isa = PBXBuildFile; fileRef = 49636A460EE7078200F7B6D2 /* invalid.png */; };
 		49636A4A0EE7078200F7B6D2 /* ready.png in Resources */ = {isa = PBXBuildFile; fileRef = 49636A470EE7078200F7B6D2 /* ready.png */; };
 		49636A4B0EE7078200F7B6D2 /* readyunknown.png in Resources */ = {isa = PBXBuildFile; fileRef = 49636A480EE7078200F7B6D2 /* readyunknown.png */; };
@@ -91,9 +91,7 @@
 		497E67100EEC24FA000372EC /* commands.plist in Resources */ = {isa = PBXBuildFile; fileRef = 497E670F0EEC24FA000372EC /* commands.plist */; };
 		497E67170EEC5DD8000372EC /* Command.m in Sources */ = {isa = PBXBuildFile; fileRef = 497E67160EEC5DD8000372EC /* Command.m */; };
 		499A31770EDD97EB000C0AAF /* Transcoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 499A31760EDD97EB000C0AAF /* Transcoder.m */; };
-		499A31D10EDEE3D3000C0AAF /* mediainfo in Resources */ = {isa = PBXBuildFile; fileRef = 499A31D00EDEE3D3000C0AAF /* mediainfo */; };
 		499A31D30EDEE3E4000C0AAF /* mediainfo-inform.csv in Resources */ = {isa = PBXBuildFile; fileRef = 499A31D20EDEE3E4000C0AAF /* mediainfo-inform.csv */; };
-		499A31D50EDEE41B000C0AAF /* AtomicParsley in Resources */ = {isa = PBXBuildFile; fileRef = 499A31D40EDEE41B000C0AAF /* AtomicParsley */; };
 		49BC89A90ECD245F00027F1D /* MoviePanelController.m in Sources */ = {isa = PBXBuildFile; fileRef = 49BC89A70ECD245F00027F1D /* MoviePanelController.m */; };
 		49BC8CAA0ED6892400027F1D /* EncodeWorking0.png in Resources */ = {isa = PBXBuildFile; fileRef = 49BC8CA10ED6892400027F1D /* EncodeWorking0.png */; };
 		49BC8CAB0ED6892400027F1D /* EncodeWorking1.png in Resources */ = {isa = PBXBuildFile; fileRef = 49BC8CA20ED6892400027F1D /* EncodeWorking1.png */; };
@@ -193,8 +191,8 @@
 		4910FFDC0EC87BB3001B578B /* wii.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = wii.png; path = images/wii.png; sourceTree = "<group>"; };
 		4910FFDD0EC87BB3001B578B /* wma.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = wma.png; path = images/wma.png; sourceTree = "<group>"; };
 		4910FFDE0EC87BB3001B578B /* xbox360.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = xbox360.png; path = images/xbox360.png; sourceTree = "<group>"; };
+		492D2F5E0EEF430F00AEB740 /* bin */ = {isa = PBXFileReference; lastKnownFileType = folder; path = bin; sourceTree = "<group>"; };
 		494917A80EDE07AF0083743F /* VideoMonkey.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = VideoMonkey.icns; path = icons/VideoMonkey.icns; sourceTree = "<group>"; };
-		49557AAF0EDDDAE400C851C0 /* ffmpeg */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; name = ffmpeg; path = bin/ffmpeg; sourceTree = "<group>"; };
 		49636A460EE7078200F7B6D2 /* invalid.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = invalid.png; path = icons/invalid.png; sourceTree = "<group>"; };
 		49636A470EE7078200F7B6D2 /* ready.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = ready.png; path = icons/ready.png; sourceTree = "<group>"; };
 		49636A480EE7078200F7B6D2 /* readyunknown.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = readyunknown.png; path = icons/readyunknown.png; sourceTree = "<group>"; };
@@ -207,9 +205,7 @@
 		497E67160EEC5DD8000372EC /* Command.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Command.m; path = classes/Command.m; sourceTree = "<group>"; };
 		499A31750EDD97EB000C0AAF /* Transcoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Transcoder.h; path = classes/Transcoder.h; sourceTree = "<group>"; };
 		499A31760EDD97EB000C0AAF /* Transcoder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Transcoder.m; path = classes/Transcoder.m; sourceTree = "<group>"; };
-		499A31D00EDEE3D3000C0AAF /* mediainfo */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; name = mediainfo; path = bin/mediainfo; sourceTree = "<group>"; };
 		499A31D20EDEE3E4000C0AAF /* mediainfo-inform.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "mediainfo-inform.csv"; sourceTree = "<group>"; };
-		499A31D40EDEE41B000C0AAF /* AtomicParsley */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; name = AtomicParsley; path = bin/AtomicParsley; sourceTree = "<group>"; };
 		49BC89A70ECD245F00027F1D /* MoviePanelController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MoviePanelController.m; path = classes/MoviePanelController.m; sourceTree = "<group>"; };
 		49BC89A80ECD245F00027F1D /* MoviePanelController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MoviePanelController.h; path = classes/MoviePanelController.h; sourceTree = "<group>"; };
 		49BC8CA10ED6892400027F1D /* EncodeWorking0.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = EncodeWorking0.png; path = icons/EncodeWorking0.png; sourceTree = "<group>"; };
@@ -309,8 +305,8 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				492D2F5E0EEF430F00AEB740 /* bin */,
 				499A31D20EDEE3E4000C0AAF /* mediainfo-inform.csv */,
-				49557AAE0EDDDAD100C851C0 /* Executables */,
 				4910FEF90EC7C1C1001B578B /* Icons */,
 				4910FE7F0EC7B304001B578B /* Images */,
 				8D1107310486CEB800E47090 /* Info.plist */,
@@ -427,16 +423,6 @@
 				4910FF110EC7C1D8001B578B /* sofar9.png */,
 			);
 			name = Icons;
-			sourceTree = "<group>";
-		};
-		49557AAE0EDDDAD100C851C0 /* Executables */ = {
-			isa = PBXGroup;
-			children = (
-				499A31D40EDEE41B000C0AAF /* AtomicParsley */,
-				499A31D00EDEE3D3000C0AAF /* mediainfo */,
-				49557AAF0EDDDAE400C851C0 /* ffmpeg */,
-			);
-			name = Executables;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -563,17 +549,15 @@
 				49BC8CB00ED6892400027F1D /* Pause.tiff in Resources */,
 				49BC8CB10ED6892400027F1D /* Play.tiff in Resources */,
 				49BC8CB20ED6892400027F1D /* Stop.tiff in Resources */,
-				49557AB00EDDDAE400C851C0 /* ffmpeg in Resources */,
 				494917A90EDE07AF0083743F /* VideoMonkey.icns in Resources */,
-				499A31D10EDEE3D3000C0AAF /* mediainfo in Resources */,
 				499A31D30EDEE3E4000C0AAF /* mediainfo-inform.csv in Resources */,
-				499A31D50EDEE41B000C0AAF /* AtomicParsley in Resources */,
 				49636A490EE7078200F7B6D2 /* invalid.png in Resources */,
 				49636A4A0EE7078200F7B6D2 /* ready.png in Resources */,
 				49636A4B0EE7078200F7B6D2 /* readyunknown.png in Resources */,
 				49636A4D0EE707BA00F7B6D2 /* error.png in Resources */,
 				49636A4F0EE707E300F7B6D2 /* ok.png in Resources */,
 				497E67100EEC24FA000372EC /* commands.plist in Resources */,
+				492D2F660EEF430F00AEB740 /* bin in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
