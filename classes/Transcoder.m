@@ -255,7 +255,7 @@
 {
     // assemble command
     // TODO: for now just do a stock encode
-    NSString* job = [m_appController jobForDevice: @"iphone" type: @"quicktime"];
+    NSString* job = [m_appController jobForDevice: @"iphone" type: @"quicktime-v"];
     
     NSArray* elements = [job componentsSeparatedByString:@" "];
     
@@ -264,6 +264,7 @@
     NSString* s;
     NSMutableString* commandString = [[NSMutableString alloc] init];
     CommandOutputType type = OT_NONE;
+    BOOL isFirst = YES;
     
     while (s = (NSString*) [enumerator nextObject]) {
         // collect each element up to a ';' (wait) '&' (continue) or '|' (pipe) into a command
@@ -275,8 +276,10 @@
             type = OT_CONTINUE;
     
         if (type == OT_NONE) {
+            if (!isFirst)
+                [commandString appendString:@" "];
+            isFirst = NO;
             [commandString appendString:s];
-            [commandString appendString:@" "];
         }
         else {
             // make a Command object for this command
@@ -291,10 +294,13 @@
 
     // execute each command in turn
     enumerator = [commands objectEnumerator];
-    Command* command;
+    Command* command = [enumerator nextObject];
     
-    while(command = (Command*) [enumerator nextObject])
-        [command execute];
+    while(command) {
+        Command* nextCommand = [enumerator nextObject];
+        [command execute: nextCommand];
+        command = nextCommand;
+    }
 
     m_fileStatus = FS_ENCODING;
     return YES;

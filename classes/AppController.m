@@ -315,7 +315,7 @@ static NSString* _validateCommandString(NSString* s)
 -(NSString*) jobForDevice: (NSString*) name type: (NSString*) type
 {
     NSDictionary* commands = [m_commands valueForKey: @"commands"];
-    NSString* job = _validateCommandString([[[m_commands valueForKey: @"jobs"] valueForKey: type] valueForKey: name]);
+    NSString* job = _validateCommandString([[[m_commands valueForKey: @"jobs"] valueForKey: name] valueForKey: type]);
     
     // job is a list of strings separated by spaces. If a string starts with '!' it is replaced by an
     // entry from commands. Otherwise it is output as is

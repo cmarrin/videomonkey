@@ -30,8 +30,8 @@
     return (Transcoder*) self;
 }
 
--(void) execute
-{        
+-(void) execute: (Command*) nextCommand
+{
     // build the environment
     NSMutableDictionary* env = [[NSMutableDictionary alloc] init];
     
@@ -54,25 +54,33 @@
     [env setValue: [NSString stringWithString:cmd] forKey: @"yuvadjust"];
     
     // fill in the filenames
-    [env setValue: [NSString stringWithString:[m_transcoder inputFileName]] forKey: @"input_file"];
-    [env setValue: [NSString stringWithString:[m_transcoder outputFileName]] forKey: @"output_file"];
+    [env setValue: [m_transcoder inputFileName] forKey: @"input_file"];
+    [env setValue: [m_transcoder outputFileName] forKey: @"output_file"];
     
     NSString* tmpfile = [NSString stringWithFormat:@"/tmp/%p-tmpaudio.wav", self];
     [[NSFileManager defaultManager] removeFileAtPath:tmpfile handler:nil];
     [env setValue: tmpfile forKey: @"tmp_audio_file"];
     
     // fill in params
-    [env setValue: [NSNumber numberWithInt: [m_transcoder inputVideoWidth]] forKey: @"input_file_width"];
-    [env setValue: [NSNumber numberWithInt: [m_transcoder inputVideoHeight]] forKey: @"input_file_height"];
-    [env setValue: [NSNumber numberWithDouble: [m_transcoder bitrate]] forKey: @"bitrate"];
-    [env setValue: [NSString stringWithString:[m_transcoder ffmpeg_vcodec]] forKey: @"ffmpeg_vcodec"];
+    [env setValue: [NSString stringWithFormat: @"%d", [m_transcoder inputVideoWidth]] forKey: @"input_video_width"];
+    [env setValue: [NSString stringWithFormat: @"%d", [m_transcoder inputVideoHeight]] forKey: @"input_video_width"];
+    [env setValue: [NSString stringWithFormat: @"%g", [m_transcoder bitrate]] forKey: @"input_video_width"];
+    [env setValue: [m_transcoder ffmpeg_vcodec] forKey: @"ffmpeg_vcodec"];
 
     // setup args and command
     NSMutableArray* args = [NSMutableArray arrayWithArray: [m_command componentsSeparatedByString:@" "]];
-    NSString* launchPath = [args objectAtIndex:0];
-    if ([launchPath characterAtIndex:0] == '$')
-        launchPath = [NSString stringWithString:[env valueForKey: [launchPath substringFromIndex: 1]]];
     
+    // do '$' replacement
+    for (int i = 0; i < [args count]; ++i) {
+        NSString* s = [args objectAtIndex:i];
+        if ([s characterAtIndex:0] == '$') {
+            NSString* replacement = [env valueForKey: [s substringFromIndex: 1]];
+            if (replacement)
+                [args replaceObjectAtIndex:i withObject:replacement];
+        }
+    }
+    
+    NSString* launchPath = [args objectAtIndex:0];
     [args removeObjectAtIndex: 0];
     
     // execute the command
@@ -81,23 +89,22 @@
     [m_task setLaunchPath: launchPath];
     [m_task setStandardError: [m_messagePipe fileHandleForWriting]];
     
-    if (m_outputType == OT_PIPE)
+    if (m_outputType == OT_PIPE) {
         [m_task setStandardOutput: m_outputPipe];
+        assert(nextCommand);
+        if (nextCommand)
+            [nextCommand setInputPipe: m_outputPipe];
+    }
         
     // add notifications
-    //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(processFinishEncode:) name:NSTaskDidTerminateNotification object:m_task];
-    //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(processRead:) name:NSFileHandleReadCompletionNotification object:[m_messagePipe fileHandleForReading]];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(processFinishEncode:) name:NSTaskDidTerminateNotification object:m_task];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(processRead:) name:NSFileHandleReadCompletionNotification object:[m_messagePipe fileHandleForReading]];
 
     [[m_messagePipe fileHandleForReading] readInBackgroundAndNotify];
     
     [m_task launch];
     if (m_outputType == OT_WAIT)
         [m_task waitUntilExit];
-}
-
--(NSPipe*) outputPipe
-{
-    return m_outputPipe;
 }
 
 -(void) setInputPipe: (NSPipe*) pipe
