@@ -286,6 +286,7 @@
             [commands addObject:[[Command alloc] initWithTranscoder:self command:commandString outputType:type finishId: @""]];
             type = OT_NONE;
             [commandString setString:@""];
+            isFirst = YES;
         }
     }
     

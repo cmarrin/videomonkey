@@ -18,7 +18,7 @@
         m_transcoder = transcoder;
         m_outputType = type;
         m_command = [NSString stringWithString:command];
-        m_id = id;
+        m_id = [NSString stringWithString:id];
         m_buffer = [[NSMutableString alloc] init];
         
         m_task = [[NSTask alloc] init];
@@ -146,6 +146,8 @@ static NSDictionary* makeDictionary(NSString* s)
 
 -(void) handleResponse: (NSString*) response
 {
+    NSLog(@"*** response: %@\n", response);
+    
     if (![response hasPrefix:@"#progress:"])
         return;
         
