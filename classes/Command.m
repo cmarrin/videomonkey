@@ -17,7 +17,7 @@
     if (self) {
         m_transcoder = transcoder;
         m_outputType = type;
-        m_command = [NSString stringWithString:command];
+        m_command = [command retain];
         m_id = [NSString stringWithString:id];
         m_buffer = [[NSMutableString alloc] init];
         
@@ -63,8 +63,8 @@
     
     // fill in params
     [env setValue: [NSString stringWithFormat: @"%d", [m_transcoder inputVideoWidth]] forKey: @"input_video_width"];
-    [env setValue: [NSString stringWithFormat: @"%d", [m_transcoder inputVideoHeight]] forKey: @"input_video_width"];
-    [env setValue: [NSString stringWithFormat: @"%g", [m_transcoder bitrate]] forKey: @"input_video_width"];
+    [env setValue: [NSString stringWithFormat: @"%d", [m_transcoder inputVideoHeight]] forKey: @"input_video_height"];
+    [env setValue: [NSString stringWithFormat: @"%d", (int) [m_transcoder bitrate]] forKey: @"bitrate"];
     [env setValue: [m_transcoder ffmpeg_vcodec] forKey: @"ffmpeg_vcodec"];
 
     // setup args and command
@@ -144,7 +144,7 @@ static NSDictionary* makeDictionary(NSString* s)
     return dictionary;
 }
 
--(void) handleResponse: (NSString*) response
+-(void) processResponse_generic: (NSString*) response
 {
     NSLog(@"*** response: %@\n", response);
     
@@ -169,6 +169,27 @@ static NSDictionary* makeDictionary(NSString* s)
     [dictionary release];
 }
 
+-(void) processResponse_ffmpeg: (NSString*) response
+{
+    // for now we ignore everything but the progress lines, which 
+    if (![response hasPrefix:@"frame="])
+        return;
+        
+    // parse out the time
+    NSRange range = [response rangeOfString: @"time="];
+    NSString* timeString = [response substringFromIndex:(range.location + range.length)];
+    double time = [timeString doubleValue];
+    [m_transcoder setProgressForCommand: self to: time / [m_transcoder playTime]];
+}
+
+-(void) processResponse: (NSString*) response
+{
+    if ([m_command hasPrefix:@"$ffmpeg"])
+        [self processResponse_ffmpeg: response];
+    else
+        [self processResponse_generic: response];
+}
+
 -(void) processRead: (NSNotification*) note
 {
     if (![[note name] isEqualToString:NSFileHandleReadCompletionNotification])
@@ -179,23 +200,23 @@ static NSDictionary* makeDictionary(NSString* s)
 	if([data length]) {
 		NSString* string = [[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding] autorelease];
         
-        NSArray* components = [string componentsSeparatedByString: @"\n"];
+        NSArray* components = [string componentsSeparatedByCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"\r\n"]];
         int i;
         assert([components count] > 0);
         for (i = 0; i < [components count]-1; ++i) {
             [m_buffer appendString:[components objectAtIndex:i]];
             
             // process string
-            [self handleResponse: m_buffer];
+            [self processResponse: m_buffer];
             
             // clear string
             [m_buffer setString: @""];
         }
         
         // if string ends in \n, it is complete, so send it too.
-        if ([string hasSuffix:@"\n"]) {
+        if ([string hasSuffix:@"\n"] || [string hasSuffix:@"\r"]) {
             [m_buffer appendString:[components objectAtIndex:[components count]-1]];
-            [self handleResponse: m_buffer];
+            [self processResponse: m_buffer];
             [m_buffer setString: @""];
         }
         else {
@@ -206,30 +227,6 @@ static NSDictionary* makeDictionary(NSString* s)
         // read another buffer
 		[[note object] readInBackgroundAndNotify];
     }
-}
-
--(void) processResponse_ffmpeg: (NSString*) response
-{
-    // for now we ignore everything but the progress lines, which 
-    if (![response hasPrefix:@"#progress:"])
-        return;
-        
-    NSDictionary* dictionary = makeDictionary(response);
-    
-    // see if we're done
-    if ([[dictionary objectForKey: @"#progress"] isEqualToString:@"done"]) {
-        [m_transcoder setProgressForCommand: self to: 1];
-    }
-    else {
-        // parse out the time
-        id val = [dictionary objectForKey: @"time"];
-        if (val && [val isKindOfClass: [NSString class]]) {
-            double time = [val doubleValue];
-            [m_transcoder setProgressForCommand: self to: time / [m_transcoder playTime]];
-        }
-    }
-    
-    [dictionary release];
 }
 
 @end

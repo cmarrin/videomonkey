@@ -109,7 +109,7 @@
         
     // Do video if it's there
     int offset = 1;
-    if ([[components objectAtIndex:offset] hasPrefix: @"-Video-"]) {
+    if ([components count] > offset && [[components objectAtIndex:offset] hasPrefix: @"-Video-"]) {
         NSArray* video = [[components objectAtIndex:offset] componentsSeparatedByString:@","];
         offset = 2;
         
@@ -119,9 +119,9 @@
             return NO;
         info->m_videaStreamKind = [[video objectAtIndex:1] intValue];
         info->m_videoTrack = [[video objectAtIndex:2] intValue];
-        info->m_videoLanguage = [video objectAtIndex:3];
-        info->m_videoCodec = [video objectAtIndex:4];
-        info->m_videoProfile = [video objectAtIndex:5];
+        info->m_videoLanguage = [[video objectAtIndex:3] retain];
+        info->m_videoCodec = [[video objectAtIndex:4] retain];
+        info->m_videoProfile = [[video objectAtIndex:5] retain];
         info->m_videoInterlaced = [[video objectAtIndex:6] isEqualToString:@"Interlace"];
         info->m_width = [[video objectAtIndex:8] intValue];
         info->m_height = [[video objectAtIndex:9] intValue];
@@ -131,7 +131,7 @@
     }
     
     // Do audio if it's there
-    if ([[components objectAtIndex:offset] hasPrefix: @"-Audio-"]) {
+    if ([components count] > offset && [[components objectAtIndex:offset] hasPrefix: @"-Audio-"]) {
         NSArray* audio = [[components objectAtIndex:offset] componentsSeparatedByString:@","];
 
         // -Audio-,%StreamKindID%,%ID%,%Language%,%Format%,%SamplingRate%,%Channels%,%BitRate%
@@ -140,8 +140,8 @@
             
         info->m_audioStreamKind = [[audio objectAtIndex:1] intValue];
         info->m_audioTrack = [[audio objectAtIndex:2] intValue];
-        info->m_audioLanguage = [audio objectAtIndex:3];
-        info->m_audioCodec = [audio objectAtIndex:4];
+        info->m_audioLanguage = [[audio objectAtIndex:3] retain];
+        info->m_audioCodec = [[audio objectAtIndex:4] retain];
         info->m_audioSamplingRate = [[audio objectAtIndex:5] doubleValue];
         info->m_channels = [[audio objectAtIndex:6] intValue];
         info->m_audioBitrate = [[audio objectAtIndex:7] doubleValue];
@@ -212,7 +212,10 @@
 
 - (double) bitrate;
 {
-    return m_bitrate;
+    // TODO: CFM - for now we will just match the input bitrate
+    if ([m_inputFiles count] > 0)
+        return ((TranscoderFileInfo*) [m_inputFiles objectAtIndex: 0])->m_bitrate;
+    return 100000;
 }
 
 -(double) playTime
@@ -263,14 +266,15 @@
 
 -(NSString*) ffmpeg_vcodec
 {
-    if ([m_inputFiles count] == 0)
-        return nil;
+    if ([m_outputFiles count] == 0)
+        return @"libx264";
     
-    NSString* vcodec = ((TranscoderFileInfo*) [m_inputFiles objectAtIndex: 0])->m_videoCodec;
+    // TODO: CFM - we eventually need to return accurate strings here
+    NSString* vcodec = ((TranscoderFileInfo*) [m_outputFiles objectAtIndex: 0])->m_videoCodec;
     if ([vcodec isEqualToString:@"h264"])
         return @"libx264";
         
-    return nil;
+    return @"libx264";
 }
 
 -(int) outputFileSize
@@ -320,7 +324,7 @@
         }
         else {
             // make a Command object for this command
-            [commands addObject:[[Command alloc] initWithTranscoder:self command:commandString outputType:type finishId: @""]];
+            [commands addObject:[[Command alloc] initWithTranscoder:self command:[NSString stringWithString: commandString] outputType:type finishId: @""]];
             type = OT_NONE;
             [commandString setString:@""];
             isFirst = YES;
