@@ -157,6 +157,7 @@
     m_inputFiles = [[NSMutableArray alloc] init];
     m_outputFiles = [[NSMutableArray alloc] init];
     m_fileStatus = FS_INVALID;
+    m_tempAudioFileName = [[NSString stringWithFormat:@"/tmp/%p-tmpaudio.wav", self] retain];
     
     // init the progress indicator
     m_progressIndicator = [[NSProgressIndicator alloc] init];
@@ -270,6 +271,24 @@
     return ([m_inputFiles count] > 0) ? ((TranscoderFileInfo*) [m_inputFiles objectAtIndex: 0])->m_height : 0;
 }
 
+-(int) inputVideoWidthDiv2
+{
+    if ([m_inputFiles count] == 0)
+        return 100;
+        
+    int w = ((TranscoderFileInfo*) [m_inputFiles objectAtIndex: 0])->m_width;
+    return (w & 1) ? w+1 : w;
+}
+
+-(int) inputVideoHeightDiv2
+{
+    if ([m_inputFiles count] == 0)
+        return 100;
+        
+    int h = ((TranscoderFileInfo*) [m_inputFiles objectAtIndex: 0])->m_height;
+    return (h & 1) ? h+1 : h;
+}
+
 -(NSString*) ffmpeg_vcodec
 {
     if ([m_outputFiles count] == 0)
@@ -298,8 +317,30 @@
     return (int) (playTime * bitrate / 8);
 }
 
+-(NSString*) tempAudioFileName
+{
+    return m_tempAudioFileName;
+}
+
 - (BOOL) startEncode
 {
+    if ([m_outputFiles count] == 0)
+        return NO;
+        
+    // open the log file
+    if (logFile) {
+        [logFile closeFile];
+        [logFile release];
+    }
+        
+    NSString* logFileName = [NSString stringWithFormat:@"~/Library/Application Support/VideoMonkey/Logs/%@-%@.log",
+                                [self outputFileName], [[NSDate date] description]];
+                                
+    logFile = [NSFileHandle fileHandleForWritingAtPath:logFileName];
+    
+    // make sure the tmp audio file does not exist
+    [[NSFileManager defaultManager] removeFileAtPath:m_tempAudioFileName handler:nil];
+
     // assemble command
     // TODO: always for iphone for now
     NSString* jobType = [NSString stringWithFormat:@"%@-%@", [self isInputQuicktime] ? @"quicktime" : @"normal", [self hasInputAudio] ? @"av" : @"v"];
@@ -313,6 +354,7 @@
     NSMutableString* commandString = [[NSMutableString alloc] init];
     CommandOutputType type = OT_NONE;
     BOOL isFirst = YES;
+    int commandId = 0;
     
     while (s = (NSString*) [enumerator nextObject]) {
         // collect each element up to a ';' (wait) '&' (continue) or '|' (pipe) into a command
@@ -331,7 +373,8 @@
         }
         else {
             // make a Command object for this command
-            [commands addObject:[[Command alloc] initWithTranscoder:self command:[NSString stringWithString: commandString] outputType:type finishId: @""]];
+            [commands addObject:[[Command alloc] initWithTranscoder:self command:[NSString stringWithString: commandString] 
+                                outputType:type finishId:[[NSNumber numberWithInt:commandId] stringValue]]];
             type = OT_NONE;
             [commandString setString:@""];
             isFirst = YES;
@@ -339,7 +382,7 @@
     }
     
     // add the last command (we know there will be a last command because we know the job can't end in one of the end chars)
-    [commands addObject:[[Command alloc] initWithTranscoder:self command:commandString outputType:OT_CONTINUE finishId: @"done"]];
+    [commands addObject:[[Command alloc] initWithTranscoder:self command:commandString outputType:OT_CONTINUE finishId: @"last"]];
 
     // execute each command in turn
     enumerator = [commands objectEnumerator];
@@ -370,10 +413,29 @@
 
 -(void) commandFinished: (Command*) command
 {
-    if ([(NSString*) [command finishId] isEqualToString:@"done"]) {
+    if ([(NSString*) [command finishId] isEqualToString:@"last"]) {
         m_fileStatus = FS_SUCCEEDED;
+        m_progress = 1;
+        [m_progressIndicator setDoubleValue: m_progress];
         [m_appController encodeFinished:self];
+        [logFile closeFile];
+        [logFile release];
+        logFile = nil;
     }
+}
+
+-(void) log: (NSString*) format, ...
+{
+    va_list args;
+    va_start(args, format);
+    NSString* s = [[NSString alloc] initWithFormat:format arguments: args];
+    
+    // Output to stderr
+    fprintf(stderr, [s UTF8String]);
+    
+    // Output to log file
+    if (logFile)
+        [logFile writeData:[s dataUsingEncoding:NSUTF8StringEncoding]];
 }
 
 @end

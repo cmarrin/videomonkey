@@ -72,6 +72,9 @@ typedef enum { FS_INVALID, FS_VALID, FS_ENCODING, FS_FAILED, FS_SUCCEEDED } File
     NSTask* m_task;
     NSPipe* m_pipe;
     NSProgressIndicator* m_progressIndicator;
+    
+    NSFileHandle* logFile;
+    NSString* m_tempAudioFileName;
 }
 
 -(Transcoder*) initWithController: (AppController*) controller;
@@ -89,10 +92,13 @@ typedef enum { FS_INVALID, FS_VALID, FS_ENCODING, FS_FAILED, FS_SUCCEEDED } File
 -(NSString*) inputFileName;
 -(int) inputVideoWidth;
 -(int) inputVideoHeight;
+-(int) inputVideoWidthDiv2;
+-(int) inputVideoHeightDiv2;
 -(BOOL) isInputQuicktime;
 -(BOOL) hasInputAudio;
 -(NSString*) outputFileName;
 -(int) outputFileSize;
+-(NSString*) tempAudioFileName;
 
 -(NSString*) ffmpeg_vcodec;
 
@@ -101,5 +107,7 @@ typedef enum { FS_INVALID, FS_VALID, FS_ENCODING, FS_FAILED, FS_SUCCEEDED } File
 
 -(void) setProgressForCommand: (Command*) command to: (double) value;
 -(void) commandFinished: (Command*) command;
+
+-(void) log: (NSString*) format, ...;
 
 @end

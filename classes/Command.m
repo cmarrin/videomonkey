@@ -46,16 +46,18 @@
     // fill in the filenames
     [env setValue: [m_transcoder inputFileName] forKey: @"input_file"];
     [env setValue: [m_transcoder outputFileName] forKey: @"output_file"];
-    
-    NSString* tmpfile = [NSString stringWithFormat:@"/tmp/%p-tmpaudio.wav", self];
-    [[NSFileManager defaultManager] removeFileAtPath:tmpfile handler:nil];
-    [env setValue: tmpfile forKey: @"tmp_audio_file"];
+    [env setValue: [m_transcoder tempAudioFileName] forKey: @"tmp_audio_file"];
     
     // fill in params
-    [env setValue: [NSString stringWithFormat: @"%d", [m_transcoder inputVideoWidth]] forKey: @"input_video_width"];
-    [env setValue: [NSString stringWithFormat: @"%d", [m_transcoder inputVideoHeight]] forKey: @"input_video_height"];
-    [env setValue: [NSString stringWithFormat: @"%d", (int) [m_transcoder bitrate]] forKey: @"bitrate"];
+    [env setValue: [[NSNumber numberWithInt: [m_transcoder inputVideoWidth]] stringValue] forKey: @"input_video_width"];
+    [env setValue: [[NSNumber numberWithInt: [m_transcoder inputVideoHeight]] stringValue] forKey: @"input_video_height"];
+    [env setValue: [[NSNumber numberWithInt: [m_transcoder inputVideoWidthDiv2]] stringValue] forKey: @"output_video_width"];
+    [env setValue: [[NSNumber numberWithInt: [m_transcoder inputVideoHeightDiv2]] stringValue] forKey: @"output_video_height"];
+    [env setValue: [[NSNumber numberWithInt: [m_transcoder bitrate]] stringValue] forKey: @"bitrate"];
     [env setValue: [m_transcoder ffmpeg_vcodec] forKey: @"ffmpeg_vcodec"];
+    
+    NSString* videoSize = [NSString stringWithFormat: @"%dx%d", [m_transcoder inputVideoWidthDiv2], [m_transcoder inputVideoHeightDiv2]];
+    [env setValue: videoSize forKey: @"ffmpeg_output_video_size"];
 
     // setup args and command
     NSMutableArray* args = [NSMutableArray arrayWithArray: [m_command componentsSeparatedByString:@" "]];
@@ -72,6 +74,12 @@
     
     NSString* launchPath = [args objectAtIndex:0];
     [args removeObjectAtIndex: 0];
+    
+    // log the command
+    [m_transcoder log: @"[Command %@] execute: %@ %@\n", 
+                            [m_id isEqualToString:@"last"] ? @"X" : m_id, 
+                            [launchPath lastPathComponent], 
+                            [args componentsJoinedByString: @" "]];
     
     // execute the command
     [m_task setArguments: args];
@@ -136,31 +144,13 @@ static NSDictionary* makeDictionary(NSString* s)
 
 -(void) processResponse_generic: (NSString*) response
 {
-    NSLog(@"*** response: %@\n", response);
-    
-    if (![response hasPrefix:@"#progress:"])
-        return;
-        
-    NSDictionary* dictionary = makeDictionary(response);
-    
-    // see if we're done
-    if ([[dictionary objectForKey: @"#progress"] isEqualToString:@"done"]) {
-        [m_transcoder setProgressForCommand: self to: 1];
-    }
-    else {
-        // parse out the time
-        id val = [dictionary objectForKey: @"time"];
-        if (val && [val isKindOfClass: [NSString class]]) {
-            double time = [val doubleValue];
-            [m_transcoder setProgressForCommand: self to: time / [m_transcoder playTime]];
-        }
-    }
-    
-    [dictionary release];
+    [m_transcoder log: @"[Command %@] %@\n", [m_id isEqualToString:@"last"] ? @"X" : m_id, response];
 }
 
 -(void) processResponse_ffmpeg: (NSString*) response
 {
+    [m_transcoder log: @"[Command %@] %@\n", [m_id isEqualToString:@"last"] ? @"X" : m_id, response];
+    
     // for now we ignore everything but the progress lines, which 
     if (![response hasPrefix:@"frame="])
         return;

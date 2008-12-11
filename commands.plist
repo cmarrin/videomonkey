@@ -11,7 +11,7 @@
 		<key>yuv_to_ffmpeg_av</key>
 		<string>$ffmpeg -y -i - -i $tmp_audio_file -vcodec $ffmpeg_vcodec -b $bitrate $output_file</string>
 		<key>yuv_to_ffmpeg_v</key>
-		<string>$ffmpeg -y -i - -vcodec $ffmpeg_vcodec -b $bitrate $output_file</string>
+		<string>$ffmpeg -y -i - -vcodec $ffmpeg_vcodec -b $bitrate -s $ffmpeg_output_video_size $output_file</string>
 		<key>ffmpeg</key>
 		<string>$ffmpeg -y -i $input_file -vcodec $ffmpeg_vcodec -b $bitrate $output_file</string>
 	</dict>
