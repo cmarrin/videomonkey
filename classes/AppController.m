@@ -114,9 +114,10 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
     NSString* filename;
     for (int i = 0; i < 10000; ++i) {
         if (i == 0)
-            filename = [NSString stringWithFormat: @"%@%@.%@", savePath, baseName, suffix];
+            filename = [[savePath stringByAppendingPathComponent: baseName] stringByAppendingPathExtension: suffix];
         else
-            filename = [NSString stringWithFormat: @"%@%@_%d.%@", savePath, baseName, i, suffix];
+            filename = [[savePath stringByAppendingPathComponent: 
+                        [NSString stringWithFormat: @"%@_%d", baseName, i]] stringByAppendingPathExtension: suffix];
             
         if (![[NSFileManager defaultManager] fileExistsAtPath: filename])
             break;
@@ -232,10 +233,21 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
     return YES;
 }
 
+-(void) setOutputFileName
+{
+    NSEnumerator* e = [m_files objectEnumerator];
+    Transcoder* transcoder;
+    
+    while ((transcoder = (Transcoder*) [e nextObject]))
+        [transcoder changeOutputFileName: getOutputFileName([transcoder inputFileName], m_savePath, m_outputFileSuffix)];
+}
+
 - (IBAction)startConvert:(id)sender
 {
-    if ([m_files count] > 0)
+    if ([m_files count] > 0) {
+        [self setOutputFileName];
         [[m_files objectAtIndex: 0] startEncode];
+    }
 }
 
 - (IBAction)pauseConvert:(id)sender
@@ -248,15 +260,6 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
     printf("*** stop\n");
 }
 
--(void) changeOutputFileName
-{
-    NSEnumerator* e = [m_files objectEnumerator];
-    Transcoder* transcoder;
-    
-    while ((transcoder = (Transcoder*) [e nextObject]))
-        [transcoder changeOutputFileName: getOutputFileName([transcoder inputFileName], m_savePath, m_outputFileSuffix)];
-}
-
 -(IBAction)changeSaveToText:(id)sender
 {
     [m_savePath release];
@@ -264,7 +267,7 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
     [m_savePath retain];
     [m_saveToPathTextField abortEditing];
     [m_saveToPathTextField setStringValue:m_savePath];
-    [self changeOutputFileName];
+    [self setOutputFileName];
 }
 
 -(IBAction)selectSaveToPath:(id)sender
@@ -279,7 +282,7 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
         m_savePath = [[panel filenames] objectAtIndex:0];
         [m_savePath retain];
         [m_saveToPathTextField setStringValue:m_savePath];
-        [self changeOutputFileName];
+        [self setOutputFileName];
     }
 }
 

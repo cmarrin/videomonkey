@@ -332,7 +332,7 @@
     }
     
     // add the last command (we know there will be a last command because we know the job can't end in one of the end chars)
-    [commands addObject:[[Command alloc] initWithTranscoder:self command:commandString outputType:OT_CONTINUE finishId: @""]];
+    [commands addObject:[[Command alloc] initWithTranscoder:self command:commandString outputType:OT_CONTINUE finishId: @"done"]];
 
     // execute each command in turn
     enumerator = [commands objectEnumerator];
@@ -363,8 +363,10 @@
 
 -(void) commandFinished: (Command*) command
 {
-    if ([(NSString*) [command finishId] isEqualToString:@"done"])
+    if ([(NSString*) [command finishId] isEqualToString:@"done"]) {
+        m_fileStatus = FS_SUCCEEDED;
         [m_appController encodeFinished:self];
+    }
 }
 
 @end

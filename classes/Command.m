@@ -37,22 +37,12 @@
     
     // fill in the commands
     NSString* cmdPath = [NSString stringWithString: [[NSBundle mainBundle] resourcePath]];
-    NSMutableString* cmd = [NSMutableString stringWithString: cmdPath];
-    [cmd appendString:@"/bin/ffmpeg"];
-    [env setValue: [NSString stringWithString:cmd] forKey: @"ffmpeg"];
     
-    [cmd setString: cmdPath];
-    [cmd appendString:@"/bin/qt_export"];
-    [env setValue: [NSString stringWithString:cmd] forKey: @"qt_export"];
+    [env setValue: [cmdPath stringByAppendingPathComponent: @"bin/ffmpeg"] forKey: @"ffmpeg"];
+    [env setValue: [cmdPath stringByAppendingPathComponent: @"bin/qt_export"] forKey: @"qt_export"];
+    [env setValue: [cmdPath stringByAppendingPathComponent: @"bin/movtoy4m"] forKey: @"movtoy4m"];
+    [env setValue: [cmdPath stringByAppendingPathComponent: @"bin/yuvadjust"] forKey: @"yuvadjust"];
 
-    [cmd setString: cmdPath];
-    [cmd appendString:@"/bin/movtoy4m"];
-    [env setValue: [NSString stringWithString:cmd] forKey: @"movtoy4m"];
-
-    [cmd setString: cmdPath];
-    [cmd appendString:@"/bin/yuvadjust"];
-    [env setValue: [NSString stringWithString:cmd] forKey: @"yuvadjust"];
-    
     // fill in the filenames
     [env setValue: [m_transcoder inputFileName] forKey: @"input_file"];
     [env setValue: [m_transcoder outputFileName] forKey: @"output_file"];
