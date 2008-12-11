@@ -242,16 +242,22 @@
 
 -(NSString*) inputFileName
 {
-    if ([m_inputFiles count] > 0)
-        return ((TranscoderFileInfo*) [m_inputFiles objectAtIndex: 0])->m_filename;
-    return nil;
+    return ([m_inputFiles count] > 0) ? ((TranscoderFileInfo*) [m_inputFiles objectAtIndex: 0])->m_filename : nil;
+}
+
+-(BOOL) isInputQuicktime
+{
+    return ([m_inputFiles count] > 0) ? ((TranscoderFileInfo*) [m_inputFiles objectAtIndex: 0])->m_isQuicktime : NO;
+}
+
+-(BOOL) hasInputAudio
+{
+    return ([m_inputFiles count] > 0) ? (((TranscoderFileInfo*) [m_inputFiles objectAtIndex: 0])->m_audioSamplingRate != 0) : NO;
 }
 
 -(NSString*) outputFileName
 {
-    if ([m_outputFiles count] > 0)
-        return ((TranscoderFileInfo*) [m_outputFiles objectAtIndex: 0])->m_filename;
-    return nil;
+    return ([m_outputFiles count] > 0) ? ((TranscoderFileInfo*) [m_outputFiles objectAtIndex: 0])->m_filename : nil;
 }
 
 -(int) inputVideoWidth
@@ -295,8 +301,9 @@
 - (BOOL) startEncode
 {
     // assemble command
-    // TODO: for now just do a stock encode
-    NSString* job = [m_appController jobForDevice: @"iphone" type: @"quicktime-v"];
+    // TODO: always for iphone for now
+    NSString* jobType = [NSString stringWithFormat:@"%@-%@", [self isInputQuicktime] ? @"quicktime" : @"normal", [self hasInputAudio] ? @"av" : @"v"];
+    NSString* job = [m_appController jobForDevice: @"iphone" type: jobType];
     
     NSArray* elements = [job componentsSeparatedByString:@" "];
     

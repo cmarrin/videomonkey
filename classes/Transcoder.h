@@ -89,6 +89,8 @@ typedef enum { FS_INVALID, FS_VALID, FS_ENCODING, FS_FAILED, FS_SUCCEEDED } File
 -(NSString*) inputFileName;
 -(int) inputVideoWidth;
 -(int) inputVideoHeight;
+-(BOOL) isInputQuicktime;
+-(BOOL) hasInputAudio;
 -(NSString*) outputFileName;
 -(int) outputFileSize;
 
