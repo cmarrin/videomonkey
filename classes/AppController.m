@@ -109,8 +109,8 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
     objectValueForTableColumn: (NSTableColumn *)aTableColumn
     row: (int)rowIndex
 {
-    if ([[aTableColumn identifier] isEqualToString: @"image"])
-        return nil; //getFileStatusImage([[m_files objectAtIndex: rowIndex] inputFileStatus]);
+    if ([[aTableColumn identifier] isEqualToString: @"enable"])
+        return [NSNumber numberWithBool:YES];
     if ([[aTableColumn identifier] isEqualToString: @"progress"]) {
         id tr = [m_files objectAtIndex: rowIndex];
         if ([tr inputFileStatus] == FS_ENCODING)
