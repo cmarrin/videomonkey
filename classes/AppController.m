@@ -79,27 +79,6 @@ static NSString* formatFileSize(int size)
         return [NSString stringWithFormat:@"%.1fGB", (double) size/1000000000.0];
 }
 
-static NSImage* getResourceImage(NSString* name, NSString* ext)
-{
-    NSString* path = [[NSBundle mainBundle] pathForResource:name ofType:ext];
-    return [[NSImage alloc] initWithContentsOfFile:path]; 
-}
-
-static NSImage* getFileStatusImage(FileStatus status)
-{
-    NSString* name = nil;
-    switch(status)
-    {
-        case FS_INVALID:    name = @"invalid";     break;
-        case FS_VALID:      name = @"ready";       break;
-        case FS_ENCODING:   name = @"converting";  break;
-        case FS_FAILED:     name = @"error";       break;
-        case FS_SUCCEEDED:  name = @"ok";          break;
-    }
-    
-    return name ? getResourceImage(name, @"png") : nil;
-}
-
 static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, NSString* suffix)
 {
     // extract filename
@@ -131,9 +110,14 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
     row: (int)rowIndex
 {
     if ([[aTableColumn identifier] isEqualToString: @"image"])
-        return getFileStatusImage([[m_files objectAtIndex: rowIndex] inputFileStatus]);
-    if ([[aTableColumn identifier] isEqualToString: @"progress"])
-        return [NSValue valueWithPointer:[[m_files objectAtIndex: rowIndex] progressIndicator]];
+        return nil; //getFileStatusImage([[m_files objectAtIndex: rowIndex] inputFileStatus]);
+    if ([[aTableColumn identifier] isEqualToString: @"progress"]) {
+        id tr = [m_files objectAtIndex: rowIndex];
+        if ([tr inputFileStatus] == FS_ENCODING)
+            return [NSValue valueWithPointer:[tr progressIndicator]];
+        else
+            return [NSValue valueWithPointer:[tr statusImageView]];
+    }
     if ([[aTableColumn identifier] isEqualToString: @"filename"])
         return [[m_files objectAtIndex: rowIndex] inputFileName];
     if ([[aTableColumn identifier] isEqualToString: @"filesize"])

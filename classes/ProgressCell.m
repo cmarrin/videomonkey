@@ -21,22 +21,26 @@
 // Draw the cell.
 - (void) drawInteriorWithFrame : (NSRect) cellFrame inView: (NSView *) controlView
 {
-    NSProgressIndicator* progress = (NSProgressIndicator*) [[self objectValue] pointerValue];
-    
-    // Removing subviews is tricky, if the progress bar gets removed when it gets
-    // 100%, it could get re-created on resize. This is perhaps kludgy and should
-    // be fixed.
-    if([progress doubleValue] < 100) {
-        if(![progress superview])
-            [controlView addSubview: progress];
-
+    id obj = (id) [[self objectValue] pointerValue];
+    NSArray* subviews = [controlView subviews];
+    if ([subviews count] > 0) {
+        id oldobj = [subviews objectAtIndex:0];
+        if (oldobj == obj)
+            return;
+            
+        [controlView replaceSubview:oldobj with:obj];
+    }
+    else
+        [controlView addSubview: obj];
+        
+    if ([obj isKindOfClass:[NSProgressIndicator class]]) {
         // Make the indicator a bit smaller. The setControlSize method
         // doesn’t work in this scenario.
         cellFrame.origin.y += cellFrame.size.height / 4;
         cellFrame.size.height /= 1.5;
-
-        [progress setFrame: cellFrame];
     }
+    
+    [obj setFrame: cellFrame];
 }
 
 @end

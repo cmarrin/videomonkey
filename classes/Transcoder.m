@@ -150,6 +150,25 @@
     return YES;
 }
 
+static NSImage* getFileStatusImage(FileStatus status)
+{
+    NSString* name = nil;
+    switch(status)
+    {
+        case FS_INVALID:    name = @"invalid";     break;
+        case FS_VALID:      name = @"ready";       break;
+        case FS_ENCODING:   name = @"converting";  break;
+        case FS_FAILED:     name = @"error";       break;
+        case FS_SUCCEEDED:  name = @"ok";          break;
+    }
+    
+    if (!name)
+        return nil;
+        
+    NSString* path = [[NSBundle mainBundle] pathForResource:name ofType:@"png"];
+    return [[NSImage alloc] initWithContentsOfFile:path]; 
+}
+
 - (Transcoder*) initWithController: (AppController*) controller
 {
     self = [super init];
@@ -165,6 +184,10 @@
     [m_progressIndicator setMaxValue:1];
     [m_progressIndicator setIndeterminate: NO];
     [m_progressIndicator setBezeled: NO];
+    
+    // init the status image view
+    m_statusImageView = [[NSImageView alloc] init];
+    [m_statusImageView setImage: getFileStatusImage(m_fileStatus)];
 
     return self;
 }
@@ -182,12 +205,14 @@
     if (![self _validateInputFile: file ]) {
         [file release];
         m_fileStatus = FS_INVALID;
+        [m_statusImageView setImage: getFileStatusImage(m_fileStatus)];
         return -1;
     }
 
     [m_inputFiles addObject: file];
     [file release];
     m_fileStatus = FS_VALID;
+    [m_statusImageView setImage: getFileStatusImage(m_fileStatus)];
     return [m_inputFiles count] - 1;    
 }
 
@@ -234,6 +259,11 @@
 -(NSProgressIndicator*) progressIndicator
 {
     return m_progressIndicator;
+}
+
+-(NSImageView*) statusImageView
+{
+    return m_statusImageView;
 }
 
 -(FileStatus) inputFileStatus
@@ -395,6 +425,7 @@
     }
 
     m_fileStatus = FS_ENCODING;
+    [m_statusImageView setImage: getFileStatusImage(m_fileStatus)];
     return YES;
 }
 
@@ -415,6 +446,7 @@
 {
     if ([(NSString*) [command finishId] isEqualToString:@"last"]) {
         m_fileStatus = FS_SUCCEEDED;
+        [m_statusImageView setImage: getFileStatusImage(m_fileStatus)];
         m_progress = 1;
         [m_progressIndicator setDoubleValue: m_progress];
         [m_appController encodeFinished:self];

@@ -14,7 +14,7 @@
 @class AppController;
 @class Command;
 
-typedef enum { FS_INVALID, FS_VALID, FS_ENCODING, FS_FAILED, FS_SUCCEEDED } FileStatus;
+typedef enum FileStatus { FS_INVALID, FS_VALID, FS_ENCODING, FS_FAILED, FS_SUCCEEDED } FileStatus;
 
 @interface TranscoderFileInfo : NSObject {
   @public
@@ -72,6 +72,7 @@ typedef enum { FS_INVALID, FS_VALID, FS_ENCODING, FS_FAILED, FS_SUCCEEDED } File
     NSTask* m_task;
     NSPipe* m_pipe;
     NSProgressIndicator* m_progressIndicator;
+    NSImageView* m_statusImageView;
     
     NSFileHandle* logFile;
     NSString* m_tempAudioFileName;
@@ -86,8 +87,11 @@ typedef enum { FS_INVALID, FS_VALID, FS_ENCODING, FS_FAILED, FS_SUCCEEDED } File
 -(void) setBitrate: (float) rate;
 -(double) bitrate;
 -(double) playTime;
+
 -(double) progress;
 -(NSProgressIndicator*) progressIndicator;
+-(NSImageView*) statusImageView;
+
 -(FileStatus) inputFileStatus;
 -(NSString*) inputFileName;
 -(int) inputVideoWidth;
