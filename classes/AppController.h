@@ -23,6 +23,7 @@
     int m_currentEncoding;
 }
 
+-(IBAction)clickFileEnable:(id)sender;
 -(IBAction)startEncode:(id)sender;
 -(IBAction)pauseEncode:(id)sender;
 -(IBAction)stopEncode:(id)sender;

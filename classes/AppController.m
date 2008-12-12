@@ -221,12 +221,19 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
         [transcoder changeOutputFileName: getOutputFileName([transcoder inputFileName], m_savePath, m_outputFileSuffix)];
 }
 
+-(IBAction)clickFileEnable:(id)sender
+{
+    Transcoder* tr = [m_files objectAtIndex:[sender selectedRow]];
+    [tr setEnabled: ![tr isEnabled]];
+    [m_fileListView reloadData];
+}
+
 -(void) startNextEncode
 {
-    if (m_currentEncoding >= [m_files count])
-        return;
-        
-    [[m_files objectAtIndex: m_currentEncoding++] startEncode];
+    while (m_currentEncoding < [m_files count]) {
+        if ([[m_files objectAtIndex: m_currentEncoding++] startEncode])
+            break;
+    }
 }
 
 - (IBAction)startEncode:(id)sender

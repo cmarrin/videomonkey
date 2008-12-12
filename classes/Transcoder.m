@@ -257,6 +257,11 @@ static NSImage* getFileStatusImage(FileStatus status)
     return m_enabled;
 }
 
+-(void) setEnabled: (BOOL) b
+{
+    m_enabled = b;
+}
+
 -(NSProgressIndicator*) progressIndicator
 {
     return m_progressIndicator;
@@ -373,7 +378,7 @@ static NSImage* getFileStatusImage(FileStatus status)
 
 - (BOOL) startEncode
 {
-    if ([m_outputFiles count] == 0)
+    if ([m_outputFiles count] == 0 || !m_enabled)
         return NO;
         
     // open the log file

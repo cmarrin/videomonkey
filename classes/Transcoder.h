@@ -90,6 +90,7 @@ typedef enum FileStatus { FS_INVALID, FS_VALID, FS_ENCODING, FS_FAILED, FS_SUCCE
 
 -(double) progress;
 -(BOOL) isEnabled;
+-(void) setEnabled: (BOOL) b;
 -(NSProgressIndicator*) progressIndicator;
 -(NSImageView*) statusImageView;
 
