@@ -16,10 +16,12 @@
 
 @interface ConversionParams : NSObject {
     IBOutlet float *m_quality;
-    IBOutlet id m_conversionParamsTabView;
+    IBOutlet NSTabView* m_conversionParamsTabView;
+    IBOutlet NSPopUpButton* m_conversionParamsButton;
     
     ConversionTab* m_currentTabViewItem;
 }
+
 - (IBAction)selectTab:(id)sender;
 - (IBAction)paramChanged:(id)sender;
 @end

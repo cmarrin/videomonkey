@@ -43,6 +43,9 @@
     [[m_fileListView tableColumnWithIdentifier: @"progress"] setDataCell: [[ProgressCell alloc] init]];
 
     [m_totalProgressBar setUsesThreadedAnimation:YES];
+
+    [m_stopEncodeItem setEnabled: NO];
+    [m_pauseEncodeItem setEnabled: NO];
 }
 
 // dataSource methods
@@ -228,17 +231,31 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
     [m_fileListView reloadData];
 }
 
+- (BOOL)validateToolbarItem:(NSToolbarItem *)theItem
+{
+    return [theItem isEnabled];
+}
+
 -(void) startNextEncode
 {
     while (m_currentEncoding < [m_files count]) {
         if ([[m_files objectAtIndex: m_currentEncoding++] startEncode])
-            break;
+            return;
     }
+
+    [m_startEncodeItem setEnabled: YES];
+    [m_stopEncodeItem setEnabled: NO];
+    [m_pauseEncodeItem setEnabled: NO];
 }
 
 - (IBAction)startEncode:(id)sender
 {
     [self setOutputFileName];
+    
+    [m_startEncodeItem setEnabled: NO];
+    [m_stopEncodeItem setEnabled: YES];
+    [m_pauseEncodeItem setEnabled: YES];
+    
     m_currentEncoding = 0;
     [self startNextEncode];
 }

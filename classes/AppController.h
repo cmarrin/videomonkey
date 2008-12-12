@@ -15,6 +15,10 @@
     IBOutlet NSTableView* m_fileListView;
     IBOutlet NSProgressIndicator* m_totalProgressBar;
     IBOutlet NSTextField* m_saveToPathTextField;
+    IBOutlet NSToolbarItem* m_startEncodeItem;
+    IBOutlet NSToolbarItem* m_pauseEncodeItem;
+    IBOutlet NSToolbarItem* m_stopEncodeItem;
+    
     NSMutableArray* m_files;
     int m_draggedRow;
     NSString* m_savePath;
