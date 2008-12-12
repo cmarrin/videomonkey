@@ -66,6 +66,7 @@ typedef enum FileStatus { FS_INVALID, FS_VALID, FS_ENCODING, FS_FAILED, FS_SUCCE
     double m_bitrate;
     double m_totalDuration;
     double m_progress;
+    BOOL m_enabled;
     FileStatus m_fileStatus;
     AppController* m_appController;
     
@@ -79,7 +80,6 @@ typedef enum FileStatus { FS_INVALID, FS_VALID, FS_ENCODING, FS_FAILED, FS_SUCCE
 }
 
 -(Transcoder*) initWithController: (AppController*) controller;
--(void) setAppController: (AppController*) appController;
 
 -(int) addInputFile: (NSString*) filename;
 -(int) addOutputFile: (NSString*) filename;
@@ -89,6 +89,7 @@ typedef enum FileStatus { FS_INVALID, FS_VALID, FS_ENCODING, FS_FAILED, FS_SUCCE
 -(double) playTime;
 
 -(double) progress;
+-(BOOL) isEnabled;
 -(NSProgressIndicator*) progressIndicator;
 -(NSImageView*) statusImageView;
 
@@ -98,6 +99,8 @@ typedef enum FileStatus { FS_INVALID, FS_VALID, FS_ENCODING, FS_FAILED, FS_SUCCE
 -(int) inputVideoHeight;
 -(int) inputVideoWidthDiv2;
 -(int) inputVideoHeightDiv2;
+-(int) inputVideoWidthDiv16;
+-(int) inputVideoHeightDiv16;
 -(BOOL) isInputQuicktime;
 -(BOOL) hasInputAudio;
 -(NSString*) outputFileName;

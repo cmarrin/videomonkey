@@ -172,10 +172,11 @@ static NSImage* getFileStatusImage(FileStatus status)
 - (Transcoder*) initWithController: (AppController*) controller
 {
     self = [super init];
-    [self setAppController: controller];
+    m_appController = controller;
     m_inputFiles = [[NSMutableArray alloc] init];
     m_outputFiles = [[NSMutableArray alloc] init];
     m_fileStatus = FS_INVALID;
+    m_enabled = YES;
     m_tempAudioFileName = [[NSString stringWithFormat:@"/tmp/%p-tmpaudio.wav", self] retain];
     
     // init the progress indicator
@@ -192,11 +193,6 @@ static NSImage* getFileStatusImage(FileStatus status)
     return self;
 }
     
--(void) setAppController: (AppController*) appController
-{
-    m_appController = appController;
-}
-
 - (int) addInputFile: (NSString*) filename
 {
     TranscoderFileInfo* file = [[TranscoderFileInfo alloc] init];
@@ -228,7 +224,7 @@ static NSImage* getFileStatusImage(FileStatus status)
 -(void) changeOutputFileName: (NSString*) filename
 {
     if ([m_outputFiles count] > 0)
-        ((TranscoderFileInfo*) [m_outputFiles objectAtIndex: 0])->m_filename = filename;
+        [[m_outputFiles objectAtIndex: 0] setFilename: filename];
 }
 
 - (void) setBitrate: (float) rate
@@ -254,6 +250,11 @@ static NSImage* getFileStatusImage(FileStatus status)
 -(double) progress
 {
     return m_progress;
+}
+
+-(BOOL) isEnabled
+{
+    return m_enabled;
 }
 
 -(NSProgressIndicator*) progressIndicator
@@ -317,6 +318,24 @@ static NSImage* getFileStatusImage(FileStatus status)
         
     int h = ((TranscoderFileInfo*) [m_inputFiles objectAtIndex: 0])->m_height;
     return (h & 1) ? h+1 : h;
+}
+
+-(int) inputVideoWidthDiv16
+{
+    if ([m_inputFiles count] == 0)
+        return 100;
+        
+    int w = ((TranscoderFileInfo*) [m_inputFiles objectAtIndex: 0])->m_width;
+    return (w+15) & (~(16-1));
+}
+
+-(int) inputVideoHeightDiv16
+{
+    if ([m_inputFiles count] == 0)
+        return 100;
+        
+    int h = ((TranscoderFileInfo*) [m_inputFiles objectAtIndex: 0])->m_height;
+    return (h+15) & (~(16-1));
 }
 
 -(NSString*) ffmpeg_vcodec

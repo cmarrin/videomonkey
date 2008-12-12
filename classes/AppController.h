@@ -20,11 +20,12 @@
     NSString* m_savePath;
     NSString* m_outputFileSuffix;
     NSDictionary* m_commands;
+    int m_currentEncoding;
 }
 
--(IBAction)startConvert:(id)sender;
--(IBAction)pauseConvert:(id)sender;
--(IBAction)stopConvert:(id)sender;
+-(IBAction)startEncode:(id)sender;
+-(IBAction)pauseEncode:(id)sender;
+-(IBAction)stopEncode:(id)sender;
 -(IBAction)changeSaveToText:(id)sender;
 -(IBAction)selectSaveToPath:(id)sender;
 

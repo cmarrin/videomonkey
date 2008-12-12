@@ -7,7 +7,7 @@
 //
 
 #import "ProgressCell.h"
-
+#import "Transcoder.h"
 
 @implementation ProgressCell
 
@@ -21,25 +21,22 @@
 // Draw the cell.
 - (void) drawInteriorWithFrame : (NSRect) cellFrame inView: (NSView *) controlView
 {
-    id obj = (id) [[self objectValue] pointerValue];
-    NSArray* subviews = [controlView subviews];
-    if ([subviews count] > 0) {
-        id oldobj = [subviews objectAtIndex:0];
-        if (oldobj == obj)
-            return;
-            
-        [controlView replaceSubview:oldobj with:obj];
-    }
-    else
-        [controlView addSubview: obj];
-        
-    if ([obj isKindOfClass:[NSProgressIndicator class]]) {
+    Transcoder* tr = (Transcoder*) [[self objectValue] pointerValue];
+    
+    // make sure neither is in the view right now
+    [[tr statusImageView] removeFromSuperview];
+    [[tr progressIndicator] removeFromSuperview];
+    
+    // now add the appropriate one
+    id obj = ([tr inputFileStatus] == FS_ENCODING) ? (id) [tr progressIndicator] : (id) [tr statusImageView];
+    if ([tr inputFileStatus] == FS_ENCODING) {
         // Make the indicator a bit smaller. The setControlSize method
         // doesn’t work in this scenario.
         cellFrame.origin.y += cellFrame.size.height / 4;
         cellFrame.size.height /= 1.5;
     }
     
+    [controlView addSubview:obj];
     [obj setFrame: cellFrame];
 }
 

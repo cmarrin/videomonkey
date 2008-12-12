@@ -51,12 +51,12 @@
     // fill in params
     [env setValue: [[NSNumber numberWithInt: [m_transcoder inputVideoWidth]] stringValue] forKey: @"input_video_width"];
     [env setValue: [[NSNumber numberWithInt: [m_transcoder inputVideoHeight]] stringValue] forKey: @"input_video_height"];
-    [env setValue: [[NSNumber numberWithInt: [m_transcoder inputVideoWidthDiv2]] stringValue] forKey: @"output_video_width"];
-    [env setValue: [[NSNumber numberWithInt: [m_transcoder inputVideoHeightDiv2]] stringValue] forKey: @"output_video_height"];
+    [env setValue: [[NSNumber numberWithInt: [m_transcoder inputVideoWidthDiv16]] stringValue] forKey: @"output_video_width"];
+    [env setValue: [[NSNumber numberWithInt: [m_transcoder inputVideoHeightDiv16]] stringValue] forKey: @"output_video_height"];
     [env setValue: [[NSNumber numberWithInt: [m_transcoder bitrate]] stringValue] forKey: @"bitrate"];
     [env setValue: [m_transcoder ffmpeg_vcodec] forKey: @"ffmpeg_vcodec"];
     
-    NSString* videoSize = [NSString stringWithFormat: @"%dx%d", [m_transcoder inputVideoWidthDiv2], [m_transcoder inputVideoHeightDiv2]];
+    NSString* videoSize = [NSString stringWithFormat: @"%dx%d", [m_transcoder inputVideoWidthDiv16], [m_transcoder inputVideoHeightDiv16]];
     [env setValue: videoSize forKey: @"ffmpeg_output_video_size"];
 
     // setup args and command
@@ -148,13 +148,14 @@ static NSDictionary* makeDictionary(NSString* s)
 }
 
 -(void) processResponse_ffmpeg: (NSString*) response
-{
-    [m_transcoder log: @"[Command %@] %@\n", [m_id isEqualToString:@"last"] ? @"X" : m_id, response];
-    
+{    
     // for now we ignore everything but the progress lines, which 
-    if (![response hasPrefix:@"frame="])
+    if (![response hasPrefix:@"frame="]) {
+        if ([response length] > 0)
+            [m_transcoder log: @"[Command %@] %@\n", [m_id isEqualToString:@"last"] ? @"X" : m_id, response];
         return;
-        
+    }
+    
     // parse out the time
     NSRange range = [response rangeOfString: @"time="];
     NSString* timeString = [response substringFromIndex:(range.location + range.length)];

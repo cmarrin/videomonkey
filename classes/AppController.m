@@ -110,14 +110,9 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
     row: (int)rowIndex
 {
     if ([[aTableColumn identifier] isEqualToString: @"enable"])
-        return [NSNumber numberWithBool:YES];
-    if ([[aTableColumn identifier] isEqualToString: @"progress"]) {
-        id tr = [m_files objectAtIndex: rowIndex];
-        if ([tr inputFileStatus] == FS_ENCODING)
-            return [NSValue valueWithPointer:[tr progressIndicator]];
-        else
-            return [NSValue valueWithPointer:[tr statusImageView]];
-    }
+        return [NSNumber numberWithBool:[[m_files objectAtIndex: rowIndex] isEnabled]];
+    if ([[aTableColumn identifier] isEqualToString: @"progress"])
+        return [NSValue valueWithPointer:[m_files objectAtIndex: rowIndex]];
     if ([[aTableColumn identifier] isEqualToString: @"filename"])
         return [[m_files objectAtIndex: rowIndex] inputFileName];
     if ([[aTableColumn identifier] isEqualToString: @"filesize"])
@@ -226,20 +221,27 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
         [transcoder changeOutputFileName: getOutputFileName([transcoder inputFileName], m_savePath, m_outputFileSuffix)];
 }
 
-- (IBAction)startConvert:(id)sender
+-(void) startNextEncode
 {
-    if ([m_files count] > 0) {
-        [self setOutputFileName];
-        [[m_files objectAtIndex: 0] startEncode];
-    }
+    if (m_currentEncoding >= [m_files count])
+        return;
+        
+    [[m_files objectAtIndex: m_currentEncoding++] startEncode];
 }
 
-- (IBAction)pauseConvert:(id)sender
+- (IBAction)startEncode:(id)sender
+{
+    [self setOutputFileName];
+    m_currentEncoding = 0;
+    [self startNextEncode];
+}
+
+- (IBAction)pauseEncode:(id)sender
 {
     printf("*** pause\n");
 }
 
-- (IBAction)stopConvert:(id)sender
+- (IBAction)stopEncode:(id)sender
 {
     printf("*** stop\n");
 }
@@ -329,6 +331,7 @@ static NSString* _validateCommandString(NSString* s)
 {
     [m_totalProgressBar setDoubleValue: 1];
     [m_fileListView reloadData];
+    [self startNextEncode];
 }
 
 @end
