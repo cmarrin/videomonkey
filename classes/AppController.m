@@ -362,14 +362,12 @@ static NSString* _validateCommandString(NSString* s)
 
 -(void) setProgressFor: (Transcoder*) transcoder to: (double) progress
 {
-    printf("AppController: setting progress to %f\n", progress);
     [m_totalProgressBar setDoubleValue: progress];
     [m_fileListView reloadData];
 }
 
 -(void) encodeFinished: (Transcoder*) transcoder
 {
-    printf("AppController: encodeFinished - m_isTerminated=%d\n", (int) m_isTerminated);
     [m_totalProgressBar setDoubleValue: m_isTerminated ? 0 : 1];
     [m_fileListView reloadData];
     [self startNextEncode];

@@ -484,13 +484,16 @@ static NSImage* getFileStatusImage(FileStatus status)
 {
     m_fileStatus = (status == 0) ? FS_SUCCEEDED : (status == 255) ? FS_VALID : FS_FAILED;
     [m_statusImageView setImage: getFileStatusImage(m_fileStatus)];
-    printf("***** finish: status=%d\n", status);
     m_progress = (status == 0) ? 1 : 0;
     [m_progressIndicator setDoubleValue: m_progress];
     [m_appController encodeFinished:self];
     [logFile closeFile];
     [logFile release];
     logFile = nil;
+    
+    // toss output file is not successful
+    if (m_fileStatus != FS_SUCCEEDED)
+        [[NSFileManager defaultManager] removeFileAtPath:[self outputFileName] handler:nil];
 }
 
 -(BOOL) stopEncode

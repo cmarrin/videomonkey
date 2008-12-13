@@ -147,7 +147,6 @@
 {
     int status = [m_task terminationStatus];
     
-    printf("*** processFinishEncode status=%d\n", status);
     // notify the Transcoder we're done
     [m_transcoder commandFinished: self status: status];
 }
@@ -199,8 +198,6 @@ static NSDictionary* makeDictionary(NSString* s)
 {
     if (![m_task isRunning])
         return;
-        
-    printf("*** processing response\n");
         
     if (![[note name] isEqualToString:NSFileHandleReadCompletionNotification])
         return;
