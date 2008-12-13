@@ -14,7 +14,7 @@
 @class AppController;
 @class Command;
 
-typedef enum FileStatus { FS_INVALID, FS_VALID, FS_ENCODING, FS_FAILED, FS_SUCCEEDED } FileStatus;
+typedef enum FileStatus { FS_INVALID, FS_VALID, FS_ENCODING, FS_PAUSED, FS_FAILED, FS_SUCCEEDED } FileStatus;
 
 @interface TranscoderFileInfo : NSObject {
   @public
@@ -72,6 +72,7 @@ typedef enum FileStatus { FS_INVALID, FS_VALID, FS_ENCODING, FS_FAILED, FS_SUCCE
     
     NSTask* m_task;
     NSPipe* m_pipe;
+    NSMutableArray* m_commands;
     NSProgressIndicator* m_progressIndicator;
     NSImageView* m_statusImageView;
     
@@ -112,9 +113,11 @@ typedef enum FileStatus { FS_INVALID, FS_VALID, FS_ENCODING, FS_FAILED, FS_SUCCE
 
 -(BOOL) startEncode;
 -(BOOL) pauseEncode;
+-(BOOL) resumeEncode;
+-(BOOL) stopEncode;
 
 -(void) setProgressForCommand: (Command*) command to: (double) value;
--(void) commandFinished: (Command*) command;
+-(void) commandFinished: (Command*) command status: (int) status;
 
 -(void) log: (NSString*) format, ...;
 

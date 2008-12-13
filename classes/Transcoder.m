@@ -381,6 +381,9 @@ static NSImage* getFileStatusImage(FileStatus status)
     if ([m_outputFiles count] == 0 || !m_enabled)
         return NO;
         
+    m_progress = 0;
+    [m_progressIndicator setDoubleValue: m_progress];
+    
     // open the log file
     if (logFile) {
         [logFile closeFile];
@@ -402,7 +405,7 @@ static NSImage* getFileStatusImage(FileStatus status)
     
     NSArray* elements = [job componentsSeparatedByString:@" "];
     
-    NSMutableArray* commands = [[NSMutableArray alloc] init];
+    m_commands = [[NSMutableArray alloc] init];
     NSEnumerator* enumerator = [elements objectEnumerator];
     NSString* s;
     NSMutableString* commandString = [[NSMutableString alloc] init];
@@ -427,7 +430,7 @@ static NSImage* getFileStatusImage(FileStatus status)
         }
         else {
             // make a Command object for this command
-            [commands addObject:[[Command alloc] initWithTranscoder:self command:[NSString stringWithString: commandString] 
+            [m_commands addObject:[[Command alloc] initWithTranscoder:self command:[NSString stringWithString: commandString] 
                                 outputType:type finishId:[[NSNumber numberWithInt:commandId] stringValue]]];
             type = OT_NONE;
             [commandString setString:@""];
@@ -436,10 +439,10 @@ static NSImage* getFileStatusImage(FileStatus status)
     }
     
     // add the last command (we know there will be a last command because we know the job can't end in one of the end chars)
-    [commands addObject:[[Command alloc] initWithTranscoder:self command:commandString outputType:OT_CONTINUE finishId: @"last"]];
+    [m_commands addObject:[[Command alloc] initWithTranscoder:self command:commandString outputType:OT_CONTINUE finishId: @"last"]];
 
     // execute each command in turn
-    enumerator = [commands objectEnumerator];
+    enumerator = [m_commands objectEnumerator];
     Command* command = [enumerator nextObject];
     
     while(command) {
@@ -455,7 +458,51 @@ static NSImage* getFileStatusImage(FileStatus status)
 
 - (BOOL) pauseEncode
 {
-    return NO;
+    NSEnumerator* enumerator = [m_commands objectEnumerator];
+    Command* command;
+    
+    while(command = [enumerator nextObject])
+        [command suspend];
+        
+    m_fileStatus = FS_PAUSED;
+    return YES;
+}
+
+-(BOOL) resumeEncode
+{
+    NSEnumerator* enumerator = [m_commands objectEnumerator];
+    Command* command;
+    
+    while(command = [enumerator nextObject])
+        [command resume];
+        
+    m_fileStatus = FS_ENCODING;
+    return YES;
+}
+
+-(void) finish: (int) status
+{
+    m_fileStatus = (status == 0) ? FS_SUCCEEDED : (status == 255) ? FS_VALID : FS_FAILED;
+    [m_statusImageView setImage: getFileStatusImage(m_fileStatus)];
+    printf("***** finish: status=%d\n", status);
+    m_progress = (status == 0) ? 1 : 0;
+    [m_progressIndicator setDoubleValue: m_progress];
+    [m_appController encodeFinished:self];
+    [logFile closeFile];
+    [logFile release];
+    logFile = nil;
+}
+
+-(BOOL) stopEncode
+{
+    NSEnumerator* enumerator = [m_commands objectEnumerator];
+    Command* command;
+    
+    while(command = [enumerator nextObject])
+        [command terminate];
+        
+    [self finish: 255];
+    return YES;
 }
 
 -(void) setProgressForCommand: (Command*) command to: (double) value
@@ -466,18 +513,10 @@ static NSImage* getFileStatusImage(FileStatus status)
     [m_appController setProgressFor: self to: m_progress];
 }
 
--(void) commandFinished: (Command*) command
+-(void) commandFinished: (Command*) command status: (int) status
 {
-    if ([(NSString*) [command finishId] isEqualToString:@"last"]) {
-        m_fileStatus = FS_SUCCEEDED;
-        [m_statusImageView setImage: getFileStatusImage(m_fileStatus)];
-        m_progress = 1;
-        [m_progressIndicator setDoubleValue: m_progress];
-        [m_appController encodeFinished:self];
-        [logFile closeFile];
-        [logFile release];
-        logFile = nil;
-    }
+    if ([(NSString*) [command finishId] isEqualToString:@"last"])
+        [self finish: status];
 }
 
 -(void) log: (NSString*) format, ...

@@ -10,6 +10,8 @@
 
 @class Transcoder;
 
+typedef enum { RS_STOPPED, RS_RUNNING, RS_PAUSED } RunStateType;
+
 @interface AppController : NSObject {
 @private
     IBOutlet NSTableView* m_fileListView;
@@ -25,12 +27,15 @@
     NSString* m_outputFileSuffix;
     NSDictionary* m_commands;
     int m_currentEncoding;
+    RunStateType m_runState;
+    BOOL m_isTerminated;
 }
 
 -(IBAction)clickFileEnable:(id)sender;
 -(IBAction)startEncode:(id)sender;
 -(IBAction)pauseEncode:(id)sender;
 -(IBAction)stopEncode:(id)sender;
+
 -(IBAction)changeSaveToText:(id)sender;
 -(IBAction)selectSaveToPath:(id)sender;
 
@@ -38,5 +43,7 @@
 
 -(void) setProgressFor: (Transcoder*) transcoder to: (double) progress;
 -(void) encodeFinished: (Transcoder*) transcoder;
+
+-(void) setRunState: (RunStateType) state;
 
 @end

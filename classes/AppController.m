@@ -238,36 +238,51 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
 
 -(void) startNextEncode
 {
-    while (m_currentEncoding < [m_files count]) {
-        if ([[m_files objectAtIndex: m_currentEncoding++] startEncode])
-            return;
+    if (!m_isTerminated) {
+        while (++m_currentEncoding < [m_files count]) {
+            if ([[m_files objectAtIndex: m_currentEncoding] startEncode])
+                return;
+        }
     }
-
-    [m_startEncodeItem setEnabled: YES];
-    [m_stopEncodeItem setEnabled: NO];
-    [m_pauseEncodeItem setEnabled: NO];
+    else {
+        [m_totalProgressBar setDoubleValue: 0];
+        [m_fileListView reloadData];
+    }
+    
+    [self setRunState: RS_STOPPED];
 }
 
 - (IBAction)startEncode:(id)sender
 {
-    [self setOutputFileName];
+    [m_totalProgressBar setDoubleValue: 0];
+    m_isTerminated = NO;
     
-    [m_startEncodeItem setEnabled: NO];
-    [m_stopEncodeItem setEnabled: YES];
-    [m_pauseEncodeItem setEnabled: YES];
+    if (m_runState == RS_PAUSED) {
+        [[m_files objectAtIndex: m_currentEncoding] resumeEncode];
+        [self setRunState: RS_RUNNING];
+    }
+    else {
+        [self setOutputFileName];
+        [self setRunState: RS_RUNNING];
     
-    m_currentEncoding = 0;
-    [self startNextEncode];
+        m_currentEncoding = -1;
+        [self startNextEncode];
+    }
 }
 
 - (IBAction)pauseEncode:(id)sender
 {
-    printf("*** pause\n");
+    [[m_files objectAtIndex: m_currentEncoding] pauseEncode];
+    [self setRunState: RS_PAUSED];
+    [m_fileListView reloadData];
 }
 
 - (IBAction)stopEncode:(id)sender
 {
-    printf("*** stop\n");
+    m_isTerminated = YES;
+    [[m_files objectAtIndex: m_currentEncoding] stopEncode];
+    [self setRunState: RS_STOPPED];
+    [m_fileListView reloadData];
 }
 
 -(IBAction)changeSaveToText:(id)sender
@@ -347,15 +362,42 @@ static NSString* _validateCommandString(NSString* s)
 
 -(void) setProgressFor: (Transcoder*) transcoder to: (double) progress
 {
+    printf("AppController: setting progress to %f\n", progress);
     [m_totalProgressBar setDoubleValue: progress];
     [m_fileListView reloadData];
 }
 
 -(void) encodeFinished: (Transcoder*) transcoder
 {
-    [m_totalProgressBar setDoubleValue: 1];
+    printf("AppController: encodeFinished - m_isTerminated=%d\n", (int) m_isTerminated);
+    [m_totalProgressBar setDoubleValue: m_isTerminated ? 0 : 1];
     [m_fileListView reloadData];
     [self startNextEncode];
+}
+
+-(void) setRunState: (RunStateType) state
+{
+    m_runState = state;
+    switch(m_runState) {
+        case RS_STOPPED:
+            [m_startEncodeItem setEnabled: YES];
+            [m_startEncodeItem setLabel:@"Start"];
+            [m_stopEncodeItem setEnabled: NO];
+            [m_pauseEncodeItem setEnabled: NO];
+            break;
+        case RS_RUNNING:
+            [m_startEncodeItem setEnabled: NO];
+            [m_startEncodeItem setLabel:@"Start"];
+            [m_stopEncodeItem setEnabled: YES];
+            [m_pauseEncodeItem setEnabled: YES];
+            break;
+        case RS_PAUSED:
+            [m_startEncodeItem setEnabled: YES];
+            [m_startEncodeItem setLabel:@"Resume"];
+            [m_stopEncodeItem setEnabled: YES];
+            [m_pauseEncodeItem setEnabled: NO];
+            break;
+    }
 }
 
 @end

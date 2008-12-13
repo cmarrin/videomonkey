@@ -32,6 +32,8 @@
 
 -(void) execute: (Command*) nextCommand
 {
+    m_isPaused = NO;
+    
     // build the environment
     NSMutableDictionary* env = [[NSMutableDictionary alloc] init];
     
@@ -105,6 +107,27 @@
         [m_task waitUntilExit];
 }
 
+-(void) suspend
+{
+    if (!m_isPaused) {
+        [m_task suspend];
+        m_isPaused = YES;
+    }
+}
+
+-(void) resume
+{
+    if (m_isPaused) {
+        [m_task resume];
+        m_isPaused = NO;
+    }
+}
+
+-(void) terminate
+{
+    [m_task terminate];
+}
+
 -(void) setInputPipe: (NSPipe*) pipe
 {
     [m_task setStandardInput: [pipe fileHandleForReading]];
@@ -122,10 +145,11 @@
 
 -(void) processFinishEncode: (NSNotification*) note
 {
-    // TODO: deal with return code
+    int status = [m_task terminationStatus];
     
+    printf("*** processFinishEncode status=%d\n", status);
     // notify the Transcoder we're done
-    [m_transcoder commandFinished: self];
+    [m_transcoder commandFinished: self status: status];
 }
 
 static NSDictionary* makeDictionary(NSString* s)
@@ -148,7 +172,7 @@ static NSDictionary* makeDictionary(NSString* s)
 }
 
 -(void) processResponse_ffmpeg: (NSString*) response
-{    
+{
     // for now we ignore everything but the progress lines, which 
     if (![response hasPrefix:@"frame="]) {
         if ([response length] > 0)
@@ -173,6 +197,11 @@ static NSDictionary* makeDictionary(NSString* s)
 
 -(void) processRead: (NSNotification*) note
 {
+    if (![m_task isRunning])
+        return;
+        
+    printf("*** processing response\n");
+        
     if (![[note name] isEqualToString:NSFileHandleReadCompletionNotification])
         return;
 
