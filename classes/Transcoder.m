@@ -68,7 +68,7 @@
 -(BOOL) _validateInputFile: (TranscoderFileInfo*) info
 {
     NSMutableString* mediainfoPath = [NSMutableString stringWithString: [[NSBundle mainBundle] resourcePath]];
-    [mediainfoPath appendString:@"/mediainfo"];
+    [mediainfoPath appendString:@"/bin/mediainfo"];
     
     NSMutableString* mediainfoInformPath = [NSMutableString stringWithString: @"--Inform=file://"];
     [mediainfoInformPath appendString: [[NSBundle mainBundle] resourcePath]];
@@ -402,6 +402,18 @@ static NSImage* getFileStatusImage(FileStatus status)
     // TODO: always for iphone for now
     NSString* jobType = [NSString stringWithFormat:@"%@-%@", [self isInputQuicktime] ? @"quicktime" : @"normal", [self hasInputAudio] ? @"av" : @"v"];
     NSString* job = [m_appController jobForDevice: @"iphone" type: jobType];
+
+    if ([job length] == 0) {
+        // try the default
+        job = [m_appController jobForDevice: @"default" type: jobType];
+    }
+    
+    if ([job length] == 0) {
+        NSWindow* mainWindow = [[NSApplication sharedApplication] mainWindow];
+        NSBeginAlertSheet(@"Internal Error", nil, nil, nil, mainWindow, nil, nil, nil, nil, 
+                          @"Transcoder attempted to execute an empty command");
+        return NO;
+    }
     
     NSArray* elements = [job componentsSeparatedByString:@" "];
     

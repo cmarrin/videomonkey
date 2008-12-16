@@ -344,27 +344,36 @@ static NSString* _validateCommandString(NSString* s)
 {
     NSDictionary* commands = [m_commands valueForKey: @"commands"];
     NSString* job = _validateCommandString([[[m_commands valueForKey: @"jobs"] valueForKey: name] valueForKey: type]);
-    
+    if ([job length] == 0)
+        return nil;
+        
     // job is a list of strings separated by spaces. If a string starts with '!' it is replaced by an
     // entry from commands. Otherwise it is output as is. '!' substitution can be nested so, repeat until
     // no more substitution is found
     NSMutableString* command = [[NSMutableString alloc] init];
-    NSArray* joblist = [job componentsSeparatedByString:@" "];
+    [command setString: job];
     BOOL foundSubs = YES;
     
     while (foundSubs) {
+        NSArray* joblist = [command componentsSeparatedByString:@" "];
         NSEnumerator* e = [joblist objectEnumerator];
+        [command setString: @""];
+        
         NSString* s;
         foundSubs = NO;
         while ((s = (NSString*) [e nextObject])) {
-            if ([s characterAtIndex:0] == '!') {
-                foundSubs = YES;
-                [command appendString: [commands valueForKey: [s substringFromIndex:1]]];
+            if ([s length] > 0) {
+                if ([s characterAtIndex:0] == '!') {
+                    foundSubs = YES;
+                    NSString* replacement = [commands valueForKey: [s substringFromIndex:1]];
+                    if (replacement)
+                        [command appendString: replacement];
+                }
+                else
+                    [command appendString: s];
+                    
+                [command appendString: @" "];
             }
-            else
-                [command appendString: s];
-                
-            [command appendString: @" "];
         }
     }
     

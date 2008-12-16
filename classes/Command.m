@@ -57,6 +57,7 @@
     [env setValue: [[NSNumber numberWithInt: [m_transcoder inputVideoHeightDiv16]] stringValue] forKey: @"output_video_height"];
     [env setValue: [[NSNumber numberWithInt: [m_transcoder bitrate]] stringValue] forKey: @"bitrate"];
     [env setValue: [m_transcoder ffmpeg_vcodec] forKey: @"ffmpeg_vcodec"];
+    [env setValue: @"default" forKey: @"ffmpeg_vpre"];
     
     NSString* videoSize = [NSString stringWithFormat: @"%dx%d", [m_transcoder inputVideoWidthDiv16], [m_transcoder inputVideoHeightDiv16]];
     [env setValue: videoSize forKey: @"ffmpeg_output_video_size"];

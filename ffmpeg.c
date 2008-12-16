@@ -3752,16 +3752,16 @@ static int opt_preset(const char *opt, const char *arg)
                          };
                          
     // first check for path relative to executable (so presets can be in an OSX package)
-    snprintf(filename, sizeof(filename), "%s/../ffmpeg/%s.ffpreset", executable_path, arg);
-printf("***** (a) trying to open '%s'\n", filename);
+    snprintf(filename, sizeof(filename), "%s/../ffpresets/%s.ffpreset", executable_path, arg);
     f= fopen(filename, "r");
+printf("************ (1) tried to open %s --> %p\n", filename, f);
     if(!f){
         char *codec_name= *opt == 'v' ? video_codec_name :
                           *opt == 'a' ? audio_codec_name :
                                         subtitle_codec_name;
-        snprintf(filename, sizeof(filename), "%s/../ffmpeg/%s-%s.ffpreset", executable_path, codec_name, arg);
-printf("***** (b) trying to open '%s'\n", filename);
+        snprintf(filename, sizeof(filename), "%s/../ffpresets/%s-%s.ffpreset", executable_path, codec_name, arg);
         f= fopen(filename, "r");
+printf("************ (2) tried to open %s --> %p\n", filename, f);
     }
     
     if (!f) {

@@ -4,11 +4,11 @@
 <dict>
 	<key>commands</key>
 	<dict>
-		<key>ffmpeg_pass_0</key>
+		<key>ffmpeg_pass0</key>
 		<string>-vpre $ffmpeg_vpre</string>
-		<key>ffmpeg_pass_1</key>
+		<key>ffmpeg_pass1</key>
 		<string>-vpre $ffmpeg_vpre_pass1 -pass 1 -passlogfile $pass_log_file</string>
-		<key>ffmpeg_pass_2</key>
+		<key>ffmpeg_pass2</key>
 		<string>-vpre $ffmpeg_vpre -pass 2 -passlogfile $pass_log_file</string>
 		<key>ffmpeg_options</key>
 		<string>-vcodec $ffmpeg_vcodec -b $bitrate -s $ffmpeg_output_video_size </string>
