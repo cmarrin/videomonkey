@@ -4,33 +4,67 @@
 <dict>
 	<key>commands</key>
 	<dict>
+		<key>ffmpeg_pass_0</key>
+		<string>-vpre $ffmpeg_vpre</string>
+		<key>ffmpeg_pass_1</key>
+		<string>-vpre $ffmpeg_vpre_pass1 -pass 1 -passlogfile $pass_log_file</string>
+		<key>ffmpeg_pass_2</key>
+		<string>-vpre $ffmpeg_vpre -pass 2 -passlogfile $pass_log_file</string>
+		<key>ffmpeg_options</key>
+		<string>-vcodec $ffmpeg_vcodec -b $bitrate -s $ffmpeg_output_video_size </string>
 		<key>quicktime_to_audio_file</key>
 		<string>$qt_export $input_file --video=0 $tmp_audio_file</string>
 		<key>quicktime_to_yuv</key>
 		<string>$movtoy4m -w $input_video_width -h $input_video_height $input_file </string>
 		<key>yuv_to_ffmpeg_av</key>
-		<string>$ffmpeg -y -i - -i $tmp_audio_file -vcodec $ffmpeg_vcodec -b $bitrate $output_file</string>
+		<string>$ffmpeg -y -i - -i $tmp_audio_file</string>
 		<key>yuv_to_ffmpeg_v</key>
-		<string>$ffmpeg -y -i - -vcodec $ffmpeg_vcodec -b $bitrate -s $ffmpeg_output_video_size $output_file</string>
-		<key>ffmpeg</key>
-		<string>$ffmpeg -y -i $input_file -vcodec $ffmpeg_vcodec -b $bitrate $output_file</string>
+		<string>$ffmpeg -y -i -</string>
+		<key>ffmpeg_normal</key>
+		<string>$ffmpeg -y -i $input_file</string>
+		<key>quicktime_av_pass0</key>
+		<string>!quicktime_to_yuv | !yuv_to_ffmpeg_av !ffmpeg_options !ffmpeg_pass0 $output_file</string>
+		<key>quicktime_av_pass1</key>
+		<string>!quicktime_to_yuv | !yuv_to_ffmpeg_av !ffmpeg_options !ffmpeg_pass1 $output_file</string>
+		<key>quicktime_av_pass2</key>
+		<string>!quicktime_to_yuv | !yuv_to_ffmpeg_av !ffmpeg_options !ffmpeg_pass2 $output_file</string>
+		<key>quicktime_v_pass0</key>
+		<string>!quicktime_to_yuv | !yuv_to_ffmpeg_a !ffmpeg_options !ffmpeg_pass0 $output_file</string>
+		<key>quicktime_v_pass1</key>
+		<string>!quicktime_to_yuv | !yuv_to_ffmpeg_a !ffmpeg_options !ffmpeg_pass1 $output_file</string>
+		<key>quicktime_v_pass2</key>
+		<string>!quicktime_to_yuv | !yuv_to_ffmpeg_a !ffmpeg_options !ffmpeg_pass2 $output_file</string>
+		<key>normal_pass0</key>
+		<string>!ffmpeg_normal !ffmpeg_options !ffmpeg_pass0 $output_file</string>
+		<key>normal_pass1</key>
+		<string>!ffmpeg_normal !ffmpeg_options !ffmpeg_pass1 $output_file</string>
+		<key>normal_pass2</key>
+		<string>!ffmpeg_normal !ffmpeg_options !ffmpeg_pass2 $output_file</string>
 	</dict>
 	<key>jobs</key>
 	<dict>
-		<key>iphone</key>
+		<key>default</key>
 		<dict>
+			<key>output-file-suffix</key>
+			<string>mp4</string>
 			<key>quicktime-av</key>
-			<string>!quicktime_to_audio_file ; !quicktime_to_yuv | !yuv_to_ffmpeg_av</string>
+			<string>!quicktime_to_audio_file ; !quicktime_av_pass0</string>
+			<key>quicktime-av-2pass</key>
+			<string>!quicktime_to_audio_file ; !quicktime_av_pass1 ; !quicktime_av_pass2</string>
 			<key>quicktime-v</key>
-			<string>!quicktime_to_yuv | !yuv_to_ffmpeg_v</string>
+			<string>!quicktime_v_pass0</string>
+			<key>quicktime-v-2pass</key>
+			<string>!quicktime_v_pass1 ; !quicktime_v_pass2</string>
 			<key>normal-av</key>
-			<string>!ffmpeg</string>
+			<string>!normal_pass0</string>
+			<key>normal-av-2pass</key>
+			<string>!normal_pass1 ; !normal_pass2</string>
 			<key>normal-v</key>
-			<string>!ffmpeg</string>
+			<string>!normal_pass0</string>
+			<key>normal-v-2pass</key>
+			<string>!normal_pass1 ; !normal_pass2</string>
 		</dict>
-		<key>quicktime</key>
-		<dict/>
-		<key>normal</key>
+		<key>iphone</key>
 		<dict/>
 	</dict>
 </dict>

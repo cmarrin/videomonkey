@@ -346,15 +346,26 @@ static NSString* _validateCommandString(NSString* s)
     NSString* job = _validateCommandString([[[m_commands valueForKey: @"jobs"] valueForKey: name] valueForKey: type]);
     
     // job is a list of strings separated by spaces. If a string starts with '!' it is replaced by an
-    // entry from commands. Otherwise it is output as is
+    // entry from commands. Otherwise it is output as is. '!' substitution can be nested so, repeat until
+    // no more substitution is found
     NSMutableString* command = [[NSMutableString alloc] init];
     NSArray* joblist = [job componentsSeparatedByString:@" "];
-    NSEnumerator* e = [joblist objectEnumerator];
-    NSString* s;
+    BOOL foundSubs = YES;
     
-    while ((s = (NSString*) [e nextObject])) {
-        [command appendString: ([s characterAtIndex:0] == '!') ? [commands valueForKey: [s substringFromIndex:1]] : s];
-        [command appendString: @" "];
+    while (foundSubs) {
+        NSEnumerator* e = [joblist objectEnumerator];
+        NSString* s;
+        foundSubs = NO;
+        while ((s = (NSString*) [e nextObject])) {
+            if ([s characterAtIndex:0] == '!') {
+                foundSubs = YES;
+                [command appendString: [commands valueForKey: [s substringFromIndex:1]]];
+            }
+            else
+                [command appendString: s];
+                
+            [command appendString: @" "];
+        }
     }
     
     return  _validateCommandString(command);
