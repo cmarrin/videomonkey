@@ -18,10 +18,17 @@
     IBOutlet float *m_quality;
     IBOutlet NSTabView* m_conversionParamsTabView;
     IBOutlet NSPopUpButton* m_conversionParamsButton;
+    IBOutlet NSPopUpButton* m_performanceButton;
     
     ConversionTab* m_currentTabViewItem;
+    NSString* m_currentPerformance;
+    BOOL m_isTwoPass;
 }
 
-- (IBAction)selectTab:(id)sender;
-- (IBAction)paramChanged:(id)sender;
+-(IBAction)selectTab:(id)sender;
+-(IBAction)selectPerformance:(id)sender;
+-(IBAction)paramChanged:(id)sender;
+
+-(BOOL) isTwoPass;
+-(NSString*) performance;
 @end
