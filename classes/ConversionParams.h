@@ -12,6 +12,8 @@
 @interface ConversionTab : NSTabViewItem {
     IBOutlet id m_h264Button;
 }
+
+-(NSString*) deviceName;
 @end
 
 @interface ConversionParams : NSObject {
@@ -31,4 +33,5 @@
 
 -(BOOL) isTwoPass;
 -(NSString*) performance;
+-(NSString*) device;
 @end

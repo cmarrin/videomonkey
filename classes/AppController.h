@@ -8,6 +8,7 @@
 
 #import <Cocoa/Cocoa.h>
 
+@class ConversionParams;
 @class Transcoder;
 
 typedef enum { RS_STOPPED, RS_RUNNING, RS_PAUSED } RunStateType;
@@ -20,11 +21,11 @@ typedef enum { RS_STOPPED, RS_RUNNING, RS_PAUSED } RunStateType;
     IBOutlet NSToolbarItem* m_startEncodeItem;
     IBOutlet NSToolbarItem* m_pauseEncodeItem;
     IBOutlet NSToolbarItem* m_stopEncodeItem;
+    IBOutlet ConversionParams* m_conversionParams;
     
     NSMutableArray* m_files;
     int m_draggedRow;
     NSString* m_savePath;
-    NSString* m_outputFileSuffix;
     NSDictionary* m_commands;
     int m_currentEncoding;
     RunStateType m_runState;
@@ -45,5 +46,7 @@ typedef enum { RS_STOPPED, RS_RUNNING, RS_PAUSED } RunStateType;
 -(void) encodeFinished: (Transcoder*) transcoder;
 
 -(void) setRunState: (RunStateType) state;
+
+-(ConversionParams*) conversionParams;
 
 @end

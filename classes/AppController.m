@@ -7,6 +7,7 @@
 //
 
 #import "AppController.h"
+#import "ConversionParams.h"
 #import "Transcoder.h"
 #import "ProgressCell.h"
 
@@ -21,9 +22,6 @@
         
         m_commands = [NSDictionary dictionaryWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"commands" ofType:@"plist"]];
         [m_commands retain];
-        
-        // TODO: need a way to determine the output file suffix
-        m_outputFileSuffix = @"mp4";
     }
     return self;
 }
@@ -52,6 +50,12 @@
 - (int)numberOfRowsInTableView: (NSTableView *)aTableView
 {
     return [m_files count];
+}
+
+-(NSString*) suffixForDevice: (NSString*) device
+{
+    NSString* suffix = [[[m_commands valueForKey: @"jobs"] valueForKey: device] valueForKey: @"output-file-suffix"];
+    return (!suffix || [suffix length] == 0) ? [[[m_commands valueForKey: @"jobs"] valueForKey: @"default"] valueForKey: @"output-file-suffix"] : suffix;
 }
 
 static NSString* formatDuration(double duration)
@@ -200,7 +204,7 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
                 for (int i= 0; i < [filenames count]; i++) {
                     Transcoder* transcoder = [[Transcoder alloc] initWithController:self];
                     [transcoder addInputFile: [filenames objectAtIndex:i]];
-                    [transcoder addOutputFile: getOutputFileName([filenames objectAtIndex:i], m_savePath, m_outputFileSuffix)];
+                    [transcoder addOutputFile: getOutputFileName([filenames objectAtIndex:i], m_savePath, @"")];
                     
                     if (row < 0)
                         [m_files addObject:transcoder];
@@ -219,9 +223,10 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
 {
     NSEnumerator* e = [m_files objectEnumerator];
     Transcoder* transcoder;
+    NSString* suffix = [self suffixForDevice:[m_conversionParams device]];
     
     while ((transcoder = (Transcoder*) [e nextObject]))
-        [transcoder changeOutputFileName: getOutputFileName([transcoder inputFileName], m_savePath, m_outputFileSuffix)];
+        [transcoder changeOutputFileName: getOutputFileName([transcoder inputFileName], m_savePath, suffix)];
 }
 
 -(IBAction)clickFileEnable:(id)sender
@@ -416,6 +421,11 @@ static NSString* _validateCommandString(NSString* s)
             [m_pauseEncodeItem setEnabled: NO];
             break;
     }
+}
+
+-(ConversionParams*) conversionParams
+{
+    return m_conversionParams;
 }
 
 @end

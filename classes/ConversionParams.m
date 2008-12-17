@@ -13,6 +13,12 @@
 - (bool) h264 {
     return [(NSButton*) m_h264Button state] != 0;
 }
+
+-(NSString*) deviceName
+{
+    return [self identifier];
+}
+
 @end
 
 @implementation ConversionParams
@@ -66,6 +72,11 @@
 -(NSString*) performance
 {
     return m_currentPerformance;
+}
+
+-(NSString*) device
+{
+    return [m_currentTabViewItem deviceName];
 }
 
 @end

@@ -9,6 +9,7 @@
 #import "Transcoder.h"
 #import "AppController.h"
 #import "Command.h"
+#import "ConversionParams.h"
 
 @implementation TranscoderFileInfo
 
@@ -399,9 +400,9 @@ static NSImage* getFileStatusImage(FileStatus status)
     [[NSFileManager defaultManager] removeFileAtPath:m_tempAudioFileName handler:nil];
 
     // assemble command
-    // TODO: always for iphone for now
+    NSString* device = [[m_appController conversionParams] device];
     NSString* jobType = [NSString stringWithFormat:@"%@-%@", [self isInputQuicktime] ? @"quicktime" : @"normal", [self hasInputAudio] ? @"av" : @"v"];
-    NSString* job = [m_appController jobForDevice: @"iphone" type: jobType];
+    NSString* job = [m_appController jobForDevice: device type: jobType];
 
     if ([job length] == 0) {
         // try the default
