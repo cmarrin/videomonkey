@@ -14,8 +14,10 @@
 		<string>-vcodec $ffmpeg_vcodec -b $bitrate -s $ffmpeg_output_video_size </string>
 		<key>quicktime_to_audio_file</key>
 		<string>$qt_export $input_file --video=0 $tmp_audio_file</string>
+		<key>correct_yuv</key>
+		<string>$yuvcorrect -v 0 -Y LUMINANCE_1.20_0_255_0_255 -Y CHROMINANCE_0_1.04_128_1.04_128_0_255</string>
 		<key>quicktime_to_yuv</key>
-		<string>$movtoy4m -w $input_video_width -h $input_video_height $input_file </string>
+		<string>$movtoy4m -f -w $input_video_width -h $input_video_height -F $framerate -a $aspect_ratio $input_file | !correct_yuv</string>
 		<key>yuv_to_ffmpeg_av</key>
 		<string>$ffmpeg -y -i - -i $tmp_audio_file</string>
 		<key>yuv_to_ffmpeg_v</key>
@@ -29,11 +31,11 @@
 		<key>quicktime_av_pass2</key>
 		<string>!quicktime_to_yuv | !yuv_to_ffmpeg_av !ffmpeg_options !ffmpeg_pass2 $output_file</string>
 		<key>quicktime_v_pass0</key>
-		<string>!quicktime_to_yuv | !yuv_to_ffmpeg_a !ffmpeg_options !ffmpeg_pass0 $output_file</string>
+		<string>!quicktime_to_yuv | !yuv_to_ffmpeg_v !ffmpeg_options !ffmpeg_pass0 $output_file</string>
 		<key>quicktime_v_pass1</key>
-		<string>!quicktime_to_yuv | !yuv_to_ffmpeg_a !ffmpeg_options !ffmpeg_pass1 $output_file</string>
+		<string>!quicktime_to_yuv | !yuv_to_ffmpeg_v !ffmpeg_options !ffmpeg_pass1 $output_file</string>
 		<key>quicktime_v_pass2</key>
-		<string>!quicktime_to_yuv | !yuv_to_ffmpeg_a !ffmpeg_options !ffmpeg_pass2 $output_file</string>
+		<string>!quicktime_to_yuv | !yuv_to_ffmpeg_v !ffmpeg_options !ffmpeg_pass2 $output_file</string>
 		<key>normal_pass0</key>
 		<string>!ffmpeg_normal !ffmpeg_options !ffmpeg_pass0 $output_file</string>
 		<key>normal_pass1</key>

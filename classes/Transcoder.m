@@ -179,6 +179,7 @@ static NSImage* getFileStatusImage(FileStatus status)
     m_fileStatus = FS_INVALID;
     m_enabled = YES;
     m_tempAudioFileName = [[NSString stringWithFormat:@"/tmp/%p-tmpaudio.wav", self] retain];
+    m_passLogFileName = [[NSString stringWithFormat:@"/tmp/%p-tmppass.log", self] retain];
     
     // init the progress indicator
     m_progressIndicator = [[NSProgressIndicator alloc] init];
@@ -344,6 +345,11 @@ static NSImage* getFileStatusImage(FileStatus status)
     return (h+15) & (~(16-1));
 }
 
+-(double) inputVideoFrameRate
+{
+    return ([m_inputFiles count] > 0) ? ((TranscoderFileInfo*) [m_inputFiles objectAtIndex: 0])->m_frameRate : 30;
+}
+
 -(NSString*) ffmpeg_vcodec
 {
     if ([m_outputFiles count] == 0)
@@ -355,6 +361,11 @@ static NSImage* getFileStatusImage(FileStatus status)
         return @"libx264";
         
     return @"libx264";
+}
+
+-(NSString*) ffmpeg_vpre
+{
+    return [[m_appController conversionParams] performance];
 }
 
 -(int) outputFileSize
@@ -377,6 +388,11 @@ static NSImage* getFileStatusImage(FileStatus status)
     return m_tempAudioFileName;
 }
 
+-(NSString*) passLogFileName
+{
+    return m_passLogFileName;
+}
+
 - (BOOL) startEncode
 {
     if ([m_outputFiles count] == 0 || !m_enabled)
@@ -396,12 +412,16 @@ static NSImage* getFileStatusImage(FileStatus status)
                                 
     logFile = [NSFileHandle fileHandleForWritingAtPath:logFileName];
     
-    // make sure the tmp audio file does not exist
+    // make sure the tmp tmp files do not exist
     [[NSFileManager defaultManager] removeFileAtPath:m_tempAudioFileName handler:nil];
+    [[NSFileManager defaultManager] removeFileAtPath:m_passLogFileName handler:nil];
 
     // assemble command
     NSString* device = [[m_appController conversionParams] device];
     NSString* jobType = [NSString stringWithFormat:@"%@-%@", [self isInputQuicktime] ? @"quicktime" : @"normal", [self hasInputAudio] ? @"av" : @"v"];
+    if ([[m_appController conversionParams] isTwoPass])
+        jobType = [NSString stringWithFormat:@"%@-2pass", jobType];
+        
     NSString* job = [m_appController jobForDevice: device type: jobType];
 
     if ([job length] == 0) {
