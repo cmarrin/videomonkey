@@ -129,6 +129,15 @@
         info->m_pixelAspectRatio = [[video objectAtIndex:10] doubleValue];
         info->m_displayAspectRatio = [[video objectAtIndex:11] doubleValue];
         info->m_frameRate = [[video objectAtIndex:12] doubleValue];
+        
+        // standardize video codec name
+        NSString* f = VC_H264;
+        if ([info->m_videoCodec caseInsensitiveCompare:@"vc-1" == NSOrderedSame] || [info->m_videoCodec caseInsensitiveCompare:@"wmv3" == NSOrderedSame])
+            f = VC_WMV3;
+        else if ([info->m_videoCodec caseInsensitiveCompare:@"avc" == NSOrderedSame] || [info->m_videoCodec caseInsensitiveCompare:@"avc1" == NSOrderedSame])
+            f = VC_H264;
+    
+        info->m_videoCodec = f;
     }
     
     // Do audio if it's there
@@ -231,15 +240,32 @@ static NSImage* getFileStatusImage(FileStatus status)
 
 - (void) setBitrate: (float) rate
 {
-    m_bitrate = rate;
+    if ([m_outputFiles count] == 0)
+        return;
+    
+    ((TranscoderFileInfo*) [m_outputFiles objectAtIndex: 0])->m_bitrate = rate;
 }
 
 - (double) bitrate;
 {
-    // TODO: CFM - for now we will just match the input bitrate
-    if ([m_inputFiles count] > 0)
-        return ((TranscoderFileInfo*) [m_inputFiles objectAtIndex: 0])->m_bitrate;
-    return 100000;
+    double inputRate =  ([m_inputFiles count] > 0) ? ((TranscoderFileInfo*) [m_inputFiles objectAtIndex: 0])->m_bitrate : 100000;
+    double outputRate =  ([m_outputFiles count] > 0) ? ((TranscoderFileInfo*) [m_outputFiles objectAtIndex: 0])->m_bitrate : 0;
+    return (outputRate > 0) ? outputRate : inputRate;
+}
+
+-(void) setVideoFormat: (NSString*) format
+{
+    if ([m_outputFiles count] == 0)
+        return;
+        
+    if (![format isEqualToString:VC_H264] && ![format isEqualToString:VC_WMV3])
+        format = VC_H264;
+    ((TranscoderFileInfo*) [m_outputFiles objectAtIndex: 0])->m_videoCodec = format;
+}
+
+-(NSString*) videoFormat
+{
+    return ([m_outputFiles count] == 0) ? VC_H264 : ((TranscoderFileInfo*) [m_outputFiles objectAtIndex: 0])->m_videoCodec;
 }
 
 -(double) playTime
@@ -292,6 +318,11 @@ static NSImage* getFileStatusImage(FileStatus status)
 -(BOOL) hasInputAudio
 {
     return ([m_inputFiles count] > 0) ? (((TranscoderFileInfo*) [m_inputFiles objectAtIndex: 0])->m_audioSamplingRate != 0) : NO;
+}
+
+-(NSString*) inputVideoFormat
+{
+    return ([m_inputFiles count] > 0) ? ((TranscoderFileInfo*) [m_inputFiles objectAtIndex: 0])->m_videoCodec : nil;
 }
 
 -(NSString*) outputFileName
@@ -352,15 +383,12 @@ static NSImage* getFileStatusImage(FileStatus status)
 
 -(NSString*) ffmpeg_vcodec
 {
-    if ([m_outputFiles count] == 0)
+    if ([[self videoFormat] isEqualToString:VC_H264])
         return @"libx264";
-    
-    // TODO: CFM - we eventually need to return accurate strings here
-    NSString* vcodec = ((TranscoderFileInfo*) [m_outputFiles objectAtIndex: 0])->m_videoCodec;
-    if ([vcodec isEqualToString:@"h264"])
+    else if ([[self videoFormat] isEqualToString:VC_WMV3])
+        return @"wmv3";
+    else 
         return @"libx264";
-        
-    return @"libx264";
 }
 
 -(NSString*) ffmpeg_vpre
@@ -370,16 +398,8 @@ static NSImage* getFileStatusImage(FileStatus status)
 
 -(int) outputFileSize
 {
-    // The m_bitrate property holds the desired bitrate. If it is 0, the user wants the
-    // output bitrate to match the input bitrate.
     double playTime = [self playTime];
-    double bitrate = 0;
-    
-    if (m_bitrate > 0)
-        bitrate = m_bitrate;
-    else if ([m_inputFiles count] > 0)
-        bitrate = ((TranscoderFileInfo*) [m_inputFiles objectAtIndex: 0])->m_bitrate;
-        
+    double bitrate = [self bitrate];
     return (int) (playTime * bitrate / 8);
 }
 
@@ -418,7 +438,10 @@ static NSImage* getFileStatusImage(FileStatus status)
 
     // assemble command
     NSString* device = [[m_appController conversionParams] device];
-    NSString* jobType = [NSString stringWithFormat:@"%@-%@", [self isInputQuicktime] ? @"quicktime" : @"normal", [self hasInputAudio] ? @"av" : @"v"];
+    
+    // Special case is when we have a quicktime movie and it has a video format of WMV3
+    BOOL useQT = [self isInputQuicktime] && [[self inputVideoFormat] isEqualToString:VC_WMV3];
+    NSString* jobType = [NSString stringWithFormat:@"job-%@-%@", useQT ? @"quicktime" : @"normal", [self hasInputAudio] ? @"av" : @"v"];
     if ([[m_appController conversionParams] isTwoPass])
         jobType = [NSString stringWithFormat:@"%@-2pass", jobType];
         

@@ -201,7 +201,7 @@
 		49636A4E0EE707E300F7B6D2 /* ok.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = ok.png; path = icons/ok.png; sourceTree = "<group>"; };
 		497E65A80EE4F284000372EC /* ProgressCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ProgressCell.h; path = classes/ProgressCell.h; sourceTree = "<group>"; };
 		497E65A90EE4F284000372EC /* ProgressCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ProgressCell.m; path = classes/ProgressCell.m; sourceTree = "<group>"; };
-		497E670F0EEC24FA000372EC /* commands.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = commands.plist; sourceTree = "<group>"; };
+		497E670F0EEC24FA000372EC /* commands.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = commands.plist; sourceTree = "<group>"; wrapsLines = 1; };
 		497E67150EEC5DD8000372EC /* Command.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Command.h; path = classes/Command.h; sourceTree = "<group>"; };
 		497E67160EEC5DD8000372EC /* Command.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Command.m; path = classes/Command.m; sourceTree = "<group>"; };
 		499A31750EDD97EB000C0AAF /* Transcoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Transcoder.h; path = classes/Transcoder.h; sourceTree = "<group>"; };

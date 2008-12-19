@@ -52,10 +52,20 @@
     return [m_files count];
 }
 
+-(NSString*) valueForDevice:(NSString*) device withKey:(NSString*) key
+{
+    NSString* value = [[[m_commands valueForKey: @"devices"] valueForKey: device] valueForKey: key];
+    return (!value || [value length] == 0) ? [[[m_commands valueForKey: @"devices"] valueForKey: @"default"] valueForKey: key] : value;
+}
+
 -(NSString*) suffixForDevice: (NSString*) device
 {
-    NSString* suffix = [[[m_commands valueForKey: @"jobs"] valueForKey: device] valueForKey: @"output-file-suffix"];
-    return (!suffix || [suffix length] == 0) ? [[[m_commands valueForKey: @"jobs"] valueForKey: @"default"] valueForKey: @"output-file-suffix"] : suffix;
+    return [self valueForDevice:device withKey:@"output-file-suffix"];
+}
+
+-(NSString*) videoFormatForDevice: (NSString*) device
+{
+    return [self valueForDevice:device withKey:@"output-video-format"];
 }
 
 static NSString* formatDuration(double duration)
@@ -204,7 +214,8 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
                 for (int i= 0; i < [filenames count]; i++) {
                     Transcoder* transcoder = [[Transcoder alloc] initWithController:self];
                     [transcoder addInputFile: [filenames objectAtIndex:i]];
-                    [transcoder addOutputFile: getOutputFileName([filenames objectAtIndex:i], m_savePath, @"")];
+                    [transcoder addOutputFile: getOutputFileName([filenames objectAtIndex:i], m_savePath, [self suffixForDevice:[m_conversionParams device]])];
+                    [transcoder setVideoFormat: [self videoFormatForDevice: [m_conversionParams device]]];
                     
                     if (row < 0)
                         [m_files addObject:transcoder];
@@ -224,9 +235,12 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
     NSEnumerator* e = [m_files objectEnumerator];
     Transcoder* transcoder;
     NSString* suffix = [self suffixForDevice:[m_conversionParams device]];
+    NSString* format = [self videoFormatForDevice: [m_conversionParams device]];
     
-    while ((transcoder = (Transcoder*) [e nextObject]))
+    while ((transcoder = (Transcoder*) [e nextObject])) {
         [transcoder changeOutputFileName: getOutputFileName([transcoder inputFileName], m_savePath, suffix)];
+        [transcoder setVideoFormat: format];
+    }
 }
 
 -(IBAction)clickFileEnable:(id)sender
@@ -348,7 +362,7 @@ static NSString* _validateCommandString(NSString* s)
 -(NSString*) jobForDevice: (NSString*) name type: (NSString*) type
 {
     NSDictionary* commands = [m_commands valueForKey: @"commands"];
-    NSString* job = _validateCommandString([[[m_commands valueForKey: @"jobs"] valueForKey: name] valueForKey: type]);
+    NSString* job = _validateCommandString([[[m_commands valueForKey: @"devices"] valueForKey: name] valueForKey: type]);
     if ([job length] == 0)
         return nil;
         

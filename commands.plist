@@ -43,27 +43,29 @@
 		<key>normal_pass2</key>
 		<string>!ffmpeg_normal !ffmpeg_options !ffmpeg_pass2 $output_file</string>
 	</dict>
-	<key>jobs</key>
+	<key>devices</key>
 	<dict>
 		<key>default</key>
 		<dict>
 			<key>output-file-suffix</key>
 			<string>mp4</string>
-			<key>quicktime-av</key>
+			<key>output-video-format</key>
+			<string>h.264</string>
+			<key>job-quicktime-av</key>
 			<string>!quicktime_to_audio_file ; !quicktime_av_pass0</string>
-			<key>quicktime-av-2pass</key>
+			<key>job-quicktime-av-2pass</key>
 			<string>!quicktime_to_audio_file ; !quicktime_av_pass1 ; !quicktime_av_pass2</string>
-			<key>quicktime-v</key>
+			<key>job-quicktime-v</key>
 			<string>!quicktime_v_pass0</string>
-			<key>quicktime-v-2pass</key>
+			<key>job-quicktime-v-2pass</key>
 			<string>!quicktime_v_pass1 ; !quicktime_v_pass2</string>
-			<key>normal-av</key>
+			<key>job-normal-av</key>
 			<string>!normal_pass0</string>
-			<key>normal-av-2pass</key>
+			<key>job-normal-av-2pass</key>
 			<string>!normal_pass1 ; !normal_pass2</string>
-			<key>normal-v</key>
+			<key>job-normal-v</key>
 			<string>!normal_pass0</string>
-			<key>normal-v-2pass</key>
+			<key>job-normal-v-2pass</key>
 			<string>!normal_pass1 ; !normal_pass2</string>
 		</dict>
 		<key>iPhone</key>

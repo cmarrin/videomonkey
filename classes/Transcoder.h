@@ -63,7 +63,6 @@ typedef enum FileStatus { FS_INVALID, FS_VALID, FS_ENCODING, FS_PAUSED, FS_FAILE
   @private
     NSMutableArray* m_inputFiles;
     NSMutableArray* m_outputFiles;
-    double m_bitrate;
     double m_totalDuration;
     double m_progress;
     BOOL m_enabled;
@@ -86,8 +85,11 @@ typedef enum FileStatus { FS_INVALID, FS_VALID, FS_ENCODING, FS_PAUSED, FS_FAILE
 -(int) addInputFile: (NSString*) filename;
 -(int) addOutputFile: (NSString*) filename;
 -(void) changeOutputFileName: (NSString*) filename;
+
 -(void) setBitrate: (float) rate;
 -(double) bitrate;
+-(void) setVideoFormat: (NSString*) format;
+
 -(double) playTime;
 
 -(double) progress;
@@ -108,6 +110,7 @@ typedef enum FileStatus { FS_INVALID, FS_VALID, FS_ENCODING, FS_PAUSED, FS_FAILE
 
 -(BOOL) isInputQuicktime;
 -(BOOL) hasInputAudio;
+-(NSString*) inputVideoFormat;
 -(NSString*) outputFileName;
 -(int) outputFileSize;
 -(NSString*) tempAudioFileName;

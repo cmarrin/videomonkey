@@ -16,6 +16,9 @@
 -(NSString*) deviceName;
 @end
 
+#define VC_H264 @"h.264"
+#define VC_WMV3 @"wmv3"
+
 @interface ConversionParams : NSObject {
     IBOutlet float *m_quality;
     IBOutlet NSTabView* m_conversionParamsTabView;
