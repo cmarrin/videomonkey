@@ -216,6 +216,7 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
                     [transcoder addInputFile: [filenames objectAtIndex:i]];
                     [transcoder addOutputFile: getOutputFileName([filenames objectAtIndex:i], m_savePath, [self suffixForDevice:[m_conversionParams device]])];
                     [transcoder setVideoFormat: [self videoFormatForDevice: [m_conversionParams device]]];
+                    [m_moviePanel setMovie: [filenames objectAtIndex:i]];
                     
                     if (row < 0)
                         [m_files addObject:transcoder];

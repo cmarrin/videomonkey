@@ -3,13 +3,13 @@
 	<data>
 		<int key="IBDocument.SystemTarget">1050</int>
 		<string key="IBDocument.SystemVersion">9F33</string>
-		<string key="IBDocument.InterfaceBuilderVersion">676</string>
+		<string key="IBDocument.InterfaceBuilderVersion">677</string>
 		<string key="IBDocument.AppKitVersion">949.34</string>
 		<string key="IBDocument.HIToolboxVersion">352.00</string>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
-			<integer value="81"/>
 			<integer value="628"/>
+			<integer value="81"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -1353,7 +1353,7 @@
 												<reference key="NSControlView" ref="668207334"/>
 												<int key="NSButtonFlags">-2038415105</int>
 												<int key="NSButtonFlags2">36</int>
-												<object class="NSCustomResource" key="NSNormalImage">
+												<object class="NSCustomResource" key="NSNormalImage" id="1061223336">
 													<string key="NSClassName">NSImage</string>
 													<string key="NSResourceName">tinyitunes</string>
 												</object>
@@ -1368,10 +1368,7 @@
 													<string key="NSKeyEquiv"/>
 													<int key="NSMnemonicLoc">2147483647</int>
 													<int key="NSState">1</int>
-													<object class="NSCustomResource" key="NSImage">
-														<string key="NSClassName">NSImage</string>
-														<string key="NSResourceName">tinyitunes</string>
-													</object>
+													<reference key="NSImage" ref="1061223336"/>
 													<reference key="NSOnImage" ref="35465992"/>
 													<reference key="NSMixedImage" ref="502551668"/>
 													<string key="NSAction">_popUpItemAction:</string>
@@ -13152,6 +13149,22 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 					</object>
 					<int key="connectionID">2024</int>
 				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">m_moviePanel</string>
+						<reference key="source" ref="98230273"/>
+						<reference key="destination" ref="179961847"/>
+					</object>
+					<int key="connectionID">2033</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">delegate</string>
+						<reference key="source" ref="461588446"/>
+						<reference key="destination" ref="179961847"/>
+					</object>
+					<int key="connectionID">2034</int>
+				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
 				<object class="NSArray" key="orderedObjects">
@@ -23550,7 +23563,7 @@ J3MgbW9yZSBpbXBvcnRhbnQuA</string>
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">2032</int>
+			<int key="maxID">2034</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -23585,6 +23598,7 @@ J3MgbW9yZSBpbXBvcnRhbnQuA</string>
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>m_conversionParams</string>
 							<string>m_fileListView</string>
+							<string>m_moviePanel</string>
 							<string>m_pauseEncodeItem</string>
 							<string>m_saveToPathTextField</string>
 							<string>m_startEncodeItem</string>
@@ -23595,6 +23609,7 @@ J3MgbW9yZSBpbXBvcnRhbnQuA</string>
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>ConversionParams</string>
 							<string>NSTableView</string>
+							<string>MoviePanelController</string>
 							<string>NSToolbarItem</string>
 							<string>NSTextField</string>
 							<string>NSToolbarItem</string>

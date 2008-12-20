@@ -13,6 +13,11 @@
 @interface MoviePanelController : NSObject {
 @private
     IBOutlet QTMovieView* m_movieView;
+    
+    BOOL m_isVisible;
+    BOOL m_isMovieSet;
 }
+
+-(void) setMovie:(NSString*) filename;
 
 @end

@@ -9,6 +9,7 @@
 #import <Cocoa/Cocoa.h>
 
 @class ConversionParams;
+@class MoviePanelController;
 @class Transcoder;
 
 typedef enum { RS_STOPPED, RS_RUNNING, RS_PAUSED } RunStateType;
@@ -22,6 +23,7 @@ typedef enum { RS_STOPPED, RS_RUNNING, RS_PAUSED } RunStateType;
     IBOutlet NSToolbarItem* m_pauseEncodeItem;
     IBOutlet NSToolbarItem* m_stopEncodeItem;
     IBOutlet ConversionParams* m_conversionParams;
+    IBOutlet MoviePanelController* m_moviePanel;
     
     NSMutableArray* m_files;
     int m_draggedRow;
