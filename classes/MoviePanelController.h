@@ -7,16 +7,24 @@
 //
 
 #import <Cocoa/Cocoa.h>
-#import <QTKit/QTMovieView.h>
-
+#import <QTKit/QTKit.h>
 
 @interface MoviePanelController : NSObject {
 @private
     IBOutlet QTMovieView* m_movieView;
+    IBOutlet NSProgressIndicator* m_progress;
     
     BOOL m_isVisible;
-    BOOL m_isMovieSet;
+    BOOL m_movieIsSet;
+    NSMutableString* m_filename;
+    int m_controlHeight;
+    NSTimeInterval m_selectionStart;
+    NSTimeInterval m_selectionEnd;
 }
+
+-(IBAction)startSelection:(id)sender;
+-(IBAction)endSelection:(id)sender;
+-(IBAction)encodeSelection:(id)sender;
 
 -(void) setMovie:(NSString*) filename;
 

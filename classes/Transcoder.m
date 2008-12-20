@@ -453,8 +453,8 @@ static NSImage* getFileStatusImage(FileStatus status)
     }
     
     if ([job length] == 0) {
-        NSWindow* mainWindow = [[NSApplication sharedApplication] mainWindow];
-        NSBeginAlertSheet(@"Internal Error", nil, nil, nil, mainWindow, nil, nil, nil, nil, 
+        NSBeginAlertSheet(@"Internal Error", nil, nil, nil, [[NSApplication sharedApplication] mainWindow], 
+                          nil, nil, nil, nil, 
                           @"Transcoder attempted to execute an empty command");
         return NO;
     }
