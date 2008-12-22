@@ -47,9 +47,9 @@
 	<dict>
 		<key>default</key>
 		<dict>
-			<key>output-file-suffix</key>
+			<key>file-suffix</key>
 			<string>mp4</string>
-			<key>output-video-format</key>
+			<key>video-format</key>
 			<string>h.264</string>
 			<key>job-quicktime-av</key>
 			<string>!quicktime_to_audio_file ; !quicktime_av_pass0</string>
@@ -69,7 +69,60 @@
 			<string>!normal_pass1 ; !normal_pass2</string>
 		</dict>
 		<key>iPhone</key>
+		<dict>
+			<key>formats</key>
+			<dict>
+				<key>h.264</key>
+				<array>
+					<string>24,5000000,1280,720</string>
+					<string>30,5000000,960,540</string>
+				</array>
+			</dict>
+			<key>video-width</key>
+			<string>480</string>
+			<key>video-height</key>
+			<string>320</string>
+		</dict>
+		<key>iPodTouch</key>
+		<dict>
+			<key>video-width</key>
+			<string>480</string>
+			<key>video-height</key>
+			<string>320</string>
+		</dict>
+		<key>appleTV</key>
+		<dict>
+			<key>formats</key>
+			<dict>
+				<key>h.264</key>
+				<array>
+					<string>24,5000000,1280,720</string>
+					<string>30,5000000,960,540</string>
+				</array>
+				<key>mpeg4</key>
+				<array>
+					<string>30,3000000,720,432</string>
+				</array>
+			</dict>
+		</dict>
+		<key>allAppleDevices</key>
 		<dict/>
+		<key>iPodClassic</key>
+		<dict>
+			<key>output-video-width</key>
+			<string>320</string>
+			<key>output-video-height</key>
+			<string>240</string>
+		</dict>
+		<key>iPod5G</key>
+		<dict/>
+		<key>iPodNano</key>
+		<dict>
+			<key>output-video-width</key>
+			<string>320</string>
+			<key>output-video-height</key>
+			<string>240</string>
+		</dict>
 	</dict>
 </dict>
 </plist>

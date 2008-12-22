@@ -60,12 +60,12 @@
 
 -(NSString*) suffixForDevice: (NSString*) device
 {
-    return [self valueForDevice:device withKey:@"output-file-suffix"];
+    return [self valueForDevice:device withKey:@"file-suffix"];
 }
 
 -(NSString*) videoFormatForDevice: (NSString*) device
 {
-    return [self valueForDevice:device withKey:@"output-video-format"];
+    return [self valueForDevice:device withKey:@"video-format"];
 }
 
 static NSString* formatDuration(double duration)

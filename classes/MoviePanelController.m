@@ -125,4 +125,11 @@
     [self setVisible:YES];
 }
 
+- (void)sendEvent:(NSEvent *)event
+{
+    static int i = 0;
+    if ([event type] == NSMouseMoved)
+        printf("*** sendEvent %d\n", i++);
+}
+
 @end

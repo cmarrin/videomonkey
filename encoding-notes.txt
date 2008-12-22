@@ -1,0 +1,223 @@
+Notes About Encoding
+
+Recipes
+
+for iPod Touch
+
+ffmpeg -i INPUT -acodec libfaac -ac 2 -ar 44100 -ab 128k -s 320x240 -vcodec libx264 -b 300k -flags +loop -cmp +chroma -partitions+parti4x4+partp8x8+partb8x8 -me umh -subq 5 -trellis 1 -refs 1 -coder 0 -me_range 16 -g 300 -keyint_min 25 -sc_threshold 40 -i_qfactor 0.71 -bt 300k -maxrate 300k -bufsize 300k -rc_eq 'blurCplx^(1-qComp)' -qcomp 0.6 -qmin 15 -qmax 51 -qdiff 4 -level 30 -aspect 320:240 OUTPUT.mp4
+
+AtomicParsley OUTPUT.mp4 --DeepScan --iPod-uuid 1200 --overWrite --title "THE MOVIE TITLE";
+
+===========
+
+ffpresets files in the ffmpeg/ffpresets subdir
+
+Default libx264 settings
+------------------------
+coder=1
+flags=+loop
+cmp=+chroma
+partitions=+parti8x8+parti4x4+partp8x8+partb8x8
+me=hex
+subq=5
+me_range=16
+g=250
+keyint_min=25
+sc_threshold=40
+i_qfactor=0.71
+b_strategy=1
+qcomp=0.6
+qmin=10
+qmax=51
+qdiff=4
+directpred=1
+flags2=+fastpskip
+threads=0
+
+
+Fast First Pass
+---------------
+coder=1
+flags=+loop
+cmp=+chroma
+partitions=-parti8x8-parti4x4-partp8x8-partp4x4-partb8x8
+me=dia
+subq=1
+me_range=16
+g=250
+keyint_min=25
+sc_threshold=40
+i_qfactor=0.71
+b_strategy=1
+qcomp=0.6
+qmin=10
+qmax=51
+qdiff=4
+refs=1
+directpred=1
+bidir_refine=0
+trellis=0
+flags2=-bpyramid-wpred-brdo-mixed_refs-dct8x8+fastpskip
+threads=0
+
+
+Dark Shikari’s Q55 preset
+-------------------------
+coder=1
+flags=+loop
+cmp=+chroma
+partitions=+parti8x8+parti4x4+partp8x8+partb8x8
+me=hex
+subq=6
+me_range=16
+g=250
+keyint_min=25
+sc_threshold=40
+i_qfactor=0.71
+b_strategy=1
+qcomp=0.6
+qmin=10
+qmax=51
+qdiff=4
+bf=16
+refs=2
+directpred=3
+bidir_refine=1
+trellis=0
+flags2=+bpyramid+wpred+dct8x8+fastpskip
+threads=0
+
+
+Dark Shikari’s Q75 preset
+-------------------------
+coder=1
+flags=+loop
+cmp=+chroma
+partitions=+parti8x8+parti4x4+partp8x8+partb8x8
+me=umh
+subq=7
+me_range=16
+g=250
+keyint_min=25
+sc_threshold=40
+i_qfactor=0.71
+b_strategy=1
+qcomp=0.6
+qmin=10
+qmax=51
+qdiff=4
+bf=16
+refs=4
+directpred=3
+bidir_refine=1
+trellis=1
+flags2=+bpyramid+wpred+brdo+mixed_refs+dct8x8+fastpskip
+threads=0
+
+
+all options maxed out
+---------------------
+coder=1
+flags=+loop
+cmp=+chroma
+partitions=+parti8x8+parti4x4+partp8x8+partp4x4+partb8x8
+me=tesa
+subq=7
+me_range=32
+g=250
+keyint_min=25
+sc_threshold=40
+i_qfactor=0.71
+b_strategy=1
+qcomp=0.6
+qmin=10
+qmax=51
+qdiff=4
+bf=16
+refs=16
+directpred=3
+bidir_refine=1
+trellis=2
+flags2=+bpyramid+wpred+brdo+mixed_refs+dct8x8-fastpskip
+threads=0
+
+
+==========
+
+768kbit/s 320×240 H.264
+
+1 pass
+
+ffmpeg -i INPUT -acodec libfaac -ab 128k -s WIDTHxHEIGHT -vcodec libx264 -b BIT_RATE -bt BIT_RATE -level 13 -title SOME_TITLE OUTPUT.mp4
+
+coder=0
+flags=+loop
+cmp=+chroma
+partitions=+parti4x4+partp8x8+partb8x8
+me= umh
+subq=5
+me_range=16
+g=250
+keyint_min=25
+sc_threshold= ??? (40)
+i_qfactor=0.71
+b_strategy= ??? (1)
+qcomp=0.6
+qmin=10
+qmax=51
+qdiff=4
+bf= ??? (16)
+refs=5
+directpred= ??? (3)
+bidir_refine= ??? (1)
+trellis=1
+flags2=+mixed_refs
+threads=0
+
+*** added ***
+
+maxrate=768k
+bufsize=2M
+rc_eq='blurCplx^(1-qComp)'
+
+
+http://itbroadcastanddigitalcinema.com/ffmpeg_howto.html
+
+
+
+
+Visual Hub Encoding
+
+Differences: size, frame rate (1/2 rate or full rate)
+
+All Devices - Tiny - h.264:	-s <480 wide> -aspect <480 wide> -r <half> -vcodec h264
+				-g 150 -qmin 29  -b 300k  -level 30 -loop 1 -sc_threshold 40 -partp4x4 1 -rc_eq 'blurCplx^(1-qComp)' -refs 2  -qmax 51 -maxrate 1450k -keyint_min 40
+				-async 50  -acodec libfaac  -ar 11025 -ac 1 -ab 16k
+
+All Devices - Tiny:		-s <480 wide> -aspect <480 wide> -r <half> -vcodec mpeg4  
+				-g 150  -qmin 7  -b 500k  -maxrate 2400k -qmax 31 -bufsize 1221k
+				-async 50  -acodec libfaac  -ar 11025 -ac 1 -ab 16k
+
+All Devices - Low - h.264:	-s 624x352 -aspect 624:352   -r <full>   -vcodec h264
+				-g 150  -qmin 32  -b 600k  -level 30 -loop 1 -sc_threshold 40 -partp4x4 1 -rc_eq 'blurCplx^(1-qComp)' -refs 2  -qmax 51 -maxrate 1450k -keyint_min 40
+				-async 50  -acodec libfaac  -ar 48000 -ac 2 -ab 128k
+
+All Devices - Low:		-s 624x352 -aspect 624:352   -r ntsc-film   -vcodec mpeg4
+				-g 150  -qmin 8  -b 700k  -maxrate 2400k -qmax 31 -bufsize 1221k
+				-async 50  -acodec libfaac  -ar 44100 -ac 2 -ab 128k
+
+All Devices - Standard - h.264:	-s 1440x1080 -aspect 1440:1080   -r pal   -vcodec h264
+				-g 150  -qmin 25  -b 1000k  -level 30 -loop 1 -sc_threshold 40 -partp4x4 1 -rc_eq 'blurCplx^(1-qComp)' -refs 2  -qmax 51 -maxrate 1450k -keyint_min 40
+				-async 50  -acodec libfaac  -ar 48000 -ac 2 -ab 128k
+
+All Devices - High - h.264:	-s 1440x1080 -aspect 1440:1080   -r pal   -vcodec h264
+				-g 150  -qmin 20  -b 1200k  -level 30 -loop 1 -sc_threshold 40 -partp4x4 1 -rc_eq 'blurCplx^(1-qComp)' -refs 2  -qmax 51 -maxrate 1450k -keyint_min 40
+				-async 50  -acodec libfaac  -ar 48000 -ac 2 -ab 128k
+
+All Devices - Go Nuts - h.264:	-s 1440x1080 -aspect 1440:1080   -r pal   -vcodec h264
+				-g 150  -qmin 8  -b 1400k  -level 30 -loop 1 -sc_threshold 40 -partp4x4 1 -rc_eq 'blurCplx^(1-qComp)' -refs 2  -qmax 51 -maxrate 1450k -keyint_min 40
+				-async 50  -acodec libfaac  -ar 48000 -ac 2 -ab 128k
+
+iPod 5G - Tiny - h.264:		-s 1440x1080 -aspect 1440:1080   -r pal   -vcodec h264  -g 150  -qmin 29  -b 150k  -level 13 -loop 1 -sc_threshold 40 -partp4x4 1 -rc_eq 'blurCplx^(1-qComp)' -refs 3  -qmax 51 -maxrate 700k -keyint_min 40    -async 50  -acodec libfaac  -ar 11025 -ac 1 -ab 16k
+
+
