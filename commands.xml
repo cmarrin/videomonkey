@@ -1,0 +1,16 @@
+<videomonkey>
+    <device_group title="iTunes">
+        <device title="All Apple Devices" id="allappledevices" tab="long-q-2-check-boxes">
+            <quality>
+                <quality_stop which="0" title="Tiny" min_bitrate="200000" max_bitrate="400000" audio="low" size="0.5" />
+                <quality_stop which="1" title="Low" min_bitrate="400000" max_bitrate="800000" audio="high" size="1" />
+                <quality_stop which="2" title="Standard" min_bitrate="800000" max_bitrate="1100000" audio="high" size="1" />
+                <quality_stop which="3" title="High" min_bitrate="1100000" max_bitrate="1500000" audio="high" size="1" />
+                <quality_stop which="4" title="Go Nuts" min_bitrate="200000" max_bitrate="400000" audio="high" size="1" />
+            </quality>
+            <checkbox which="0" title="H.264 Video (slower but better)" checked="-vcodec libx264" unchecked="-vcodec mpeg4" />
+        </device>
+    </device_group>
+</videomonkey>
+
+        

@@ -102,6 +102,7 @@
 		49BC8CB00ED6892400027F1D /* Pause.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 49BC8CA70ED6892400027F1D /* Pause.tiff */; };
 		49BC8CB10ED6892400027F1D /* Play.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 49BC8CA80ED6892400027F1D /* Play.tiff */; };
 		49BC8CB20ED6892400027F1D /* Stop.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 49BC8CA90ED6892400027F1D /* Stop.tiff */; };
+		49D4694A0F0F2E52005D70FD /* commands.xml in Resources */ = {isa = PBXBuildFile; fileRef = 49D469490F0F2E52005D70FD /* commands.xml */; };
 		49E9119B0EF86C3F009D0CAF /* ffpresets in Resources */ = {isa = PBXBuildFile; fileRef = 49E911930EF86C3F009D0CAF /* ffpresets */; };
 		49FC93830ECB3CCD0058CDBB /* QTKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 49FC93820ECB3CCD0058CDBB /* QTKit.framework */; };
 		8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165CFE840E0CC02AAC07 /* InfoPlist.strings */; };
@@ -218,6 +219,7 @@
 		49BC8CA70ED6892400027F1D /* Pause.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = Pause.tiff; path = icons/Pause.tiff; sourceTree = "<group>"; };
 		49BC8CA80ED6892400027F1D /* Play.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = Play.tiff; path = icons/Play.tiff; sourceTree = "<group>"; };
 		49BC8CA90ED6892400027F1D /* Stop.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = Stop.tiff; path = icons/Stop.tiff; sourceTree = "<group>"; };
+		49D469490F0F2E52005D70FD /* commands.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = commands.xml; sourceTree = "<group>"; };
 		49E911930EF86C3F009D0CAF /* ffpresets */ = {isa = PBXFileReference; lastKnownFileType = folder; path = ffpresets; sourceTree = "<group>"; };
 		49FC93820ECB3CCD0058CDBB /* QTKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QTKit.framework; path = /System/Library/Frameworks/QTKit.framework; sourceTree = "<absolute>"; };
 		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -316,6 +318,7 @@
 				089C165CFE840E0CC02AAC07 /* InfoPlist.strings */,
 				491001880ECBE470001B578B /* MainMenu.nib */,
 				497E670F0EEC24FA000372EC /* commands.plist */,
+				49D469490F0F2E52005D70FD /* commands.xml */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -562,6 +565,7 @@
 				497E67100EEC24FA000372EC /* commands.plist in Resources */,
 				492D327E0EF18D8000AEB740 /* bin in Resources */,
 				49E9119B0EF86C3F009D0CAF /* ffpresets in Resources */,
+				49D4694A0F0F2E52005D70FD /* commands.xml in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
