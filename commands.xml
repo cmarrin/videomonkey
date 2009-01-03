@@ -1,4 +1,87 @@
 <videomonkey>
+    <commands>
+        <command id="ffmpeg_pass0"> -vpre $ffmpeg_vpre </command>
+        <command id="ffmpeg_pass1"> -vpre $ffmpeg_vpre_pass1 -pass 1 -passlogfile $pass_log_file </command>
+		<command id="ffmpeg_pass2"> -vpre $ffmpeg_vpre -pass 2 -passlogfile $pass_log_file </command>
+		<command id="ffmpeg_options"> -vcodec $ffmpeg_vcodec -b $bitrate -s $ffmpeg_output_video_size  </command>
+		<command id="quicktime_to_audio_file"> $qt_export $input_file --video=0 $tmp_audio_file </command>
+		<command id="correct_yuv"> $yuvcorrect -v 0 -Y LUMINANCE_1.20_0_255_0_255 -Y CHROMINANCE_0_1.04_128_1.04_128_0_255 </command>
+		<command id="quicktime_to_yuv"> $movtoy4m -f -w $input_video_width -h $input_video_height -F $framerate -a $aspect_ratio $input_file | !correct_yuv </command>
+		<command id="yuv_to_ffmpeg_av"> $ffmpeg -y -i - -i $tmp_audio_file </command>
+		<command id="yuv_to_ffmpeg_v"> $ffmpeg -y -i - </command>
+		<command id="ffmpeg_normal"> $ffmpeg -y -i $input_file </command>
+		<command id="quicktime_av_pass0"> !quicktime_to_yuv | !yuv_to_ffmpeg_av !ffmpeg_options !ffmpeg_pass0 $output_file </command>
+		<command id="quicktime_av_pass1"> !quicktime_to_yuv | !yuv_to_ffmpeg_av !ffmpeg_options !ffmpeg_pass1 $output_file </command>
+		<command id="quicktime_av_pass2"> !quicktime_to_yuv | !yuv_to_ffmpeg_av !ffmpeg_options !ffmpeg_pass2 $output_file </command>
+		<command id="quicktime_v_pass0"> !quicktime_to_yuv | !yuv_to_ffmpeg_v !ffmpeg_options !ffmpeg_pass0 $output_file </command>
+		<command id="quicktime_v_pass1"> !quicktime_to_yuv | !yuv_to_ffmpeg_v !ffmpeg_options !ffmpeg_pass1 $output_file </command>
+		<command id="quicktime_v_pass2"> !quicktime_to_yuv | !yuv_to_ffmpeg_v !ffmpeg_options !ffmpeg_pass2 $output_file </command>
+		<command id="normal_pass0"> !ffmpeg_normal !ffmpeg_options !ffmpeg_pass0 $output_file </command>
+		<command id="normal_pass1"> !ffmpeg_normal !ffmpeg_options !ffmpeg_pass1 $output_file </command>
+		<command id="normal_pass2"> !ffmpeg_normal !ffmpeg_options !ffmpeg_pass2 $output_file </command>
+    </commands>
+    <default_device>
+        <quality>
+            <quality_stop which="0" title="Tiny" min_bitrate="200000" max_bitrate="400000" audio="low" size="0.5" />
+            <quality_stop which="1" title="Low" min_bitrate="400000" max_bitrate="800000" audio="high" size="1" />
+            <quality_stop which="2" title="Standard" min_bitrate="800000" max_bitrate="1100000" audio="high" size="1" />
+            <quality_stop which="3" title="High" min_bitrate="1100000" max_bitrate="1500000" audio="high" size="1" />
+            <quality_stop which="4" title="Go Nuts" min_bitrate="200000" max_bitrate="400000" audio="high" size="1" />
+        </quality>
+        <performance>
+            <performance_item title="Fastest">
+                <param id="two_pass" value="" />
+                <param id="ffmpeg_vpre" value="fastest" />
+            </performance_item>
+            <performance_item title="Fast">
+                <param id="two_pass" value="" />
+                <param id="ffmpeg_vpre" value="default" />
+            </performance_item>
+            <performance_item title="Normal">
+                <param id="two_pass" value="" />
+                <param id="ffmpeg_vpre" value="normal" />
+            </performance_item>
+            <performance_item title="Normal (2 pass)">
+                <param id="two_pass" value="_2pass" />
+                <param id="ffmpeg_vpre" value="normal" />
+            </performance_item>
+            <performance_item title="High Quality">
+                <param id="two_pass" value="" />
+                <param id="ffmpeg_vpre" value="hq" />
+            </performance_item>
+            <performance_item title="High Quality (2 pass)">
+                <param id="two_pass" value="_2pass" />
+                <param id="ffmpeg_vpre" value="hq" />
+            </performance_item>
+        </performance>
+        <param id="ffmpeg_vcodec" value="libx264" />
+        <command suffix="mp4">
+            <command_qt_av>
+                !quicktime_to_audio_file ; !quicktime_av_pass0
+            </command_qt_av>
+            <command_qt_av_2pass>
+                !quicktime_to_audio_file ; !quicktime_av_pass1 ; !quicktime_av_pass2
+            </command_qt_av_2pass>
+            <command_qt_v>
+                !quicktime_v_pass0
+            </command_qt_v>
+            <command_qt_v_2pass>
+                !quicktime_v_pass1 ; !quicktime_v_pass2
+            </command_qt_v_2pass>
+            <command_av>
+                !normal_pass0
+            </command_av>
+            <command_av_2pass>
+                !normal_pass1 ; !normal_pass2
+            </command_av_2pass>
+            <command_v>
+                !normal_pass0
+            </command_v>
+            <command_v_2pass>
+                !normal_pass1 ; !normal_pass2
+            </command_v_2pass>
+        </command>
+    </default_device>
     <device_group title="iTunes">
         <device title="All Apple Devices" id="allappledevices" tab="long-q-2-check-boxes">
             <quality>
@@ -8,7 +91,33 @@
                 <quality_stop which="3" title="High" min_bitrate="1100000" max_bitrate="1500000" audio="high" size="1" />
                 <quality_stop which="4" title="Go Nuts" min_bitrate="200000" max_bitrate="400000" audio="high" size="1" />
             </quality>
-            <checkbox which="0" title="H.264 Video (slower but better)" checked="-vcodec libx264" unchecked="-vcodec mpeg4" />
+            <checkbox which="0" title="H.264 Video (slower but better)" id="ffmpeg_vcodec" checked="libx264" unchecked="mpeg4" />
+            <command suffix="mp4">
+                <command_qt_av>
+                    !quicktime_to_audio_file ; !quicktime_av_pass0
+                </command_qt_av>
+                <command_qt_av_2pass>
+                    !quicktime_to_audio_file ; !quicktime_av_pass1 ; !quicktime_av_pass2
+                </command_qt_av_2pass>
+                <command_qt_v>
+                    !quicktime_v_pass0
+                </command_qt_v>
+                <command_qt_v_2pass>
+                    !quicktime_v_pass1 ; !quicktime_v_pass2
+                </command_qt_v_2pass>
+                <command_av>
+                    !normal_pass0
+                </command_av>
+                <command_av_2pass>
+                    !normal_pass1 ; !normal_pass2
+                </command_av_2pass>
+                <command_v>
+                    !normal_pass0
+                </command_v>
+                <command_v_2pass>
+                    !normal_pass1 ; !normal_pass2
+                </command_v_2pass>
+            </command>
         </device>
     </device_group>
 </videomonkey>
