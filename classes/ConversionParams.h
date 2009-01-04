@@ -7,13 +7,56 @@
 //
 
 #import <Cocoa/Cocoa.h>
-//#import <Cocoa/NSTabViewItem.h>
 
 @interface ConversionTab : NSTabViewItem {
-    IBOutlet id m_h264Button;
+    IBOutlet NSButton* m_button0;
+    IBOutlet NSTextField* m_buttonLabel0;
+    IBOutlet NSButton* m_button1;
+    IBOutlet NSTextField* m_buttonLabel1;
+    IBOutlet NSButton* m_button2;           // menu 0
+    IBOutlet NSTextField* m_buttonLabel2;
+    IBOutlet NSButton* m_button3;           // menu 1
+    IBOutlet NSTextField* m_buttonLabel3;
+    
+    IBOutlet NSMatrix* m_radio;
+    IBOutlet NSTextField* m_radioLabel0;
+    
+    IBOutlet NSSlider* m_slider;
+    IBOutlet NSTextField* m_sliderLabel1;
+    IBOutlet NSTextField* m_sliderLabel2;
+    IBOutlet NSTextField* m_sliderLabel3;
+    IBOutlet NSTextField* m_sliderLabel4;
+    IBOutlet NSTextField* m_sliderLabel5;
 }
 
 -(NSString*) deviceName;
+@end
+
+typedef enum { DT_NONE, DT_LONG_Q_2_CHECK, DT_SHORT_Q_2_RADIO_2_CHECK, DT_SHORT_Q_2_MENU_1_CHECK, DT_DVD } DeviceTabType;
+
+@interface DeviceEntry : NSObject {
+    NSString* m_id;
+    
+    NSDictionary* m_commands;
+    DeviceTabType m_deviceTab;
+    
+    NSString* m_buttonLabel0;
+    NSString* m_buttonLabel1;
+    NSString* m_buttonLabel2;
+    NSString* m_buttonLabel3;
+    
+    NSString* m_radioTitle;
+    NSString* m_radioLabel0;
+    NSString* m_radioLabel1;
+    
+    NSString* m_sliderLabel1;
+    NSString* m_sliderLabel2;
+    NSString* m_sliderLabel3;
+    NSString* m_sliderLabel4;
+    NSString* m_sliderLabel5;
+}
+
+-(NSString*) id;
 @end
 
 #define VC_H264 @"h.264"
@@ -25,6 +68,9 @@
     IBOutlet NSPopUpButton* m_conversionParamsButton;
     IBOutlet NSPopUpButton* m_performanceButton;
     
+    NSDictionary* m_commands;
+    NSDictionary* m_environment;
+
     ConversionTab* m_currentTabViewItem;
     NSString* m_currentPerformance;
     BOOL m_isTwoPass;

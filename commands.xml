@@ -1,6 +1,8 @@
 <videomonkey>
     <commands>
-        <command id="ffmpeg_pass0"> -vpre $ffmpeg_vpre </command>
+        <command id="ffmpeg_pass0"> 
+            -vpre $ffmpeg_vpre
+        </command>
         <command id="ffmpeg_pass1"> -vpre $ffmpeg_vpre_pass1 -pass 1 -passlogfile $pass_log_file </command>
 		<command id="ffmpeg_pass2"> -vpre $ffmpeg_vpre -pass 2 -passlogfile $pass_log_file </command>
 		<command id="ffmpeg_options"> -vcodec $ffmpeg_vcodec -b $bitrate -s $ffmpeg_output_video_size  </command>
@@ -22,11 +24,12 @@
     </commands>
     <default_device>
         <quality>
-            <quality_stop which="0" title="Tiny" min_bitrate="200000" max_bitrate="400000" audio="low" size="0.5" />
-            <quality_stop which="1" title="Low" min_bitrate="400000" max_bitrate="800000" audio="high" size="1" />
-            <quality_stop which="2" title="Standard" min_bitrate="800000" max_bitrate="1100000" audio="high" size="1" />
-            <quality_stop which="3" title="High" min_bitrate="1100000" max_bitrate="1500000" audio="high" size="1" />
-            <quality_stop which="4" title="Go Nuts" min_bitrate="200000" max_bitrate="400000" audio="high" size="1" />
+            <quality_stop which="0" bitrate="200000" />
+            <quality_stop which="1" title="Tiny" bitrate="400000" audio="low" size="0.5" />
+            <quality_stop which="2" title="Low" bitrate="800000" audio="high" size="1" />
+            <quality_stop which="3" title="Standard" bitrate="1100000" audio="high" size="1" />
+            <quality_stop which="4" title="High" bitrate="1500000" audio="high" size="1" />
+            <quality_stop which="5" title="Go Nuts" bitrate="2000000" audio="high" size="1" />
         </quality>
         <performance>
             <performance_item title="Fastest">
@@ -55,71 +58,48 @@
             </performance_item>
         </performance>
         <param id="ffmpeg_vcodec" value="libx264" />
-        <command suffix="mp4">
-            <command_qt_av>
+        <param id="video_suffix" value="mp4" />
+        <recipes>
+            <recipe is_quicktime="true" has_audio="true" is_2pass="false">
                 !quicktime_to_audio_file ; !quicktime_av_pass0
-            </command_qt_av>
-            <command_qt_av_2pass>
+            </recipe>
+            <recipe is_quicktime="true" has_audio="true" is_2pass="true">
                 !quicktime_to_audio_file ; !quicktime_av_pass1 ; !quicktime_av_pass2
-            </command_qt_av_2pass>
-            <command_qt_v>
+            </recipe>
+            <recipe is_quicktime="true" has_audio="false" is_2pass="false">
                 !quicktime_v_pass0
-            </command_qt_v>
-            <command_qt_v_2pass>
+            </recipe>
+            <recipe is_quicktime="true" has_audio="false" is_2pass="true">
                 !quicktime_v_pass1 ; !quicktime_v_pass2
-            </command_qt_v_2pass>
-            <command_av>
+            </recipe>
+            <recipe is_quicktime="false" has_audio="true" is_2pass="false">
                 !normal_pass0
-            </command_av>
-            <command_av_2pass>
+            </recipe>
+            <recipe is_quicktime="false" has_audio="true" is_2pass="true">
                 !normal_pass1 ; !normal_pass2
-            </command_av_2pass>
-            <command_v>
+            </recipe>
+            <recipe is_quicktime="false" has_audio="false" is_2pass="false">
                 !normal_pass0
-            </command_v>
-            <command_v_2pass>
+            </recipe>
+            <recipe is_quicktime="false" has_audio="false" is_2pass="true">
                 !normal_pass1 ; !normal_pass2
-            </command_v_2pass>
+            </recipe>
         </command>
     </default_device>
-    <device_group title="iTunes">
-        <device title="All Apple Devices" id="allappledevices" tab="long-q-2-check-boxes">
-            <quality>
-                <quality_stop which="0" title="Tiny" min_bitrate="200000" max_bitrate="400000" audio="low" size="0.5" />
-                <quality_stop which="1" title="Low" min_bitrate="400000" max_bitrate="800000" audio="high" size="1" />
-                <quality_stop which="2" title="Standard" min_bitrate="800000" max_bitrate="1100000" audio="high" size="1" />
-                <quality_stop which="3" title="High" min_bitrate="1100000" max_bitrate="1500000" audio="high" size="1" />
-                <quality_stop which="4" title="Go Nuts" min_bitrate="200000" max_bitrate="400000" audio="high" size="1" />
-            </quality>
-            <checkbox which="0" title="H.264 Video (slower but better)" id="ffmpeg_vcodec" checked="libx264" unchecked="mpeg4" />
-            <command suffix="mp4">
-                <command_qt_av>
-                    !quicktime_to_audio_file ; !quicktime_av_pass0
-                </command_qt_av>
-                <command_qt_av_2pass>
-                    !quicktime_to_audio_file ; !quicktime_av_pass1 ; !quicktime_av_pass2
-                </command_qt_av_2pass>
-                <command_qt_v>
-                    !quicktime_v_pass0
-                </command_qt_v>
-                <command_qt_v_2pass>
-                    !quicktime_v_pass1 ; !quicktime_v_pass2
-                </command_qt_v_2pass>
-                <command_av>
-                    !normal_pass0
-                </command_av>
-                <command_av_2pass>
-                    !normal_pass1 ; !normal_pass2
-                </command_av_2pass>
-                <command_v>
-                    !normal_pass0
-                </command_v>
-                <command_v_2pass>
-                    !normal_pass1 ; !normal_pass2
-                </command_v_2pass>
-            </command>
-        </device>
-    </device_group>
+    <devices>
+        <device_group title="iTunes">
+            <device title="All Apple Devices" id="allappledevices" tab="long-q-2-check-boxes">
+                <quality>
+                    <quality_stop which="0" title="Tiny" min_bitrate="200000" max_bitrate="400000" audio="low" size="0.5" />
+                    <quality_stop which="1" title="Low" min_bitrate="400000" max_bitrate="800000" audio="high" size="1" />
+                    <quality_stop which="2" title="Standard" min_bitrate="800000" max_bitrate="1100000" audio="high" size="1" />
+                    <quality_stop which="3" title="High" min_bitrate="1100000" max_bitrate="1500000" audio="high" size="1" />
+                    <quality_stop which="4" title="Go Nuts" min_bitrate="200000" max_bitrate="400000" audio="high" size="1" />
+                </quality>
+                <checkbox which="0" title="H.264 Video (slower but better)" id="ffmpeg_vcodec" checked="libx264" unchecked="mpeg4" />
+            </device>
+        </device_group>
+    <devices>
 </videomonkey>
 
         
