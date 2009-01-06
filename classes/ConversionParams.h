@@ -97,6 +97,9 @@ typedef enum { DT_NONE, DT_LONG_Q_2_CHECK, DT_SHORT_Q_2_RADIO_2_CHECK, DT_SHORT_
     NSString* m_radioLabel1;
     
     NSMutableArray* m_qualityStops;
+    NSMutableArray* m_performanceItems;
+    NSMutableArray* m_recipes;
+    NSMutableDictionary* m_params;
     
 }
 
@@ -117,7 +120,27 @@ typedef enum { DT_NONE, DT_LONG_Q_2_CHECK, DT_SHORT_Q_2_RADIO_2_CHECK, DT_SHORT_
 }
 
 +(QualityStop*) qualityStopWithElement: (NSXMLElement*) element withDefaults: (DeviceEntry*) defaults;
--(QualityStop*) initWithElement: (NSXMLElement*) element withDefaults: (DeviceEntry*) defaults;
+
+@end
+
+@interface PerformanceItem : NSObject {
+    NSString* m_title;
+    
+    NSMutableDictionary* m_params;
+}
+
++(PerformanceItem*) performanceItemWithElement: (NSXMLElement*) element withDefaults: (DeviceEntry*) defaults;
+
+@end
+
+@interface Recipe : NSObject {
+    NSString* m_recipe;
+    
+    // FIXME: Eventually this needs to be a more generic match function
+    BOOL m_isQuicktime, m_hasAudio, m_is2Pass;
+}
+
++(Recipe*) recipeWithElement: (NSXMLElement*) element withDefaults: (DeviceEntry*) defaults;
 
 @end
 

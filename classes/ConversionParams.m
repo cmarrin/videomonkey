@@ -40,6 +40,22 @@ static NSXMLElement* findChildElement(NSXMLElement* element, NSString* name)
     return [array objectAtIndex:0];
 }
 
+static void addParam(NSXMLElement* paramElement, NSMutableDictionary* dictionary)
+{
+    NSString* key = stringAttribute(paramElement, @"id");
+    NSString* value = stringAttribute(paramElement, @"value");
+    if ([key length])
+        [dictionary setValue:value forKey:key];
+}
+
+static void parseParams(NSXMLElement* element, NSMutableDictionary* dictionary)
+{
+    NSArray* array = [element elementsForName: @"param"];
+    for (int i = 0; i < [array count]; ++i)
+        addParam((NSXMLElement*) [array objectAtIndex:i], dictionary);
+
+}
+
 @implementation ConversionTab
 
 -(NSString*) deviceName
@@ -53,38 +69,74 @@ static NSXMLElement* findChildElement(NSXMLElement* element, NSString* name)
 
 +(QualityStop*) qualityStopWithElement: (NSXMLElement*) element withDefaults: (DeviceEntry*) defaults
 {
-    return [[QualityStop alloc] initWithElement: element withDefaults: defaults];
-}
+    QualityStop* obj = [[QualityStop alloc] init];
 
--(QualityStop*) initWithElement: (NSXMLElement*) element withDefaults: (DeviceEntry*) defaults
-{
-    m_title = [NSString stringWithString:stringAttribute(element, @"title")];
-    m_bitrate = doubleAttribute(element, @"bitrate");
-    m_sizeRatio = doubleAttribute(element, @"size");
+    obj->m_title = [NSString stringWithString:stringAttribute(element, @"title")];
+    obj->m_bitrate = doubleAttribute(element, @"bitrate");
+    obj->m_sizeRatio = doubleAttribute(element, @"size");
     
     NSString* audio = stringAttribute(element, @"audio");
     if ([audio isEqualToString:@"low"]) {
-        m_audioBitrate = 16000;
-        m_audioSampleRate = 11025;
-        m_audioChannels = 1;
+        obj->m_audioBitrate = 16000;
+        obj->m_audioSampleRate = 11025;
+        obj->m_audioChannels = 1;
     }
     else if ([audio isEqualToString:@"medium"]) {
-        m_audioBitrate = 32000;
-        m_audioSampleRate = 22050;
-        m_audioChannels = 1;
+        obj->m_audioBitrate = 32000;
+        obj->m_audioSampleRate = 22050;
+        obj->m_audioChannels = 1;
     }
     else {
-        m_audioBitrate = 128000;
-        m_audioSampleRate = 48000;
-        m_audioChannels = 2;
+        obj->m_audioBitrate = 128000;
+        obj->m_audioSampleRate = 48000;
+        obj->m_audioChannels = 2;
     }
     
-    return self;
+    return obj;
+}
+
+@end
+
+@implementation PerformanceItem
+
++(PerformanceItem*) performanceItemWithElement: (NSXMLElement*) element withDefaults: (DeviceEntry*) defaults
+{
+    PerformanceItem* obj = [[PerformanceItem alloc] init];
+
+    obj->m_title = [NSString stringWithString:stringAttribute(element, @"title")];
+    
+    // add params
+    obj->m_params = [[NSMutableDictionary alloc] init];
+    parseParams(element, obj->m_params);
+
+    return obj;
+}
+
+@end
+
+@implementation Recipe
+
++(Recipe*) recipeWithElement: (NSXMLElement*) element withDefaults: (DeviceEntry*) defaults
+{
+    Recipe* obj = [[Recipe alloc] init];
+
+    obj->m_recipe = [NSString stringWithString:content(element)];
+    
+    obj->m_isQuicktime = boolAttribute(element, @"is_quicktime");
+    obj->m_hasAudio = boolAttribute(element, @"has_audio");
+    obj->m_is2Pass = boolAttribute(element, @"is_2pass");
+
+    return obj;
 }
 
 @end
 
 @implementation DeviceEntry
+
+-(void) parseParams: (NSArray*) array
+{
+    
+}
 
 -(void) parseQualityStops: (NSArray*) array
 {
@@ -99,14 +151,19 @@ static NSXMLElement* findChildElement(NSXMLElement* element, NSString* name)
 
 -(void) parsePerformanceItems: (NSArray*) array
 {
+    for (int i = 0; i < [array count]; ++i) {
+        NSXMLElement* element = (NSXMLElement*) [array objectAtIndex:i];
+        [m_performanceItems addObject: [PerformanceItem performanceItemWithElement: element withDefaults: nil]];
+    }
 }
 
 -(void) parseRecipes: (NSArray*) array
 {
-}
+    for (int i = 0; i < [array count]; ++i) {
+        NSXMLElement* element = (NSXMLElement*) [array objectAtIndex:i];
 
--(void) parseParams: (NSArray*) array
-{
+        [m_recipes addObject:[Recipe recipeWithElement: element withDefaults: nil]];
+    }
 }
 
 -(void) parseCheckboxes: (NSArray*) array
@@ -133,6 +190,8 @@ static NSXMLElement* findChildElement(NSXMLElement* element, NSString* name)
     m_groupTitle = [NSString stringWithString:group ? group : @""];
     
     m_qualityStops = [NSMutableArray arrayWithCapacity:6];
+    m_performanceItems = [NSMutableArray arrayWithCapacity:6];
+    m_recipes = [NSMutableArray arrayWithCapacity:4];
     
     // handle quality
     [self parseQualityStops:[findChildElement(element, @"quality") elementsForName: @"quality_stop"]];
@@ -144,7 +203,7 @@ static NSXMLElement* findChildElement(NSXMLElement* element, NSString* name)
     [self parseRecipes:[findChildElement(element, @"recipes") elementsForName: @"recipe"]];
     
     // handle params
-    [self parseParams:[element elementsForName:@"param"]];
+    parseParams(element, m_params);
     
     // handle checkboxes
     [self parseCheckboxes:[element elementsForName:@"checkbox"]];
