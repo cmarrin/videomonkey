@@ -131,12 +131,52 @@ static void parseParams(NSXMLElement* element, NSMutableDictionary* dictionary)
 
 @end
 
-@implementation DeviceEntry
+@implementation Checkbox
 
--(void) parseParams: (NSArray*) array
++(Checkbox*) checkboxWithElement: (NSXMLElement*) element withDefaults: (DeviceEntry*) defaults
 {
+    Checkbox* obj = [[Checkbox alloc] init];
+
+    obj->m_title = [NSString stringWithString:stringAttribute(element, @"title")];
+    obj->m_checkedParams = [[NSMutableDictionary alloc] init];
+    obj->m_uncheckedParams = [[NSMutableDictionary alloc] init];
     
+    parseParams(findChildElement(element, @"checked_params"), obj->m_checkedParams);
+    parseParams(findChildElement(element, @"unchecked_params"), obj->m_uncheckedParams);
+
+    return obj;
 }
+
+@end
+
+@implementation Menu
+
++(Menu*) menuWithElement: (NSXMLElement*) element withDefaults: (DeviceEntry*) defaults
+{
+    Menu* obj = [[Menu alloc] init];
+
+    obj->m_title = [NSString stringWithString:stringAttribute(element, @"title")];
+    
+    // parse all the items
+    obj->m_itemTitle = [[NSMutableArray alloc] init];
+    obj->m_itemParams = [[NSMutableArray alloc] init];
+
+    NSArray* menuItems = [element elementsForName:@"menu_item"];
+    for (int i = 0; i < [menuItems count]; ++i) {
+        NSXMLElement* itemElement = (NSXMLElement*) [menuItems objectAtIndex:i];
+        [obj->m_itemTitle addObject: stringAttribute(itemElement, @"title")];
+        
+        NSMutableDictionary* params = [[NSMutableDictionary alloc] init];
+        [obj->m_itemParams addObject: params];
+        parseParams(itemElement, params);
+    }
+
+    return obj;
+}
+
+@end
+
+@implementation DeviceEntry
 
 -(void) parseQualityStops: (NSArray*) array
 {
@@ -168,14 +208,35 @@ static void parseParams(NSXMLElement* element, NSMutableDictionary* dictionary)
 
 -(void) parseCheckboxes: (NSArray*) array
 {
+    for (int i = 0; i < [array count]; ++i) {
+        NSXMLElement* element = (NSXMLElement*) [array objectAtIndex:i];
+        int which = (int) doubleAttribute(element, @"which");
+        if (which < 0 || which > MAX_CHECKBOXES)
+            continue;
+        [m_checkboxes insertObject:[Checkbox checkboxWithElement: element withDefaults: nil] atIndex:which];
+    }
 }
 
 -(void) parseMenus: (NSArray*) array
 {
+    for (int i = 0; i < [array count]; ++i) {
+        NSXMLElement* element = (NSXMLElement*) [array objectAtIndex:i];
+        int which = (int) doubleAttribute(element, @"which");
+        if (which < 0 || which > MAX_MENUS)
+            continue;
+        [m_menus insertObject:[Menu menuWithElement: element withDefaults: nil] atIndex:which];
+    }
 }
 
 -(void) parseRadios: (NSArray*) array
 {
+    for (int i = 0; i < [array count]; ++i) {
+        NSXMLElement* element = (NSXMLElement*) [array objectAtIndex:i];
+        int which = (int) doubleAttribute(element, @"which");
+        if (which < 0 || which > MAX_RADIOS)
+            continue;
+        [m_radios insertObject:[Menu menuWithElement: element withDefaults: nil] atIndex:which];
+    }
 }
 
 +(DeviceEntry*) deviceEntryWithElement: (NSXMLElement*) element inGroup: (NSString*) group withDefaults: (DeviceEntry*) defaults
@@ -192,6 +253,11 @@ static void parseParams(NSXMLElement* element, NSMutableDictionary* dictionary)
     m_qualityStops = [NSMutableArray arrayWithCapacity:6];
     m_performanceItems = [NSMutableArray arrayWithCapacity:6];
     m_recipes = [NSMutableArray arrayWithCapacity:4];
+    m_checkboxes = [NSMutableArray arrayWithCapacity:2];
+    m_menus = [NSMutableArray arrayWithCapacity:2];
+    m_radios = [NSMutableArray arrayWithCapacity:2];
+    
+    m_params = [[NSMutableDictionary alloc] init];
     
     // handle quality
     [self parseQualityStops:[findChildElement(element, @"quality") elementsForName: @"quality_stop"]];

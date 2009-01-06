@@ -53,6 +53,10 @@
 //                  checked - value to use for this param when box is checked
 //                  unchecked - value to use for this param when box is unchecked
 
+#define MAX_CHECKBOXES 4
+#define MAX_MENUS 4
+#define MAX_RADIOS 4
+
 @interface ConversionTab : NSTabViewItem {
     IBOutlet NSButton* m_button0;
     IBOutlet NSTextField* m_buttonLabel0;
@@ -87,20 +91,13 @@ typedef enum { DT_NONE, DT_LONG_Q_2_CHECK, DT_SHORT_Q_2_RADIO_2_CHECK, DT_SHORT_
     NSDictionary* m_commands;
     DeviceTabType m_deviceTab;
     
-    NSString* m_buttonLabel0;
-    NSString* m_buttonLabel1;
-    NSString* m_buttonLabel2;
-    NSString* m_buttonLabel3;
-    
-    NSString* m_radioTitle;
-    NSString* m_radioLabel0;
-    NSString* m_radioLabel1;
-    
     NSMutableArray* m_qualityStops;
     NSMutableArray* m_performanceItems;
     NSMutableArray* m_recipes;
     NSMutableDictionary* m_params;
-    
+    NSMutableArray* m_checkboxes;
+    NSMutableArray* m_radios;
+    NSMutableArray* m_menus;
 }
 
 +(DeviceEntry*) deviceEntryWithElement: (NSXMLElement*) element inGroup: (NSString*) group withDefaults: (DeviceEntry*) defaults;
@@ -141,6 +138,28 @@ typedef enum { DT_NONE, DT_LONG_Q_2_CHECK, DT_SHORT_Q_2_RADIO_2_CHECK, DT_SHORT_
 }
 
 +(Recipe*) recipeWithElement: (NSXMLElement*) element withDefaults: (DeviceEntry*) defaults;
+
+@end
+
+@interface Checkbox : NSObject {
+    NSString* m_title;
+    
+    NSMutableDictionary* m_checkedParams;
+    NSMutableDictionary* m_uncheckedParams;
+}
+
++(Checkbox*) checkboxWithElement: (NSXMLElement*) element withDefaults: (DeviceEntry*) defaults;
+
+@end
+
+@interface Menu : NSObject {
+    NSString* m_title;
+    
+    NSMutableArray* m_itemTitle;
+    NSMutableArray* m_itemParams;
+}
+
++(Menu*) menuWithElement: (NSXMLElement*) element withDefaults: (DeviceEntry*) defaults;
 
 @end
 

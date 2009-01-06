@@ -84,7 +84,7 @@
             <recipe is_quicktime="false" has_audio="false" is_2pass="true">
                 !normal_pass1 ; !normal_pass2
             </recipe>
-        </command>
+        </recipes>
     </default_device>
     <devices>
         <device_group title="iTunes">
@@ -96,7 +96,22 @@
                     <quality_stop which="3" title="High" min_bitrate="1100000" max_bitrate="1500000" audio="high" size="1" />
                     <quality_stop which="4" title="Go Nuts" min_bitrate="200000" max_bitrate="400000" audio="high" size="1" />
                 </quality>
-                <checkbox which="0" title="H.264 Video (slower but better)" id="ffmpeg_vcodec" checked="libx264" unchecked="mpeg4" />
+                <checkbox which="0" title="H.264 Video (slower but better)">
+                    <checked_params>
+                        <param id="ffmpeg_vcodec" value="libx264" />
+                    </checked_params>
+                    <unchecked_params>
+                        <param id="ffmpeg_vcodec" value="mpeg4" />
+                    </unchecked_params>
+                </checkbox>
+                <menu which="0" title="Foo">
+                    <menu_item title="Bar" id="bar">
+                        <param id="baz" value="27" />
+                    </menu_item>
+                    <menu_item title="Bar" id="bar">
+                        <param id="baz" value="27" />
+                    </menu_item>
+                </menu>
             </device>
         </device_group>
     <devices>
