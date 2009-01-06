@@ -96,17 +96,29 @@ typedef enum { DT_NONE, DT_LONG_Q_2_CHECK, DT_SHORT_Q_2_RADIO_2_CHECK, DT_SHORT_
     NSString* m_radioLabel0;
     NSString* m_radioLabel1;
     
-    NSString* m_sliderLabel1;
-    NSString* m_sliderLabel2;
-    NSString* m_sliderLabel3;
-    NSString* m_sliderLabel4;
-    NSString* m_sliderLabel5;
+    NSMutableArray* m_qualityStops;
+    
 }
 
 +(DeviceEntry*) deviceEntryWithElement: (NSXMLElement*) element inGroup: (NSString*) group withDefaults: (DeviceEntry*) defaults;
 -(DeviceEntry*) initWithElement: (NSXMLElement*) element inGroup: (NSString*) group withDefaults: (DeviceEntry*) defaults;
 
 -(NSString*) id;
+@end
+
+@interface QualityStop : NSObject {
+    NSString* m_title;
+
+    double m_bitrate;
+    double m_audioBitrate;
+    double m_audioSampleRate;
+    int m_audioChannels;
+    double m_sizeRatio;
+}
+
++(QualityStop*) qualityStopWithElement: (NSXMLElement*) element withDefaults: (DeviceEntry*) defaults;
+-(QualityStop*) initWithElement: (NSXMLElement*) element withDefaults: (DeviceEntry*) defaults;
+
 @end
 
 #define VC_H264 @"h.264"

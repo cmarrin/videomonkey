@@ -8,10 +8,20 @@
 
 #import "ConversionParams.h"
 
-static NSString* attribute(NSXMLElement* element, NSString* name)
+static NSString* stringAttribute(NSXMLElement* element, NSString* name)
 {
     NSXMLNode* node = [element attributeForName:name];
     return node ? [node stringValue] : @"";
+}
+
+static double doubleAttribute(NSXMLElement* element, NSString* name)
+{
+    return [stringAttribute(element, name) doubleValue];
+}
+
+static BOOL boolAttribute(NSXMLElement* element, NSString* name)
+{
+    return [stringAttribute(element, name) boolValue];
 }
 
 static NSString* content(NSXMLElement* element)
@@ -39,10 +49,52 @@ static NSXMLElement* findChildElement(NSXMLElement* element, NSString* name)
 
 @end
 
+@implementation QualityStop
+
++(QualityStop*) qualityStopWithElement: (NSXMLElement*) element withDefaults: (DeviceEntry*) defaults
+{
+    return [[QualityStop alloc] initWithElement: element withDefaults: defaults];
+}
+
+-(QualityStop*) initWithElement: (NSXMLElement*) element withDefaults: (DeviceEntry*) defaults
+{
+    m_title = [NSString stringWithString:stringAttribute(element, @"title")];
+    m_bitrate = doubleAttribute(element, @"bitrate");
+    m_sizeRatio = doubleAttribute(element, @"size");
+    
+    NSString* audio = stringAttribute(element, @"audio");
+    if ([audio isEqualToString:@"low"]) {
+        m_audioBitrate = 16000;
+        m_audioSampleRate = 11025;
+        m_audioChannels = 1;
+    }
+    else if ([audio isEqualToString:@"medium"]) {
+        m_audioBitrate = 32000;
+        m_audioSampleRate = 22050;
+        m_audioChannels = 1;
+    }
+    else {
+        m_audioBitrate = 128000;
+        m_audioSampleRate = 48000;
+        m_audioChannels = 2;
+    }
+    
+    return self;
+}
+
+@end
+
 @implementation DeviceEntry
 
 -(void) parseQualityStops: (NSArray*) array
 {
+    for (int i = 0; i < [array count]; ++i) {
+        NSXMLElement* element = (NSXMLElement*) [array objectAtIndex:i];
+        int which = (int) doubleAttribute(element, @"which");
+        if (which < 0 || which > 5)
+            continue;
+        [m_qualityStops insertObject:[QualityStop qualityStopWithElement: element withDefaults: nil] atIndex:which];
+    }
 }
 
 -(void) parsePerformanceItems: (NSArray*) array
@@ -76,9 +128,11 @@ static NSXMLElement* findChildElement(NSXMLElement* element, NSString* name)
 
 -(DeviceEntry*) initWithElement: (NSXMLElement*) element inGroup: (NSString*) group withDefaults: (DeviceEntry*) defaults;
 {
-    m_id = [NSString stringWithString:attribute(element, @"id")];
-    m_title = [NSString stringWithString:attribute(element, @"title")];
+    m_id = [NSString stringWithString:stringAttribute(element, @"id")];
+    m_title = [NSString stringWithString:stringAttribute(element, @"title")];
     m_groupTitle = [NSString stringWithString:group ? group : @""];
+    
+    m_qualityStops = [NSMutableArray arrayWithCapacity:6];
     
     // handle quality
     [self parseQualityStops:[findChildElement(element, @"quality") elementsForName: @"quality_stop"]];
@@ -140,7 +194,7 @@ static NSXMLElement* findChildElement(NSXMLElement* element, NSString* name)
     
     for (int i = 0; i < [commandArray count]; ++i) {
         NSXMLElement* element = (NSXMLElement*) [commandArray objectAtIndex:i];
-        NSString* id = attribute(element, @"id");
+        NSString* id = stringAttribute(element, @"id");
         if ([id length])
             [m_commands setValue: content(element) forKey: id];
     }
@@ -156,7 +210,7 @@ static NSXMLElement* findChildElement(NSXMLElement* element, NSString* name)
     
     for (int i = 0; i < [deviceGroups count]; ++i) {
         NSXMLElement* deviceGroupElement = (NSXMLElement*) [deviceGroups objectAtIndex:i];
-        NSString* groupTitle = attribute(deviceGroupElement, @"title");
+        NSString* groupTitle = stringAttribute(deviceGroupElement, @"title");
         NSArray* devices = [deviceGroupElement elementsForName:@"device"];
         
         for (int j = 0; j < [devices count]; ++j) {
