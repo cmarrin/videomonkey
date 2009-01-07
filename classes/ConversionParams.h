@@ -103,6 +103,8 @@ typedef enum { DT_NONE, DT_LONG_Q_2_CHECK, DT_SHORT_Q_2_RADIO_2_CHECK, DT_SHORT_
 +(DeviceEntry*) deviceEntryWithElement: (NSXMLElement*) element inGroup: (NSString*) group withDefaults: (DeviceEntry*) defaults;
 -(DeviceEntry*) initWithElement: (NSXMLElement*) element inGroup: (NSString*) group withDefaults: (DeviceEntry*) defaults;
 
+-(NSString*) group;
+-(NSString*) title;
 -(NSString*) id;
 @end
 
@@ -167,11 +169,11 @@ typedef enum { DT_NONE, DT_LONG_Q_2_CHECK, DT_SHORT_Q_2_RADIO_2_CHECK, DT_SHORT_
 #define VC_WMV3 @"wmv3"
 
 @interface ConversionParams : NSObject {
-    IBOutlet float *m_quality;
     IBOutlet NSTabView* m_conversionParamsTabView;
-    IBOutlet NSPopUpButton* m_conversionParamsButton;
+    IBOutlet NSPopUpButton* m_deviceButton;
     IBOutlet NSPopUpButton* m_performanceButton;
     
+    NSMutableArray* m_devices;
     NSDictionary* m_commands;
     NSDictionary* m_environment;
 
@@ -182,7 +184,6 @@ typedef enum { DT_NONE, DT_LONG_Q_2_CHECK, DT_SHORT_Q_2_RADIO_2_CHECK, DT_SHORT_
 
 -(IBAction)selectTab:(id)sender;
 -(IBAction)selectPerformance:(id)sender;
--(IBAction)paramChanged:(id)sender;
 
 -(BOOL) isTwoPass;
 -(NSString*) performance;

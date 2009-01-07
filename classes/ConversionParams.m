@@ -283,6 +283,16 @@ static void parseParams(NSXMLElement* element, NSMutableDictionary* dictionary)
     return self;
 }
 
+-(NSString*) group
+{
+    return m_groupTitle;
+}
+
+-(NSString*) title
+{
+    return m_title;
+}
+
 -(NSString*) id
 {
     return m_id;
@@ -328,7 +338,7 @@ static void parseParams(NSXMLElement* element, NSMutableDictionary* dictionary)
     DeviceEntry* defaultDevice = [DeviceEntry deviceEntryWithElement: findChildElement([doc rootElement], @"default_device") inGroup: nil withDefaults: nil];
         
     // Build the device list
-    NSMutableDictionary* m_devices = [[NSMutableDictionary alloc] init];
+    m_devices = [[NSMutableArray alloc] init];
     
     NSXMLElement* devicesElement = findChildElement([doc rootElement], @"devices");
     NSArray* deviceGroups = [devicesElement elementsForName:@"device_group"];
@@ -339,10 +349,10 @@ static void parseParams(NSXMLElement* element, NSMutableDictionary* dictionary)
         NSArray* devices = [deviceGroupElement elementsForName:@"device"];
         
         for (int j = 0; j < [devices count]; ++j) {
-            NSXMLElement* deviceElement = (NSXMLElement*) [devices objectAtIndex:i];
+            NSXMLElement* deviceElement = (NSXMLElement*) [devices objectAtIndex:j];
             DeviceEntry* entry = [DeviceEntry deviceEntryWithElement: deviceElement inGroup: groupTitle withDefaults: defaultDevice];
             if (entry)
-                [m_devices setValue: entry forKey: [entry id]];
+                [m_devices addObject: entry];
         }
     }
     
@@ -358,13 +368,50 @@ static void parseParams(NSXMLElement* element, NSMutableDictionary* dictionary)
     [m_environment setValue: [cmdPath stringByAppendingPathComponent: @"bin/yuvcorrect"] forKey: @"yuvcorrect"];
 }
 
+static void addMenuItem(NSPopUpButton* button, NSString* title, int tag)
+{
+    NSMenuItem* item = [[NSMenuItem alloc] init];
+    [item setTitle:title];
+    [item setTag:tag];
+    if (tag < 0)
+        [item setEnabled:NO];
+    else
+        [item setIndentationLevel:1];
+        
+    [[button menu] addItem:item];
+}
+
 - (void) awakeFromNib
 {
     // load the XML file with all the commands and device setup
     [self initCommands];
-
-    [m_conversionParamsButton selectItemAtIndex:1];
-    m_currentTabViewItem = [[m_conversionParamsButton selectedItem] representedObject];
+    
+    // populate the device menu
+    [m_deviceButton removeAllItems];
+    
+    // This assumes all items for a group are consecutive
+    NSString* currentGroup = @"";
+    int currentItem = 0;
+    
+    for (int i = 0; i < [m_devices count]; ++i) {
+        DeviceEntry* entry = (DeviceEntry*) [m_devices objectAtIndex:i];
+        if (!entry)
+            continue;
+            
+        NSString* group = [entry group];
+        if (![group isEqualToString:currentGroup]) {
+            currentGroup = group;
+            addMenuItem(m_deviceButton, currentGroup, -1);
+        }
+        
+        addMenuItem(m_deviceButton, [entry title], currentItem++);
+    }
+    
+    // set the selected item
+    // FIXME: need to get this from prefs
+    [m_deviceButton selectItemWithTag:0];
+    
+    //m_currentTabViewItem = [[m_conversionParamsButton selectedItem] representedObject];
     [m_conversionParamsTabView selectTabViewItem: m_currentTabViewItem];
     
     [m_performanceButton selectItemAtIndex:2];
@@ -377,16 +424,13 @@ static void parseParams(NSXMLElement* element, NSMutableDictionary* dictionary)
 }
 
 - (IBAction)selectTab:(id)sender {
-    m_currentTabViewItem = [sender representedObject];
-    [m_conversionParamsTabView selectTabViewItem: m_currentTabViewItem];
+    //int tag = [[sender selectedItem] tag];
+    //m_currentTabViewItem = [sender representedObject];
+    //[m_conversionParamsTabView selectTabViewItem: m_currentTabViewItem];
 }
 
 - (IBAction)selectPerformance:(id)sender {
     [self setPerformance: [sender indexOfSelectedItem]];
-}
-
-- (IBAction)paramChanged:(id)sender {
-    //printf("paramChanged: quality=%d\n", (int) [m_currentTabViewItem h264]);
 }
 
 -(BOOL) isTwoPass

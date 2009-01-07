@@ -88,14 +88,7 @@
     </default_device>
     <devices>
         <device_group title="iTunes">
-            <device title="All Apple Devices" id="allappledevices" tab="long-q-2-check-boxes">
-                <quality>
-                    <quality_stop which="0" title="Tiny" min_bitrate="200000" max_bitrate="400000" audio="low" size="0.5" />
-                    <quality_stop which="1" title="Low" min_bitrate="400000" max_bitrate="800000" audio="high" size="1" />
-                    <quality_stop which="2" title="Standard" min_bitrate="800000" max_bitrate="1100000" audio="high" size="1" />
-                    <quality_stop which="3" title="High" min_bitrate="1100000" max_bitrate="1500000" audio="high" size="1" />
-                    <quality_stop which="4" title="Go Nuts" min_bitrate="200000" max_bitrate="400000" audio="high" size="1" />
-                </quality>
+            <device title="All Apple Devices" id="allappledevices" tab="long_q_2_check">
                 <checkbox which="0" title="H.264 Video (slower but better)">
                     <checked_params>
                         <param id="ffmpeg_vcodec" value="libx264" />
@@ -104,14 +97,24 @@
                         <param id="ffmpeg_vcodec" value="mpeg4" />
                     </unchecked_params>
                 </checkbox>
-                <menu which="0" title="Foo">
-                    <menu_item title="Bar" id="bar">
-                        <param id="baz" value="27" />
+            </device>
+            <device title="iPhone" id="iphone" tab="short_q_2_radio_2_check">
+                <checkbox which="0" title="H.264 Video (slower but better)">
+                    <checked_params>
+                        <param id="ffmpeg_vcodec" value="libx264" />
+                    </checked_params>
+                    <unchecked_params>
+                        <param id="ffmpeg_vcodec" value="mpeg4" />
+                    </unchecked_params>
+                </checkbox>
+                <radio which="0" title="Best for:">
+                    <menu_item title="iPhone">
+                        <param id="ffmpeg_vcodec" value="libx264" />
                     </menu_item>
-                    <menu_item title="Bar" id="bar">
-                        <param id="baz" value="27" />
+                    <menu_item title="TV">
+                        <param id="ffmpeg_vcodec" value="mpeg4" />
                     </menu_item>
-                </menu>
+                </radio>
             </device>
         </device_group>
     <devices>
