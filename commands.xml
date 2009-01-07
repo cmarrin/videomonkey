@@ -1,8 +1,6 @@
 <videomonkey>
     <commands>
-        <command id="ffmpeg_pass0"> 
-            -vpre $ffmpeg_vpre
-        </command>
+        <command id="ffmpeg_pass0"> -vpre $ffmpeg_vpre </command>
         <command id="ffmpeg_pass1"> -vpre $ffmpeg_vpre_pass1 -pass 1 -passlogfile $pass_log_file </command>
 		<command id="ffmpeg_pass2"> -vpre $ffmpeg_vpre -pass 2 -passlogfile $pass_log_file </command>
 		<command id="ffmpeg_options"> -vcodec $ffmpeg_vcodec -b $bitrate -s $ffmpeg_output_video_size  </command>
@@ -12,24 +10,34 @@
 		<command id="yuv_to_ffmpeg_av"> $ffmpeg -y -i - -i $tmp_audio_file </command>
 		<command id="yuv_to_ffmpeg_v"> $ffmpeg -y -i - </command>
 		<command id="ffmpeg_normal"> $ffmpeg -y -i $input_file </command>
-		<command id="quicktime_av_pass0"> !quicktime_to_yuv | !yuv_to_ffmpeg_av !ffmpeg_options !ffmpeg_pass0 $output_file </command>
-		<command id="quicktime_av_pass1"> !quicktime_to_yuv | !yuv_to_ffmpeg_av !ffmpeg_options !ffmpeg_pass1 $output_file </command>
-		<command id="quicktime_av_pass2"> !quicktime_to_yuv | !yuv_to_ffmpeg_av !ffmpeg_options !ffmpeg_pass2 $output_file </command>
-		<command id="quicktime_v_pass0"> !quicktime_to_yuv | !yuv_to_ffmpeg_v !ffmpeg_options !ffmpeg_pass0 $output_file </command>
-		<command id="quicktime_v_pass1"> !quicktime_to_yuv | !yuv_to_ffmpeg_v !ffmpeg_options !ffmpeg_pass1 $output_file </command>
-		<command id="quicktime_v_pass2"> !quicktime_to_yuv | !yuv_to_ffmpeg_v !ffmpeg_options !ffmpeg_pass2 $output_file </command>
-		<command id="normal_pass0"> !ffmpeg_normal !ffmpeg_options !ffmpeg_pass0 $output_file </command>
-		<command id="normal_pass1"> !ffmpeg_normal !ffmpeg_options !ffmpeg_pass1 $output_file </command>
-		<command id="normal_pass2"> !ffmpeg_normal !ffmpeg_options !ffmpeg_pass2 $output_file </command>
+		<command id="quicktime_av_pass0"> $quicktime_to_yuv | $yuv_to_ffmpeg_av $ffmpeg_options $ffmpeg_pass0 $output_file </command>
+		<command id="quicktime_av_pass1"> $quicktime_to_yuv | $yuv_to_ffmpeg_av $ffmpeg_options $ffmpeg_pass1 $output_file </command>
+		<command id="quicktime_av_pass2"> $quicktime_to_yuv | $yuv_to_ffmpeg_av $ffmpeg_options $ffmpeg_pass2 $output_file </command>
+		<command id="quicktime_v_pass0"> $quicktime_to_yuv | $yuv_to_ffmpeg_v $ffmpeg_options $ffmpeg_pass0 $output_file </command>
+		<command id="quicktime_v_pass1"> $quicktime_to_yuv | $yuv_to_ffmpeg_v $ffmpeg_options $ffmpeg_pass1 $output_file </command>
+		<command id="quicktime_v_pass2"> $quicktime_to_yuv | $yuv_to_ffmpeg_v $ffmpeg_options $ffmpeg_pass2 $output_file </command>
+		<command id="normal_pass0"> $ffmpeg_normal $ffmpeg_options $ffmpeg_pass0 $output_file </command>
+		<command id="normal_pass1"> $ffmpeg_normal $ffmpeg_options $ffmpeg_pass1 $output_file </command>
+		<command id="normal_pass2"> $ffmpeg_normal $ffmpeg_options $ffmpeg_pass2 $output_file </command>
     </commands>
+    <script>
+        function audio(type)
+        {
+            switch(type) {
+                case "low":    params.audioBitrate =  16000; params.audioSampleRate = 11025; params.audioChannels = 1; break;
+                case "medium": params.audioBitrate =  32000; params.audioSampleRate = 22050; params.audioChannels = 1; break;
+                case "high":   params.audioBitrate = 128000; params.audioSampleRate = 48000; params.audioChannels = 2; break;
+            }
+        }
+    </script>
     <default_device>
         <quality>
             <quality_stop which="0" bitrate="200000" />
-            <quality_stop which="1" title="Tiny" bitrate="400000" audio="low" size="0.5" />
-            <quality_stop which="2" title="Low" bitrate="800000" audio="high" size="1" />
-            <quality_stop which="3" title="Standard" bitrate="1100000" audio="high" size="1" />
-            <quality_stop which="4" title="High" bitrate="1500000" audio="high" size="1" />
-            <quality_stop which="5" title="Go Nuts" bitrate="2000000" audio="high" size="1" />
+            <quality_stop which="1" title="Tiny" bitrate="400000" script="audio('low'); params.size = 0.5" />
+            <quality_stop which="2" title="Low" bitrate="800000" script="audio('high'); params.size = 1" />
+            <quality_stop which="3" title="Standard" bitrate="1100000" script="audio('high'); params.size = 1" />
+            <quality_stop which="4" title="High" bitrate="1500000" script="audio('high'); params.size = 1" />
+            <quality_stop which="5" title="Go Nuts" bitrate="2000000" script="audio('high'); params.size = 1" />
         </quality>
         <performance>
             <performance_item title="Fastest">
