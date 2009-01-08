@@ -437,66 +437,54 @@ static NSImage* getFileStatusImage(FileStatus status)
     [[NSFileManager defaultManager] removeFileAtPath:m_passLogFileName handler:nil];
 
     // assemble command
-    NSString* device = [[m_appController conversionParams] device];
-    
     // Special case is when we have a quicktime movie and it has a video format of WMV3
     BOOL useQT = [self isInputQuicktime] && [[self inputVideoFormat] isEqualToString:VC_WMV3];
     NSString* jobType = [NSString stringWithFormat:@"job-%@-%@", useQT ? @"quicktime" : @"normal", [self hasInputAudio] ? @"av" : @"v"];
     if ([[m_appController conversionParams] isTwoPass])
         jobType = [NSString stringWithFormat:@"%@-2pass", jobType];
         
-    NSString* job = [m_appController jobForDevice: device type: jobType];
+    NSString* recipe = [[m_appController conversionParams] recipe];
 
-    if ([job length] == 0) {
-        // try the default
-        job = [m_appController jobForDevice: @"default" type: jobType];
-    }
-    
-    if ([job length] == 0) {
+    if ([recipe length] == 0) {
         NSBeginAlertSheet(@"Internal Error", nil, nil, nil, [[NSApplication sharedApplication] mainWindow], 
                           nil, nil, nil, nil, 
                           @"Transcoder attempted to execute an empty command");
         return NO;
     }
     
-    NSArray* elements = [job componentsSeparatedByString:@" "];
+    // split out each command separately
+    NSArray* elements = [recipe componentsSeparatedByCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@";&|"]];
     
     m_commands = [[NSMutableArray alloc] init];
     NSEnumerator* enumerator = [elements objectEnumerator];
     NSString* s;
-    NSMutableString* commandString = [[NSMutableString alloc] init];
-    CommandOutputType type = OT_NONE;
-    BOOL isFirst = YES;
     int commandId = 0;
+    int index = 0;
     
     while (s = (NSString*) [enumerator nextObject]) {
-        // collect each element up to a ';' (wait) '&' (continue) or '|' (pipe) into a command
-        if ([s isEqualToString:@";"])
-            type = OT_WAIT;
-        else if ([s isEqualToString:@"|"])
-            type = OT_PIPE;
-        else if ([s isEqualToString:@"&"])
-            type = OT_CONTINUE;
-    
-        if (type == OT_NONE) {
-            if (!isFirst)
-                [commandString appendString:@" "];
-            isFirst = NO;
-            [commandString appendString:s];
+        CommandOutputType type = OT_NONE;
+        
+        // in splitting the commands, we've lost it's separator, so we have to reconstruct it from the original string
+        index += [s length];
+        unichar sep = (index < [recipe length]) ? [recipe characterAtIndex:index] : '&';
+        index++;
+        
+        switch(sep)
+        {
+            case ';': type = OT_WAIT; break;
+            case '|': type = OT_PIPE; break;
+            case '&': type = OT_CONTINUE; break;
         }
-        else {
-            // make a Command object for this command
-            [m_commands addObject:[[Command alloc] initWithTranscoder:self command:[NSString stringWithString: commandString] 
-                                outputType:type finishId:[[NSNumber numberWithInt:commandId] stringValue]]];
-            type = OT_NONE;
-            [commandString setString:@""];
-            isFirst = YES;
-        }
+        
+        s = [s stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+        if (![s length])
+            continue;
+
+        // make a Command object for this command
+        [m_commands addObject:[[Command alloc] initWithTranscoder:self command:s 
+                            outputType:type finishId:[[NSNumber numberWithInt:commandId] stringValue]]];
     }
     
-    // add the last command (we know there will be a last command because we know the job can't end in one of the end chars)
-    [m_commands addObject:[[Command alloc] initWithTranscoder:self command:commandString outputType:OT_CONTINUE finishId: @"last"]];
-
     // execute each command in turn
     enumerator = [m_commands objectEnumerator];
     Command* command = [enumerator nextObject];

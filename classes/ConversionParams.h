@@ -112,8 +112,11 @@
 -(NSString*) title;
 -(NSString*) id;
 -(NSArray*) performanceItems;
+-(NSString*) fileSuffix;
+-(NSString*) videoFormat;
+-(NSString*) recipe;
 
--(void) setCurrentTab:(NSTabView*) tabview;
+-(void) setCurrentDevice:(NSTabView*) tabview;
 @end
 
 @interface QualityStop : NSObject {
@@ -197,10 +200,13 @@
     ConversionTab* m_currentTabViewItem;
 }
 
--(IBAction)selectTab:(id)sender;
+-(IBAction)selectDevice:(id)sender;
 -(IBAction)selectPerformance:(id)sender;
 
 -(BOOL) isTwoPass;
 -(NSString*) performance;
--(NSString*) device;
+-(NSString*) fileSuffix;
+-(NSString*) videoFormat;
+-(NSString*) recipe;
+
 @end

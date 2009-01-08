@@ -340,7 +340,28 @@ static NSArray* parseCommands(NSXMLElement* parent)
     return [m_performanceItems count] ? m_performanceItems : [m_defaultDevice performanceItems];
 }
 
--(void) setCurrentTab:(NSTabView*) tabview
+-(NSString*) paramWithDefault:(NSString*) key
+{
+    NSString* v = [m_params objectForKey:key];
+    return (v && [v length]) ? v : [m_defaultDevice paramWithDefault: key];
+}
+
+-(NSString*) fileSuffix
+{
+    return [self paramWithDefault: @"video_suffix"];
+}
+
+-(NSString*) videoFormat
+{
+    return [self paramWithDefault: @"ffmpeg_vcodec"];
+}
+
+-(NSString*) recipe
+{
+    return @"abc;def|ghi&jkl";
+}
+
+-(void) setCurrentDevice:(NSTabView*) tabview
 {
 }
 
@@ -470,7 +491,7 @@ static void addMenuItem(NSPopUpButton* button, NSString* title, int tag)
     [m_deviceButton selectItemWithTag:0];
     
     m_currentDevice = [self findDeviceEntryWithIndex:0];
-    [m_currentDevice setCurrentTab: m_conversionParamsTabView];
+    [m_currentDevice setCurrentDevice: m_conversionParamsTabView];
 
     // populate the performance menu
     [m_performanceButton removeAllItems];
@@ -495,10 +516,10 @@ static void addMenuItem(NSPopUpButton* button, NSString* title, int tag)
     return [menuItem isEnabled];
 }
 
-- (IBAction)selectTab:(id)sender {
-    //int tag = [[sender selectedItem] tag];
-    //m_currentTabViewItem = [sender representedObject];
-    //[m_conversionParamsTabView selectTabViewItem: m_currentTabViewItem];
+- (IBAction)selectDevice:(id)sender {
+    int tag = [[sender selectedItem] tag];
+    m_currentDevice = [self findDeviceEntryWithIndex:tag];
+    [m_currentDevice setCurrentDevice: m_conversionParamsTabView];
 }
 
 - (IBAction)selectPerformance:(id)sender {
@@ -515,9 +536,19 @@ static void addMenuItem(NSPopUpButton* button, NSString* title, int tag)
     return m_currentPerformance;
 }
 
--(NSString*) device
+-(NSString*) fileSuffix
 {
-    return [m_currentTabViewItem deviceName];
+    return [m_currentDevice fileSuffix];
+}
+
+-(NSString*) videoFormat
+{
+    return [m_currentDevice videoFormat];
+}
+
+-(NSString*) recipe
+{
+    return [m_currentDevice recipe];
 }
 
 @end

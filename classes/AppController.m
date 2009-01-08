@@ -214,8 +214,8 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
                 for (int i= 0; i < [filenames count]; i++) {
                     Transcoder* transcoder = [[Transcoder alloc] initWithController:self];
                     [transcoder addInputFile: [filenames objectAtIndex:i]];
-                    [transcoder addOutputFile: getOutputFileName([filenames objectAtIndex:i], m_savePath, [self suffixForDevice:[m_conversionParams device]])];
-                    [transcoder setVideoFormat: [self videoFormatForDevice: [m_conversionParams device]]];
+                    [transcoder addOutputFile: getOutputFileName([filenames objectAtIndex:i], m_savePath, [m_conversionParams fileSuffix])];
+                    [transcoder setVideoFormat: [m_conversionParams videoFormat]];
                     [m_moviePanel setMovie: [filenames objectAtIndex:i]];
                     
                     if (row < 0)
@@ -235,8 +235,8 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
 {
     NSEnumerator* e = [m_files objectEnumerator];
     Transcoder* transcoder;
-    NSString* suffix = [self suffixForDevice:[m_conversionParams device]];
-    NSString* format = [self videoFormatForDevice: [m_conversionParams device]];
+    NSString* suffix = [m_conversionParams fileSuffix];
+    NSString* format = [m_conversionParams videoFormat];
     
     while ((transcoder = (Transcoder*) [e nextObject])) {
         [transcoder changeOutputFileName: getOutputFileName([transcoder inputFileName], m_savePath, suffix)];
