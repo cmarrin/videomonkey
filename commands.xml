@@ -1,26 +1,26 @@
 <?xml version="1.0"?>
 <!DOCTYPE videomonkey [
-    <!ELEMENT videomonkey    (commands|script|param|default_device|devices)*>
-    <!ELEMENT commands      (command*)>
-    <!ELEMENT command    (#PCDATA)>
-        <!ATTLIST command id CDATA "">
+    <!ELEMENT videomonkey    (default_device|devices)*>
     <!ELEMENT script    (#PCDATA)>
     <!ELEMENT param    EMPTY>
         <!ATTLIST param id CDATA "">
         <!ATTLIST param value CDATA "">
-    <!ELEMENT default_device    (quality|performance|recipes|param)*>
+    <!ELEMENT default_device    (commands|quality|performance|recipes|script|param)*>
+    <!ELEMENT devices    (device_group*)>
+    <!ELEMENT commands      (command*)>
+    <!ELEMENT command    (#PCDATA)>
+        <!ATTLIST command id CDATA "">
     <!ELEMENT quality    (quality_stop*)>
-    <!ELEMENT quality_stop    (script*,param*)>
+    <!ELEMENT quality_stop    (script|param)*>
         <!ATTLIST quality_stop which CDATA "">
         <!ATTLIST quality_stop title CDATA "">
         <!ATTLIST quality_stop bitrate CDATA "">
     <!ELEMENT performance    (performance_item*)>
-    <!ELEMENT performance_item    (script*,param*)>
+    <!ELEMENT performance_item    (script|param)*>
         <!ATTLIST performance_item title CDATA "">
     <!ELEMENT recipes    (recipe*)>
     <!ELEMENT recipe    (#PCDATA)>
         <!ATTLIST recipe condition CDATA "">
-    <!ELEMENT devices    (device_group*)>
     <!ELEMENT device_group    (device*)>
         <!ATTLIST device_group title CDATA "">
     <!ELEMENT device    (checkbox|menu)*>
@@ -38,58 +38,58 @@
         <!ATTLIST menu_item title CDATA "">
 ]>
 <videomonkey>
-    <commands>
-        <command id="ffmpeg_pass0"> -vpre $ffmpeg_vpre </command>
-        <command id="ffmpeg_pass1"> -vpre $ffmpeg_vpre_pass1 -pass 1 -passlogfile $pass_log_file </command>
-		<command id="ffmpeg_pass2"> -vpre $ffmpeg_vpre -pass 2 -passlogfile $pass_log_file </command>
-		<command id="ffmpeg_options"> -vcodec $ffmpeg_vcodec -b $bitrate -s $ffmpeg_output_video_size  </command>
-		<command id="quicktime_to_audio_file"> $qt_export $input_file --video=0 $tmp_audio_file </command>
-		<command id="correct_yuv"> $yuvcorrect -v 0 -Y LUMINANCE_1.20_0_255_0_255 -Y CHROMINANCE_0_1.04_128_1.04_128_0_255 </command>
-		<command id="quicktime_to_yuv"> $movtoy4m -f -w $input_video_width -h $input_video_height -F $framerate -a $aspect_ratio $input_file | !correct_yuv </command>
-		<command id="yuv_to_ffmpeg_av"> $ffmpeg -y -i - -i $tmp_audio_file </command>
-		<command id="yuv_to_ffmpeg_v"> $ffmpeg -y -i - </command>
-		<command id="ffmpeg_normal"> $ffmpeg -y -i $input_file </command>
-		<command id="quicktime_av_pass0"> $quicktime_to_yuv | $yuv_to_ffmpeg_av $ffmpeg_options $ffmpeg_pass0 $output_file </command>
-		<command id="quicktime_av_pass1"> $quicktime_to_yuv | $yuv_to_ffmpeg_av $ffmpeg_options $ffmpeg_pass1 $output_file </command>
-		<command id="quicktime_av_pass2"> $quicktime_to_yuv | $yuv_to_ffmpeg_av $ffmpeg_options $ffmpeg_pass2 $output_file </command>
-		<command id="quicktime_v_pass0"> $quicktime_to_yuv | $yuv_to_ffmpeg_v $ffmpeg_options $ffmpeg_pass0 $output_file </command>
-		<command id="quicktime_v_pass1"> $quicktime_to_yuv | $yuv_to_ffmpeg_v $ffmpeg_options $ffmpeg_pass1 $output_file </command>
-		<command id="quicktime_v_pass2"> $quicktime_to_yuv | $yuv_to_ffmpeg_v $ffmpeg_options $ffmpeg_pass2 $output_file </command>
-		<command id="normal_pass0"> $ffmpeg_normal $ffmpeg_options $ffmpeg_pass0 $output_file </command>
-		<command id="normal_pass1"> $ffmpeg_normal $ffmpeg_options $ffmpeg_pass1 $output_file </command>
-		<command id="normal_pass2"> $ffmpeg_normal $ffmpeg_options $ffmpeg_pass2 $output_file </command>
-    </commands>
-    <script>
-        <![CDATA[
-        
-        function audio(type)
-        {
-            switch(type) {
-                case "low":    params.audioBitrate =  16000; params.audioSampleRate = 11025; params.audioChannels = 1; break;
-                case "medium": params.audioBitrate =  32000; params.audioSampleRate = 22050; params.audioChannels = 1; break;
-                case "high":   params.audioBitrate = 128000; params.audioSampleRate = 48000; params.audioChannels = 2; break;
-            }
-        }
-        
-        function all()
-        {
-            for (var i = 0; i < arguments.length; ++i)
-                if (!arguments[i])
-                    return false;
-            return true;
-        }
-        
-        function any()
-        {
-            for (var i = 0; i < arguments.length; ++i)
-                if (arguments[i])
-                    return true;
-            return false;
-        }
-        
-        ]]>
-    </script>
     <default_device>
+        <commands>
+            <command id="ffmpeg_pass0"> -vpre $ffmpeg_vpre </command>
+            <command id="ffmpeg_pass1"> -vpre $ffmpeg_vpre_pass1 -pass 1 -passlogfile $pass_log_file </command>
+            <command id="ffmpeg_pass2"> -vpre $ffmpeg_vpre -pass 2 -passlogfile $pass_log_file </command>
+            <command id="ffmpeg_options"> -vcodec $ffmpeg_vcodec -b $bitrate -s $ffmpeg_output_video_size  </command>
+            <command id="quicktime_to_audio_file"> $qt_export $input_file --video=0 $tmp_audio_file </command>
+            <command id="correct_yuv"> $yuvcorrect -v 0 -Y LUMINANCE_1.20_0_255_0_255 -Y CHROMINANCE_0_1.04_128_1.04_128_0_255 </command>
+            <command id="quicktime_to_yuv"> $movtoy4m -f -w $input_video_width -h $input_video_height -F $framerate -a $aspect_ratio $input_file | !correct_yuv </command>
+            <command id="yuv_to_ffmpeg_av"> $ffmpeg -y -i - -i $tmp_audio_file </command>
+            <command id="yuv_to_ffmpeg_v"> $ffmpeg -y -i - </command>
+            <command id="ffmpeg_normal"> $ffmpeg -y -i $input_file </command>
+            <command id="quicktime_av_pass0"> $quicktime_to_yuv | $yuv_to_ffmpeg_av $ffmpeg_options $ffmpeg_pass0 $output_file </command>
+            <command id="quicktime_av_pass1"> $quicktime_to_yuv | $yuv_to_ffmpeg_av $ffmpeg_options $ffmpeg_pass1 $output_file </command>
+            <command id="quicktime_av_pass2"> $quicktime_to_yuv | $yuv_to_ffmpeg_av $ffmpeg_options $ffmpeg_pass2 $output_file </command>
+            <command id="quicktime_v_pass0"> $quicktime_to_yuv | $yuv_to_ffmpeg_v $ffmpeg_options $ffmpeg_pass0 $output_file </command>
+            <command id="quicktime_v_pass1"> $quicktime_to_yuv | $yuv_to_ffmpeg_v $ffmpeg_options $ffmpeg_pass1 $output_file </command>
+            <command id="quicktime_v_pass2"> $quicktime_to_yuv | $yuv_to_ffmpeg_v $ffmpeg_options $ffmpeg_pass2 $output_file </command>
+            <command id="normal_pass0"> $ffmpeg_normal $ffmpeg_options $ffmpeg_pass0 $output_file </command>
+            <command id="normal_pass1"> $ffmpeg_normal $ffmpeg_options $ffmpeg_pass1 $output_file </command>
+            <command id="normal_pass2"> $ffmpeg_normal $ffmpeg_options $ffmpeg_pass2 $output_file </command>
+        </commands>
+        <script>
+            <![CDATA[
+            
+            function audio(type)
+            {
+                switch(type) {
+                    case "low":    params.audioBitrate =  16000; params.audioSampleRate = 11025; params.audioChannels = 1; break;
+                    case "medium": params.audioBitrate =  32000; params.audioSampleRate = 22050; params.audioChannels = 1; break;
+                    case "high":   params.audioBitrate = 128000; params.audioSampleRate = 48000; params.audioChannels = 2; break;
+                }
+            }
+            
+            function all()
+            {
+                for (var i = 0; i < arguments.length; ++i)
+                    if (!arguments[i])
+                        return false;
+                return true;
+            }
+            
+            function any()
+            {
+                for (var i = 0; i < arguments.length; ++i)
+                    if (arguments[i])
+                        return true;
+                return false;
+            }
+            
+            ]]>
+        </script>
         <quality>
             <quality_stop which="0" bitrate="200000" />
             <quality_stop which="1" title="Tiny" bitrate="400000">

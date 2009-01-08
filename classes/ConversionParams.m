@@ -33,11 +33,8 @@ static NSString* content(NSXMLElement* element)
 
 static NSXMLElement* findChildElement(NSXMLElement* element, NSString* name)
 {
-    NSArray* array = [element elementsForName:name];
-    if (!array || [array count] == 0)
-        return nil;
-        
-    return [array objectAtIndex:0];
+    // return the LAST element with the passed name (later versions override earlier ones)
+    return [[element elementsForName:name] lastObject];
 }
 
 static void addParam(NSXMLElement* paramElement, NSMutableDictionary* dictionary)
@@ -68,6 +65,23 @@ static NSString* parseScripts(NSXMLElement* element)
     return script;
 }
 
+static NSArray* parseCommands(NSXMLElement* parent)
+{
+    // extract the commands
+    NSMutableArray* commands = [[NSMutableDictionary alloc] init];
+    NSXMLElement* commandsElement = findChildElement(parent, @"commands");
+    NSArray* commandArray = [commandsElement elementsForName:@"command"];
+    
+    for (int i = 0; i < [commandArray count]; ++i) {
+        NSXMLElement* element = (NSXMLElement*) [commandArray objectAtIndex:i];
+        NSString* id = stringAttribute(element, @"id");
+        if ([id length])
+            [commands setValue: content(element) forKey: id];
+    }
+    
+    return commands;
+}
+
 @implementation ConversionTab
 
 -(NSString*) deviceName
@@ -79,7 +93,7 @@ static NSString* parseScripts(NSXMLElement* element)
 
 @implementation QualityStop
 
-+(QualityStop*) qualityStopWithElement: (NSXMLElement*) element withDefaults: (DeviceEntry*) defaults
++(QualityStop*) qualityStopWithElement: (NSXMLElement*) element
 {
     QualityStop* obj = [[QualityStop alloc] init];
 
@@ -100,7 +114,7 @@ static NSString* parseScripts(NSXMLElement* element)
 
 @implementation PerformanceItem
 
-+(PerformanceItem*) performanceItemWithElement: (NSXMLElement*) element withDefaults: (DeviceEntry*) defaults
++(PerformanceItem*) performanceItemWithElement: (NSXMLElement*) element
 {
     PerformanceItem* obj = [[PerformanceItem alloc] init];
 
@@ -116,11 +130,16 @@ static NSString* parseScripts(NSXMLElement* element)
     return obj;
 }
 
+-(NSString*) title
+{
+    return m_title;
+}
+
 @end
 
 @implementation Recipe
 
-+(Recipe*) recipeWithElement: (NSXMLElement*) element withDefaults: (DeviceEntry*) defaults
++(Recipe*) recipeWithElement: (NSXMLElement*) element
 {
     Recipe* obj = [[Recipe alloc] init];
 
@@ -137,7 +156,7 @@ static NSString* parseScripts(NSXMLElement* element)
 
 @implementation Checkbox
 
-+(Checkbox*) checkboxWithElement: (NSXMLElement*) element withDefaults: (DeviceEntry*) defaults
++(Checkbox*) checkboxWithElement: (NSXMLElement*) element
 {
     Checkbox* obj = [[Checkbox alloc] init];
 
@@ -155,20 +174,20 @@ static NSString* parseScripts(NSXMLElement* element)
 
 @implementation Menu
 
-+(Menu*) menuWithElement: (NSXMLElement*) element withDefaults: (DeviceEntry*) defaults
++(Menu*) menuWithElement: (NSXMLElement*) element
 {
     Menu* obj = [[Menu alloc] init];
 
     obj->m_title = [NSString stringWithString:stringAttribute(element, @"title")];
     
     // parse all the items
-    obj->m_itemTitle = [[NSMutableArray alloc] init];
+    obj->m_itemTitles = [[NSMutableArray alloc] init];
     obj->m_itemParams = [[NSMutableArray alloc] init];
 
     NSArray* menuItems = [element elementsForName:@"menu_item"];
     for (int i = 0; i < [menuItems count]; ++i) {
         NSXMLElement* itemElement = (NSXMLElement*) [menuItems objectAtIndex:i];
-        [obj->m_itemTitle addObject: stringAttribute(itemElement, @"title")];
+        [obj->m_itemTitles addObject: stringAttribute(itemElement, @"title")];
         
         NSMutableDictionary* params = [[NSMutableDictionary alloc] init];
         [obj->m_itemParams addObject: params];
@@ -176,6 +195,16 @@ static NSString* parseScripts(NSXMLElement* element)
     }
 
     return obj;
+}
+
+-(NSArray*) itemTitles
+{
+    return m_itemTitles;
+}
+
+-(NSArray*) itemParams
+{
+    return m_itemParams;
 }
 
 @end
@@ -189,7 +218,7 @@ static NSString* parseScripts(NSXMLElement* element)
         int which = (int) doubleAttribute(element, @"which");
         if (which < 0 || which > 5)
             continue;
-        [m_qualityStops insertObject:[QualityStop qualityStopWithElement: element withDefaults: nil] atIndex:which];
+        [m_qualityStops insertObject:[QualityStop qualityStopWithElement: element] atIndex:which];
     }
 }
 
@@ -197,7 +226,7 @@ static NSString* parseScripts(NSXMLElement* element)
 {
     for (int i = 0; i < [array count]; ++i) {
         NSXMLElement* element = (NSXMLElement*) [array objectAtIndex:i];
-        [m_performanceItems addObject: [PerformanceItem performanceItemWithElement: element withDefaults: nil]];
+        [m_performanceItems addObject: [PerformanceItem performanceItemWithElement: element]];
     }
 }
 
@@ -206,7 +235,7 @@ static NSString* parseScripts(NSXMLElement* element)
     for (int i = 0; i < [array count]; ++i) {
         NSXMLElement* element = (NSXMLElement*) [array objectAtIndex:i];
 
-        [m_recipes addObject:[Recipe recipeWithElement: element withDefaults: nil]];
+        [m_recipes addObject:[Recipe recipeWithElement: element]];
     }
 }
 
@@ -217,7 +246,7 @@ static NSString* parseScripts(NSXMLElement* element)
         int which = (int) doubleAttribute(element, @"which");
         if (which < 0 || which > MAX_CHECKBOXES)
             continue;
-        [m_checkboxes insertObject:[Checkbox checkboxWithElement: element withDefaults: nil] atIndex:which];
+        [m_checkboxes insertObject:[Checkbox checkboxWithElement: element] atIndex:which];
     }
 }
 
@@ -228,7 +257,7 @@ static NSString* parseScripts(NSXMLElement* element)
         int which = (int) doubleAttribute(element, @"which");
         if (which < 0 || which > MAX_MENUS)
             continue;
-        [m_menus insertObject:[Menu menuWithElement: element withDefaults: nil] atIndex:which];
+        [m_menus insertObject:[Menu menuWithElement: element] atIndex:which];
     }
 }
 
@@ -239,7 +268,7 @@ static NSString* parseScripts(NSXMLElement* element)
         int which = (int) doubleAttribute(element, @"which");
         if (which < 0 || which > MAX_RADIOS)
             continue;
-        [m_radios insertObject:[Menu menuWithElement: element withDefaults: nil] atIndex:which];
+        [m_radios insertObject:[Menu menuWithElement: element] atIndex:which];
     }
 }
 
@@ -250,18 +279,17 @@ static NSString* parseScripts(NSXMLElement* element)
 
 -(DeviceEntry*) initWithElement: (NSXMLElement*) element inGroup: (NSString*) group withDefaults: (DeviceEntry*) defaults;
 {
+    m_defaultDevice = defaults;
     m_id = [NSString stringWithString:stringAttribute(element, @"id")];
     m_title = [NSString stringWithString:stringAttribute(element, @"title")];
     m_groupTitle = [NSString stringWithString:group ? group : @""];
     
     m_qualityStops = [NSMutableArray arrayWithCapacity:6];
-    m_performanceItems = [NSMutableArray arrayWithCapacity:6];
-    m_recipes = [NSMutableArray arrayWithCapacity:4];
-    m_checkboxes = [NSMutableArray arrayWithCapacity:2];
-    m_menus = [NSMutableArray arrayWithCapacity:2];
-    m_radios = [NSMutableArray arrayWithCapacity:2];
-    
+    m_performanceItems = [[NSMutableArray alloc] init];
+    m_recipes = [[NSMutableArray alloc] init];
     m_params = [[NSMutableDictionary alloc] init];
+    m_checkboxes = [[NSMutableArray alloc] init];
+    m_menus = [[NSMutableArray alloc] init];
     
     // handle quality
     [self parseQualityStops:[findChildElement(element, @"quality") elementsForName: @"quality_stop"]];
@@ -281,8 +309,13 @@ static NSString* parseScripts(NSXMLElement* element)
     // handle menus
     [self parseMenus:[element elementsForName:@"menu"]];
     
-    // handle radios
-    [self parseRadios:[element elementsForName:@"radio"]];
+    // Set the device tab enum
+    if ([m_menus count] == 0)
+        m_deviceTab = DT_NO_MENUS;
+    else if ([m_menus count] == 1 && [[(Menu*) [m_menus objectAtIndex:0] itemTitles] count] <= 3)
+        m_deviceTab = DT_RADIO_2_CHECK;
+    else
+        m_deviceTab = DT_2_MENU_2_CHECK;
     
     return self;
 }
@@ -300,6 +333,15 @@ static NSString* parseScripts(NSXMLElement* element)
 -(NSString*) id
 {
     return m_id;
+}
+
+-(NSArray*) performanceItems
+{
+    return [m_performanceItems count] ? m_performanceItems : [m_defaultDevice performanceItems];
+}
+
+-(void) setCurrentTab:(NSTabView*) tabview
+{
 }
 
 @end
@@ -336,20 +378,8 @@ static NSString* parseScripts(NSXMLElement* element)
         return;
     }
         
-    // extract the commands
-    m_commands = [[NSMutableDictionary alloc] init];
-    NSXMLElement* commandsElement = findChildElement([doc rootElement], @"commands");
-    NSArray* commandArray = [commandsElement elementsForName:@"command"];
-    
-    for (int i = 0; i < [commandArray count]; ++i) {
-        NSXMLElement* element = (NSXMLElement*) [commandArray objectAtIndex:i];
-        NSString* id = stringAttribute(element, @"id");
-        if ([id length])
-            [m_commands setValue: content(element) forKey: id];
-    }
-    
     // extract the defaults
-    DeviceEntry* defaultDevice = [DeviceEntry deviceEntryWithElement: findChildElement([doc rootElement], @"default_device") inGroup: nil withDefaults: nil];
+    m_defaultDevice = [DeviceEntry deviceEntryWithElement: findChildElement([doc rootElement], @"default_device") inGroup: nil withDefaults: nil];
         
     // Build the device list
     m_devices = [[NSMutableArray alloc] init];
@@ -364,7 +394,7 @@ static NSString* parseScripts(NSXMLElement* element)
         
         for (int j = 0; j < [devices count]; ++j) {
             NSXMLElement* deviceElement = (NSXMLElement*) [devices objectAtIndex:j];
-            DeviceEntry* entry = [DeviceEntry deviceEntryWithElement: deviceElement inGroup: groupTitle withDefaults: defaultDevice];
+            DeviceEntry* entry = [DeviceEntry deviceEntryWithElement: deviceElement inGroup: groupTitle withDefaults: m_defaultDevice];
             if (entry)
                 [m_devices addObject: entry];
         }
@@ -373,7 +403,7 @@ static NSString* parseScripts(NSXMLElement* element)
     // build the environment
     m_environment = [[NSMutableDictionary alloc] init];
 
-    // fill in the commands
+    // fill in the environment
     NSString* cmdPath = [NSString stringWithString: [[NSBundle mainBundle] resourcePath]];
     [m_environment setValue: [cmdPath stringByAppendingPathComponent: @"bin/ffmpeg"] forKey: @"ffmpeg"];
     [m_environment setValue: [cmdPath stringByAppendingPathComponent: @"bin/qt_export"] forKey: @"qt_export"];
@@ -393,6 +423,20 @@ static void addMenuItem(NSPopUpButton* button, NSString* title, int tag)
         [item setIndentationLevel:1];
         
     [[button menu] addItem:item];
+}
+
+-(DeviceEntry*) findDeviceEntryWithIndex: (int) index
+{
+    int currentItem = 0;
+    
+    for (int i = 0; i < [m_devices count]; ++i) {
+        DeviceEntry* entry = (DeviceEntry*) [m_devices objectAtIndex:i];
+        if (!entry)
+            continue;
+        if (currentItem++ == index)
+            return entry;
+    }
+    return nil;
 }
 
 - (void) awakeFromNib
@@ -425,10 +469,24 @@ static void addMenuItem(NSPopUpButton* button, NSString* title, int tag)
     // FIXME: need to get this from prefs
     [m_deviceButton selectItemWithTag:0];
     
-    //m_currentTabViewItem = [[m_conversionParamsButton selectedItem] representedObject];
-    [m_conversionParamsTabView selectTabViewItem: m_currentTabViewItem];
+    m_currentDevice = [self findDeviceEntryWithIndex:0];
+    [m_currentDevice setCurrentTab: m_conversionParamsTabView];
+
+    // populate the performance menu
+    [m_performanceButton removeAllItems];
+    NSArray* performanceItems = [m_currentDevice performanceItems];
     
-    [m_performanceButton selectItemAtIndex:2];
+    for (int i = 0; i < [performanceItems count]; ++i) {
+        PerformanceItem* item = (PerformanceItem*) [performanceItems objectAtIndex:i];
+        if (!item)
+            continue;
+        
+        addMenuItem(m_performanceButton, [item title], i);
+    }
+    
+    // set the selected item
+    // FIXME: need to get this from prefs
+    [m_performanceButton selectItemWithTag:2];
     [self setPerformance: [m_performanceButton indexOfSelectedItem]];
 }
 

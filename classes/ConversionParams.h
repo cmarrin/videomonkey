@@ -81,15 +81,20 @@
 -(NSString*) deviceName;
 @end
 
-typedef enum { DT_NONE, DT_LONG_Q_2_CHECK, DT_SHORT_Q_2_RADIO_2_CHECK, DT_SHORT_Q_2_MENU_1_CHECK, DT_DVD } DeviceTabType;
+#define DT_NO_MENUS @"nomenus"
+#define DT_RADIO_2_CHECK @"radio2check"
+#define DT_2_MENU_2_CHECK @"2menu2check"
+#define DT_DVD @"dvd"
 
 @interface DeviceEntry : NSObject {
     NSString* m_id;
     NSString* m_title;
     NSString* m_groupTitle;
     
+    DeviceEntry* m_defaultDevice;
+    
     NSDictionary* m_commands;
-    DeviceTabType m_deviceTab;
+    NSString* m_deviceTab;
     
     NSMutableArray* m_qualityStops;
     NSMutableArray* m_performanceItems;
@@ -106,6 +111,9 @@ typedef enum { DT_NONE, DT_LONG_Q_2_CHECK, DT_SHORT_Q_2_RADIO_2_CHECK, DT_SHORT_
 -(NSString*) group;
 -(NSString*) title;
 -(NSString*) id;
+-(NSArray*) performanceItems;
+
+-(void) setCurrentTab:(NSTabView*) tabview;
 @end
 
 @interface QualityStop : NSObject {
@@ -117,7 +125,7 @@ typedef enum { DT_NONE, DT_LONG_Q_2_CHECK, DT_SHORT_Q_2_RADIO_2_CHECK, DT_SHORT_
     NSString* m_script;
 }
 
-+(QualityStop*) qualityStopWithElement: (NSXMLElement*) element withDefaults: (DeviceEntry*) defaults;
++(QualityStop*) qualityStopWithElement: (NSXMLElement*) element;
 
 @end
 
@@ -128,7 +136,9 @@ typedef enum { DT_NONE, DT_LONG_Q_2_CHECK, DT_SHORT_Q_2_RADIO_2_CHECK, DT_SHORT_
     NSString* m_script;
 }
 
-+(PerformanceItem*) performanceItemWithElement: (NSXMLElement*) element withDefaults: (DeviceEntry*) defaults;
++(PerformanceItem*) performanceItemWithElement: (NSXMLElement*) element;
+
+-(NSString*) title;
 
 @end
 
@@ -139,7 +149,7 @@ typedef enum { DT_NONE, DT_LONG_Q_2_CHECK, DT_SHORT_Q_2_RADIO_2_CHECK, DT_SHORT_
     BOOL m_isQuicktime, m_hasAudio, m_is2Pass;
 }
 
-+(Recipe*) recipeWithElement: (NSXMLElement*) element withDefaults: (DeviceEntry*) defaults;
++(Recipe*) recipeWithElement: (NSXMLElement*) element;
 
 @end
 
@@ -150,18 +160,20 @@ typedef enum { DT_NONE, DT_LONG_Q_2_CHECK, DT_SHORT_Q_2_RADIO_2_CHECK, DT_SHORT_
     NSMutableDictionary* m_uncheckedParams;
 }
 
-+(Checkbox*) checkboxWithElement: (NSXMLElement*) element withDefaults: (DeviceEntry*) defaults;
++(Checkbox*) checkboxWithElement: (NSXMLElement*) element;
 
 @end
 
 @interface Menu : NSObject {
     NSString* m_title;
     
-    NSMutableArray* m_itemTitle;
+    NSMutableArray* m_itemTitles;
     NSMutableArray* m_itemParams;
 }
 
-+(Menu*) menuWithElement: (NSXMLElement*) element withDefaults: (DeviceEntry*) defaults;
++(Menu*) menuWithElement: (NSXMLElement*) element;
+-(NSArray*) itemTitles;
+-(NSArray*) itemParams;
 
 @end
 
@@ -174,13 +186,15 @@ typedef enum { DT_NONE, DT_LONG_Q_2_CHECK, DT_SHORT_Q_2_RADIO_2_CHECK, DT_SHORT_
     IBOutlet NSPopUpButton* m_deviceButton;
     IBOutlet NSPopUpButton* m_performanceButton;
     
+    DeviceEntry* m_defaultDevice;
     NSMutableArray* m_devices;
-    NSDictionary* m_commands;
     NSDictionary* m_environment;
-
-    ConversionTab* m_currentTabViewItem;
+    
+    DeviceEntry* m_currentDevice;
     NSString* m_currentPerformance;
     BOOL m_isTwoPass;
+
+    ConversionTab* m_currentTabViewItem;
 }
 
 -(IBAction)selectTab:(id)sender;
