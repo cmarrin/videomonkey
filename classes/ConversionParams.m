@@ -56,6 +56,18 @@ static void parseParams(NSXMLElement* element, NSMutableDictionary* dictionary)
 
 }
 
+static NSString* parseScripts(NSXMLElement* element)
+{
+    NSMutableString* script = [[NSMutableString alloc] init];
+    NSArray* array = [element elementsForName: @"script"];
+    for (int i = 0; i < [array count]; ++i) {
+        [script appendString:content((NSXMLElement*) [array objectAtIndex:i])];
+        [script appendString:@"\n\n"];
+    }
+    
+    return script;
+}
+
 @implementation ConversionTab
 
 -(NSString*) deviceName
@@ -73,25 +85,14 @@ static void parseParams(NSXMLElement* element, NSMutableDictionary* dictionary)
 
     obj->m_title = [NSString stringWithString:stringAttribute(element, @"title")];
     obj->m_bitrate = doubleAttribute(element, @"bitrate");
-    obj->m_sizeRatio = doubleAttribute(element, @"size");
-    
-    NSString* audio = stringAttribute(element, @"audio");
-    if ([audio isEqualToString:@"low"]) {
-        obj->m_audioBitrate = 16000;
-        obj->m_audioSampleRate = 11025;
-        obj->m_audioChannels = 1;
-    }
-    else if ([audio isEqualToString:@"medium"]) {
-        obj->m_audioBitrate = 32000;
-        obj->m_audioSampleRate = 22050;
-        obj->m_audioChannels = 1;
-    }
-    else {
-        obj->m_audioBitrate = 128000;
-        obj->m_audioSampleRate = 48000;
-        obj->m_audioChannels = 2;
-    }
-    
+
+    // add params
+    obj->m_params = [[NSMutableDictionary alloc] init];
+    parseParams(element, obj->m_params);
+
+    // add scripts
+    obj->m_script = parseScripts(element);
+
     return obj;
 }
 
@@ -108,6 +109,9 @@ static void parseParams(NSXMLElement* element, NSMutableDictionary* dictionary)
     // add params
     obj->m_params = [[NSMutableDictionary alloc] init];
     parseParams(element, obj->m_params);
+
+    // add scripts
+    obj->m_script = parseScripts(element);
 
     return obj;
 }
@@ -318,9 +322,19 @@ static void parseParams(NSXMLElement* element, NSMutableDictionary* dictionary)
 -(void) initCommands
 {
     NSURL* url = [NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"commands" ofType:@"xml"]];
-    NSXMLDocument* doc = [[NSXMLDocument alloc] initWithContentsOfURL:url options:NSXMLDocumentTidyXML error:nil];
-    if (!doc || ![[[doc rootElement] name] isEqualToString:@"videomonkey"])
+    NSError* error;
+    NSXMLDocument* doc = [[NSXMLDocument alloc] initWithContentsOfURL:url options:NSXMLNodePreserveEntities error:&error];
+    NSString* desc = [error localizedDescription];
+    
+    if ([desc length] != 0) {
+        NSRunAlertPanel(@"Error parsing commands.xml", desc, nil, nil, nil);
         return;
+    }
+    
+    if (!doc || ![[[doc rootElement] name] isEqualToString:@"videomonkey"]) {
+        NSRunAlertPanel(@"Error in commands.xml", @"root element is not <videomonkey>", nil, nil, nil);
+        return;
+    }
         
     // extract the commands
     m_commands = [[NSMutableDictionary alloc] init];

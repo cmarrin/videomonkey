@@ -33,11 +33,26 @@
     <default_device>
         <quality>
             <quality_stop which="0" bitrate="200000" />
-            <quality_stop which="1" title="Tiny" bitrate="400000" script="audio('low'); params.size = 0.5" />
-            <quality_stop which="2" title="Low" bitrate="800000" script="audio('high'); params.size = 1" />
-            <quality_stop which="3" title="Standard" bitrate="1100000" script="audio('high'); params.size = 1" />
-            <quality_stop which="4" title="High" bitrate="1500000" script="audio('high'); params.size = 1" />
-            <quality_stop which="5" title="Go Nuts" bitrate="2000000" script="audio('high'); params.size = 1" />
+            <quality_stop which="1" title="Tiny" bitrate="400000">
+                <script> audio('low') </script> 
+                <param id="size" value="0.5" />
+            </quality_stop>
+            <quality_stop which="2" title="Low" bitrate="800000">
+                <script> audio('high') </script> 
+                <param id="size" value="1" />
+            </quality_stop>
+            <quality_stop which="3" title="Standard" bitrate="1100000">
+                <script> audio('high') </script> 
+                <param id="size" value="1" />
+            </quality_stop>
+            <quality_stop which="4" title="High" bitrate="1500000">
+                <script> audio('high') </script> 
+                <param id="size" value="1" />
+            </quality_stop>
+            <quality_stop which="5" title="Go Nuts" bitrate="2000000">
+                <script> audio('high') </script> 
+                <param id="size" value="1" />
+            </quality_stop>
         </quality>
         <performance>
             <performance_item title="Fastest">
@@ -68,35 +83,35 @@
         <param id="ffmpeg_vcodec" value="libx264" />
         <param id="video_suffix" value="mp4" />
         <recipes>
-            <recipe is_quicktime="true" has_audio="true" is_2pass="false">
-                !quicktime_to_audio_file ; !quicktime_av_pass0
+            <recipe condition="!params.specialQT && !params.hasAudio && !params.is2Pass">
+                !normal_pass0
             </recipe>
-            <recipe is_quicktime="true" has_audio="true" is_2pass="true">
-                !quicktime_to_audio_file ; !quicktime_av_pass1 ; !quicktime_av_pass2
+            <recipe condition="!params.specialQT && !params.hasAudio && params.is2Pass">
+                !normal_pass1 ; !normal_pass2
             </recipe>
-            <recipe is_quicktime="true" has_audio="false" is_2pass="false">
+            <recipe condition="!params.specialQT && params.hasAudio && !params.is2Pass">
+                !normal_pass0
+            </recipe>
+            <recipe condition="!params.specialQT && params.hasAudio && params.is2Pass">
+                !normal_pass1 ; !normal_pass2
+            </recipe>
+            <recipe condition="params.specialQT && !params.hasAudio && !params.is2Pass">
                 !quicktime_v_pass0
             </recipe>
-            <recipe is_quicktime="true" has_audio="false" is_2pass="true">
+            <recipe condition="params.specialQT && !params.hasAudio && params.is2Pass">
                 !quicktime_v_pass1 ; !quicktime_v_pass2
             </recipe>
-            <recipe is_quicktime="false" has_audio="true" is_2pass="false">
-                !normal_pass0
+            <recipe condition="params.specialQT && params.hasAudio && !params.is2Pass">
+                !quicktime_to_audio_file ; !quicktime_av_pass0
             </recipe>
-            <recipe is_quicktime="false" has_audio="true" is_2pass="true">
-                !normal_pass1 ; !normal_pass2
-            </recipe>
-            <recipe is_quicktime="false" has_audio="false" is_2pass="false">
-                !normal_pass0
-            </recipe>
-            <recipe is_quicktime="false" has_audio="false" is_2pass="true">
-                !normal_pass1 ; !normal_pass2
+            <recipe condition="params.specialQT && params.hasAudio && params.is2Pass">
+                !quicktime_to_audio_file ; !quicktime_av_pass1 ; !quicktime_av_pass2
             </recipe>
         </recipes>
     </default_device>
     <devices>
         <device_group title="iTunes">
-            <device title="All Apple Devices" id="allappledevices" tab="long_q_2_check">
+            <device title="All Apple Devices" id="allappledevices">
                 <checkbox which="0" title="H.264 Video (slower but better)">
                     <checked_params>
                         <param id="ffmpeg_vcodec" value="libx264" />
@@ -106,7 +121,7 @@
                     </unchecked_params>
                 </checkbox>
             </device>
-            <device title="iPhone" id="iphone" tab="short_q_2_radio_2_check">
+            <device title="iPhone" id="iphone">
                 <checkbox which="0" title="H.264 Video (slower but better)">
                     <checked_params>
                         <param id="ffmpeg_vcodec" value="libx264" />
@@ -125,7 +140,7 @@
                 </radio>
             </device>
         </device_group>
-    <devices>
+    </devices>
 </videomonkey>
 
         

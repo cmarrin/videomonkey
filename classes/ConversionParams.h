@@ -112,10 +112,9 @@ typedef enum { DT_NONE, DT_LONG_Q_2_CHECK, DT_SHORT_Q_2_RADIO_2_CHECK, DT_SHORT_
     NSString* m_title;
 
     double m_bitrate;
-    double m_audioBitrate;
-    double m_audioSampleRate;
-    int m_audioChannels;
-    double m_sizeRatio;
+
+    NSMutableDictionary* m_params;
+    NSString* m_script;
 }
 
 +(QualityStop*) qualityStopWithElement: (NSXMLElement*) element withDefaults: (DeviceEntry*) defaults;
@@ -126,6 +125,7 @@ typedef enum { DT_NONE, DT_LONG_Q_2_CHECK, DT_SHORT_Q_2_RADIO_2_CHECK, DT_SHORT_
     NSString* m_title;
     
     NSMutableDictionary* m_params;
+    NSString* m_script;
 }
 
 +(PerformanceItem*) performanceItemWithElement: (NSXMLElement*) element withDefaults: (DeviceEntry*) defaults;
@@ -169,6 +169,7 @@ typedef enum { DT_NONE, DT_LONG_Q_2_CHECK, DT_SHORT_Q_2_RADIO_2_CHECK, DT_SHORT_
 #define VC_WMV3 @"wmv3"
 
 @interface ConversionParams : NSObject {
+    IBOutlet NSWindow* m_mainWindow;
     IBOutlet NSTabView* m_conversionParamsTabView;
     IBOutlet NSPopUpButton* m_deviceButton;
     IBOutlet NSPopUpButton* m_performanceButton;
