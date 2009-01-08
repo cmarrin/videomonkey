@@ -323,7 +323,7 @@ static NSString* parseScripts(NSXMLElement* element)
 {
     NSURL* url = [NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"commands" ofType:@"xml"]];
     NSError* error;
-    NSXMLDocument* doc = [[NSXMLDocument alloc] initWithContentsOfURL:url options:NSXMLNodePreserveEntities error:&error];
+    NSXMLDocument* doc = [[NSXMLDocument alloc] initWithContentsOfURL:url options:NSXMLDocumentValidate error:&error];
     NSString* desc = [error localizedDescription];
     
     if ([desc length] != 0) {

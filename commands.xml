@@ -1,3 +1,42 @@
+<?xml version="1.0"?>
+<!DOCTYPE videomonkey [
+    <!ELEMENT videomonkey    (commands|script|param|default_device|devices)*>
+    <!ELEMENT commands      (command*)>
+    <!ELEMENT command    (#PCDATA)>
+        <!ATTLIST command id CDATA "">
+    <!ELEMENT script    (#PCDATA)>
+    <!ELEMENT param    EMPTY>
+        <!ATTLIST param id CDATA "">
+        <!ATTLIST param value CDATA "">
+    <!ELEMENT default_device    (quality|performance|recipes|param)*>
+    <!ELEMENT quality    (quality_stop*)>
+    <!ELEMENT quality_stop    (script*,param*)>
+        <!ATTLIST quality_stop which CDATA "">
+        <!ATTLIST quality_stop title CDATA "">
+        <!ATTLIST quality_stop bitrate CDATA "">
+    <!ELEMENT performance    (performance_item*)>
+    <!ELEMENT performance_item    (script*,param*)>
+        <!ATTLIST performance_item title CDATA "">
+    <!ELEMENT recipes    (recipe*)>
+    <!ELEMENT recipe    (#PCDATA)>
+        <!ATTLIST recipe condition CDATA "">
+    <!ELEMENT devices    (device_group*)>
+    <!ELEMENT device_group    (device*)>
+        <!ATTLIST device_group title CDATA "">
+    <!ELEMENT device    (checkbox|menu)*>
+        <!ATTLIST device title CDATA "">
+        <!ATTLIST device id CDATA "">
+    <!ELEMENT checkbox    (checked_params|unchecked_params)*>
+        <!ATTLIST checkbox which CDATA "">
+        <!ATTLIST checkbox title CDATA "">
+    <!ELEMENT checked_params    (param|script)*>
+    <!ELEMENT unchecked_params    (param|script)*>
+    <!ELEMENT menu    (menu_item*)>
+        <!ATTLIST menu which CDATA "">
+        <!ATTLIST menu title CDATA "">
+    <!ELEMENT menu_item    (param|script)*>
+        <!ATTLIST menu_item title CDATA "">
+]>
 <videomonkey>
     <commands>
         <command id="ffmpeg_pass0"> -vpre $ffmpeg_vpre </command>
@@ -21,6 +60,8 @@
 		<command id="normal_pass2"> $ffmpeg_normal $ffmpeg_options $ffmpeg_pass2 $output_file </command>
     </commands>
     <script>
+        <![CDATA[
+        
         function audio(type)
         {
             switch(type) {
@@ -29,6 +70,24 @@
                 case "high":   params.audioBitrate = 128000; params.audioSampleRate = 48000; params.audioChannels = 2; break;
             }
         }
+        
+        function all()
+        {
+            for (var i = 0; i < arguments.length; ++i)
+                if (!arguments[i])
+                    return false;
+            return true;
+        }
+        
+        function any()
+        {
+            for (var i = 0; i < arguments.length; ++i)
+                if (arguments[i])
+                    return true;
+            return false;
+        }
+        
+        ]]>
     </script>
     <default_device>
         <quality>
@@ -83,28 +142,28 @@
         <param id="ffmpeg_vcodec" value="libx264" />
         <param id="video_suffix" value="mp4" />
         <recipes>
-            <recipe condition="!params.specialQT && !params.hasAudio && !params.is2Pass">
+            <recipe condition="all(!params.specialQT, !params.hasAudio, !params.is2Pass)">
                 !normal_pass0
             </recipe>
-            <recipe condition="!params.specialQT && !params.hasAudio && params.is2Pass">
+            <recipe condition="all(!params.specialQT, !params.hasAudio, params.is2Pass)">
                 !normal_pass1 ; !normal_pass2
             </recipe>
-            <recipe condition="!params.specialQT && params.hasAudio && !params.is2Pass">
+            <recipe condition="all(!params.specialQT, params.hasAudio, !params.is2Pass)">
                 !normal_pass0
             </recipe>
-            <recipe condition="!params.specialQT && params.hasAudio && params.is2Pass">
+            <recipe condition="all(!params.specialQT, params.hasAudio, params.is2Pass)">
                 !normal_pass1 ; !normal_pass2
             </recipe>
-            <recipe condition="params.specialQT && !params.hasAudio && !params.is2Pass">
+            <recipe condition="all(params.specialQT, !params.hasAudio, !params.is2Pass)">
                 !quicktime_v_pass0
             </recipe>
-            <recipe condition="params.specialQT && !params.hasAudio && params.is2Pass">
+            <recipe condition="all(params.specialQT, !params.hasAudio, params.is2Pass)">
                 !quicktime_v_pass1 ; !quicktime_v_pass2
             </recipe>
-            <recipe condition="params.specialQT && params.hasAudio && !params.is2Pass">
+            <recipe condition="all(params.specialQT, params.hasAudio, !params.is2Pass)">
                 !quicktime_to_audio_file ; !quicktime_av_pass0
             </recipe>
-            <recipe condition="params.specialQT && params.hasAudio && params.is2Pass">
+            <recipe condition="all(params.specialQT, params.hasAudio, params.is2Pass)">
                 !quicktime_to_audio_file ; !quicktime_av_pass1 ; !quicktime_av_pass2
             </recipe>
         </recipes>
@@ -130,14 +189,14 @@
                         <param id="ffmpeg_vcodec" value="mpeg4" />
                     </unchecked_params>
                 </checkbox>
-                <radio which="0" title="Best for:">
+                <menu which="0" title="Best for:">
                     <menu_item title="iPhone">
                         <param id="ffmpeg_vcodec" value="libx264" />
                     </menu_item>
                     <menu_item title="TV">
                         <param id="ffmpeg_vcodec" value="mpeg4" />
                     </menu_item>
-                </radio>
+                </menu>
             </device>
         </device_group>
     </devices>
