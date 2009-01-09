@@ -82,6 +82,7 @@
 
 -(void) setCheckboxes: (NSArray*) checkboxes;
 -(void) setMenus: (NSArray*) menus;
+-(void) setQuality: (NSArray*) qualityStops;
 
 @end
 
@@ -114,12 +115,15 @@
 -(NSString*) group;
 -(NSString*) title;
 -(NSString*) id;
+-(NSArray*) qualityStops;
 -(NSArray*) performanceItems;
 -(NSString*) fileSuffix;
 -(NSString*) videoFormat;
 -(NSString*) recipe;
 
--(void) setCurrentDevice:(NSTabView*) tabview;
+-(void) populateTabView:(NSTabView*) tabview;
+-(void) populatePerformanceButton:(NSPopUpButton*) tabview;
+
 @end
 
 @interface QualityStop : NSObject {
@@ -132,6 +136,8 @@
 }
 
 +(QualityStop*) qualityStopWithElement: (NSXMLElement*) element;
+
+-(NSString*) title;
 
 @end
 

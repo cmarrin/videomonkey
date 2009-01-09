@@ -23,7 +23,7 @@
         <!ATTLIST recipe condition CDATA "">
     <!ELEMENT device_group    (device*)>
         <!ATTLIST device_group title CDATA "">
-    <!ELEMENT device    (checkbox|menu)*>
+    <!ELEMENT device    (commands|quality|performance|recipes|script|param|checkbox|menu)*>
         <!ATTLIST device title CDATA "">
         <!ATTLIST device id CDATA "">
     <!ELEMENT checkbox    (checked_params|unchecked_params)*>
@@ -105,23 +105,28 @@
             <quality_stop which="0" bitrate="200000" />
             <quality_stop which="1" title="Tiny" bitrate="400000">
                 <script> audio('low') </script> 
-                <param id="size" value="0.5" />
+                <param id="size" value="640x480" />
+                <param id="frame_rate" value="0.5" />
             </quality_stop>
             <quality_stop which="2" title="Low" bitrate="800000">
                 <script> audio('high') </script> 
-                <param id="size" value="1" />
+                <param id="size" value="640x480" />
+                <param id="frame_rate" value="1" />
             </quality_stop>
             <quality_stop which="3" title="Standard" bitrate="1100000">
                 <script> audio('high') </script> 
-                <param id="size" value="1" />
+                <param id="size" value="640x480" />
+                <param id="frame_rate" value="1" />
             </quality_stop>
             <quality_stop which="4" title="High" bitrate="1500000">
                 <script> audio('high') </script> 
-                <param id="size" value="1" />
+                <param id="size" value="640x480" />
+                <param id="frame_rate" value="1" />
             </quality_stop>
             <quality_stop which="5" title="Go Nuts" bitrate="2000000">
                 <script> audio('high') </script> 
-                <param id="size" value="1" />
+                <param id="size" value="640x480" />
+                <param id="frame_rate" value="1" />
             </quality_stop>
         </quality>
         <performance>
@@ -192,6 +197,34 @@
                 </checkbox>
             </device>
             <device title="iPhone" id="iphone">
+                <quality>
+                    <quality_stop which="0" bitrate="200000" />
+                    <quality_stop which="1" title="EDGE" bitrate="50000">
+                        <script> audio('low') </script> 
+                        <param id="size" value="192x144" />
+                        <param id="frame_rate" value="0.5" />
+                    </quality_stop>
+                    <quality_stop which="2" title="3G" bitrate="100000">
+                        <script> audio('medium') </script> 
+                        <param id="size" value="480x320" />
+                        <param id="frame_rate" value="1" />
+                    </quality_stop>
+                    <quality_stop which="3" title="WiFi" bitrate="1100000">
+                        <script> audio('high') </script> 
+                        <param id="size" value="480x320" />
+                        <param id="frame_rate" value="1" />
+                    </quality_stop>
+                    <quality_stop which="4" title="High" bitrate="1800000">
+                        <script> audio('high') </script> 
+                        <param id="size" value="640x480" />
+                        <param id="frame_rate" value="1" />
+                    </quality_stop>
+                    <quality_stop which="5" title="Go Nuts" bitrate="3000000">
+                        <script> audio('high') </script> 
+                        <param id="size" value="640x480" />
+                        <param id="frame_rate" value="1" />
+                    </quality_stop>
+                </quality>
                 <checkbox which="0" title="H.264 Video (slower but better)">
                     <checked_params>
                         <param id="ffmpeg_vcodec" value="libx264" />
@@ -201,10 +234,10 @@
                     </unchecked_params>
                 </checkbox>
                 <menu which="0" title="Best for:">
-                    <menu_item title="iPhone">
+                    <menu_item title="iPhone Screen">
                         <param id="ffmpeg_vcodec" value="libx264" />
                     </menu_item>
-                    <menu_item title="TV">
+                    <menu_item title="TV Screen">
                         <param id="ffmpeg_vcodec" value="mpeg4" />
                     </menu_item>
                 </menu>

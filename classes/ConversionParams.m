@@ -82,6 +82,19 @@ static NSArray* parseCommands(NSXMLElement* parent)
     return commands;
 }
 
+static void addMenuItem(NSPopUpButton* button, NSString* title, int tag)
+{
+    NSMenuItem* item = [[NSMenuItem alloc] init];
+    [item setTitle:title];
+    [item setTag:tag];
+    if (tag < 0)
+        [item setEnabled:NO];
+    else
+        [item setIndentationLevel:1];
+        
+    [[button menu] addItem:item];
+}
+
 @implementation ConversionTab
 
 -(NSString*) deviceName
@@ -112,11 +125,18 @@ static void setButton(NSButton* button, NSString* title)
     
     if (m_radio) {
         if (size > 0) {
+            Menu* menu = (Menu*) [menus objectAtIndex:0];
+            
             [m_radioLabel0 setHidden:NO];
-            [m_radioLabel0 setStringValue:  [(Menu*) [menus objectAtIndex:0] title]];
+            [m_radioLabel0 setStringValue:  [menu title]];
             [m_radio setHidden:NO];
             
-            // FIXME: add radio buttons
+            NSArray* itemTitles = [menu itemTitles];
+            [m_radio renewRows:[itemTitles count] columns:1];
+            for (int i = 0; i < [itemTitles count]; ++i) {
+                NSButtonCell* cell = (NSButtonCell*) [m_radio cellAtRow:i column:0];
+                [cell setTitle:[itemTitles objectAtIndex:i]];
+            }
         }
         else {
             [m_radioLabel0 setHidden:YES];
@@ -130,6 +150,46 @@ static void setButton(NSButton* button, NSString* title)
         
         // FIXME: add items
     }
+}
+
+-(void) setQuality: (NSArray*) qualityStops
+{
+    // We can draw a slider with 2, 3, or 5 tick marks. There is one more entry in the array than tick
+    // marks. The entry at index 0 just sets the minumum bitrate to use.
+    // If we see any other number in the array we will turn off the quality slider
+    [m_slider setHidden:NO];
+    [m_sliderLabel1 setHidden:NO];
+    [m_sliderLabel2 setHidden:NO];
+    [m_sliderLabel3 setHidden:NO];
+    [m_sliderLabel4 setHidden:NO];
+    [m_sliderLabel5 setHidden:NO];
+    
+    if ([qualityStops count] == 3) {
+        [m_slider setNumberOfTickMarks:2];
+        [m_sliderLabel1 setStringValue:[(QualityStop*) [qualityStops objectAtIndex:1] title]];
+        [m_sliderLabel2 setHidden:YES];
+        [m_sliderLabel3 setHidden:YES];
+        [m_sliderLabel4 setHidden:YES];
+        [m_sliderLabel5 setStringValue:[(QualityStop*) [qualityStops objectAtIndex:2] title]];
+    }
+    else if ([qualityStops count] == 4) {
+        [m_slider setNumberOfTickMarks:3];
+        [m_sliderLabel1 setStringValue:[(QualityStop*) [qualityStops objectAtIndex:1] title]];
+        [m_sliderLabel2 setHidden:YES];
+        [m_sliderLabel3 setStringValue:[(QualityStop*) [qualityStops objectAtIndex:2] title]];
+        [m_sliderLabel4 setHidden:YES];
+        [m_sliderLabel5 setStringValue:[(QualityStop*) [qualityStops objectAtIndex:3] title]];
+    }
+    else if ([qualityStops count] == 6) {
+        [m_slider setNumberOfTickMarks:5];
+        [m_sliderLabel1 setStringValue:[(QualityStop*) [qualityStops objectAtIndex:1] title]];
+        [m_sliderLabel2 setStringValue:[(QualityStop*) [qualityStops objectAtIndex:2] title]];
+        [m_sliderLabel3 setStringValue:[(QualityStop*) [qualityStops objectAtIndex:3] title]];
+        [m_sliderLabel4 setStringValue:[(QualityStop*) [qualityStops objectAtIndex:4] title]];
+        [m_sliderLabel5 setStringValue:[(QualityStop*) [qualityStops objectAtIndex:5] title]];
+    }
+    else 
+        [m_slider setHidden:YES];
 }
 
 @end
@@ -151,6 +211,11 @@ static void setButton(NSButton* button, NSString* title)
     obj->m_script = parseScripts(element);
 
     return obj;
+}
+
+-(NSString*) title
+{
+    return m_title;
 }
 
 @end
@@ -321,12 +386,12 @@ static void setButton(NSButton* button, NSString* title)
 
 -(DeviceEntry*) initWithElement: (NSXMLElement*) element inGroup: (NSString*) group withDefaults: (DeviceEntry*) defaults;
 {
-    m_defaultDevice = defaults;
+    m_defaultDevice = [defaults retain];
     m_id = [NSString stringWithString:stringAttribute(element, @"id")];
     m_title = [NSString stringWithString:stringAttribute(element, @"title")];
     m_groupTitle = [NSString stringWithString:group ? group : @""];
     
-    m_qualityStops = [NSMutableArray arrayWithCapacity:6];
+    m_qualityStops = [[NSMutableArray alloc] init];
     m_performanceItems = [[NSMutableArray alloc] init];
     m_recipes = [[NSMutableArray alloc] init];
     m_params = [[NSMutableDictionary alloc] init];
@@ -377,6 +442,11 @@ static void setButton(NSButton* button, NSString* title)
     return m_id;
 }
 
+-(NSArray*) qualityStops
+{
+    return [m_qualityStops count] ? m_qualityStops : [m_defaultDevice qualityStops];
+}
+
 -(NSArray*) performanceItems
 {
     return [m_performanceItems count] ? m_performanceItems : [m_defaultDevice performanceItems];
@@ -404,13 +474,27 @@ static void setButton(NSButton* button, NSString* title)
     return @"abc;def|ghi&jkl";
 }
 
--(void) setCurrentDevice:(NSTabView*) tabview
+-(void) populateTabView:(NSTabView*) tabview
 {
     [tabview selectTabViewItemWithIdentifier:m_deviceTab];
     ConversionTab* tab = (ConversionTab*) [tabview selectedTabViewItem];
     
     [tab setCheckboxes: m_checkboxes];
     [tab setMenus: m_menus];
+    [tab setQuality: [self qualityStops]];
+}
+
+-(void) populatePerformanceButton: (NSPopUpButton*) button
+{
+    [button removeAllItems];
+    
+    for (int i = 0; i < [m_performanceItems count]; ++i) {
+        PerformanceItem* item = (PerformanceItem*) [m_performanceItems objectAtIndex:i];
+        if (!item)
+            continue;
+        
+        addMenuItem(button, [item title], i);
+    }
 }
 
 @end
@@ -449,7 +533,8 @@ static void setButton(NSButton* button, NSString* title)
         
     // extract the defaults
     m_defaultDevice = [DeviceEntry deviceEntryWithElement: findChildElement([doc rootElement], @"default_device") inGroup: nil withDefaults: nil];
-        
+    [m_defaultDevice retain];
+    
     // Build the device list
     m_devices = [[NSMutableArray alloc] init];
     
@@ -479,19 +564,6 @@ static void setButton(NSButton* button, NSString* title)
     [m_environment setValue: [cmdPath stringByAppendingPathComponent: @"bin/movtoy4m"] forKey: @"movtoy4m"];
     [m_environment setValue: [cmdPath stringByAppendingPathComponent: @"bin/yuvadjust"] forKey: @"yuvadjust"];
     [m_environment setValue: [cmdPath stringByAppendingPathComponent: @"bin/yuvcorrect"] forKey: @"yuvcorrect"];
-}
-
-static void addMenuItem(NSPopUpButton* button, NSString* title, int tag)
-{
-    NSMenuItem* item = [[NSMenuItem alloc] init];
-    [item setTitle:title];
-    [item setTag:tag];
-    if (tag < 0)
-        [item setEnabled:NO];
-    else
-        [item setIndentationLevel:1];
-        
-    [[button menu] addItem:item];
 }
 
 -(DeviceEntry*) findDeviceEntryWithIndex: (int) index
@@ -539,19 +611,8 @@ static void addMenuItem(NSPopUpButton* button, NSString* title, int tag)
     [m_deviceButton selectItemWithTag:0];
     
     m_currentDevice = [self findDeviceEntryWithIndex:0];
-    [m_currentDevice setCurrentDevice: m_conversionParamsTabView];
-
-    // populate the performance menu
-    [m_performanceButton removeAllItems];
-    NSArray* performanceItems = [m_currentDevice performanceItems];
-    
-    for (int i = 0; i < [performanceItems count]; ++i) {
-        PerformanceItem* item = (PerformanceItem*) [performanceItems objectAtIndex:i];
-        if (!item)
-            continue;
-        
-        addMenuItem(m_performanceButton, [item title], i);
-    }
+    [m_currentDevice populateTabView: m_conversionParamsTabView];
+    [m_currentDevice populatePerformanceButton: m_performanceButton];
     
     // set the selected item
     // FIXME: need to get this from prefs
@@ -567,7 +628,8 @@ static void addMenuItem(NSPopUpButton* button, NSString* title, int tag)
 - (IBAction)selectDevice:(id)sender {
     int tag = [[sender selectedItem] tag];
     m_currentDevice = [self findDeviceEntryWithIndex:tag];
-    [m_currentDevice setCurrentDevice: m_conversionParamsTabView];
+    [m_currentDevice populateTabView: m_conversionParamsTabView];
+    [m_currentDevice populatePerformanceButton: m_performanceButton];
 }
 
 - (IBAction)selectPerformance:(id)sender {
