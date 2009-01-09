@@ -258,8 +258,6 @@ static NSImage* getFileStatusImage(FileStatus status)
     if ([m_outputFiles count] == 0)
         return;
         
-    if (![format isEqualToString:VC_H264] && ![format isEqualToString:VC_WMV3])
-        format = VC_H264;
     ((TranscoderFileInfo*) [m_outputFiles objectAtIndex: 0])->m_videoCodec = format;
 }
 

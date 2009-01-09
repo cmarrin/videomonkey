@@ -63,6 +63,8 @@
         <script>
             <![CDATA[
             
+            function caseInsensitiveCompare(a,b) { return a.toLowerCase() == b.toLowerCase() }
+            
             function audio(type)
             {
                 switch(type) {
@@ -86,6 +88,15 @@
                     if (arguments[i])
                         return true;
                 return false;
+            }
+            
+            function standardizeVideoCodecName(name)
+            {
+                if (caseInsensitiveCompare(name, "vc-1"))
+                    return "wmv3";
+                if (caseInsensitiveCompare(name, "avc") || caseInsensitiveCompare(name, "avc1"))
+                    return "h.264";
+                return name;
             }
             
             ]]>
