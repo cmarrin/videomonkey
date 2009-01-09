@@ -89,6 +89,49 @@ static NSArray* parseCommands(NSXMLElement* parent)
     return [self identifier];
 }
 
+static void setButton(NSButton* button, NSString* title)
+{
+    if (title) {
+        [button setHidden:NO];
+        [button setTitle:title];
+    }
+    else
+        [button setHidden:YES];
+}
+
+-(void) setCheckboxes: (NSArray*) checkboxes
+{
+    int size = [checkboxes count];
+    setButton(m_button0, (size > 0) ? [(Checkbox*) [checkboxes objectAtIndex:0] title] : nil);
+    setButton(m_button1, (size > 1) ? [(Checkbox*) [checkboxes objectAtIndex:1] title] : nil);
+}
+
+-(void) setMenus: (NSArray*) menus
+{
+    int size = [menus count];
+    
+    if (m_radio) {
+        if (size > 0) {
+            [m_radioLabel0 setHidden:NO];
+            [m_radioLabel0 setStringValue:  [(Menu*) [menus objectAtIndex:0] title]];
+            [m_radio setHidden:NO];
+            
+            // FIXME: add radio buttons
+        }
+        else {
+            [m_radioLabel0 setHidden:YES];
+            [m_radio setHidden:YES];
+        }
+    }
+    else {
+        // handle menus
+        setButton(m_button2, (size > 0) ? [(Menu*) [menus objectAtIndex:0] title] : nil);
+        setButton(m_button3, (size > 1) ? [(Menu*) [menus objectAtIndex:1] title] : nil);
+        
+        // FIXME: add items
+    }
+}
+
 @end
 
 @implementation QualityStop
@@ -170,6 +213,11 @@ static NSArray* parseCommands(NSXMLElement* parent)
     return obj;
 }
 
+-(NSString*) title
+{
+    return m_title;
+}
+
 @end
 
 @implementation Menu
@@ -205,6 +253,11 @@ static NSArray* parseCommands(NSXMLElement* parent)
 -(NSArray*) itemParams
 {
     return m_itemParams;
+}
+
+-(NSString*) title
+{
+    return m_title;
 }
 
 @end
@@ -258,17 +311,6 @@ static NSArray* parseCommands(NSXMLElement* parent)
         if (which < 0 || which > MAX_MENUS)
             continue;
         [m_menus insertObject:[Menu menuWithElement: element] atIndex:which];
-    }
-}
-
--(void) parseRadios: (NSArray*) array
-{
-    for (int i = 0; i < [array count]; ++i) {
-        NSXMLElement* element = (NSXMLElement*) [array objectAtIndex:i];
-        int which = (int) doubleAttribute(element, @"which");
-        if (which < 0 || which > MAX_RADIOS)
-            continue;
-        [m_radios insertObject:[Menu menuWithElement: element] atIndex:which];
     }
 }
 
@@ -358,11 +400,17 @@ static NSArray* parseCommands(NSXMLElement* parent)
 
 -(NSString*) recipe
 {
+    // FIXME: need to return the real recipe
     return @"abc;def|ghi&jkl";
 }
 
 -(void) setCurrentDevice:(NSTabView*) tabview
 {
+    [tabview selectTabViewItemWithIdentifier:m_deviceTab];
+    ConversionTab* tab = (ConversionTab*) [tabview selectedTabViewItem];
+    
+    [tab setCheckboxes: m_checkboxes];
+    [tab setMenus: m_menus];
 }
 
 @end

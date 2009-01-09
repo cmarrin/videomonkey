@@ -2,13 +2,13 @@
 <archive type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="7.03">
 	<data>
 		<int key="IBDocument.SystemTarget">1050</int>
-		<string key="IBDocument.SystemVersion">9E17</string>
+		<string key="IBDocument.SystemVersion">9F33</string>
 		<string key="IBDocument.InterfaceBuilderVersion">677</string>
-		<string key="IBDocument.AppKitVersion">949.31</string>
+		<string key="IBDocument.AppKitVersion">949.34</string>
 		<string key="IBDocument.HIToolboxVersion">352.00</string>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
-			<integer value="628"/>
+			<integer value="2083"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -1880,7 +1880,7 @@
 												<object class="NSTabViewItem" id="28671661">
 													<string key="NSIdentifier">nomenus</string>
 													<object class="NSView" key="NSView" id="82745317">
-														<nil key="NSNextResponder"/>
+														<reference key="NSNextResponder" ref="32007006"/>
 														<int key="NSvFlags">256</int>
 														<object class="NSMutableArray" key="NSSubviews">
 															<bool key="EncodedWithXMLCoder">YES</bool>
@@ -2117,6 +2117,7 @@
 															</object>
 														</object>
 														<string key="NSFrameSize">{616, 109}</string>
+														<reference key="NSSuperview" ref="32007006"/>
 													</object>
 													<string key="NSLabel">No Menus</string>
 													<reference key="NSColor" ref="153400129"/>
@@ -3080,7 +3081,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 												<object class="NSTabViewItem" id="898172981">
 													<string key="NSIdentifier">dvd</string>
 													<object class="NSView" key="NSView" id="251004873">
-														<reference key="NSNextResponder" ref="32007006"/>
+														<nil key="NSNextResponder"/>
 														<int key="NSvFlags">256</int>
 														<object class="NSMutableArray" key="NSSubviews">
 															<bool key="EncodedWithXMLCoder">YES</bool>
@@ -3471,20 +3472,19 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 															</object>
 														</object>
 														<string key="NSFrameSize">{616, 109}</string>
-														<reference key="NSSuperview" ref="32007006"/>
 													</object>
 													<string key="NSLabel">DVD</string>
 													<reference key="NSColor" ref="153400129"/>
 													<reference key="NSTabView" ref="32007006"/>
 												</object>
 											</object>
-											<reference key="NSSelectedTabViewItem" ref="898172981"/>
+											<reference key="NSSelectedTabViewItem" ref="28671661"/>
 											<reference key="NSFont" ref="176004473"/>
 											<int key="NSTvFlags">6</int>
 											<bool key="NSAllowTruncatedLabels">YES</bool>
 											<object class="NSMutableArray" key="NSSubviews">
 												<bool key="EncodedWithXMLCoder">YES</bool>
-												<reference ref="251004873"/>
+												<reference ref="82745317"/>
 											</object>
 										</object>
 										<object class="NSPopUpButton" id="709474193">
@@ -4210,14 +4210,6 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 					<int key="connectionID">1001</int>
 				</object>
 				<object class="IBConnectionRecord">
-					<object class="IBOutletConnection" key="connection">
-						<string key="label">m_h264Button</string>
-						<reference key="source" ref="28671661"/>
-						<reference key="destination" ref="129613565"/>
-					</object>
-					<int key="connectionID">1013</int>
-				</object>
-				<object class="IBConnectionRecord">
 					<object class="IBActionConnection" key="connection">
 						<string key="label">makeKeyAndOrderFront:</string>
 						<reference key="source" ref="461588446"/>
@@ -4248,22 +4240,6 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 						<reference key="destination" ref="8035353"/>
 					</object>
 					<int key="connectionID">1044</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBOutletConnection" key="connection">
-						<string key="label">m_h264Button</string>
-						<reference key="source" ref="910176919"/>
-						<reference key="destination" ref="1063443774"/>
-					</object>
-					<int key="connectionID">1346</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBOutletConnection" key="connection">
-						<string key="label">m_h264Button</string>
-						<reference key="source" ref="637136577"/>
-						<reference key="destination" ref="918014708"/>
-					</object>
-					<int key="connectionID">1376</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBOutletConnection" key="connection">
@@ -4442,14 +4418,6 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 					<int key="connectionID">2045</int>
 				</object>
 				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">selectTab:</string>
-						<reference key="source" ref="402522846"/>
-						<reference key="destination" ref="668207334"/>
-					</object>
-					<int key="connectionID">2070</int>
-				</object>
-				<object class="IBConnectionRecord">
 					<object class="IBOutletConnection" key="connection">
 						<string key="label">m_deviceButton</string>
 						<reference key="source" ref="402522846"/>
@@ -4464,6 +4432,254 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 						<reference key="destination" ref="972006081"/>
 					</object>
 					<int key="connectionID">2087</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">selectDevice:</string>
+						<reference key="source" ref="402522846"/>
+						<reference key="destination" ref="668207334"/>
+					</object>
+					<int key="connectionID">2088</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">m_button0</string>
+						<reference key="source" ref="28671661"/>
+						<reference key="destination" ref="129613565"/>
+					</object>
+					<int key="connectionID">2089</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">m_button1</string>
+						<reference key="source" ref="28671661"/>
+						<reference key="destination" ref="197603681"/>
+					</object>
+					<int key="connectionID">2090</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">m_slider</string>
+						<reference key="source" ref="28671661"/>
+						<reference key="destination" ref="684576151"/>
+					</object>
+					<int key="connectionID">2091</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">m_sliderLabel1</string>
+						<reference key="source" ref="28671661"/>
+						<reference key="destination" ref="606558712"/>
+					</object>
+					<int key="connectionID">2092</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">m_sliderLabel2</string>
+						<reference key="source" ref="28671661"/>
+						<reference key="destination" ref="231909137"/>
+					</object>
+					<int key="connectionID">2093</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">m_sliderLabel3</string>
+						<reference key="source" ref="28671661"/>
+						<reference key="destination" ref="784845327"/>
+					</object>
+					<int key="connectionID">2094</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">m_sliderLabel4</string>
+						<reference key="source" ref="28671661"/>
+						<reference key="destination" ref="627215646"/>
+					</object>
+					<int key="connectionID">2095</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">m_sliderLabel5</string>
+						<reference key="source" ref="28671661"/>
+						<reference key="destination" ref="396304433"/>
+					</object>
+					<int key="connectionID">2096</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">m_button0</string>
+						<reference key="source" ref="910176919"/>
+						<reference key="destination" ref="1063443774"/>
+					</object>
+					<int key="connectionID">2097</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">m_button1</string>
+						<reference key="source" ref="910176919"/>
+						<reference key="destination" ref="1029604041"/>
+					</object>
+					<int key="connectionID">2098</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">m_radioLabel0</string>
+						<reference key="source" ref="910176919"/>
+						<reference key="destination" ref="573332376"/>
+					</object>
+					<int key="connectionID">2099</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">m_radio</string>
+						<reference key="source" ref="910176919"/>
+						<reference key="destination" ref="625545931"/>
+					</object>
+					<int key="connectionID">2100</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">m_button0</string>
+						<reference key="source" ref="637136577"/>
+						<reference key="destination" ref="918014708"/>
+					</object>
+					<int key="connectionID">2101</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">m_button1</string>
+						<reference key="source" ref="637136577"/>
+						<reference key="destination" ref="750711183"/>
+					</object>
+					<int key="connectionID">2102</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">m_buttonLabel2</string>
+						<reference key="source" ref="637136577"/>
+						<reference key="destination" ref="738635450"/>
+					</object>
+					<int key="connectionID">2103</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">m_button2</string>
+						<reference key="source" ref="637136577"/>
+						<reference key="destination" ref="949339403"/>
+					</object>
+					<int key="connectionID">2104</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">m_buttonLabel3</string>
+						<reference key="source" ref="637136577"/>
+						<reference key="destination" ref="452554051"/>
+					</object>
+					<int key="connectionID">2105</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">m_button3</string>
+						<reference key="source" ref="637136577"/>
+						<reference key="destination" ref="78017057"/>
+					</object>
+					<int key="connectionID">2106</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">m_slider</string>
+						<reference key="source" ref="637136577"/>
+						<reference key="destination" ref="1051590437"/>
+					</object>
+					<int key="connectionID">2107</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">m_sliderLabel2</string>
+						<reference key="source" ref="637136577"/>
+						<reference key="destination" ref="261302924"/>
+					</object>
+					<int key="connectionID">2110</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">m_sliderLabel1</string>
+						<reference key="source" ref="637136577"/>
+						<reference key="destination" ref="446339819"/>
+					</object>
+					<int key="connectionID">2111</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">m_sliderLabel3</string>
+						<reference key="source" ref="637136577"/>
+						<reference key="destination" ref="931962675"/>
+					</object>
+					<int key="connectionID">2112</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">m_sliderLabel4</string>
+						<reference key="source" ref="637136577"/>
+						<reference key="destination" ref="440915017"/>
+					</object>
+					<int key="connectionID">2113</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">m_sliderLabel5</string>
+						<reference key="source" ref="637136577"/>
+						<reference key="destination" ref="676665299"/>
+					</object>
+					<int key="connectionID">2114</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">m_slider</string>
+						<reference key="source" ref="910176919"/>
+						<reference key="destination" ref="915345427"/>
+					</object>
+					<int key="connectionID">2115</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">m_sliderLabel1</string>
+						<reference key="source" ref="910176919"/>
+						<reference key="destination" ref="165682739"/>
+					</object>
+					<int key="connectionID">2116</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">m_sliderLabel2</string>
+						<reference key="source" ref="910176919"/>
+						<reference key="destination" ref="631142509"/>
+					</object>
+					<int key="connectionID">2117</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">m_sliderLabel3</string>
+						<reference key="source" ref="910176919"/>
+						<reference key="destination" ref="904076254"/>
+					</object>
+					<int key="connectionID">2118</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">m_sliderLabel4</string>
+						<reference key="source" ref="910176919"/>
+						<reference key="destination" ref="620519541"/>
+					</object>
+					<int key="connectionID">2119</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">m_sliderLabel5</string>
+						<reference key="source" ref="910176919"/>
+						<reference key="destination" ref="618879185"/>
+					</object>
+					<int key="connectionID">2120</int>
 				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -7790,7 +8006,7 @@ J3MgbW9yZSBpbXBvcnRhbnQuA</string>
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">2087</int>
+			<int key="maxID">2120</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -7856,8 +8072,8 @@ J3MgbW9yZSBpbXBvcnRhbnQuA</string>
 						<bool key="EncodedWithXMLCoder">YES</bool>
 						<object class="NSMutableArray" key="dict.sortedKeys">
 							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>selectDevice:</string>
 							<string>selectPerformance:</string>
-							<string>selectTab:</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>

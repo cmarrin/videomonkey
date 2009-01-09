@@ -79,6 +79,10 @@
 }
 
 -(NSString*) deviceName;
+
+-(void) setCheckboxes: (NSArray*) checkboxes;
+-(void) setMenus: (NSArray*) menus;
+
 @end
 
 #define DT_NO_MENUS @"nomenus"
@@ -101,7 +105,6 @@
     NSMutableArray* m_recipes;
     NSMutableDictionary* m_params;
     NSMutableArray* m_checkboxes;
-    NSMutableArray* m_radios;
     NSMutableArray* m_menus;
 }
 
@@ -165,6 +168,8 @@
 
 +(Checkbox*) checkboxWithElement: (NSXMLElement*) element;
 
+-(NSString*) title;
+
 @end
 
 @interface Menu : NSObject {
@@ -177,6 +182,7 @@
 +(Menu*) menuWithElement: (NSXMLElement*) element;
 -(NSArray*) itemTitles;
 -(NSArray*) itemParams;
+-(NSString*) title;
 
 @end
 
