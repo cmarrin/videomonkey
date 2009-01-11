@@ -110,10 +110,6 @@
 	[super dealloc];
 }
 
-
-
-
-
 	/* -vsCallJSFunction:withParameters: is much like the vsprintf function in that
 	it receives a va_list rather than a variable length argument list.  This
 	is a simple utility for calling JavaScript functions in a JavaScriptContext
@@ -309,39 +305,6 @@
 	}
 }
 
-
-
-	/* -addGlobalStringProperty:withValue: adds a string with the given name to the
-	global object of the JavaScriptContext.  After this call, scripts running in
-	the context will be able to access the string using the name. */
-- (void)addGlobalStringProperty:(NSString *)name withValue:(NSString *)theValue {
-
-		/* convert the name to a JavaScript string */
-	JSStringRef propertyName = [name jsStringValue];
-	if ( propertyName != NULL ) {
-	
-			/* convert the property value into a JavaScript string */
-		JSStringRef propertyValue = [theValue jsStringValue];
-		if ( propertyValue != NULL ) {
-		
-				/* copy the property value into the JavaScript context */
-			JSValueRef valueInContext = JSValueMakeString( m_jsContext, propertyValue );
-			if ( valueInContext != NULL ) {
-			
-					/* add the property into the context's global object */
-				JSObjectSetProperty( m_jsContext, JSContextGetGlobalObject( m_jsContext ),
-						propertyName, valueInContext, kJSPropertyAttributeReadOnly, NULL );
-			}
-				/* done with our reference to the property value */
-			JSStringRelease( propertyValue );
-		}
-			/* done with our reference to the property name */
-		JSStringRelease( propertyName );
-	}
-}
-
-
-
 	/* -addGlobalFunctionProperty:withCallback: adds a function with the given name to the
 	global object of the JavaScriptContext.  After this call, scripts running in
 	the context will be able to call the function using the name. */
@@ -395,21 +358,57 @@
 	return resultString;
 }
 
--(JavaScriptObject*) objectPropertyInObject: (JavaScriptObject*) obj forKey:(NSString*) key
+-(JSValueRef) jsValuePropertyInObject: (JavaScriptObject*) obj forKey:(NSString*) key
 {
     if (!obj)
         obj = m_globalObject;
 	JSStringRef jskey = [key jsStringValue];
     JSValueRef jsValue = JSObjectGetProperty(m_jsContext, [obj jsObject], jskey, NULL);
+    JSStringRelease(jskey);
+    return jsValue;
+}
+
+-(JavaScriptObject*) objectPropertyInObject: (JavaScriptObject*) obj forKey:(NSString*) key
+{
+    JSValueRef jsValue = [self jsValuePropertyInObject: obj forKey: key];
     return [JavaScriptObject javaScriptObject:self withJSObject:JSValueToObject(m_jsContext, jsValue, NULL)];
+}
+
+-(NSString*) stringPropertyInObject: (JavaScriptObject*) obj forKey:(NSString*) key
+{
+    JSValueRef jsValue = [self jsValuePropertyInObject: obj forKey: key];
+    JSStringRef jsstring = JSValueToStringCopy(m_jsContext, jsValue, NULL);
+    NSString* string = [[NSString stringWithJSString:jsstring] retain];
+    JSStringRelease(jsstring);
+    return string;
+}
+
+-(void) setPropertyInObject: (JavaScriptObject*) obj forKey:(NSString*) key toJSValue: (JSValueRef) jsValue
+{
+    if (!obj)
+        obj = m_globalObject;
+        
+	JSStringRef propertyName = [key jsStringValue];
+	if (propertyName != NULL) {
+        JSObjectSetProperty(m_jsContext, [obj jsObject], propertyName, jsValue, kJSPropertyAttributeNone, NULL);        
+		JSStringRelease(propertyName);
+	}
 }
 
 -(void) setPropertyInObject: (JavaScriptObject*) obj forKey:(NSString*) key toString: (NSString*) string
 {
-    if (!obj)
-        obj = m_globalObject;
-	JSStringRef jskey = [key jsStringValue];
-    JSObjectSetProperty(m_jsContext, [obj jsObject], jskey, [string jsStringValue], kJSPropertyAttributeNone, NULL);
+    JSStringRef propertyValue = [string jsStringValue];
+    if (propertyValue != NULL) {
+        JSValueRef valueInContext = JSValueMakeString( m_jsContext, propertyValue);
+        if (valueInContext != NULL)
+            [self setPropertyInObject: obj forKey: key toJSValue: valueInContext];
+        JSStringRelease(propertyValue);
+	}
+}
+
+-(void) setPropertyInObject: (JavaScriptObject*) obj forKey:(NSString*) key toObject: (JavaScriptObject*) object
+{
+    [self setPropertyInObject: obj forKey: key toJSValue: [object jsObject]];
 }
 
 -(void)setStringParam:(NSString*) string forKey:(NSString*)key
@@ -422,6 +421,15 @@
 {
     // FIXME: need to implement
     return nil;
+}
+
+-(void) addParams: (NSDictionary*) params
+{
+    for (id key in params) {
+        NSString* value = [[params objectForKey:key] stringValue];
+        if (value)
+            [self setStringParam:value forKey:key];
+    }
 }
 
 -(JavaScriptObject*) globalObject

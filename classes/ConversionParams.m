@@ -7,6 +7,7 @@
 //
 
 #import "ConversionParams.h"
+#import "JavaScriptContext.h"
 
 static NSString* stringAttribute(NSXMLElement* element, NSString* name)
 {
@@ -45,12 +46,25 @@ static void addParam(NSXMLElement* paramElement, NSMutableDictionary* dictionary
         [dictionary setValue:value forKey:key];
 }
 
+static void addCommand(NSXMLElement* paramElement, NSMutableDictionary* dictionary)
+{
+    NSString* key = stringAttribute(paramElement, @"id");
+    NSString* value = content(paramElement);
+    if ([key length])
+        [dictionary setValue:value forKey:key];
+}
+
 static void parseParams(NSXMLElement* element, NSMutableDictionary* dictionary)
 {
+    // handle <param>
     NSArray* array = [element elementsForName: @"param"];
     for (int i = 0; i < [array count]; ++i)
         addParam((NSXMLElement*) [array objectAtIndex:i], dictionary);
 
+    // handle <command>
+    array = [element elementsForName: @"command"];
+    for (int i = 0; i < [array count]; ++i)
+        addCommand((NSXMLElement*) [array objectAtIndex:i], dictionary);
 }
 
 static NSString* parseScripts(NSXMLElement* element)
@@ -63,23 +77,6 @@ static NSString* parseScripts(NSXMLElement* element)
     }
     
     return script;
-}
-
-static NSArray* parseCommands(NSXMLElement* parent)
-{
-    // extract the commands
-    NSMutableArray* commands = [[NSMutableDictionary alloc] init];
-    NSXMLElement* commandsElement = findChildElement(parent, @"commands");
-    NSArray* commandArray = [commandsElement elementsForName:@"command"];
-    
-    for (int i = 0; i < [commandArray count]; ++i) {
-        NSXMLElement* element = (NSXMLElement*) [commandArray objectAtIndex:i];
-        NSString* id = stringAttribute(element, @"id");
-        if ([id length])
-            [commands setValue: content(element) forKey: id];
-    }
-    
-    return commands;
 }
 
 static void addMenuItem(NSPopUpButton* button, NSString* title, int tag)
@@ -192,6 +189,35 @@ static void setButton(NSButton* button, NSString* title)
         [m_slider setHidden:YES];
 }
 
+-(int) checkboxState:(int) index
+{
+    NSButton* button = (index == 0) ? m_button0 : ((index == 1) ? m_button1 : nil);
+    
+    // return 1 if button is one, 0 if it is off, or -1 if it is hidden
+    return button ? ([button isHidden] ? -1 : (([button state] == NSOnState) ? 1 : 0)) : -1;
+}
+
+-(int) menuState:(int) index
+{
+    if (index == 0 && m_radio)
+        // return -1 if radio is hidden or index of selected item
+        return [m_radio isHidden] ? -1 : [m_radio selectedRow];
+        
+    NSPopUpButton* button = (NSPopUpButton*) ((index == 0) ? m_button2 : ((index == 1) ? m_button3 : nil));
+    
+    // return -1 if button is hidden or index of selected item
+    return button ? ([button isHidden] ? -1 : [button indexOfSelectedItem]) : -1;
+}
+
+-(int) qualityState
+{
+    if (!m_slider)
+        return -1;
+    
+    double ticks = [m_slider numberOfTickMarks] - 1;
+    return (int) ([m_slider doubleValue] * ticks) + 1;
+}
+
 @end
 
 @implementation QualityStop
@@ -218,6 +244,11 @@ static void setButton(NSButton* button, NSString* title)
     return m_title;
 }
 
+-(NSDictionary*) params
+{
+    return m_params;
+}
+
 @end
 
 @implementation PerformanceItem
@@ -241,6 +272,11 @@ static void setButton(NSButton* button, NSString* title)
 -(NSString*) title
 {
     return m_title;
+}
+
+-(NSDictionary*) params
+{
+    return m_params;
 }
 
 @end
@@ -272,8 +308,13 @@ static void setButton(NSButton* button, NSString* title)
     obj->m_checkedParams = [[NSMutableDictionary alloc] init];
     obj->m_uncheckedParams = [[NSMutableDictionary alloc] init];
     
-    parseParams(findChildElement(element, @"checked_params"), obj->m_checkedParams);
-    parseParams(findChildElement(element, @"unchecked_params"), obj->m_uncheckedParams);
+    NSXMLElement* e = findChildElement(element, @"checked_params");
+    parseParams(e, obj->m_checkedParams);
+    obj->m_checkedScript = parseScripts(e);
+
+    e = findChildElement(element, @"unchecked_params");
+    parseParams(e, obj->m_uncheckedParams);
+    obj->m_uncheckedScript = parseScripts(e);
 
     return obj;
 }
@@ -281,6 +322,26 @@ static void setButton(NSButton* button, NSString* title)
 -(NSString*) title
 {
     return m_title;
+}
+
+-(NSDictionary*) uncheckedParams
+{
+    return m_uncheckedParams;
+}
+
+-(NSString*) unchedkedScript
+{
+    return m_uncheckedScript;
+}
+
+-(NSDictionary*) checkedParams
+{
+    return m_checkedParams;
+}
+
+-(NSString*) chedkedScript
+{
+    return m_checkedScript;
 }
 
 @end
@@ -296,6 +357,7 @@ static void setButton(NSButton* button, NSString* title)
     // parse all the items
     obj->m_itemTitles = [[NSMutableArray alloc] init];
     obj->m_itemParams = [[NSMutableArray alloc] init];
+    obj->m_itemScripts = [[NSMutableArray alloc] init];
 
     NSArray* menuItems = [element elementsForName:@"menu_item"];
     for (int i = 0; i < [menuItems count]; ++i) {
@@ -305,6 +367,8 @@ static void setButton(NSButton* button, NSString* title)
         NSMutableDictionary* params = [[NSMutableDictionary alloc] init];
         [obj->m_itemParams addObject: params];
         parseParams(itemElement, params);
+        
+        [obj->m_itemScripts addObject: parseScripts(itemElement)];
     }
 
     return obj;
@@ -318,6 +382,11 @@ static void setButton(NSButton* button, NSString* title)
 -(NSArray*) itemParams
 {
     return m_itemParams;
+}
+
+-(NSArray*) itemScripts
+{
+    return m_itemScripts;
 }
 
 -(NSString*) title
@@ -410,6 +479,9 @@ static void setButton(NSButton* button, NSString* title)
     // handle params
     parseParams(element, m_params);
     
+    // handle scripts
+    m_script = parseScripts(element);
+    
     // handle checkboxes
     [self parseCheckboxes:[element elementsForName:@"checkbox"]];
     
@@ -468,10 +540,45 @@ static void setButton(NSButton* button, NSString* title)
     return [self paramWithDefault: @"ffmpeg_vcodec"];
 }
 
--(NSString*) recipe
+-(NSString*) recipeWithTabView:(NSTabView*) tabview performanceIndex:(int) perfIndex
 {
-    // FIXME: need to return the real recipe
-    return @"abc;def|ghi&jkl";
+    ConversionTab* tab = (ConversionTab*) [tabview selectedTabViewItem];
+
+    // Create JS context
+    JavaScriptContext* context = [[JavaScriptContext alloc] init];
+    
+    // Add params and commands from default device
+    [m_defaultDevice addParamsToJavaScriptContext: context withTab: tab performanceIndex:perfIndex];
+    
+    // Add params and commands from this device
+    [self addParamsToJavaScriptContext: context withTab: tab performanceIndex:perfIndex];
+    
+    // Add params and commands from currently selected checkboxes
+    
+    // Add params and commands from currently selected menu items
+    
+    // Add params and commands from currently selected quality stop
+    
+    // Add params and commands from currently selected performance item
+    
+    // Execute script from default device
+    
+    // Execute script from this device
+    
+    // Execute scripts from currently selected checkboxes
+    
+    // Execute scripts from currently selected menu items
+    
+    // Execute script from currently selected quality stop
+    
+    // Execute script from currently selected performance item
+    
+    // For each recipe item, execute its condition and if it returns true, that is the recipe to use
+    NSString* recipe;
+    
+    // Recursively replace all $xxx or $(xxx) entries in recipe with values from params in JS context
+    
+    return recipe;
 }
 
 -(void) populateTabView:(NSTabView*) tabview
@@ -487,14 +594,49 @@ static void setButton(NSButton* button, NSString* title)
 -(void) populatePerformanceButton: (NSPopUpButton*) button
 {
     [button removeAllItems];
+    NSArray* performanceItems = [self performanceItems];
     
-    for (int i = 0; i < [m_performanceItems count]; ++i) {
-        PerformanceItem* item = (PerformanceItem*) [m_performanceItems objectAtIndex:i];
+    for (int i = 0; i < [performanceItems count]; ++i) {
+        PerformanceItem* item = (PerformanceItem*) [performanceItems objectAtIndex:i];
         if (!item)
             continue;
         
         addMenuItem(button, [item title], i);
     }
+}
+
+-(void) addParamsToJavaScriptContext: (JavaScriptContext*) context withTab: (ConversionTab*) tab performanceIndex:(int) perfIndex
+{
+    // Add global params and commands
+    [context addParams: m_params];
+
+    // Add params and commands from currently selected checkboxes
+    int i = 0;
+    for (Checkbox* checkbox in m_checkboxes) {
+        int state = [tab checkboxState:i];
+        if (state == 0)
+            [context addParams: [checkbox uncheckedParams]];
+        else if (state == 1)
+            [context addParams: [checkbox checkedParams]];
+        i++;
+    }
+    
+    // Add params and commands from currently selected menu items
+    i = 0;
+    for (Menu* menu in m_menus) {
+        int state = [tab menuState:i];
+        if (state >= 0)
+            [context addParams: (NSDictionary*) [[menu itemParams] objectAtIndex:state]];
+        i++;
+    }
+    
+    // Add params and commands from currently selected quality stop
+    int state = [tab qualityState];
+    if (state >= 0)
+        [context addParams: [(QualityStop*) [m_qualityStops objectAtIndex:state] params]];
+    
+    // Add params and commands from currently selected performance item
+    [context addParams: [(PerformanceItem*) [m_performanceItems objectAtIndex:perfIndex] params]];
 }
 
 @end
@@ -658,7 +800,7 @@ static void setButton(NSButton* button, NSString* title)
 
 -(NSString*) recipe
 {
-    return [m_currentDevice recipe];
+    return [m_currentDevice recipeWithTabView:m_conversionParamsTabView performanceIndex:[m_performanceButton indexOfSelectedItem]];
 }
 
 @end

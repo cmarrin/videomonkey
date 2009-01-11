@@ -57,6 +57,8 @@
 #define MAX_MENUS 4
 #define MAX_RADIOS 4
 
+@class JavaScriptContext;
+
 @interface ConversionTab : NSTabViewItem {
     IBOutlet NSButton* m_button0;
     IBOutlet NSTextField* m_buttonLabel0;
@@ -84,6 +86,10 @@
 -(void) setMenus: (NSArray*) menus;
 -(void) setQuality: (NSArray*) qualityStops;
 
+-(int) checkboxState:(int) index;
+-(int) menuState:(int) index;
+-(int) qualityState;
+
 @end
 
 #define DT_NO_MENUS @"nomenus"
@@ -98,13 +104,13 @@
     
     DeviceEntry* m_defaultDevice;
     
-    NSDictionary* m_commands;
     NSString* m_deviceTab;
     
     NSMutableArray* m_qualityStops;
     NSMutableArray* m_performanceItems;
     NSMutableArray* m_recipes;
     NSMutableDictionary* m_params;
+    NSString* m_script;
     NSMutableArray* m_checkboxes;
     NSMutableArray* m_menus;
 }
@@ -119,10 +125,11 @@
 -(NSArray*) performanceItems;
 -(NSString*) fileSuffix;
 -(NSString*) videoFormat;
--(NSString*) recipe;
+-(NSString*) recipeWithTabView:(NSTabView*) tabview performanceIndex:(int) perfIndex;
 
 -(void) populateTabView:(NSTabView*) tabview;
 -(void) populatePerformanceButton:(NSPopUpButton*) tabview;
+-(void) addParamsToJavaScriptContext: (JavaScriptContext*) context withTab: (ConversionTab*) tab performanceIndex:(int) perfIndex;
 
 @end
 
@@ -138,6 +145,7 @@
 +(QualityStop*) qualityStopWithElement: (NSXMLElement*) element;
 
 -(NSString*) title;
+-(NSDictionary*) params;
 
 @end
 
@@ -151,6 +159,7 @@
 +(PerformanceItem*) performanceItemWithElement: (NSXMLElement*) element;
 
 -(NSString*) title;
+-(NSDictionary*) params;
 
 @end
 
@@ -169,12 +178,18 @@
     NSString* m_title;
     
     NSMutableDictionary* m_checkedParams;
+    NSString* m_checkedScript;
     NSMutableDictionary* m_uncheckedParams;
+    NSString* m_uncheckedScript;
 }
 
 +(Checkbox*) checkboxWithElement: (NSXMLElement*) element;
 
 -(NSString*) title;
+-(NSDictionary*) uncheckedParams;
+-(NSString*) unchedkedScript;
+-(NSDictionary*) checkedParams;
+-(NSString*) chedkedScript;
 
 @end
 
@@ -183,11 +198,13 @@
     
     NSMutableArray* m_itemTitles;
     NSMutableArray* m_itemParams;
+    NSMutableArray* m_itemScripts;
 }
 
 +(Menu*) menuWithElement: (NSXMLElement*) element;
 -(NSArray*) itemTitles;
 -(NSArray*) itemParams;
+-(NSArray*) itemScripts;
 -(NSString*) title;
 
 @end
@@ -208,8 +225,6 @@
     DeviceEntry* m_currentDevice;
     NSString* m_currentPerformance;
     BOOL m_isTwoPass;
-
-    ConversionTab* m_currentTabViewItem;
 }
 
 -(IBAction)selectDevice:(id)sender;

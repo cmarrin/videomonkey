@@ -35,11 +35,16 @@
 -(NSNumber *)callNumberFunction:(NSString *)name withParameters:(id)firstParameter,...;
 -(NSString *)callStringFunction:(NSString *)name withParameters:(id)firstParameter,...;
 
--(void)addGlobalStringProperty:(NSString *)name withValue:(NSString *)theValue;
 -(void)addGlobalFunctionProperty:(NSString *)name withCallback:(JSObjectCallAsFunctionCallback)theFunction;
+
+-(void) setPropertyInObject: (JavaScriptObject*) obj forKey:(NSString*) key toString: (NSString*) string;
+-(void) setPropertyInObject: (JavaScriptObject*) obj forKey:(NSString*) key toObject: (JavaScriptObject*) object;
+-(JavaScriptObject*) objectPropertyInObject: (JavaScriptObject*) obj forKey:(NSString*) key;
+-(NSString*) stringPropertyInObject: (JavaScriptObject*) obj forKey:(NSString*) key;
 
 -(void)setStringParam:(NSString*) string forKey:(NSString*)key;
 -(NSString*) stringParamForKey:(NSString*)key;
+-(void) addParams: (NSDictionary*) params;
 
 -(NSString *)evaluateJavaScript:(NSString*)theJavaScript;
 
