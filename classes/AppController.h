@@ -28,7 +28,6 @@ typedef enum { RS_STOPPED, RS_RUNNING, RS_PAUSED } RunStateType;
     NSMutableArray* m_files;
     int m_draggedRow;
     NSString* m_savePath;
-    NSDictionary* m_commands;
     int m_currentEncoding;
     RunStateType m_runState;
     BOOL m_isTerminated;
@@ -41,8 +40,6 @@ typedef enum { RS_STOPPED, RS_RUNNING, RS_PAUSED } RunStateType;
 
 -(IBAction)changeSaveToText:(id)sender;
 -(IBAction)selectSaveToPath:(id)sender;
-
--(NSString*) jobForDevice: (NSString*) name type: (NSString*) type;
 
 -(void) setProgressFor: (Transcoder*) transcoder to: (double) progress;
 -(void) encodeFinished: (Transcoder*) transcoder;

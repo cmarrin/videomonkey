@@ -685,8 +685,63 @@ static void setButton(NSButton* button, NSString* title)
 
 -(NSString*) replaceParams:(NSString*) recipeString withContext: (JavaScriptContext*) context
 {
-    // FIXME: implement
-    return nil;
+    NSString* inputString = recipeString;
+    NSMutableString* outputString = [[NSMutableString alloc] init];
+    BOOL didSubstitute = YES;
+    
+    while (didSubstitute) {
+       didSubstitute = NO;
+       
+        NSArray* array = [inputString componentsSeparatedByString:@"$"];
+        [outputString setString:[array objectAtIndex:0]];
+        
+        BOOL firstTime = YES;
+        BOOL skipNext = NO;
+         
+        for (NSString* s in array) {
+            if (firstTime) {
+                firstTime = NO;
+                continue;
+            }
+                
+            if (skipNext) {
+                [outputString appendString:s];
+                skipNext = NO;
+                continue;
+            }
+                
+            // if s is of 0 length, it means there is a $$ sequence, in which case we output it as a literal $
+            // But we can't do that yet, because we would catch it as a substitution on the next pass. So we leave
+            // it doubled for now
+            if ([s length] == 0) {
+                skipNext = YES;
+                [outputString appendString:@"$$"];
+            }
+            
+            // do param substitution
+            didSubstitute = YES;
+            NSString* substitution = [context stringParamForKey: s];
+            if (substitution)
+                [outputString appendString:substitution];
+        }
+        
+        inputString = outputString;
+    }
+    
+    // All done substituting, now replace $$ with $
+    NSArray* array = [inputString componentsSeparatedByString:@"$$"];
+    [outputString setString:@""];
+    BOOL firstTime = YES;
+    
+    for (NSString* s in array) {
+        if (!firstTime)
+            [outputString appendString:@"$"];
+        else
+            firstTime = NO;
+        [outputString appendString: s];
+    }
+    
+    return outputString;
 }
 
 @end

@@ -425,7 +425,7 @@
 
 -(void) addParams: (NSDictionary*) params
 {
-    for (id key in params) {
+    for (NSString* key in params) {
         NSString* value = [[params objectForKey:key] stringValue];
         if (value)
             [self setStringParam:value forKey:key];

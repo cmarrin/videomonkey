@@ -19,9 +19,6 @@
 {
     if (self = [super init]) {
         m_files = [[NSMutableArray alloc] init];
-        
-        m_commands = [NSDictionary dictionaryWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"commands" ofType:@"plist"]];
-        [m_commands retain];
     }
     return self;
 }
@@ -50,22 +47,6 @@
 - (int)numberOfRowsInTableView: (NSTableView *)aTableView
 {
     return [m_files count];
-}
-
--(NSString*) valueForDevice:(NSString*) device withKey:(NSString*) key
-{
-    NSString* value = [[[m_commands valueForKey: @"devices"] valueForKey: device] valueForKey: key];
-    return (!value || [value length] == 0) ? [[[m_commands valueForKey: @"devices"] valueForKey: @"default"] valueForKey: key] : value;
-}
-
--(NSString*) suffixForDevice: (NSString*) device
-{
-    return [self valueForDevice:device withKey:@"file-suffix"];
-}
-
--(NSString*) videoFormatForDevice: (NSString*) device
-{
-    return [self valueForDevice:device withKey:@"video-format"];
 }
 
 static NSString* formatDuration(double duration)
@@ -329,75 +310,6 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
         [m_saveToPathTextField setStringValue:m_savePath];
         [self setOutputFileName];
     }
-}
-
-static NSString* _validateCommandString(NSString* s)
-{
-    // Make sure that a single space surrounds ';', '|' and '&' characters
-    s = [s stringByReplacingOccurrencesOfString:@";" withString:@" ; "];
-    s = [s stringByReplacingOccurrencesOfString:@"|" withString:@" | "];
-    s = [s stringByReplacingOccurrencesOfString:@"&" withString:@" & "];
-    
-    // Make sure there are no multiple adjascent spaces
-    while (1) {
-        int sizeBefore = [s length];
-        s = [s stringByReplacingOccurrencesOfString:@"  " withString:@" "];
-        int sizeAfter = [s length];
-        if (sizeBefore == sizeAfter)
-            break;
-    }
-    
-    // Make sure the first or last thing in the string is not ';', '|' or '&', or space
-    while(1) {
-        int sizeBefore = [s length];
-        s = [s stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
-        s = [s stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@";|&"]];
-        int sizeAfter = [s length];
-        if (sizeBefore == sizeAfter)
-            break;
-    }
-    
-    return s;
-}
-
--(NSString*) jobForDevice: (NSString*) name type: (NSString*) type
-{
-    NSDictionary* commands = [m_commands valueForKey: @"commands"];
-    NSString* job = _validateCommandString([[[m_commands valueForKey: @"devices"] valueForKey: name] valueForKey: type]);
-    if ([job length] == 0)
-        return nil;
-        
-    // job is a list of strings separated by spaces. If a string starts with '!' it is replaced by an
-    // entry from commands. Otherwise it is output as is. '!' substitution can be nested so, repeat until
-    // no more substitution is found
-    NSMutableString* command = [[NSMutableString alloc] init];
-    [command setString: job];
-    BOOL foundSubs = YES;
-    
-    while (foundSubs) {
-        NSArray* joblist = [command componentsSeparatedByString:@" "];
-        NSEnumerator* e = [joblist objectEnumerator];
-        [command setString: @""];
-        
-        NSString* s;
-        foundSubs = NO;
-        while ((s = (NSString*) [e nextObject])) {
-            if ([s length] > 0) {
-                if ([s characterAtIndex:0] == '!') {
-                    foundSubs = YES;
-                    NSString* replacement = [commands valueForKey: [s substringFromIndex:1]];
-                    if (replacement)
-                        [command appendString: replacement];
-                }
-                else
-                    [command appendString: s];
-                    
-                [command appendString: @" "];
-            }
-        }
-    }
-    
-    return  _validateCommandString(command);
 }
 
 -(void) setProgressFor: (Transcoder*) transcoder to: (double) progress

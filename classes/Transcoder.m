@@ -433,14 +433,8 @@ static NSImage* getFileStatusImage(FileStatus status)
     // make sure the tmp tmp files do not exist
     [[NSFileManager defaultManager] removeFileAtPath:m_tempAudioFileName handler:nil];
     [[NSFileManager defaultManager] removeFileAtPath:m_passLogFileName handler:nil];
-
-    // assemble command
-    // Special case is when we have a quicktime movie and it has a video format of WMV3
-    BOOL useQT = [self isInputQuicktime] && [[self inputVideoFormat] isEqualToString:VC_WMV3];
-    NSString* jobType = [NSString stringWithFormat:@"job-%@-%@", useQT ? @"quicktime" : @"normal", [self hasInputAudio] ? @"av" : @"v"];
-    if ([[m_appController conversionParams] isTwoPass])
-        jobType = [NSString stringWithFormat:@"%@-2pass", jobType];
-        
+    
+    // get recipe
     NSString* recipe = [[m_appController conversionParams] recipe];
 
     if ([recipe length] == 0) {
