@@ -335,37 +335,26 @@
 	JavaScriptCore context and returns the result as a string.  If an error
 	occurs or the result returned by the script cannot be converted into a 
 	string, then nil is returned. */
-- (NSString *)evaluateJavaScript:(NSString *)theJavaScript {
+- (NSString *) evaluateJavaScript:(NSString *)theJavaScript {
 
 	NSString *resultString = nil;
 	
-		/* coerce the contents of the script edit text field in the window into
-		a string inside of the JavaScript context. */
+    // coerce the contents of the script edit text field in the window into a string inside of the JavaScript context.
 	JSStringRef scriptJS = [theJavaScript jsStringValue];
-	if ( scriptJS != NULL ) {
-		
-			/* evaluate the string as a JavaScript inside of the JavaScript context. */
+	if (scriptJS != NULL) {
+        /* evaluate the string as a JavaScript inside of the JavaScript context. */
         JSValueRef error = JSValueMakeNull(m_jsContext);
 
 		JSValueRef result = JSEvaluateScript( m_jsContext, scriptJS, NULL, NULL, 0, &error );
-        if (!JSValueIsNull(m_jsContext, error)) {
-            if (JSValueIsString(m_jsContext, error))
-                printf("string\n");
-            else if (JSValueIsObject(m_jsContext, error))
-                printf("object\n");
-                
-            NSString* errorString = [NSString stringWithJSValue: error fromContext: m_jsContext];
-            printf("errorstring\n");
-        }
         
-		if ( result != NULL) {
-		
-				/* attempt to convert the result into a NSString */
+        if (!JSValueIsNull(m_jsContext, error)) {                
+            NSString* errorString = [NSString stringWithJSValue: error fromContext: m_jsContext];
+            NSRunAlertPanel(@"JavaScript error in evaluation", errorString, nil, nil, nil);
+        }
+        else if ( result != NULL)
 			resultString = [NSString stringWithJSValue:result fromContext: m_jsContext];
-					
-		}
-			/* done with our reference to the script string */
-		JSStringRelease( scriptJS );
+
+		JSStringRelease(scriptJS);
 	}
 	return resultString;
 }
@@ -375,7 +364,18 @@
     if (!obj)
         obj = m_globalObject;
 	JSStringRef jskey = [key jsStringValue];
-    JSValueRef jsValue = JSObjectGetProperty(m_jsContext, [obj jsObject], jskey, NULL);
+    JSValueRef error = JSValueMakeNull(m_jsContext);
+    
+    JSValueRef jsValue = JSObjectGetProperty(m_jsContext, [obj jsObject], jskey, &error);
+
+    if (!JSValueIsNull(m_jsContext, error)) {
+        NSString* errorString = [NSString stringWithJSValue: error fromContext: m_jsContext];
+        NSRunAlertPanel(@"JavaScript error in property get", errorString, nil, nil, nil);
+        jsValue = JSValueMakeUndefined(m_jsContext);
+    }
+    else if (JSValueIsUndefined(m_jsContext, jsValue))
+        NSRunAlertPanel(@"JavaScript error in property get", [NSString stringWithFormat:@"Property '%@' does not exist", key], nil, nil, nil);
+
     JSStringRelease(jskey);
     return jsValue;
 }
@@ -383,12 +383,16 @@
 -(JavaScriptObject*) objectPropertyInObject: (JavaScriptObject*) obj forKey:(NSString*) key
 {
     JSValueRef jsValue = [self jsValuePropertyInObject: obj forKey: key];
+    if (JSValueIsUndefined(m_jsContext, jsValue))
+        return nil;
     return [JavaScriptObject javaScriptObject:self withJSObject:JSValueToObject(m_jsContext, jsValue, NULL)];
 }
 
 -(NSString*) stringPropertyInObject: (JavaScriptObject*) obj forKey:(NSString*) key
 {
     JSValueRef jsValue = [self jsValuePropertyInObject: obj forKey: key];
+    if (JSValueIsUndefined(m_jsContext, jsValue))
+        return nil;
     JSStringRef jsstring = JSValueToStringCopy(m_jsContext, jsValue, NULL);
     NSString* string = [[NSString stringWithJSString:jsstring] retain];
     JSStringRelease(jsstring);
