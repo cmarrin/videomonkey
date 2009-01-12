@@ -249,6 +249,11 @@ static void setButton(NSButton* button, NSString* title)
     return m_params;
 }
 
+-(NSString*) script
+{
+    return m_script;
+}
+
 @end
 
 @implementation PerformanceItem
@@ -279,6 +284,11 @@ static void setButton(NSButton* button, NSString* title)
     return m_params;
 }
 
+-(NSString*) script
+{
+    return m_script;
+}
+
 @end
 
 @implementation Recipe
@@ -286,14 +296,18 @@ static void setButton(NSButton* button, NSString* title)
 +(Recipe*) recipeWithElement: (NSXMLElement*) element
 {
     Recipe* obj = [[Recipe alloc] init];
-
     obj->m_recipe = [NSString stringWithString:content(element)];
-    
-    obj->m_isQuicktime = boolAttribute(element, @"is_quicktime");
-    obj->m_hasAudio = boolAttribute(element, @"has_audio");
-    obj->m_is2Pass = boolAttribute(element, @"is_2pass");
-
     return obj;
+}
+
+-(NSString*) recipe
+{
+    return m_recipe;
+}
+
+-(NSString*) condition
+{
+    return m_condition;
 }
 
 @end
@@ -329,7 +343,7 @@ static void setButton(NSButton* button, NSString* title)
     return m_uncheckedParams;
 }
 
--(NSString*) unchedkedScript
+-(NSString*) uncheckedScript
 {
     return m_uncheckedScript;
 }
@@ -339,7 +353,7 @@ static void setButton(NSButton* button, NSString* title)
     return m_checkedParams;
 }
 
--(NSString*) chedkedScript
+-(NSString*) checkedScript
 {
     return m_checkedScript;
 }
@@ -553,32 +567,28 @@ static void setButton(NSButton* button, NSString* title)
     // Add params and commands from this device
     [self addParamsToJavaScriptContext: context withTab: tab performanceIndex:perfIndex];
     
-    // Add params and commands from currently selected checkboxes
-    
-    // Add params and commands from currently selected menu items
-    
-    // Add params and commands from currently selected quality stop
-    
-    // Add params and commands from currently selected performance item
-    
     // Execute script from default device
+    [m_defaultDevice evaluateScript: context withTab: tab performanceIndex:perfIndex];
     
     // Execute script from this device
-    
-    // Execute scripts from currently selected checkboxes
-    
-    // Execute scripts from currently selected menu items
-    
-    // Execute script from currently selected quality stop
-    
-    // Execute script from currently selected performance item
+    [self evaluateScript: context withTab: tab performanceIndex:perfIndex];
     
     // For each recipe item, execute its condition and if it returns true, that is the recipe to use
-    NSString* recipe;
+    NSString* recipeString;
+    
+    for (Recipe* recipe in m_recipes) {
+        NSString* returnString = [context evaluateJavaScript:[recipe condition]];
+        if ([returnString boolValue]) {
+            recipeString = [recipe recipe];
+            break;
+        }
+    }
     
     // Recursively replace all $xxx or $(xxx) entries in recipe with values from params in JS context
+    if (recipeString)
+        return [self replaceParams:recipeString withContext: context];
     
-    return recipe;
+    return nil;
 }
 
 -(void) populateTabView:(NSTabView*) tabview
@@ -637,6 +647,46 @@ static void setButton(NSButton* button, NSString* title)
     
     // Add params and commands from currently selected performance item
     [context addParams: [(PerformanceItem*) [m_performanceItems objectAtIndex:perfIndex] params]];
+}
+
+-(void) evaluateScript: (JavaScriptContext*) context withTab: (ConversionTab*) tab performanceIndex:(int) perfIndex
+{
+    // Evaluate global script
+    [context evaluateJavaScript:m_script];
+
+    // Evaluate scripts from currently selected checkboxes
+    int i = 0;
+    for (Checkbox* checkbox in m_checkboxes) {
+        int state = [tab checkboxState:i];
+        if (state == 0)
+            [context evaluateJavaScript: [checkbox uncheckedScript]];
+        else if (state == 1)
+            [context evaluateJavaScript: [checkbox checkedScript]];
+        i++;
+    }
+    
+    // Evaluate scripts from currently selected menu items
+    i = 0;
+    for (Menu* menu in m_menus) {
+        int state = [tab menuState:i];
+        if (state >= 0)
+            [context evaluateJavaScript: (NSString*)[[menu itemScripts] objectAtIndex:state]];
+        i++;
+    }
+    
+    // Evaluate scripts from currently selected quality stop
+    int state = [tab qualityState];
+    if (state >= 0)
+        [context evaluateJavaScript: [(QualityStop*) [m_qualityStops objectAtIndex:state] script]];
+    
+    // Evaluate scripts from currently selected performance item
+    [context evaluateJavaScript: [(PerformanceItem*) [m_performanceItems objectAtIndex:perfIndex] script]];
+}
+
+-(NSString*) replaceParams:(NSString*) recipeString withContext: (JavaScriptContext*) context
+{
+    // FIXME: implement
+    return nil;
 }
 
 @end

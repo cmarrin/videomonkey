@@ -126,10 +126,12 @@
 -(NSString*) fileSuffix;
 -(NSString*) videoFormat;
 -(NSString*) recipeWithTabView:(NSTabView*) tabview performanceIndex:(int) perfIndex;
+-(NSString*) replaceParams:(NSString*) recipeString withContext: (JavaScriptContext*) context;
 
 -(void) populateTabView:(NSTabView*) tabview;
 -(void) populatePerformanceButton:(NSPopUpButton*) tabview;
 -(void) addParamsToJavaScriptContext: (JavaScriptContext*) context withTab: (ConversionTab*) tab performanceIndex:(int) perfIndex;
+-(void) evaluateScript: (JavaScriptContext*) context withTab: (ConversionTab*) tab performanceIndex:(int) perfIndex;
 
 @end
 
@@ -146,6 +148,7 @@
 
 -(NSString*) title;
 -(NSDictionary*) params;
+-(NSString*) script;
 
 @end
 
@@ -160,17 +163,19 @@
 
 -(NSString*) title;
 -(NSDictionary*) params;
+-(NSString*) script;
 
 @end
 
 @interface Recipe : NSObject {
     NSString* m_recipe;
-    
-    // FIXME: Eventually this needs to be a more generic match function
-    BOOL m_isQuicktime, m_hasAudio, m_is2Pass;
+    NSString* m_condition;
 }
 
 +(Recipe*) recipeWithElement: (NSXMLElement*) element;
+
+-(NSString*) recipe;
+-(NSString*) condition;
 
 @end
 
@@ -187,9 +192,9 @@
 
 -(NSString*) title;
 -(NSDictionary*) uncheckedParams;
--(NSString*) unchedkedScript;
+-(NSString*) uncheckedScript;
 -(NSDictionary*) checkedParams;
--(NSString*) chedkedScript;
+-(NSString*) checkedScript;
 
 @end
 
