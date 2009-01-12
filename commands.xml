@@ -44,7 +44,7 @@
         <command id="ffmpeg_options"> -vcodec $ffmpeg_vcodec -b $bitrate -s $ffmpeg_output_video_size  </command>
         <command id="quicktime_to_audio_file"> $qt_export $input_file --video=0 $tmp_audio_file </command>
         <command id="correct_yuv"> $yuvcorrect -v 0 -Y LUMINANCE_1.20_0_255_0_255 -Y CHROMINANCE_0_1.04_128_1.04_128_0_255 </command>
-        <command id="quicktime_to_yuv"> $movtoy4m -f -w $input_video_width -h $input_video_height -F $framerate -a $aspect_ratio $input_file | !correct_yuv </command>
+        <command id="quicktime_to_yuv"> $movtoy4m -f -w $input_video_width -h $input_video_height -F $framerate -a $aspect_ratio $input_file | $correct_yuv </command>
         <command id="yuv_to_ffmpeg_av"> $ffmpeg -y -i - -i $tmp_audio_file </command>
         <command id="yuv_to_ffmpeg_v"> $ffmpeg -y -i - </command>
         <command id="ffmpeg_normal"> $ffmpeg -y -i $input_file </command>
@@ -156,28 +156,28 @@
         <param id="video_suffix" value="mp4" />
         <recipes>
             <recipe condition="all(!params.specialQT, !params.hasAudio, !params.is2Pass)">
-                !normal_pass0
+                $normal_pass0
             </recipe>
             <recipe condition="all(!params.specialQT, !params.hasAudio, params.is2Pass)">
-                !normal_pass1 ; !normal_pass2
+                $normal_pass1 ; $normal_pass2
             </recipe>
             <recipe condition="all(!params.specialQT, params.hasAudio, !params.is2Pass)">
-                !normal_pass0
+                $normal_pass0
             </recipe>
             <recipe condition="all(!params.specialQT, params.hasAudio, params.is2Pass)">
-                !normal_pass1 ; !normal_pass2
+                $normal_pass1 ; $normal_pass2
             </recipe>
             <recipe condition="all(params.specialQT, !params.hasAudio, !params.is2Pass)">
-                !quicktime_v_pass0
+                $quicktime_v_pass0
             </recipe>
             <recipe condition="all(params.specialQT, !params.hasAudio, params.is2Pass)">
-                !quicktime_v_pass1 ; !quicktime_v_pass2
+                $quicktime_v_pass1 ; $quicktime_v_pass2
             </recipe>
             <recipe condition="all(params.specialQT, params.hasAudio, !params.is2Pass)">
-                !quicktime_to_audio_file ; !quicktime_av_pass0
+                $quicktime_to_audio_file ; $quicktime_av_pass0
             </recipe>
             <recipe condition="all(params.specialQT, params.hasAudio, params.is2Pass)">
-                !quicktime_to_audio_file ; !quicktime_av_pass1 ; !quicktime_av_pass2
+                $quicktime_to_audio_file ; $quicktime_av_pass1 ; $quicktime_av_pass2
             </recipe>
         </recipes>
     </default_device>

@@ -97,7 +97,7 @@
         m_globalObject = [JavaScriptObject javaScriptObject: self withJSObject:JSContextGetGlobalObject(m_jsContext)];
     
         // add param object
-        [self evaluateJavaScript:@"param = { }"];
+        [self evaluateJavaScript:@"params = { }"];
     }
 	return self;
 }
@@ -345,7 +345,19 @@
 	if ( scriptJS != NULL ) {
 		
 			/* evaluate the string as a JavaScript inside of the JavaScript context. */
-		JSValueRef result = JSEvaluateScript( m_jsContext, scriptJS, NULL, NULL, 0, NULL );
+        JSValueRef error = JSValueMakeNull(m_jsContext);
+
+		JSValueRef result = JSEvaluateScript( m_jsContext, scriptJS, NULL, NULL, 0, &error );
+        if (!JSValueIsNull(m_jsContext, error)) {
+            if (JSValueIsString(m_jsContext, error))
+                printf("string\n");
+            else if (JSValueIsObject(m_jsContext, error))
+                printf("object\n");
+                
+            NSString* errorString = [NSString stringWithJSValue: error fromContext: m_jsContext];
+            printf("errorstring\n");
+        }
+        
 		if ( result != NULL) {
 		
 				/* attempt to convert the result into a NSString */
@@ -419,14 +431,14 @@
 
 -(NSString*) stringParamForKey:(NSString*)key
 {
-    // FIXME: need to implement
-    return nil;
+    JavaScriptObject* params = [self objectPropertyInObject: nil forKey: @"params"];
+    return [self stringPropertyInObject:params forKey:key];
 }
 
 -(void) addParams: (NSDictionary*) params
 {
     for (NSString* key in params) {
-        NSString* value = [[params objectForKey:key] stringValue];
+        NSString* value = (NSString*) [params objectForKey:key];
         if (value)
             [self setStringParam:value forKey:key];
     }

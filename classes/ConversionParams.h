@@ -123,6 +123,7 @@
 -(NSString*) id;
 -(NSArray*) qualityStops;
 -(NSArray*) performanceItems;
+-(NSArray*) recipes;
 -(NSString*) fileSuffix;
 -(NSString*) videoFormat;
 -(NSString*) recipeWithTabView:(NSTabView*) tabview performanceIndex:(int) perfIndex;

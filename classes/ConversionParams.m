@@ -27,9 +27,10 @@ static BOOL boolAttribute(NSXMLElement* element, NSString* name)
 
 static NSString* content(NSXMLElement* element)
 {
-    // It seems that the content is always the first child and that leading and trailing whitespace is removed.
-    // Let's assume that for now
-    return [element childCount] ? [[element childAtIndex:0] stringValue] : @"";
+    if ([element childCount] == 0)
+        return @"";
+    NSString* string = [[element childAtIndex:0] stringValue];
+    return [[string stringByTrimmingCharactersInSet: [NSCharacterSet whitespaceAndNewlineCharacterSet]] retain];
 }
 
 static NSXMLElement* findChildElement(NSXMLElement* element, NSString* name)
@@ -215,7 +216,12 @@ static void setButton(NSButton* button, NSString* title)
         return -1;
     
     double ticks = [m_slider numberOfTickMarks] - 1;
-    return (int) ([m_slider doubleValue] * ticks) + 1;
+    double value = [m_slider doubleValue];
+    if (value < 0)
+        value = 0;
+    else if (value > 1)
+        value = 1;
+    return (int) (value * ticks) + 1;
 }
 
 @end
@@ -297,6 +303,7 @@ static void setButton(NSButton* button, NSString* title)
 {
     Recipe* obj = [[Recipe alloc] init];
     obj->m_recipe = [NSString stringWithString:content(element)];
+    obj->m_condition = [NSString stringWithString:stringAttribute(element, @"condition")];
     return obj;
 }
 
@@ -538,6 +545,11 @@ static void setButton(NSButton* button, NSString* title)
     return [m_performanceItems count] ? m_performanceItems : [m_defaultDevice performanceItems];
 }
 
+-(NSArray*) recipes
+{
+    return [m_recipes count] ? m_recipes : [m_defaultDevice recipes];
+}
+
 -(NSString*) paramWithDefault:(NSString*) key
 {
     NSString* v = [m_params objectForKey:key];
@@ -576,7 +588,7 @@ static void setButton(NSButton* button, NSString* title)
     // For each recipe item, execute its condition and if it returns true, that is the recipe to use
     NSString* recipeString;
     
-    for (Recipe* recipe in m_recipes) {
+    for (Recipe* recipe in [self recipes]) {
         NSString* returnString = [context evaluateJavaScript:[recipe condition]];
         if ([returnString boolValue]) {
             recipeString = [recipe recipe];
@@ -642,11 +654,12 @@ static void setButton(NSButton* button, NSString* title)
     
     // Add params and commands from currently selected quality stop
     int state = [tab qualityState];
-    if (state >= 0)
+    if (state >= 0 && [m_qualityStops count] > state)
         [context addParams: [(QualityStop*) [m_qualityStops objectAtIndex:state] params]];
     
     // Add params and commands from currently selected performance item
-    [context addParams: [(PerformanceItem*) [m_performanceItems objectAtIndex:perfIndex] params]];
+    if (perfIndex >= 0 && [m_performanceItems count] > perfIndex)
+        [context addParams: [(PerformanceItem*) [m_performanceItems objectAtIndex:perfIndex] params]];
 }
 
 -(void) evaluateScript: (JavaScriptContext*) context withTab: (ConversionTab*) tab performanceIndex:(int) perfIndex
@@ -676,11 +689,12 @@ static void setButton(NSButton* button, NSString* title)
     
     // Evaluate scripts from currently selected quality stop
     int state = [tab qualityState];
-    if (state >= 0)
+    if (state >= 0 && [m_qualityStops count] > state)
         [context evaluateJavaScript: [(QualityStop*) [m_qualityStops objectAtIndex:state] script]];
     
     // Evaluate scripts from currently selected performance item
-    [context evaluateJavaScript: [(PerformanceItem*) [m_performanceItems objectAtIndex:perfIndex] script]];
+    if (perfIndex >= 0 && [m_performanceItems count] > perfIndex)
+        [context evaluateJavaScript: [(PerformanceItem*) [m_performanceItems objectAtIndex:perfIndex] script]];
 }
 
 -(NSString*) replaceParams:(NSString*) recipeString withContext: (JavaScriptContext*) context
@@ -718,11 +732,33 @@ static void setButton(NSButton* button, NSString* title)
                 [outputString appendString:@"$$"];
             }
             
+            // pick out the param name
+            NSString* param;
+            NSString* other;
+            
+            if ([s characterAtIndex:0] == '(') {
+                // pick out param between parens
+                // FIXME: implement this
+            }
+            else {
+                // pick out param to next space
+                NSRange range = [s rangeOfString: @" "];
+                if (range.location == NSNotFound) {
+                    param = s;
+                    other = @"";
+                }
+                else {
+                    param = [s substringToIndex:range.location];
+                    other = [s substringFromIndex:range.location];
+                }
+            }
+            
             // do param substitution
             didSubstitute = YES;
-            NSString* substitution = [context stringParamForKey: s];
+            NSString* substitution = [context stringParamForKey: param];
             if (substitution)
                 [outputString appendString:substitution];
+            [outputString appendString:other];
         }
         
         inputString = outputString;

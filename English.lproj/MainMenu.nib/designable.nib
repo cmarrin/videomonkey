@@ -1956,9 +1956,9 @@
 																						<int key="NSfFlags">16</int>
 																					</object>
 																					<reference key="NSControlView" ref="684576151"/>
-																					<double key="NSMaxValue">5.000000e+00</double>
-																					<double key="NSMinValue">1.000000e+00</double>
-																					<double key="NSValue">2.000000e+00</double>
+																					<double key="NSMaxValue">1.000000e+00</double>
+																					<double key="NSMinValue">0.000000e+00</double>
+																					<double key="NSValue">5.000000e-01</double>
 																					<double key="NSAltIncValue">0.000000e+00</double>
 																					<int key="NSNumberOfTickMarks">5</int>
 																					<int key="NSTickMarkPosition">0</int>
@@ -2534,7 +2534,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 																					<reference key="NSControlView" ref="915345427"/>
 																					<double key="NSMaxValue">1.000000e+00</double>
 																					<double key="NSMinValue">0.000000e+00</double>
-																					<double key="NSValue">1.000000e+00</double>
+																					<double key="NSValue">5.000000e-01</double>
 																					<double key="NSAltIncValue">0.000000e+00</double>
 																					<int key="NSNumberOfTickMarks">5</int>
 																					<int key="NSTickMarkPosition">0</int>
@@ -2924,9 +2924,9 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 																					</object>
 																					<reference key="NSSupport" ref="1010512883"/>
 																					<reference key="NSControlView" ref="1051590437"/>
-																					<double key="NSMaxValue">5.000000e+00</double>
-																					<double key="NSMinValue">1.000000e+00</double>
-																					<double key="NSValue">2.000000e+00</double>
+																					<double key="NSMaxValue">1.000000e+00</double>
+																					<double key="NSMinValue">0.000000e+00</double>
+																					<double key="NSValue">5.000000e-01</double>
 																					<double key="NSAltIncValue">0.000000e+00</double>
 																					<int key="NSNumberOfTickMarks">5</int>
 																					<int key="NSTickMarkPosition">0</int>
