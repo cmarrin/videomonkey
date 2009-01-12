@@ -741,7 +741,16 @@ static void setButton(NSButton* button, NSString* title)
             
             if ([s characterAtIndex:0] == '(') {
                 // pick out param between parens
-                // FIXME: implement this
+                NSRange range = [s rangeOfString: @")"];
+                if (range.location == NSNotFound) {
+                    // invalid
+                    param = @"";
+                    other = @"";
+                }
+                else {
+                    param = [[s substringFromIndex:1] substringToIndex:range.location-1];
+                    other = [s substringFromIndex:range.location+1];
+                }
             }
             else {
                 // pick out param to next space

@@ -468,12 +468,6 @@ static NSImage* getFileStatusImage(FileStatus status)
     [env setValue: vpre forKey: @"ffmpeg_vpre"];
     [env setValue: vpre_pass1 forKey: @"ffmpeg_vpre_pass1"];
     
-    NSString* videoSize = [NSString stringWithFormat: @"%dx%d", [self inputVideoWidthDiv16], [self inputVideoHeightDiv16]];
-    [env setValue: videoSize forKey: @"ffmpeg_output_video_size"];
-
-    NSString* aspectRatio = [NSString stringWithFormat: @"%d:%d", [self inputVideoWidth], [self inputVideoHeight]];
-    [env setValue: aspectRatio forKey: @"aspect_ratio"];
-
     // get recipe
     NSString* recipe = [[m_appController conversionParams] recipeWithEnvironment: env];
 
