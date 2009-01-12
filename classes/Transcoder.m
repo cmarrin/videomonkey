@@ -420,15 +420,22 @@ static NSImage* getFileStatusImage(FileStatus status)
     [m_progressIndicator setDoubleValue: m_progress];
     
     // open the log file
-    if (logFile) {
-        [logFile closeFile];
-        [logFile release];
+    if (m_logFile) {
+        [m_logFile closeFile];
+        [m_logFile release];
     }
+    
+    // Make sure path exists
+    NSString* logFilePath = [LOG_FILE_PATH stringByStandardizingPath];
+    if (![[NSFileManager defaultManager] fileExistsAtPath: logFilePath])
+        [[NSFileManager defaultManager] createDirectoryAtPath:logFilePath withIntermediateDirectories:YES attributes:nil error: nil];
         
-    NSString* logFileName = [NSString stringWithFormat:@"~/Library/Application Support/VideoMonkey/Logs/%@-%@.log",
-                                [self outputFileName], [[NSDate date] description]];
+    NSString* logFileName = [NSString stringWithFormat:@"%@/%@-%@.log",
+                                logFilePath, [[self outputFileName] lastPathComponent], [[NSDate date] description]];
+    [[NSFileManager defaultManager] removeFileAtPath:logFileName handler:nil];
+    [[NSFileManager defaultManager] createFileAtPath:logFileName contents:nil attributes:nil];
                                 
-    logFile = [NSFileHandle fileHandleForWritingAtPath:logFileName];
+    m_logFile = [[NSFileHandle fileHandleForWritingAtPath:logFileName] retain];
     
     // make sure the tmp tmp files do not exist
     [[NSFileManager defaultManager] removeFileAtPath:m_tempAudioFileName handler:nil];
@@ -508,15 +515,19 @@ static NSImage* getFileStatusImage(FileStatus status)
 
         // make a Command object for this command
         [m_commands addObject:[[Command alloc] initWithTranscoder:self command:s 
-                            outputType:type finishId:[[NSNumber numberWithInt:commandId] stringValue]]];
+                            outputType:type identifier:[[NSNumber numberWithInt:commandId] stringValue]]];
     }
     
     // execute each command in turn
     enumerator = [m_commands objectEnumerator];
     Command* command = [enumerator nextObject];
+    m_isLastCommandRunning = NO;
     
     while(command) {
         Command* nextCommand = [enumerator nextObject];
+        
+        if ([[enumerator allObjects] count] == 0)
+            m_isLastCommandRunning = YES;
         [command execute: nextCommand];
         command = nextCommand;
     }
@@ -557,9 +568,9 @@ static NSImage* getFileStatusImage(FileStatus status)
     m_progress = (status == 0) ? 1 : 0;
     [m_progressIndicator setDoubleValue: m_progress];
     [m_appController encodeFinished:self];
-    [logFile closeFile];
-    [logFile release];
-    logFile = nil;
+    [m_logFile closeFile];
+    [m_logFile release];
+    m_logFile = nil;
     
     // toss output file is not successful
     if (m_fileStatus != FS_SUCCEEDED)
@@ -588,7 +599,7 @@ static NSImage* getFileStatusImage(FileStatus status)
 
 -(void) commandFinished: (Command*) command status: (int) status
 {
-    if ([(NSString*) [command finishId] isEqualToString:@"last"])
+    if (m_isLastCommandRunning)
         [self finish: status];
 }
 
@@ -602,8 +613,8 @@ static NSImage* getFileStatusImage(FileStatus status)
     fprintf(stderr, [s UTF8String]);
     
     // Output to log file
-    if (logFile)
-        [logFile writeData:[s dataUsingEncoding:NSUTF8StringEncoding]];
+    if (m_logFile)
+        [m_logFile writeData:[s dataUsingEncoding:NSUTF8StringEncoding]];
 }
 
 @end

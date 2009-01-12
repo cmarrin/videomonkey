@@ -11,7 +11,7 @@
 
 @implementation Command
 
--(Transcoder*) initWithTranscoder: (Transcoder*) transcoder command: (NSString*) command outputType: (CommandOutputType) type finishId: (id) id
+-(Transcoder*) initWithTranscoder: (Transcoder*) transcoder command: (NSString*) command outputType: (CommandOutputType) type identifier: (id) id
 {
     self = [super init];
     if (self) {
@@ -100,11 +100,6 @@
     return m_outputType == OT_WAIT;
 }
 
--(id) finishId
-{
-    return m_id;
-}
-
 -(void) processFinishEncode: (NSNotification*) note
 {
     int status = [m_task terminationStatus];
@@ -129,7 +124,7 @@ static NSDictionary* makeDictionary(NSString* s)
 
 -(void) processResponse_generic: (NSString*) response
 {
-    [m_transcoder log: @"[Command %@] %@\n", [m_id isEqualToString:@"last"] ? @"X" : m_id, response];
+    [m_transcoder log: @"[Command %@] %@\n", m_id, response];
 }
 
 -(void) processResponse_ffmpeg: (NSString*) response
@@ -137,7 +132,7 @@ static NSDictionary* makeDictionary(NSString* s)
     // for now we ignore everything but the progress lines, which 
     if (![response hasPrefix:@"frame="]) {
         if ([response length] > 0)
-            [m_transcoder log: @"[Command %@] %@\n", [m_id isEqualToString:@"last"] ? @"X" : m_id, response];
+            [m_transcoder log: @"[Command %@] %@\n", m_id, response];
         return;
     }
     

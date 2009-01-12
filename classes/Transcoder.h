@@ -11,6 +11,9 @@
 
 #import <unistd.h>
 
+#define LOG_FILE_PATH @"~/Library/Application Support/VideoMonkey/Logs"
+
+
 @class AppController;
 @class Command;
 
@@ -74,8 +77,9 @@ typedef enum FileStatus { FS_INVALID, FS_VALID, FS_ENCODING, FS_PAUSED, FS_FAILE
     NSMutableArray* m_commands;
     NSProgressIndicator* m_progressIndicator;
     NSImageView* m_statusImageView;
+    BOOL m_isLastCommandRunning;
     
-    NSFileHandle* logFile;
+    NSFileHandle* m_logFile;
     NSString* m_tempAudioFileName;
     NSString* m_passLogFileName;
 }

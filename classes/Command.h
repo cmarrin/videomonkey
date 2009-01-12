@@ -25,11 +25,10 @@ typedef enum { OT_NONE, OT_WAIT, OT_CONTINUE, OT_PIPE } CommandOutputType;
     BOOL m_isPaused;
 }
 
--(Transcoder*) initWithTranscoder: (Transcoder*) transcoder command: (NSString*) command outputType: (CommandOutputType) type finishId: (id) id;
+-(Transcoder*) initWithTranscoder: (Transcoder*) transcoder command: (NSString*) command outputType: (CommandOutputType) type identifier: (id) id;
 -(void) execute: (Command*) nextCommand;
 -(void) setInputPipe: (NSPipe*) pipe;
 -(BOOL) needsToWait;
--(id) finishId;
 -(void) suspend;
 -(void) resume;
 -(void) terminate;

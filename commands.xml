@@ -66,9 +66,9 @@
             function audio(type)
             {
                 switch(type) {
-                    case "low":    params.audioBitrate =  16000; params.audioSampleRate = 11025; params.audioChannels = 1; break;
-                    case "medium": params.audioBitrate =  32000; params.audioSampleRate = 22050; params.audioChannels = 1; break;
-                    case "high":   params.audioBitrate = 128000; params.audioSampleRate = 48000; params.audioChannels = 2; break;
+                    case "low":    params.audio_bitrate =  16000; params.audio_sample_rate = 11025; params.audio_channels = 1; break;
+                    case "medium": params.audio_bitrate =  32000; params.audio_sample_rate = 22050; params.audio_channels = 1; break;
+                    case "high":   params.audio_bitrate = 128000; params.audio_sample_rate = 48000; params.audio_channels = 2; break;
                 }
             }
             
@@ -96,6 +96,8 @@
                     return "h.264";
                 return name;
             }
+            
+            params.special_qt = params.is_quicktime == "true" && params.input_video_codec == "wmv3";
             
             ]]>
         </script>
@@ -156,28 +158,28 @@
         <param id="ffmpeg_vcodec" value="libx264" />
         <param id="video_suffix" value="mp4" />
         <recipes>
-            <recipe condition="all(!params.specialQT, !params.hasAudio, !params.is2Pass)">
+            <recipe condition="all(!params.special_qt, !params.has_audio, !params.is_2_pass)">
                 $normal_pass0
             </recipe>
-            <recipe condition="all(!params.specialQT, !params.hasAudio, params.is2Pass)">
+            <recipe condition="all(!params.special_qt, !params.has_audio, params.is_2_pass)">
                 $normal_pass1 ; $normal_pass2
             </recipe>
-            <recipe condition="all(!params.specialQT, params.hasAudio, !params.is2Pass)">
+            <recipe condition="all(!params.special_qt, params.has_audio, !params.is_2_pass)">
                 $normal_pass0
             </recipe>
-            <recipe condition="all(!params.specialQT, params.hasAudio, params.is2Pass)">
+            <recipe condition="all(!params.special_qt, params.has_audio, params.is_2_pass)">
                 $normal_pass1 ; $normal_pass2
             </recipe>
-            <recipe condition="all(params.specialQT, !params.hasAudio, !params.is2Pass)">
+            <recipe condition="all(params.special_qt, !params.has_audio, !params.is_2_pass)">
                 $quicktime_v_pass0
             </recipe>
-            <recipe condition="all(params.specialQT, !params.hasAudio, params.is2Pass)">
+            <recipe condition="all(params.special_qt, !params.has_audio, params.is_2_pass)">
                 $quicktime_v_pass1 ; $quicktime_v_pass2
             </recipe>
-            <recipe condition="all(params.specialQT, params.hasAudio, !params.is2Pass)">
+            <recipe condition="all(params.special_qt, params.has_audio, !params.is_2_pass)">
                 $quicktime_to_audio_file ; $quicktime_av_pass0
             </recipe>
-            <recipe condition="all(params.specialQT, params.hasAudio, params.is2Pass)">
+            <recipe condition="all(params.special_qt, params.has_audio, params.is_2_pass)">
                 $quicktime_to_audio_file ; $quicktime_av_pass1 ; $quicktime_av_pass2
             </recipe>
         </recipes>
