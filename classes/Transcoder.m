@@ -433,9 +433,49 @@ static NSImage* getFileStatusImage(FileStatus status)
     // make sure the tmp tmp files do not exist
     [[NSFileManager defaultManager] removeFileAtPath:m_tempAudioFileName handler:nil];
     [[NSFileManager defaultManager] removeFileAtPath:m_passLogFileName handler:nil];
+
+    // build the environment
+    NSMutableDictionary* env = [[NSMutableDictionary alloc] init];
+
+    // fill in the environment
+    NSString* cmdPath = [NSString stringWithString: [[NSBundle mainBundle] resourcePath]];
+    [env setValue: [cmdPath stringByAppendingPathComponent: @"bin/ffmpeg"] forKey: @"ffmpeg"];
+    [env setValue: [cmdPath stringByAppendingPathComponent: @"bin/qt_export"] forKey: @"qt_export"];
+    [env setValue: [cmdPath stringByAppendingPathComponent: @"bin/movtoy4m"] forKey: @"movtoy4m"];
+    [env setValue: [cmdPath stringByAppendingPathComponent: @"bin/yuvadjust"] forKey: @"yuvadjust"];
+    [env setValue: [cmdPath stringByAppendingPathComponent: @"bin/yuvcorrect"] forKey: @"yuvcorrect"];
+
+    // fill in the filenames
+    [env setValue: [self inputFileName] forKey: @"input_file"];
+    [env setValue: [self outputFileName] forKey: @"output_file"];
+    [env setValue: [self tempAudioFileName] forKey: @"tmp_audio_file"];
+    [env setValue: [self passLogFileName] forKey: @"pass_log_file"];
     
+    // fill in params
+    [env setValue: [[NSNumber numberWithInt: [self inputVideoWidth]] stringValue] forKey: @"input_video_width"];
+    [env setValue: [[NSNumber numberWithInt: [self inputVideoHeight]] stringValue] forKey: @"input_video_height"];
+    [env setValue: [[NSNumber numberWithInt: [self inputVideoWidthDiv16]] stringValue] forKey: @"output_video_width"];
+    [env setValue: [[NSNumber numberWithInt: [self inputVideoHeightDiv16]] stringValue] forKey: @"output_video_height"];
+    [env setValue: [[NSNumber numberWithInt: [self bitrate]] stringValue] forKey: @"bitrate"];
+    
+    int frameRate = (int) ([self inputVideoFrameRate] * 1000);
+    [env setValue: [NSString stringWithFormat: @"%d:1000", frameRate] forKey: @"framerate"];
+    
+    [env setValue: [self ffmpeg_vcodec] forKey: @"ffmpeg_vcodec"];
+    
+    NSString* vpre = [self ffmpeg_vpre];
+    NSString* vpre_pass1 = [NSString stringWithFormat:@"%@-pass1", vpre]; 
+    [env setValue: vpre forKey: @"ffmpeg_vpre"];
+    [env setValue: vpre_pass1 forKey: @"ffmpeg_vpre_pass1"];
+    
+    NSString* videoSize = [NSString stringWithFormat: @"%dx%d", [self inputVideoWidthDiv16], [self inputVideoHeightDiv16]];
+    [env setValue: videoSize forKey: @"ffmpeg_output_video_size"];
+
+    NSString* aspectRatio = [NSString stringWithFormat: @"%d:%d", [self inputVideoWidth], [self inputVideoHeight]];
+    [env setValue: aspectRatio forKey: @"aspect_ratio"];
+
     // get recipe
-    NSString* recipe = [[m_appController conversionParams] recipe];
+    NSString* recipe = [[m_appController conversionParams] recipeWithEnvironment: env];
 
     if ([recipe length] == 0) {
         NSBeginAlertSheet(@"Internal Error", nil, nil, nil, [[NSApplication sharedApplication] mainWindow], 

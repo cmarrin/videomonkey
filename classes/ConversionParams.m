@@ -566,12 +566,15 @@ static void setButton(NSButton* button, NSString* title)
     return [self paramWithDefault: @"ffmpeg_vcodec"];
 }
 
--(NSString*) recipeWithTabView:(NSTabView*) tabview performanceIndex:(int) perfIndex
+-(NSString*) recipeWithTabView:(NSTabView*) tabview performanceIndex:(int) perfIndex environment:(NSDictionary*) env
 {
     ConversionTab* tab = (ConversionTab*) [tabview selectedTabViewItem];
 
     // Create JS context
     JavaScriptContext* context = [[JavaScriptContext alloc] init];
+    
+    // Add environment
+    [context addParams:env];
     
     // Add params and commands from default device
     [m_defaultDevice addParamsToJavaScriptContext: context withTab: tab performanceIndex:perfIndex];
@@ -836,48 +839,6 @@ static void setButton(NSButton* button, NSString* title)
                 [m_devices addObject: entry];
         }
     }
-    
-    // build the environment
-    m_environment = [[NSMutableDictionary alloc] init];
-
-    // fill in the environment
-    NSString* cmdPath = [NSString stringWithString: [[NSBundle mainBundle] resourcePath]];
-    [m_environment setValue: [cmdPath stringByAppendingPathComponent: @"bin/ffmpeg"] forKey: @"ffmpeg"];
-    [m_environment setValue: [cmdPath stringByAppendingPathComponent: @"bin/qt_export"] forKey: @"qt_export"];
-    [m_environment setValue: [cmdPath stringByAppendingPathComponent: @"bin/movtoy4m"] forKey: @"movtoy4m"];
-    [m_environment setValue: [cmdPath stringByAppendingPathComponent: @"bin/yuvadjust"] forKey: @"yuvadjust"];
-    [m_environment setValue: [cmdPath stringByAppendingPathComponent: @"bin/yuvcorrect"] forKey: @"yuvcorrect"];
-
-#if 0
-    // fill in the filenames
-    [env setValue: [m_transcoder inputFileName] forKey: @"input_file"];
-    [env setValue: [m_transcoder outputFileName] forKey: @"output_file"];
-    [env setValue: [m_transcoder tempAudioFileName] forKey: @"tmp_audio_file"];
-    [env setValue: [m_transcoder passLogFileName] forKey: @"pass_log_file"];
-    
-    // fill in params
-    [env setValue: [[NSNumber numberWithInt: [m_transcoder inputVideoWidth]] stringValue] forKey: @"input_video_width"];
-    [env setValue: [[NSNumber numberWithInt: [m_transcoder inputVideoHeight]] stringValue] forKey: @"input_video_height"];
-    [env setValue: [[NSNumber numberWithInt: [m_transcoder inputVideoWidthDiv16]] stringValue] forKey: @"output_video_width"];
-    [env setValue: [[NSNumber numberWithInt: [m_transcoder inputVideoHeightDiv16]] stringValue] forKey: @"output_video_height"];
-    [env setValue: [[NSNumber numberWithInt: [m_transcoder bitrate]] stringValue] forKey: @"bitrate"];
-    
-    int frameRate = (int) ([m_transcoder inputVideoFrameRate] * 1000);
-    [env setValue: [NSString stringWithFormat: @"%d:1000", frameRate] forKey: @"framerate"];
-    
-    [env setValue: [m_transcoder ffmpeg_vcodec] forKey: @"ffmpeg_vcodec"];
-    
-    NSString* vpre = [m_transcoder ffmpeg_vpre];
-    NSString* vpre_pass1 = [NSString stringWithFormat:@"%@-pass1", vpre]; 
-    [env setValue: vpre forKey: @"ffmpeg_vpre"];
-    [env setValue: vpre_pass1 forKey: @"ffmpeg_vpre_pass1"];
-    
-    NSString* videoSize = [NSString stringWithFormat: @"%dx%d", [m_transcoder inputVideoWidthDiv16], [m_transcoder inputVideoHeightDiv16]];
-    [env setValue: videoSize forKey: @"ffmpeg_output_video_size"];
-
-    NSString* aspectRatio = [NSString stringWithFormat: @"%d:%d", [m_transcoder inputVideoWidth], [m_transcoder inputVideoHeight]];
-    [env setValue: aspectRatio forKey: @"aspect_ratio"];
-#endif
 }
 
 -(DeviceEntry*) findDeviceEntryWithIndex: (int) index
@@ -970,9 +931,9 @@ static void setButton(NSButton* button, NSString* title)
     return [m_currentDevice videoFormat];
 }
 
--(NSString*) recipe
+-(NSString*) recipeWithEnvironment:(NSDictionary*) env
 {
-    return [m_currentDevice recipeWithTabView:m_conversionParamsTabView performanceIndex:[m_performanceButton indexOfSelectedItem]];
+    return [m_currentDevice recipeWithTabView:m_conversionParamsTabView performanceIndex:[m_performanceButton indexOfSelectedItem] environment:env];
 }
 
 @end

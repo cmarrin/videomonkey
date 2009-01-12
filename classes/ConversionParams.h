@@ -126,7 +126,7 @@
 -(NSArray*) recipes;
 -(NSString*) fileSuffix;
 -(NSString*) videoFormat;
--(NSString*) recipeWithTabView:(NSTabView*) tabview performanceIndex:(int) perfIndex;
+-(NSString*) recipeWithTabView:(NSTabView*) tabview performanceIndex:(int) perfIndex environment:(NSDictionary*) env;
 -(NSString*) replaceParams:(NSString*) recipeString withContext: (JavaScriptContext*) context;
 
 -(void) populateTabView:(NSTabView*) tabview;
@@ -226,7 +226,6 @@
     
     DeviceEntry* m_defaultDevice;
     NSMutableArray* m_devices;
-    NSDictionary* m_environment;
     
     DeviceEntry* m_currentDevice;
     NSString* m_currentPerformance;
@@ -240,6 +239,6 @@
 -(NSString*) performance;
 -(NSString*) fileSuffix;
 -(NSString*) videoFormat;
--(NSString*) recipe;
+-(NSString*) recipeWithEnvironment:(NSDictionary*) env;
 
 @end
