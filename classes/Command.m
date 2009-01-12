@@ -122,14 +122,9 @@ static NSDictionary* makeDictionary(NSString* s)
     return dictionary;
 }
 
--(void) processResponse_generic: (NSString*) response
+-(void) processResponse: (NSString*) response
 {
-    [m_transcoder log: @"[Command %@] %@\n", m_id, response];
-}
-
--(void) processResponse_ffmpeg: (NSString*) response
-{
-    // for now we ignore everything but the progress lines, which 
+    // If this looks like a progress line for ffmpeg, process it like that
     if (![response hasPrefix:@"frame="]) {
         if ([response length] > 0)
             [m_transcoder log: @"[Command %@] %@\n", m_id, response];
@@ -141,14 +136,6 @@ static NSDictionary* makeDictionary(NSString* s)
     NSString* timeString = [response substringFromIndex:(range.location + range.length)];
     double time = [timeString doubleValue];
     [m_transcoder setProgressForCommand: self to: time / [m_transcoder playTime]];
-}
-
--(void) processResponse: (NSString*) response
-{
-    if ([m_command hasPrefix:@"$ffmpeg"])
-        [self processResponse_ffmpeg: response];
-    else
-        [self processResponse_generic: response];
 }
 
 -(void) processRead: (NSNotification*) note
