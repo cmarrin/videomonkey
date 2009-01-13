@@ -8,6 +8,7 @@
 
 #import "ConversionParams.h"
 #import "JavaScriptContext.h"
+#import "Transcoder.h"
 
 static NSString* stringAttribute(NSXMLElement* element, NSString* name)
 {
@@ -566,12 +567,32 @@ static void setButton(NSButton* button, NSString* title)
     return [self paramWithDefault: @"ffmpeg_vcodec"];
 }
 
--(NSString*) recipeWithTabView:(NSTabView*) tabview performanceIndex:(int) perfIndex environment:(NSDictionary*) env
+static JSValueRef _jsLog(JSContextRef ctx, JSObjectRef function, JSObjectRef thisObject, size_t argumentCount, 
+                         const JSValueRef arguments[], JSValueRef* exception)
+{
+    JSObjectRef global = JSContextGetGlobalObject(ctx);
+    JSStringRef propString = JSStringCreateWithUTF8CString("$transcoder");
+    JSValueRef jsValue = JSObjectGetProperty(ctx, global, propString, NULL);
+    if (JSValueIsObject(ctx, jsValue)) {
+        JSObjectRef obj = JSValueToObject(ctx, jsValue, NULL);
+        Transcoder* transcoder = (Transcoder*) JSObjectGetPrivate(obj);
+
+        [transcoder log:@"*** print\n"];
+    }
+    
+    return JSValueMakeUndefined(ctx);
+}
+
+-(NSString*) recipeWithTabView:(NSTabView*) tabview performanceIndex:(int) perfIndex environment:(NSDictionary*) env transcoder:(Transcoder*) transcoder
 {
     ConversionTab* tab = (ConversionTab*) [tabview selectedTabViewItem];
 
     // Create JS context
     JavaScriptContext* context = [[JavaScriptContext alloc] init];
+    
+    // Add log method
+    [context addGlobalObject:@"$transcoder" ofClass:NULL withPrivateData:transcoder];
+    [context addGlobalFunctionProperty:@"log" withCallback:_jsLog];
     
     // Add environment
     [context addParams:env];
@@ -940,9 +961,9 @@ static void setButton(NSButton* button, NSString* title)
     return [m_currentDevice videoFormat];
 }
 
--(NSString*) recipeWithEnvironment:(NSDictionary*) env
+-(NSString*) recipeWithEnvironment:(NSDictionary*) env transcoder:(Transcoder*) transcoder
 {
-    return [m_currentDevice recipeWithTabView:m_conversionParamsTabView performanceIndex:[m_performanceButton indexOfSelectedItem] environment:env];
+    return [m_currentDevice recipeWithTabView:m_conversionParamsTabView performanceIndex:[m_performanceButton indexOfSelectedItem] environment:env transcoder:transcoder];
 }
 
 @end

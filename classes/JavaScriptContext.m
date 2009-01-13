@@ -281,9 +281,8 @@
 	/* -addGlobalObject:ofClass:withPrivateData: adds an object of the given class 
 	and name to the global object of the JavaScriptContext.  After this call, scripts
 	running in the context will be able to access the object using the name. */
-- (void)addGlobalObject:(NSString *)objectName ofClass:(JSClassRef)theClass
-			withPrivateData:(void *)theData {
-			
+- (void)addGlobalObject:(NSString *)objectName ofClass:(JSClassRef)theClass withPrivateData:(void *)theData
+{
 		/* create a new object of the given class */
 	JSObjectRef theObject = JSObjectMake( m_jsContext, theClass, theData );
 	if ( theObject != NULL ) {

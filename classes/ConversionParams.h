@@ -58,6 +58,7 @@
 #define MAX_RADIOS 4
 
 @class JavaScriptContext;
+@class Transcoder;
 
 @interface ConversionTab : NSTabViewItem {
     IBOutlet NSButton* m_button0;
@@ -126,7 +127,7 @@
 -(NSArray*) recipes;
 -(NSString*) fileSuffix;
 -(NSString*) videoFormat;
--(NSString*) recipeWithTabView:(NSTabView*) tabview performanceIndex:(int) perfIndex environment:(NSDictionary*) env;
+-(NSString*) recipeWithTabView:(NSTabView*) tabview performanceIndex:(int) perfIndex environment:(NSDictionary*) env transcoder:(Transcoder*) transcoder;
 -(NSString*) replaceParams:(NSString*) recipeString withContext: (JavaScriptContext*) context;
 
 -(void) populateTabView:(NSTabView*) tabview;
@@ -239,6 +240,6 @@
 -(NSString*) performance;
 -(NSString*) fileSuffix;
 -(NSString*) videoFormat;
--(NSString*) recipeWithEnvironment:(NSDictionary*) env;
+-(NSString*) recipeWithEnvironment:(NSDictionary*) env transcoder:(Transcoder*) transcoder;
 
 @end

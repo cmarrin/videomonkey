@@ -99,6 +99,8 @@
             
             params.special_qt = params.is_quicktime == "true" && params.input_video_codec == "wmv3";
             
+            log("hello there");
+            
             ]]>
         </script>
         <quality>

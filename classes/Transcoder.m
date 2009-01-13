@@ -476,7 +476,7 @@ static NSImage* getFileStatusImage(FileStatus status)
     [env setValue: vpre_pass1 forKey: @"ffmpeg_vpre_pass1"];
     
     // get recipe
-    NSString* recipe = [[m_appController conversionParams] recipeWithEnvironment: env];
+    NSString* recipe = [[m_appController conversionParams] recipeWithEnvironment: env transcoder: self];
 
     if ([recipe length] == 0) {
         NSBeginAlertSheet(@"Internal Error", nil, nil, nil, [[NSApplication sharedApplication] mainWindow], 
