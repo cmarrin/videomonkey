@@ -1,21 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<archive type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="7.02">
+<archive type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="7.03">
 	<data>
 		<int key="IBDocument.SystemTarget">1050</int>
-		<string key="IBDocument.SystemVersion">9G55</string>
-		<string key="IBDocument.InterfaceBuilderVersion">672</string>
-		<string key="IBDocument.AppKitVersion">949.43</string>
-		<string key="IBDocument.HIToolboxVersion">353.00</string>
+		<string key="IBDocument.SystemVersion">9E17</string>
+		<string key="IBDocument.InterfaceBuilderVersion">677</string>
+		<string key="IBDocument.AppKitVersion">949.31</string>
+		<string key="IBDocument.HIToolboxVersion">352.00</string>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
-			<integer value="503"/>
 			<integer value="2154"/>
+			<integer value="628"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
 			<string>com.apple.InterfaceBuilderKit</string>
 			<string>com.apple.QTKitIBPlugin</string>
 			<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+		</object>
+		<object class="NSMutableDictionary" key="IBDocument.Metadata">
+			<bool key="EncodedWithXMLCoder">YES</bool>
+			<object class="NSArray" key="dict.sortedKeys">
+				<bool key="EncodedWithXMLCoder">YES</bool>
+			</object>
+			<object class="NSMutableArray" key="dict.values">
+				<bool key="EncodedWithXMLCoder">YES</bool>
+			</object>
 		</object>
 		<object class="NSMutableArray" key="IBDocument.RootObjects" id="1048">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -1428,13 +1437,13 @@
 										<object class="NSTextField" id="648373860">
 											<reference key="NSNextResponder" ref="429501488"/>
 											<int key="NSvFlags">268</int>
-											<string key="NSFrame">{{24, 84}, {94, 17}}</string>
+											<string key="NSFrame">{{24, 73}, {93, 28}}</string>
 											<reference key="NSSuperview" ref="429501488"/>
 											<bool key="NSEnabled">YES</bool>
 											<object class="NSTextFieldCell" key="NSCell" id="1041711921">
 												<int key="NSCellFlags">-2080244224</int>
 												<int key="NSCellFlags2">138412032</int>
-												<string key="NSContents">Device</string>
+												<string key="NSContents">All Apple Devices</string>
 												<object class="NSFont" key="NSSupport" id="797712033">
 													<string key="NSName">LucidaGrande-Bold</string>
 													<double key="NSSize">1.100000e+01</double>
@@ -2146,7 +2155,7 @@
 												<object class="NSTabViewItem" id="910176919">
 													<string key="NSIdentifier">radio2check</string>
 													<object class="NSView" key="NSView" id="582696165">
-														<reference key="NSNextResponder" ref="32007006"/>
+														<nil key="NSNextResponder"/>
 														<int key="NSvFlags">256</int>
 														<object class="NSMutableArray" key="NSSubviews">
 															<bool key="EncodedWithXMLCoder">YES</bool>
@@ -2702,7 +2711,6 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 															</object>
 														</object>
 														<string key="NSFrameSize">{616, 109}</string>
-														<reference key="NSSuperview" ref="32007006"/>
 													</object>
 													<string key="NSLabel">Radio + 2 Check</string>
 													<reference key="NSColor" ref="153400129"/>
@@ -3102,7 +3110,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 												<object class="NSTabViewItem" id="898172981">
 													<string key="NSIdentifier">dvd</string>
 													<object class="NSView" key="NSView" id="251004873">
-														<nil key="NSNextResponder"/>
+														<reference key="NSNextResponder" ref="32007006"/>
 														<int key="NSvFlags">256</int>
 														<object class="NSMutableArray" key="NSSubviews">
 															<bool key="EncodedWithXMLCoder">YES</bool>
@@ -3493,19 +3501,20 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 															</object>
 														</object>
 														<string key="NSFrameSize">{616, 109}</string>
+														<reference key="NSSuperview" ref="32007006"/>
 													</object>
 													<string key="NSLabel">DVD</string>
 													<reference key="NSColor" ref="153400129"/>
 													<reference key="NSTabView" ref="32007006"/>
 												</object>
 											</object>
-											<reference key="NSSelectedTabViewItem" ref="910176919"/>
+											<reference key="NSSelectedTabViewItem" ref="898172981"/>
 											<reference key="NSFont" ref="176004473"/>
 											<int key="NSTvFlags">6</int>
 											<bool key="NSAllowTruncatedLabels">YES</bool>
 											<object class="NSMutableArray" key="NSSubviews">
 												<bool key="EncodedWithXMLCoder">YES</bool>
-												<reference ref="582696165"/>
+												<reference ref="251004873"/>
 											</object>
 										</object>
 										<object class="NSPopUpButton" id="709474193">
@@ -3901,10 +3910,10 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 							<string key="NSFrame">{{0, 65}, {327, 167}}</string>
 							<reference key="NSSuperview" ref="947487714"/>
 							<reference key="kCoderFillColor" ref="709913553"/>
-							<integer value="1" key="kCoderControllerVisible" id="5"/>
+							<boolean value="YES" key="kCoderControllerVisible" id="5"/>
 							<reference key="kCoderPreservesAspectRatio" ref="5"/>
 							<nil key="kCoderMovie"/>
-							<integer value="0" key="kCoderEditable" id="6"/>
+							<boolean value="NO" key="kCoderEditable"/>
 						</object>
 						<object class="NSButton" id="385888942">
 							<reference key="NSNextResponder" ref="947487714"/>
@@ -7537,8 +7546,8 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 					<string>com.apple.InterfaceBuilderKit</string>
 					<string>{{46, 907}, {393, 232}}</string>
 					<string>{{46, 907}, {393, 232}}</string>
-					<reference ref="6"/>
-					<reference ref="5"/>
+					<reference ref="8"/>
+					<reference ref="9"/>
 					<string>{393, 232}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -7561,7 +7570,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 						</object>
 					</object>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<reference ref="5"/>
+					<reference ref="9"/>
 					<string>{{506, 950}, {223, 73}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<reference ref="9"/>
@@ -7586,7 +7595,7 @@ IHlvdSB0byBmaWd1cmUgb3V0IHdoYXQncyBtb3JlIGltcG9ydGFudC4</string>
 						</object>
 					</object>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<reference ref="5"/>
+					<reference ref="9"/>
 					<object class="NSMutableDictionary">
 						<string key="NS.key.0">ToolTip</string>
 						<object class="IBToolTipAttribute" key="NS.object.0">
@@ -7597,7 +7606,7 @@ IHlvdSB0byBmaWd1cmUgb3V0IHdoYXQncyBtb3JlIGltcG9ydGFudC4</string>
 						</object>
 					</object>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<reference ref="5"/>
+					<reference ref="9"/>
 					<object class="NSMutableDictionary">
 						<string key="NS.key.0">ToolTip</string>
 						<object class="IBToolTipAttribute" key="NS.object.0">
@@ -7608,7 +7617,7 @@ IHlvdSB0byBmaWd1cmUgb3V0IHdoYXQncyBtb3JlIGltcG9ydGFudC4</string>
 						</object>
 					</object>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<reference ref="5"/>
+					<reference ref="9"/>
 					<object class="NSMutableDictionary">
 						<string key="NS.key.0">ToolTip</string>
 						<object class="IBToolTipAttribute" key="NS.object.0">
@@ -7619,7 +7628,7 @@ IHlvdSB0byBmaWd1cmUgb3V0IHdoYXQncyBtb3JlIGltcG9ydGFudC4</string>
 						</object>
 					</object>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<reference ref="5"/>
+					<reference ref="9"/>
 					<object class="NSMutableDictionary">
 						<string key="NS.key.0">ToolTip</string>
 						<object class="IBToolTipAttribute" key="NS.object.0">
@@ -7630,7 +7639,7 @@ IHlvdSB0byBmaWd1cmUgb3V0IHdoYXQncyBtb3JlIGltcG9ydGFudC4</string>
 						</object>
 					</object>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<reference ref="5"/>
+					<reference ref="9"/>
 					<object class="NSMutableDictionary">
 						<string key="NS.key.0">ToolTip</string>
 						<object class="IBToolTipAttribute" key="NS.object.0">
@@ -7641,7 +7650,7 @@ IHlvdSB0byBmaWd1cmUgb3V0IHdoYXQncyBtb3JlIGltcG9ydGFudC4</string>
 						</object>
 					</object>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<reference ref="5"/>
+					<reference ref="9"/>
 					<object class="NSMutableDictionary">
 						<string key="NS.key.0">ToolTip</string>
 						<object class="IBToolTipAttribute" key="NS.object.0">
@@ -7654,7 +7663,7 @@ J3MgbW9yZSBpbXBvcnRhbnQuA</string>
 						</object>
 					</object>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<reference ref="5"/>
+					<reference ref="9"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<reference ref="9"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -7665,7 +7674,7 @@ J3MgbW9yZSBpbXBvcnRhbnQuA</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<reference ref="5"/>
+					<reference ref="9"/>
 					<object class="NSMutableDictionary">
 						<string key="NS.key.0">ToolTip</string>
 						<object class="IBToolTipAttribute" key="NS.object.0">
@@ -7675,7 +7684,7 @@ J3MgbW9yZSBpbXBvcnRhbnQuA</string>
 						</object>
 					</object>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<reference ref="5"/>
+					<reference ref="9"/>
 					<object class="NSMutableDictionary">
 						<string key="NS.key.0">ToolTip</string>
 						<object class="IBToolTipAttribute" key="NS.object.0">
@@ -7685,7 +7694,7 @@ J3MgbW9yZSBpbXBvcnRhbnQuA</string>
 						</object>
 					</object>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<reference ref="5"/>
+					<reference ref="9"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<reference ref="9"/>
 					<string>{{436, 809}, {64, 6}}</string>
@@ -7705,7 +7714,7 @@ J3MgbW9yZSBpbXBvcnRhbnQuA</string>
 						</object>
 					</object>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<reference ref="5"/>
+					<reference ref="9"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -7722,7 +7731,7 @@ IHlvdSB0byBmaWd1cmUgb3V0IHdoYXQncyBtb3JlIGltcG9ydGFudC4</string>
 						</object>
 					</object>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<reference ref="5"/>
+					<reference ref="9"/>
 					<object class="NSMutableDictionary">
 						<string key="NS.key.0">ToolTip</string>
 						<object class="IBToolTipAttribute" key="NS.object.0">
@@ -7733,7 +7742,7 @@ IHlvdSB0byBmaWd1cmUgb3V0IHdoYXQncyBtb3JlIGltcG9ydGFudC4</string>
 						</object>
 					</object>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<reference ref="5"/>
+					<reference ref="9"/>
 					<object class="NSMutableDictionary">
 						<string key="NS.key.0">ToolTip</string>
 						<object class="IBToolTipAttribute" key="NS.object.0">
@@ -7744,7 +7753,7 @@ IHlvdSB0byBmaWd1cmUgb3V0IHdoYXQncyBtb3JlIGltcG9ydGFudC4</string>
 						</object>
 					</object>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<reference ref="5"/>
+					<reference ref="9"/>
 					<object class="NSMutableDictionary">
 						<string key="NS.key.0">ToolTip</string>
 						<object class="IBToolTipAttribute" key="NS.object.0">
@@ -7755,7 +7764,7 @@ IHlvdSB0byBmaWd1cmUgb3V0IHdoYXQncyBtb3JlIGltcG9ydGFudC4</string>
 						</object>
 					</object>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<reference ref="5"/>
+					<reference ref="9"/>
 					<object class="NSMutableDictionary">
 						<string key="NS.key.0">ToolTip</string>
 						<object class="IBToolTipAttribute" key="NS.object.0">
@@ -7766,7 +7775,7 @@ IHlvdSB0byBmaWd1cmUgb3V0IHdoYXQncyBtb3JlIGltcG9ydGFudC4</string>
 						</object>
 					</object>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<reference ref="5"/>
+					<reference ref="9"/>
 					<object class="NSMutableDictionary">
 						<string key="NS.key.0">ToolTip</string>
 						<object class="IBToolTipAttribute" key="NS.object.0">
@@ -7777,7 +7786,7 @@ IHlvdSB0byBmaWd1cmUgb3V0IHdoYXQncyBtb3JlIGltcG9ydGFudC4</string>
 						</object>
 					</object>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<reference ref="5"/>
+					<reference ref="9"/>
 					<object class="NSMutableDictionary">
 						<string key="NS.key.0">ToolTip</string>
 						<object class="IBToolTipAttribute" key="NS.object.0">
@@ -7790,7 +7799,7 @@ J3MgbW9yZSBpbXBvcnRhbnQuA</string>
 						</object>
 					</object>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<reference ref="5"/>
+					<reference ref="9"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -7815,7 +7824,7 @@ J3MgbW9yZSBpbXBvcnRhbnQuA</string>
 						</object>
 					</object>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<reference ref="5"/>
+					<reference ref="9"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -7830,7 +7839,7 @@ IHlvdSB0byBmaWd1cmUgb3V0IHdoYXQncyBtb3JlIGltcG9ydGFudC4</string>
 						</object>
 					</object>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<reference ref="5"/>
+					<reference ref="9"/>
 					<object class="NSMutableDictionary">
 						<string key="NS.key.0">ToolTip</string>
 						<object class="IBToolTipAttribute" key="NS.object.0">
@@ -7841,7 +7850,7 @@ IHlvdSB0byBmaWd1cmUgb3V0IHdoYXQncyBtb3JlIGltcG9ydGFudC4</string>
 						</object>
 					</object>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<reference ref="5"/>
+					<reference ref="9"/>
 					<object class="NSMutableDictionary">
 						<string key="NS.key.0">ToolTip</string>
 						<object class="IBToolTipAttribute" key="NS.object.0">
@@ -7852,7 +7861,7 @@ IHlvdSB0byBmaWd1cmUgb3V0IHdoYXQncyBtb3JlIGltcG9ydGFudC4</string>
 						</object>
 					</object>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<reference ref="5"/>
+					<reference ref="9"/>
 					<object class="NSMutableDictionary">
 						<string key="NS.key.0">ToolTip</string>
 						<object class="IBToolTipAttribute" key="NS.object.0">
@@ -7863,7 +7872,7 @@ IHlvdSB0byBmaWd1cmUgb3V0IHdoYXQncyBtb3JlIGltcG9ydGFudC4</string>
 						</object>
 					</object>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<reference ref="5"/>
+					<reference ref="9"/>
 					<object class="NSMutableDictionary">
 						<string key="NS.key.0">ToolTip</string>
 						<object class="IBToolTipAttribute" key="NS.object.0">
@@ -7874,7 +7883,7 @@ IHlvdSB0byBmaWd1cmUgb3V0IHdoYXQncyBtb3JlIGltcG9ydGFudC4</string>
 						</object>
 					</object>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<reference ref="5"/>
+					<reference ref="9"/>
 					<object class="NSMutableDictionary">
 						<string key="NS.key.0">ToolTip</string>
 						<object class="IBToolTipAttribute" key="NS.object.0">
@@ -7885,7 +7894,7 @@ IHlvdSB0byBmaWd1cmUgb3V0IHdoYXQncyBtb3JlIGltcG9ydGFudC4</string>
 						</object>
 					</object>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<reference ref="5"/>
+					<reference ref="9"/>
 					<object class="NSMutableDictionary">
 						<string key="NS.key.0">ToolTip</string>
 						<object class="IBToolTipAttribute" key="NS.object.0">
@@ -7898,7 +7907,7 @@ J3MgbW9yZSBpbXBvcnRhbnQuA</string>
 						</object>
 					</object>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<reference ref="5"/>
+					<reference ref="9"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -7921,7 +7930,7 @@ J3MgbW9yZSBpbXBvcnRhbnQuA</string>
 						</object>
 					</object>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<reference ref="5"/>
+					<reference ref="9"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -7938,7 +7947,7 @@ IHlvdSB0byBmaWd1cmUgb3V0IHdoYXQncyBtb3JlIGltcG9ydGFudC4</string>
 						</object>
 					</object>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<reference ref="5"/>
+					<reference ref="9"/>
 					<object class="NSMutableDictionary">
 						<string key="NS.key.0">ToolTip</string>
 						<object class="IBToolTipAttribute" key="NS.object.0">
@@ -7949,7 +7958,7 @@ IHlvdSB0byBmaWd1cmUgb3V0IHdoYXQncyBtb3JlIGltcG9ydGFudC4</string>
 						</object>
 					</object>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<reference ref="5"/>
+					<reference ref="9"/>
 					<object class="NSMutableDictionary">
 						<string key="NS.key.0">ToolTip</string>
 						<object class="IBToolTipAttribute" key="NS.object.0">
@@ -7960,7 +7969,7 @@ IHlvdSB0byBmaWd1cmUgb3V0IHdoYXQncyBtb3JlIGltcG9ydGFudC4</string>
 						</object>
 					</object>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<reference ref="5"/>
+					<reference ref="9"/>
 					<object class="NSMutableDictionary">
 						<string key="NS.key.0">ToolTip</string>
 						<object class="IBToolTipAttribute" key="NS.object.0">
@@ -7971,7 +7980,7 @@ IHlvdSB0byBmaWd1cmUgb3V0IHdoYXQncyBtb3JlIGltcG9ydGFudC4</string>
 						</object>
 					</object>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<reference ref="5"/>
+					<reference ref="9"/>
 					<object class="NSMutableDictionary">
 						<string key="NS.key.0">ToolTip</string>
 						<object class="IBToolTipAttribute" key="NS.object.0">
@@ -7982,7 +7991,7 @@ IHlvdSB0byBmaWd1cmUgb3V0IHdoYXQncyBtb3JlIGltcG9ydGFudC4</string>
 						</object>
 					</object>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<reference ref="5"/>
+					<reference ref="9"/>
 					<object class="NSMutableDictionary">
 						<string key="NS.key.0">ToolTip</string>
 						<object class="IBToolTipAttribute" key="NS.object.0">
@@ -7993,7 +8002,7 @@ IHlvdSB0byBmaWd1cmUgb3V0IHdoYXQncyBtb3JlIGltcG9ydGFudC4</string>
 						</object>
 					</object>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<reference ref="5"/>
+					<reference ref="9"/>
 					<object class="NSMutableDictionary">
 						<string key="NS.key.0">ToolTip</string>
 						<object class="IBToolTipAttribute" key="NS.object.0">
@@ -8006,7 +8015,7 @@ J3MgbW9yZSBpbXBvcnRhbnQuA</string>
 						</object>
 					</object>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<reference ref="5"/>
+					<reference ref="9"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -8173,7 +8182,7 @@ J3MgbW9yZSBpbXBvcnRhbnQuA</string>
 					<string>{{109, 102}, {714, 528}}</string>
 					<reference ref="9"/>
 					<string>{{33, 99}, {480, 360}}</string>
-					<reference ref="5"/>
+					<reference ref="9"/>
 					<string>{3.40282e+38, 3.40282e+38}</string>
 					<string>{606, 354}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
