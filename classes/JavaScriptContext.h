@@ -11,6 +11,19 @@
 
 @class JavaScriptContext;
 
+@interface NSString (JavaScriptConversion)
+
+	/* convert a JavaScriptCore string into a NSString */
++ (NSString *)stringWithJSString:(JSStringRef)jsStringValue;
+
+	/* return a new JavaScriptCore string value for the string */
+- (JSStringRef)jsStringValue;
+
+	/* convert a JavaScriptCore value in a JavaScriptCore context into a NSString. */
++ (NSString *)stringWithJSValue:(JSValueRef)jsValue fromContext:(JSContextRef)ctx;
+
+@end
+
 @interface JavaScriptObject : NSObject {
     JavaScriptContext* m_context;
 	JSObjectRef m_jsObject;
@@ -36,7 +49,7 @@
 -(NSString *)callStringFunction:(NSString *)name withParameters:(id)firstParameter,...;
 
 -(void)addGlobalFunctionProperty:(NSString *)name withCallback:(JSObjectCallAsFunctionCallback)theFunction;
-- (void)addGlobalObject:(NSString *)objectName ofClass:(JSClassRef)theClass withPrivateData:(void *)theData;
+-(void)addGlobalObject:(NSString *)objectName ofClass:(JSClassRef)theClass withPrivateData:(void *)theData;
 
 -(void) setPropertyInObject: (JavaScriptObject*) obj forKey:(NSString*) key toString: (NSString*) string;
 -(void) setPropertyInObject: (JavaScriptObject*) obj forKey:(NSString*) key toObject: (JavaScriptObject*) object;

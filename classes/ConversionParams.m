@@ -573,12 +573,19 @@ static JSValueRef _jsLog(JSContextRef ctx, JSObjectRef function, JSObjectRef thi
     JSObjectRef global = JSContextGetGlobalObject(ctx);
     JSStringRef propString = JSStringCreateWithUTF8CString("$transcoder");
     JSValueRef jsValue = JSObjectGetProperty(ctx, global, propString, NULL);
-    if (JSValueIsObject(ctx, jsValue)) {
-        JSObjectRef obj = JSValueToObject(ctx, jsValue, NULL);
-        Transcoder* transcoder = (Transcoder*) JSObjectGetPrivate(obj);
+    JSObjectRef obj = JSValueToObject(ctx, jsValue, NULL);
+    Transcoder* transcoder = (Transcoder*) JSObjectGetPrivate(obj);
 
-        [transcoder log:@"*** print\n"];
+    // make a string out of the args
+    NSMutableString* string = [[NSMutableString alloc] init];
+    for (int i = 0; i < argumentCount; ++i) {
+        JSStringRef jsString = JSValueToStringCopy(ctx, arguments[i], NULL);
+        [string appendString:[NSString stringWithJSString:jsString]];
     }
+    
+    [string appendString:@"\n"];
+    
+    [transcoder log:string];
     
     return JSValueMakeUndefined(ctx);
 }

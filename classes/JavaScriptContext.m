@@ -8,19 +8,6 @@
 
 #import "JavascriptContext.h"
 
-@interface NSString (JavaScriptConversion)
-
-	/* convert a JavaScriptCore string into a NSString */
-+ (NSString *)stringWithJSString:(JSStringRef)jsStringValue;
-
-	/* return a new JavaScriptCore string value for the string */
-- (JSStringRef)jsStringValue;
-
-	/* convert a JavaScriptCore value in a JavaScriptCore context into a NSString. */
-+ (NSString *)stringWithJSValue:(JSValueRef)jsValue fromContext:(JSContextRef)ctx;
-
-@end
-
 @implementation NSString (JavaScriptConversion)
 
 	/* convert a JavaScriptCore string into a NSString */
@@ -283,6 +270,11 @@
 	running in the context will be able to access the object using the name. */
 - (void)addGlobalObject:(NSString *)objectName ofClass:(JSClassRef)theClass withPrivateData:(void *)theData
 {
+    if (theClass == NULL) {
+        JSClassDefinition definition = kJSClassDefinitionEmpty;
+        theClass = JSClassCreate(&definition);
+    }
+
 		/* create a new object of the given class */
 	JSObjectRef theObject = JSObjectMake( m_jsContext, theClass, theData );
 	if ( theObject != NULL ) {
