@@ -99,7 +99,7 @@
 #define DT_DVD @"dvd"
 
 @interface DeviceEntry : NSObject {
-    NSString* m_id;
+    NSString* m_icon;
     NSString* m_title;
     NSString* m_groupTitle;
     
@@ -121,7 +121,7 @@
 
 -(NSString*) group;
 -(NSString*) title;
--(NSString*) id;
+-(NSString*) icon;
 -(NSArray*) qualityStops;
 -(NSArray*) performanceItems;
 -(NSArray*) recipes;

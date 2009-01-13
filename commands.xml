@@ -24,7 +24,7 @@
         <!ATTLIST device_group title CDATA "">
     <!ELEMENT device    (quality|performance|recipes|script|param|command|checkbox|menu)*>
         <!ATTLIST device title CDATA "">
-        <!ATTLIST device id CDATA "">
+        <!ATTLIST device icon CDATA "">
     <!ELEMENT checkbox    (checked_params|unchecked_params)*>
         <!ATTLIST checkbox which CDATA "">
         <!ATTLIST checkbox title CDATA "">
@@ -187,8 +187,15 @@
         </recipes>
     </default_device>
     <devices>
+    
+        <!--
+        
+            iTunes Group
+            
+        -->
         <device_group title="iTunes">
-            <device title="All Apple Devices" id="allappledevices">
+            <!-- All Apple Devices -->
+            <device title="All Apple Devices" icon="itunesfile">
                 <checkbox which="0" title="H.264 Video (slower but better)">
                     <checked_params>
                         <param id="ffmpeg_vcodec" value="libx264" />
@@ -198,7 +205,885 @@
                     </unchecked_params>
                 </checkbox>
             </device>
-            <device title="iPhone" id="iphone">
+            
+            <!-- iPod 5G -->
+            <device title="iPod5G" icon="ipod">
+                <quality>
+                    <quality_stop which="0" bitrate="200000" />
+                    <quality_stop which="1" title="EDGE" bitrate="50000">
+                        <script> audio('low') </script> 
+                        <param id="size" value="192x144" />
+                        <param id="frame_rate" value="0.5" />
+                    </quality_stop>
+                    <quality_stop which="2" title="3G" bitrate="100000">
+                        <script> audio('medium') </script> 
+                        <param id="size" value="480x320" />
+                        <param id="frame_rate" value="1" />
+                    </quality_stop>
+                    <quality_stop which="3" title="WiFi" bitrate="1100000">
+                        <script> audio('high') </script> 
+                        <param id="size" value="480x320" />
+                        <param id="frame_rate" value="1" />
+                    </quality_stop>
+                    <quality_stop which="4" title="High" bitrate="1800000">
+                        <script> audio('high') </script> 
+                        <param id="size" value="640x480" />
+                        <param id="frame_rate" value="1" />
+                    </quality_stop>
+                    <quality_stop which="5" title="Go Nuts" bitrate="3000000">
+                        <script> audio('high') </script> 
+                        <param id="size" value="640x480" />
+                        <param id="frame_rate" value="1" />
+                    </quality_stop>
+                </quality>
+                <checkbox which="0" title="H.264 Video (slower but better)">
+                    <checked_params>
+                        <param id="ffmpeg_vcodec" value="libx264" />
+                    </checked_params>
+                    <unchecked_params>
+                        <param id="ffmpeg_vcodec" value="mpeg4" />
+                    </unchecked_params>
+                </checkbox>
+                <menu which="0" title="Best for:">
+                    <menu_item title="iPhone Screen">
+                        <param id="ffmpeg_vcodec" value="libx264" />
+                    </menu_item>
+                    <menu_item title="TV Screen">
+                        <param id="ffmpeg_vcodec" value="mpeg4" />
+                    </menu_item>
+                </menu>
+            </device>
+            
+            <!-- iPod classic -->
+            <device title="iPod classic" icon="ipod">
+                <quality>
+                    <quality_stop which="0" bitrate="200000" />
+                    <quality_stop which="1" title="EDGE" bitrate="50000">
+                        <script> audio('low') </script> 
+                        <param id="size" value="192x144" />
+                        <param id="frame_rate" value="0.5" />
+                    </quality_stop>
+                    <quality_stop which="2" title="3G" bitrate="100000">
+                        <script> audio('medium') </script> 
+                        <param id="size" value="480x320" />
+                        <param id="frame_rate" value="1" />
+                    </quality_stop>
+                    <quality_stop which="3" title="WiFi" bitrate="1100000">
+                        <script> audio('high') </script> 
+                        <param id="size" value="480x320" />
+                        <param id="frame_rate" value="1" />
+                    </quality_stop>
+                    <quality_stop which="4" title="High" bitrate="1800000">
+                        <script> audio('high') </script> 
+                        <param id="size" value="640x480" />
+                        <param id="frame_rate" value="1" />
+                    </quality_stop>
+                    <quality_stop which="5" title="Go Nuts" bitrate="3000000">
+                        <script> audio('high') </script> 
+                        <param id="size" value="640x480" />
+                        <param id="frame_rate" value="1" />
+                    </quality_stop>
+                </quality>
+                <checkbox which="0" title="H.264 Video (slower but better)">
+                    <checked_params>
+                        <param id="ffmpeg_vcodec" value="libx264" />
+                    </checked_params>
+                    <unchecked_params>
+                        <param id="ffmpeg_vcodec" value="mpeg4" />
+                    </unchecked_params>
+                </checkbox>
+                <menu which="0" title="Best for:">
+                    <menu_item title="iPhone Screen">
+                        <param id="ffmpeg_vcodec" value="libx264" />
+                    </menu_item>
+                    <menu_item title="TV Screen">
+                        <param id="ffmpeg_vcodec" value="mpeg4" />
+                    </menu_item>
+                </menu>
+            </device>
+            
+            <!-- iPod nano -->
+            <device title="iPod nano" icon="nano">
+                <quality>
+                    <quality_stop which="0" bitrate="200000" />
+                    <quality_stop which="1" title="EDGE" bitrate="50000">
+                        <script> audio('low') </script> 
+                        <param id="size" value="192x144" />
+                        <param id="frame_rate" value="0.5" />
+                    </quality_stop>
+                    <quality_stop which="2" title="3G" bitrate="100000">
+                        <script> audio('medium') </script> 
+                        <param id="size" value="480x320" />
+                        <param id="frame_rate" value="1" />
+                    </quality_stop>
+                    <quality_stop which="3" title="WiFi" bitrate="1100000">
+                        <script> audio('high') </script> 
+                        <param id="size" value="480x320" />
+                        <param id="frame_rate" value="1" />
+                    </quality_stop>
+                    <quality_stop which="4" title="High" bitrate="1800000">
+                        <script> audio('high') </script> 
+                        <param id="size" value="640x480" />
+                        <param id="frame_rate" value="1" />
+                    </quality_stop>
+                    <quality_stop which="5" title="Go Nuts" bitrate="3000000">
+                        <script> audio('high') </script> 
+                        <param id="size" value="640x480" />
+                        <param id="frame_rate" value="1" />
+                    </quality_stop>
+                </quality>
+                <checkbox which="0" title="H.264 Video (slower but better)">
+                    <checked_params>
+                        <param id="ffmpeg_vcodec" value="libx264" />
+                    </checked_params>
+                    <unchecked_params>
+                        <param id="ffmpeg_vcodec" value="mpeg4" />
+                    </unchecked_params>
+                </checkbox>
+                <menu which="0" title="Best for:">
+                    <menu_item title="iPhone Screen">
+                        <param id="ffmpeg_vcodec" value="libx264" />
+                    </menu_item>
+                    <menu_item title="TV Screen">
+                        <param id="ffmpeg_vcodec" value="mpeg4" />
+                    </menu_item>
+                </menu>
+            </device>
+
+            <!-- iPhone -->
+            <device title="iPhone" icon="iphone">
+                <quality>
+                    <quality_stop which="0" bitrate="200000" />
+                    <quality_stop which="1" title="EDGE" bitrate="50000">
+                        <script> audio('low') </script> 
+                        <param id="size" value="192x144" />
+                        <param id="frame_rate" value="0.5" />
+                    </quality_stop>
+                    <quality_stop which="2" title="3G" bitrate="100000">
+                        <script> audio('medium') </script> 
+                        <param id="size" value="480x320" />
+                        <param id="frame_rate" value="1" />
+                    </quality_stop>
+                    <quality_stop which="3" title="WiFi" bitrate="1100000">
+                        <script> audio('high') </script> 
+                        <param id="size" value="480x320" />
+                        <param id="frame_rate" value="1" />
+                    </quality_stop>
+                    <quality_stop which="4" title="High" bitrate="1800000">
+                        <script> audio('high') </script> 
+                        <param id="size" value="640x480" />
+                        <param id="frame_rate" value="1" />
+                    </quality_stop>
+                    <quality_stop which="5" title="Go Nuts" bitrate="3000000">
+                        <script> audio('high') </script> 
+                        <param id="size" value="640x480" />
+                        <param id="frame_rate" value="1" />
+                    </quality_stop>
+                </quality>
+                <checkbox which="0" title="H.264 Video (slower but better)">
+                    <checked_params>
+                        <param id="ffmpeg_vcodec" value="libx264" />
+                    </checked_params>
+                    <unchecked_params>
+                        <param id="ffmpeg_vcodec" value="mpeg4" />
+                    </unchecked_params>
+                </checkbox>
+                <menu which="0" title="Best for:">
+                    <menu_item title="iPhone Screen">
+                        <param id="ffmpeg_vcodec" value="libx264" />
+                    </menu_item>
+                    <menu_item title="TV Screen">
+                        <param id="ffmpeg_vcodec" value="mpeg4" />
+                    </menu_item>
+                </menu>
+            </device>
+            
+            <!-- iPod touch -->
+            <device title="iPod touch" icon="iphone">
+                <quality>
+                    <quality_stop which="0" bitrate="200000" />
+                    <quality_stop which="1" title="EDGE" bitrate="50000">
+                        <script> audio('low') </script> 
+                        <param id="size" value="192x144" />
+                        <param id="frame_rate" value="0.5" />
+                    </quality_stop>
+                    <quality_stop which="2" title="3G" bitrate="100000">
+                        <script> audio('medium') </script> 
+                        <param id="size" value="480x320" />
+                        <param id="frame_rate" value="1" />
+                    </quality_stop>
+                    <quality_stop which="3" title="WiFi" bitrate="1100000">
+                        <script> audio('high') </script> 
+                        <param id="size" value="480x320" />
+                        <param id="frame_rate" value="1" />
+                    </quality_stop>
+                    <quality_stop which="4" title="High" bitrate="1800000">
+                        <script> audio('high') </script> 
+                        <param id="size" value="640x480" />
+                        <param id="frame_rate" value="1" />
+                    </quality_stop>
+                    <quality_stop which="5" title="Go Nuts" bitrate="3000000">
+                        <script> audio('high') </script> 
+                        <param id="size" value="640x480" />
+                        <param id="frame_rate" value="1" />
+                    </quality_stop>
+                </quality>
+                <checkbox which="0" title="H.264 Video (slower but better)">
+                    <checked_params>
+                        <param id="ffmpeg_vcodec" value="libx264" />
+                    </checked_params>
+                    <unchecked_params>
+                        <param id="ffmpeg_vcodec" value="mpeg4" />
+                    </unchecked_params>
+                </checkbox>
+                <menu which="0" title="Best for:">
+                    <menu_item title="iPhone Screen">
+                        <param id="ffmpeg_vcodec" value="libx264" />
+                    </menu_item>
+                    <menu_item title="TV Screen">
+                        <param id="ffmpeg_vcodec" value="mpeg4" />
+                    </menu_item>
+                </menu>
+            </device>
+            
+            <!-- Apple TV -->
+            <device title="Apple TV" icon="appletv">
+                <quality>
+                    <quality_stop which="0" bitrate="200000" />
+                    <quality_stop which="1" title="EDGE" bitrate="50000">
+                        <script> audio('low') </script> 
+                        <param id="size" value="192x144" />
+                        <param id="frame_rate" value="0.5" />
+                    </quality_stop>
+                    <quality_stop which="2" title="3G" bitrate="100000">
+                        <script> audio('medium') </script> 
+                        <param id="size" value="480x320" />
+                        <param id="frame_rate" value="1" />
+                    </quality_stop>
+                    <quality_stop which="3" title="WiFi" bitrate="1100000">
+                        <script> audio('high') </script> 
+                        <param id="size" value="480x320" />
+                        <param id="frame_rate" value="1" />
+                    </quality_stop>
+                    <quality_stop which="4" title="High" bitrate="1800000">
+                        <script> audio('high') </script> 
+                        <param id="size" value="640x480" />
+                        <param id="frame_rate" value="1" />
+                    </quality_stop>
+                    <quality_stop which="5" title="Go Nuts" bitrate="3000000">
+                        <script> audio('high') </script> 
+                        <param id="size" value="640x480" />
+                        <param id="frame_rate" value="1" />
+                    </quality_stop>
+                </quality>
+                <checkbox which="0" title="H.264 Video (slower but better)">
+                    <checked_params>
+                        <param id="ffmpeg_vcodec" value="libx264" />
+                    </checked_params>
+                    <unchecked_params>
+                        <param id="ffmpeg_vcodec" value="mpeg4" />
+                    </unchecked_params>
+                </checkbox>
+                <menu which="0" title="Best for:">
+                    <menu_item title="iPhone Screen">
+                        <param id="ffmpeg_vcodec" value="libx264" />
+                    </menu_item>
+                    <menu_item title="TV Screen">
+                        <param id="ffmpeg_vcodec" value="mpeg4" />
+                    </menu_item>
+                </menu>
+            </device>
+        </device_group>
+
+
+        <!--
+        
+            Video Devices Group
+            
+        -->
+        <device_group title="Video Devices">
+            <!-- DV -->
+            <device title="DV" icon="dv">
+                <checkbox which="0" title="H.264 Video (slower but better)">
+                    <checked_params>
+                        <param id="ffmpeg_vcodec" value="libx264" />
+                    </checked_params>
+                    <unchecked_params>
+                        <param id="ffmpeg_vcodec" value="mpeg4" />
+                    </unchecked_params>
+                </checkbox>
+            </device>
+            
+            <!-- DVD -->
+            <device title="DVD" icon="cd">
+                <quality>
+                    <quality_stop which="0" bitrate="200000" />
+                    <quality_stop which="1" title="EDGE" bitrate="50000">
+                        <script> audio('low') </script> 
+                        <param id="size" value="192x144" />
+                        <param id="frame_rate" value="0.5" />
+                    </quality_stop>
+                    <quality_stop which="2" title="3G" bitrate="100000">
+                        <script> audio('medium') </script> 
+                        <param id="size" value="480x320" />
+                        <param id="frame_rate" value="1" />
+                    </quality_stop>
+                    <quality_stop which="3" title="WiFi" bitrate="1100000">
+                        <script> audio('high') </script> 
+                        <param id="size" value="480x320" />
+                        <param id="frame_rate" value="1" />
+                    </quality_stop>
+                    <quality_stop which="4" title="High" bitrate="1800000">
+                        <script> audio('high') </script> 
+                        <param id="size" value="640x480" />
+                        <param id="frame_rate" value="1" />
+                    </quality_stop>
+                    <quality_stop which="5" title="Go Nuts" bitrate="3000000">
+                        <script> audio('high') </script> 
+                        <param id="size" value="640x480" />
+                        <param id="frame_rate" value="1" />
+                    </quality_stop>
+                </quality>
+                <checkbox which="0" title="H.264 Video (slower but better)">
+                    <checked_params>
+                        <param id="ffmpeg_vcodec" value="libx264" />
+                    </checked_params>
+                    <unchecked_params>
+                        <param id="ffmpeg_vcodec" value="mpeg4" />
+                    </unchecked_params>
+                </checkbox>
+                <menu which="0" title="Best for:">
+                    <menu_item title="iPhone Screen">
+                        <param id="ffmpeg_vcodec" value="libx264" />
+                    </menu_item>
+                    <menu_item title="TV Screen">
+                        <param id="ffmpeg_vcodec" value="mpeg4" />
+                    </menu_item>
+                </menu>
+            </device>
+            
+            <!-- Tivo Series 2 -->
+            <device title="Tivo Series 2" icon="tivo">
+                <quality>
+                    <quality_stop which="0" bitrate="200000" />
+                    <quality_stop which="1" title="EDGE" bitrate="50000">
+                        <script> audio('low') </script> 
+                        <param id="size" value="192x144" />
+                        <param id="frame_rate" value="0.5" />
+                    </quality_stop>
+                    <quality_stop which="2" title="3G" bitrate="100000">
+                        <script> audio('medium') </script> 
+                        <param id="size" value="480x320" />
+                        <param id="frame_rate" value="1" />
+                    </quality_stop>
+                    <quality_stop which="3" title="WiFi" bitrate="1100000">
+                        <script> audio('high') </script> 
+                        <param id="size" value="480x320" />
+                        <param id="frame_rate" value="1" />
+                    </quality_stop>
+                    <quality_stop which="4" title="High" bitrate="1800000">
+                        <script> audio('high') </script> 
+                        <param id="size" value="640x480" />
+                        <param id="frame_rate" value="1" />
+                    </quality_stop>
+                    <quality_stop which="5" title="Go Nuts" bitrate="3000000">
+                        <script> audio('high') </script> 
+                        <param id="size" value="640x480" />
+                        <param id="frame_rate" value="1" />
+                    </quality_stop>
+                </quality>
+                <checkbox which="0" title="H.264 Video (slower but better)">
+                    <checked_params>
+                        <param id="ffmpeg_vcodec" value="libx264" />
+                    </checked_params>
+                    <unchecked_params>
+                        <param id="ffmpeg_vcodec" value="mpeg4" />
+                    </unchecked_params>
+                </checkbox>
+                <menu which="0" title="Best for:">
+                    <menu_item title="iPhone Screen">
+                        <param id="ffmpeg_vcodec" value="libx264" />
+                    </menu_item>
+                    <menu_item title="TV Screen">
+                        <param id="ffmpeg_vcodec" value="mpeg4" />
+                    </menu_item>
+                </menu>
+            </device>
+            
+            <!-- Tivo Series 3 -->
+            <device title="Tivo Series 3" icon="tivo">
+                <quality>
+                    <quality_stop which="0" bitrate="200000" />
+                    <quality_stop which="1" title="EDGE" bitrate="50000">
+                        <script> audio('low') </script> 
+                        <param id="size" value="192x144" />
+                        <param id="frame_rate" value="0.5" />
+                    </quality_stop>
+                    <quality_stop which="2" title="3G" bitrate="100000">
+                        <script> audio('medium') </script> 
+                        <param id="size" value="480x320" />
+                        <param id="frame_rate" value="1" />
+                    </quality_stop>
+                    <quality_stop which="3" title="WiFi" bitrate="1100000">
+                        <script> audio('high') </script> 
+                        <param id="size" value="480x320" />
+                        <param id="frame_rate" value="1" />
+                    </quality_stop>
+                    <quality_stop which="4" title="High" bitrate="1800000">
+                        <script> audio('high') </script> 
+                        <param id="size" value="640x480" />
+                        <param id="frame_rate" value="1" />
+                    </quality_stop>
+                    <quality_stop which="5" title="Go Nuts" bitrate="3000000">
+                        <script> audio('high') </script> 
+                        <param id="size" value="640x480" />
+                        <param id="frame_rate" value="1" />
+                    </quality_stop>
+                </quality>
+                <checkbox which="0" title="H.264 Video (slower but better)">
+                    <checked_params>
+                        <param id="ffmpeg_vcodec" value="libx264" />
+                    </checked_params>
+                    <unchecked_params>
+                        <param id="ffmpeg_vcodec" value="mpeg4" />
+                    </unchecked_params>
+                </checkbox>
+                <menu which="0" title="Best for:">
+                    <menu_item title="iPhone Screen">
+                        <param id="ffmpeg_vcodec" value="libx264" />
+                    </menu_item>
+                    <menu_item title="TV Screen">
+                        <param id="ffmpeg_vcodec" value="mpeg4" />
+                    </menu_item>
+                </menu>
+            </device>
+
+            <!-- 3g Cell Phones -->
+            <device title="3g Cell Phones" icon="3g">
+                <quality>
+                    <quality_stop which="0" bitrate="200000" />
+                    <quality_stop which="1" title="EDGE" bitrate="50000">
+                        <script> audio('low') </script> 
+                        <param id="size" value="192x144" />
+                        <param id="frame_rate" value="0.5" />
+                    </quality_stop>
+                    <quality_stop which="2" title="3G" bitrate="100000">
+                        <script> audio('medium') </script> 
+                        <param id="size" value="480x320" />
+                        <param id="frame_rate" value="1" />
+                    </quality_stop>
+                    <quality_stop which="3" title="WiFi" bitrate="1100000">
+                        <script> audio('high') </script> 
+                        <param id="size" value="480x320" />
+                        <param id="frame_rate" value="1" />
+                    </quality_stop>
+                    <quality_stop which="4" title="High" bitrate="1800000">
+                        <script> audio('high') </script> 
+                        <param id="size" value="640x480" />
+                        <param id="frame_rate" value="1" />
+                    </quality_stop>
+                    <quality_stop which="5" title="Go Nuts" bitrate="3000000">
+                        <script> audio('high') </script> 
+                        <param id="size" value="640x480" />
+                        <param id="frame_rate" value="1" />
+                    </quality_stop>
+                </quality>
+                <checkbox which="0" title="H.264 Video (slower but better)">
+                    <checked_params>
+                        <param id="ffmpeg_vcodec" value="libx264" />
+                    </checked_params>
+                    <unchecked_params>
+                        <param id="ffmpeg_vcodec" value="mpeg4" />
+                    </unchecked_params>
+                </checkbox>
+                <menu which="0" title="Best for:">
+                    <menu_item title="iPhone Screen">
+                        <param id="ffmpeg_vcodec" value="libx264" />
+                    </menu_item>
+                    <menu_item title="TV Screen">
+                        <param id="ffmpeg_vcodec" value="mpeg4" />
+                    </menu_item>
+                </menu>
+            </device>
+        </device_group>
+
+
+        <!--
+        
+            Game Systems Group
+            
+        -->
+        <device_group title="Game Systems">
+            <!-- XBox 360 -->
+            <device title="XBox 360" icon="xbox360">
+                <checkbox which="0" title="H.264 Video (slower but better)">
+                    <checked_params>
+                        <param id="ffmpeg_vcodec" value="libx264" />
+                    </checked_params>
+                    <unchecked_params>
+                        <param id="ffmpeg_vcodec" value="mpeg4" />
+                    </unchecked_params>
+                </checkbox>
+            </device>
+            
+            <!-- PSP -->
+            <device title="PSP" icon="psp">
+                <quality>
+                    <quality_stop which="0" bitrate="200000" />
+                    <quality_stop which="1" title="EDGE" bitrate="50000">
+                        <script> audio('low') </script> 
+                        <param id="size" value="192x144" />
+                        <param id="frame_rate" value="0.5" />
+                    </quality_stop>
+                    <quality_stop which="2" title="3G" bitrate="100000">
+                        <script> audio('medium') </script> 
+                        <param id="size" value="480x320" />
+                        <param id="frame_rate" value="1" />
+                    </quality_stop>
+                    <quality_stop which="3" title="WiFi" bitrate="1100000">
+                        <script> audio('high') </script> 
+                        <param id="size" value="480x320" />
+                        <param id="frame_rate" value="1" />
+                    </quality_stop>
+                    <quality_stop which="4" title="High" bitrate="1800000">
+                        <script> audio('high') </script> 
+                        <param id="size" value="640x480" />
+                        <param id="frame_rate" value="1" />
+                    </quality_stop>
+                    <quality_stop which="5" title="Go Nuts" bitrate="3000000">
+                        <script> audio('high') </script> 
+                        <param id="size" value="640x480" />
+                        <param id="frame_rate" value="1" />
+                    </quality_stop>
+                </quality>
+                <checkbox which="0" title="H.264 Video (slower but better)">
+                    <checked_params>
+                        <param id="ffmpeg_vcodec" value="libx264" />
+                    </checked_params>
+                    <unchecked_params>
+                        <param id="ffmpeg_vcodec" value="mpeg4" />
+                    </unchecked_params>
+                </checkbox>
+                <menu which="0" title="Best for:">
+                    <menu_item title="iPhone Screen">
+                        <param id="ffmpeg_vcodec" value="libx264" />
+                    </menu_item>
+                    <menu_item title="TV Screen">
+                        <param id="ffmpeg_vcodec" value="mpeg4" />
+                    </menu_item>
+                </menu>
+            </device>
+            
+            <!-- Playstation 3 -->
+            <device title="Playstation 3" icon="ps3">
+                <quality>
+                    <quality_stop which="0" bitrate="200000" />
+                    <quality_stop which="1" title="EDGE" bitrate="50000">
+                        <script> audio('low') </script> 
+                        <param id="size" value="192x144" />
+                        <param id="frame_rate" value="0.5" />
+                    </quality_stop>
+                    <quality_stop which="2" title="3G" bitrate="100000">
+                        <script> audio('medium') </script> 
+                        <param id="size" value="480x320" />
+                        <param id="frame_rate" value="1" />
+                    </quality_stop>
+                    <quality_stop which="3" title="WiFi" bitrate="1100000">
+                        <script> audio('high') </script> 
+                        <param id="size" value="480x320" />
+                        <param id="frame_rate" value="1" />
+                    </quality_stop>
+                    <quality_stop which="4" title="High" bitrate="1800000">
+                        <script> audio('high') </script> 
+                        <param id="size" value="640x480" />
+                        <param id="frame_rate" value="1" />
+                    </quality_stop>
+                    <quality_stop which="5" title="Go Nuts" bitrate="3000000">
+                        <script> audio('high') </script> 
+                        <param id="size" value="640x480" />
+                        <param id="frame_rate" value="1" />
+                    </quality_stop>
+                </quality>
+                <checkbox which="0" title="H.264 Video (slower but better)">
+                    <checked_params>
+                        <param id="ffmpeg_vcodec" value="libx264" />
+                    </checked_params>
+                    <unchecked_params>
+                        <param id="ffmpeg_vcodec" value="mpeg4" />
+                    </unchecked_params>
+                </checkbox>
+                <menu which="0" title="Best for:">
+                    <menu_item title="iPhone Screen">
+                        <param id="ffmpeg_vcodec" value="libx264" />
+                    </menu_item>
+                    <menu_item title="TV Screen">
+                        <param id="ffmpeg_vcodec" value="mpeg4" />
+                    </menu_item>
+                </menu>
+            </device>
+            
+            <!-- Nintendo Wii -->
+            <device title="Nintendo Wii" icon="wii">
+                <quality>
+                    <quality_stop which="0" bitrate="200000" />
+                    <quality_stop which="1" title="EDGE" bitrate="50000">
+                        <script> audio('low') </script> 
+                        <param id="size" value="192x144" />
+                        <param id="frame_rate" value="0.5" />
+                    </quality_stop>
+                    <quality_stop which="2" title="3G" bitrate="100000">
+                        <script> audio('medium') </script> 
+                        <param id="size" value="480x320" />
+                        <param id="frame_rate" value="1" />
+                    </quality_stop>
+                    <quality_stop which="3" title="WiFi" bitrate="1100000">
+                        <script> audio('high') </script> 
+                        <param id="size" value="480x320" />
+                        <param id="frame_rate" value="1" />
+                    </quality_stop>
+                    <quality_stop which="4" title="High" bitrate="1800000">
+                        <script> audio('high') </script> 
+                        <param id="size" value="640x480" />
+                        <param id="frame_rate" value="1" />
+                    </quality_stop>
+                    <quality_stop which="5" title="Go Nuts" bitrate="3000000">
+                        <script> audio('high') </script> 
+                        <param id="size" value="640x480" />
+                        <param id="frame_rate" value="1" />
+                    </quality_stop>
+                </quality>
+                <checkbox which="0" title="H.264 Video (slower but better)">
+                    <checked_params>
+                        <param id="ffmpeg_vcodec" value="libx264" />
+                    </checked_params>
+                    <unchecked_params>
+                        <param id="ffmpeg_vcodec" value="mpeg4" />
+                    </unchecked_params>
+                </checkbox>
+                <menu which="0" title="Best for:">
+                    <menu_item title="iPhone Screen">
+                        <param id="ffmpeg_vcodec" value="libx264" />
+                    </menu_item>
+                    <menu_item title="TV Screen">
+                        <param id="ffmpeg_vcodec" value="mpeg4" />
+                    </menu_item>
+                </menu>
+            </device>
+        </device_group>
+
+
+        <!--
+        
+            Generic Formats Group
+            
+        -->
+        <device_group title="Generic Formats">
+            <!-- AVI -->
+            <device title="AVI" icon="file">
+                <checkbox which="0" title="H.264 Video (slower but better)">
+                    <checked_params>
+                        <param id="ffmpeg_vcodec" value="libx264" />
+                    </checked_params>
+                    <unchecked_params>
+                        <param id="ffmpeg_vcodec" value="mpeg4" />
+                    </unchecked_params>
+                </checkbox>
+            </device>
+            
+            <!-- MP4 -->
+            <device title="MP4" icon="file">
+                <quality>
+                    <quality_stop which="0" bitrate="200000" />
+                    <quality_stop which="1" title="EDGE" bitrate="50000">
+                        <script> audio('low') </script> 
+                        <param id="size" value="192x144" />
+                        <param id="frame_rate" value="0.5" />
+                    </quality_stop>
+                    <quality_stop which="2" title="3G" bitrate="100000">
+                        <script> audio('medium') </script> 
+                        <param id="size" value="480x320" />
+                        <param id="frame_rate" value="1" />
+                    </quality_stop>
+                    <quality_stop which="3" title="WiFi" bitrate="1100000">
+                        <script> audio('high') </script> 
+                        <param id="size" value="480x320" />
+                        <param id="frame_rate" value="1" />
+                    </quality_stop>
+                    <quality_stop which="4" title="High" bitrate="1800000">
+                        <script> audio('high') </script> 
+                        <param id="size" value="640x480" />
+                        <param id="frame_rate" value="1" />
+                    </quality_stop>
+                    <quality_stop which="5" title="Go Nuts" bitrate="3000000">
+                        <script> audio('high') </script> 
+                        <param id="size" value="640x480" />
+                        <param id="frame_rate" value="1" />
+                    </quality_stop>
+                </quality>
+                <checkbox which="0" title="H.264 Video (slower but better)">
+                    <checked_params>
+                        <param id="ffmpeg_vcodec" value="libx264" />
+                    </checked_params>
+                    <unchecked_params>
+                        <param id="ffmpeg_vcodec" value="mpeg4" />
+                    </unchecked_params>
+                </checkbox>
+                <menu which="0" title="Best for:">
+                    <menu_item title="iPhone Screen">
+                        <param id="ffmpeg_vcodec" value="libx264" />
+                    </menu_item>
+                    <menu_item title="TV Screen">
+                        <param id="ffmpeg_vcodec" value="mpeg4" />
+                    </menu_item>
+                </menu>
+            </device>
+            
+            <!-- QuickTime -->
+            <device title="QuickTime" icon="file">
+                <quality>
+                    <quality_stop which="0" bitrate="200000" />
+                    <quality_stop which="1" title="EDGE" bitrate="50000">
+                        <script> audio('low') </script> 
+                        <param id="size" value="192x144" />
+                        <param id="frame_rate" value="0.5" />
+                    </quality_stop>
+                    <quality_stop which="2" title="3G" bitrate="100000">
+                        <script> audio('medium') </script> 
+                        <param id="size" value="480x320" />
+                        <param id="frame_rate" value="1" />
+                    </quality_stop>
+                    <quality_stop which="3" title="WiFi" bitrate="1100000">
+                        <script> audio('high') </script> 
+                        <param id="size" value="480x320" />
+                        <param id="frame_rate" value="1" />
+                    </quality_stop>
+                    <quality_stop which="4" title="High" bitrate="1800000">
+                        <script> audio('high') </script> 
+                        <param id="size" value="640x480" />
+                        <param id="frame_rate" value="1" />
+                    </quality_stop>
+                    <quality_stop which="5" title="Go Nuts" bitrate="3000000">
+                        <script> audio('high') </script> 
+                        <param id="size" value="640x480" />
+                        <param id="frame_rate" value="1" />
+                    </quality_stop>
+                </quality>
+                <checkbox which="0" title="H.264 Video (slower but better)">
+                    <checked_params>
+                        <param id="ffmpeg_vcodec" value="libx264" />
+                    </checked_params>
+                    <unchecked_params>
+                        <param id="ffmpeg_vcodec" value="mpeg4" />
+                    </unchecked_params>
+                </checkbox>
+                <menu which="0" title="Best for:">
+                    <menu_item title="iPhone Screen">
+                        <param id="ffmpeg_vcodec" value="libx264" />
+                    </menu_item>
+                    <menu_item title="TV Screen">
+                        <param id="ffmpeg_vcodec" value="mpeg4" />
+                    </menu_item>
+                </menu>
+            </device>
+            
+            <!-- WMV -->
+            <device title="WMV" icon="wma">
+                <quality>
+                    <quality_stop which="0" bitrate="200000" />
+                    <quality_stop which="1" title="EDGE" bitrate="50000">
+                        <script> audio('low') </script> 
+                        <param id="size" value="192x144" />
+                        <param id="frame_rate" value="0.5" />
+                    </quality_stop>
+                    <quality_stop which="2" title="3G" bitrate="100000">
+                        <script> audio('medium') </script> 
+                        <param id="size" value="480x320" />
+                        <param id="frame_rate" value="1" />
+                    </quality_stop>
+                    <quality_stop which="3" title="WiFi" bitrate="1100000">
+                        <script> audio('high') </script> 
+                        <param id="size" value="480x320" />
+                        <param id="frame_rate" value="1" />
+                    </quality_stop>
+                    <quality_stop which="4" title="High" bitrate="1800000">
+                        <script> audio('high') </script> 
+                        <param id="size" value="640x480" />
+                        <param id="frame_rate" value="1" />
+                    </quality_stop>
+                    <quality_stop which="5" title="Go Nuts" bitrate="3000000">
+                        <script> audio('high') </script> 
+                        <param id="size" value="640x480" />
+                        <param id="frame_rate" value="1" />
+                    </quality_stop>
+                </quality>
+                <checkbox which="0" title="H.264 Video (slower but better)">
+                    <checked_params>
+                        <param id="ffmpeg_vcodec" value="libx264" />
+                    </checked_params>
+                    <unchecked_params>
+                        <param id="ffmpeg_vcodec" value="mpeg4" />
+                    </unchecked_params>
+                </checkbox>
+                <menu which="0" title="Best for:">
+                    <menu_item title="iPhone Screen">
+                        <param id="ffmpeg_vcodec" value="libx264" />
+                    </menu_item>
+                    <menu_item title="TV Screen">
+                        <param id="ffmpeg_vcodec" value="mpeg4" />
+                    </menu_item>
+                </menu>
+            </device>
+
+            <!-- Flash -->
+            <device title="Flash" icon="flash">
+                <quality>
+                    <quality_stop which="0" bitrate="200000" />
+                    <quality_stop which="1" title="EDGE" bitrate="50000">
+                        <script> audio('low') </script> 
+                        <param id="size" value="192x144" />
+                        <param id="frame_rate" value="0.5" />
+                    </quality_stop>
+                    <quality_stop which="2" title="3G" bitrate="100000">
+                        <script> audio('medium') </script> 
+                        <param id="size" value="480x320" />
+                        <param id="frame_rate" value="1" />
+                    </quality_stop>
+                    <quality_stop which="3" title="WiFi" bitrate="1100000">
+                        <script> audio('high') </script> 
+                        <param id="size" value="480x320" />
+                        <param id="frame_rate" value="1" />
+                    </quality_stop>
+                    <quality_stop which="4" title="High" bitrate="1800000">
+                        <script> audio('high') </script> 
+                        <param id="size" value="640x480" />
+                        <param id="frame_rate" value="1" />
+                    </quality_stop>
+                    <quality_stop which="5" title="Go Nuts" bitrate="3000000">
+                        <script> audio('high') </script> 
+                        <param id="size" value="640x480" />
+                        <param id="frame_rate" value="1" />
+                    </quality_stop>
+                </quality>
+                <checkbox which="0" title="H.264 Video (slower but better)">
+                    <checked_params>
+                        <param id="ffmpeg_vcodec" value="libx264" />
+                    </checked_params>
+                    <unchecked_params>
+                        <param id="ffmpeg_vcodec" value="mpeg4" />
+                    </unchecked_params>
+                </checkbox>
+                <menu which="0" title="Best for:">
+                    <menu_item title="iPhone Screen">
+                        <param id="ffmpeg_vcodec" value="libx264" />
+                    </menu_item>
+                    <menu_item title="TV Screen">
+                        <param id="ffmpeg_vcodec" value="mpeg4" />
+                    </menu_item>
+                </menu>
+            </device>
+            
+            <!-- MPEG -->
+            <device title="MPEG" icon="file">
                 <quality>
                     <quality_stop which="0" bitrate="200000" />
                     <quality_stop which="1" title="EDGE" bitrate="50000">

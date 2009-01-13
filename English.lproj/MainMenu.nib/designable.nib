@@ -2,14 +2,14 @@
 <archive type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="7.03">
 	<data>
 		<int key="IBDocument.SystemTarget">1050</int>
-		<string key="IBDocument.SystemVersion">9F33</string>
+		<string key="IBDocument.SystemVersion">9E17</string>
 		<string key="IBDocument.InterfaceBuilderVersion">677</string>
-		<string key="IBDocument.AppKitVersion">949.34</string>
+		<string key="IBDocument.AppKitVersion">949.31</string>
 		<string key="IBDocument.HIToolboxVersion">352.00</string>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
+			<integer value="503"/>
 			<integer value="2154"/>
-			<integer value="371"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -1467,8 +1467,12 @@
 											<bool key="NSEnabled">YES</bool>
 											<object class="NSPopUpButtonCell" key="NSCell" id="372135114">
 												<int key="NSCellFlags">-2075001280</int>
-												<int key="NSCellFlags2">132096</int>
-												<reference key="NSSupport" ref="26"/>
+												<int key="NSCellFlags2">1024</int>
+												<object class="NSFont" key="NSSupport">
+													<string key="NSName">LucidaGrande</string>
+													<double key="NSSize">1.200000e+01</double>
+													<int key="NSfFlags">4883</int>
+												</object>
 												<reference key="NSControlView" ref="668207334"/>
 												<int key="NSButtonFlags">-2038415105</int>
 												<int key="NSButtonFlags2">36</int>
@@ -4032,7 +4036,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 												<string>WebURLsWithTitlesPboardType</string>
 											</object>
 										</object>
-										<string key="NSFrameSize">{362, 12}</string>
+										<string key="NSFrameSize">{362, 14}</string>
 										<reference key="NSSuperview" ref="693118750"/>
 										<object class="NSTextContainer" key="NSTextContainer" id="233789629">
 											<object class="NSLayoutManager" key="NSLayoutManager">
@@ -8200,7 +8204,7 @@ J3MgbW9yZSBpbXBvcnRhbnQuA</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>{{159, 663}, {148, 115}}</string>
+					<string>{{263, 673}, {148, 115}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<object class="NSMutableDictionary">

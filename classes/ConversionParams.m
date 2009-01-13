@@ -10,6 +10,12 @@
 #import "JavaScriptContext.h"
 #import "Transcoder.h"
 
+static NSImage* getImage(NSString* name)
+{
+    NSString* path = [[NSBundle mainBundle] pathForResource:name ofType:@"png"];
+    return [[NSImage alloc] initWithContentsOfFile:path];
+}
+
 static NSString* stringAttribute(NSXMLElement* element, NSString* name)
 {
     NSXMLNode* node = [element attributeForName:name];
@@ -81,16 +87,38 @@ static NSString* parseScripts(NSXMLElement* element)
     return script;
 }
 
-static void addMenuItem(NSPopUpButton* button, NSString* title, int tag)
+static void addMenuItem(NSPopUpButton* button, NSString* title, NSString* icon, int tag)
 {
     NSMenuItem* item = [[NSMenuItem alloc] init];
-    [item setTitle:title];
     [item setTag:tag];
-    if (tag < 0)
+    if (tag < 0) {
         [item setEnabled:NO];
-    else
+        NSAttributedString*  s =[[NSAttributedString alloc] initWithString:title 
+                                attributes:[NSDictionary dictionaryWithObjectsAndKeys:
+                                    [NSFont boldSystemFontOfSize:0], NSFontAttributeName, 
+                                    [NSColor blackColor], NSForegroundColorAttributeName,
+                                    nil]];
+        [item setAttributedTitle:s];
+    }
+    else {
         [item setIndentationLevel:1];
+        [item setTitle:title];
+        if (icon) {
+            NSString* iconName = [NSString stringWithFormat:@"tiny%@", icon];
+            NSImage* image = getImage(iconName);
+            if (!image)
+                NSRunAlertPanel(@"Image not found", [NSString stringWithFormat:@"Image file '%@' does not exist", iconName], nil, nil, nil);
+            else
+                [item setImage: image];
+        }
+    }
         
+    [[button menu] addItem:item];
+}
+
+static void addMenuSeparator(NSPopUpButton* button)
+{
+    NSMenuItem* item = [NSMenuItem separatorItem];
     [[button menu] addItem:item];
 }
 
@@ -478,7 +506,7 @@ static void setButton(NSButton* button, NSString* title)
 -(DeviceEntry*) initWithElement: (NSXMLElement*) element inGroup: (NSString*) group withDefaults: (DeviceEntry*) defaults;
 {
     m_defaultDevice = [defaults retain];
-    m_id = [NSString stringWithString:stringAttribute(element, @"id")];
+    m_icon = [NSString stringWithString:stringAttribute(element, @"icon")];
     m_title = [NSString stringWithString:stringAttribute(element, @"title")];
     m_groupTitle = [NSString stringWithString:group ? group : @""];
     
@@ -531,9 +559,9 @@ static void setButton(NSButton* button, NSString* title)
     return m_title;
 }
 
--(NSString*) id
+-(NSString*) icon
 {
-    return m_id;
+    return m_icon;
 }
 
 -(NSArray*) qualityStops
@@ -654,7 +682,7 @@ static JSValueRef _jsLog(JSContextRef ctx, JSObjectRef function, JSObjectRef thi
         if (!item)
             continue;
         
-        addMenuItem(button, [item title], i);
+        addMenuItem(button, [item title], nil, i);
     }
 }
 
@@ -912,10 +940,12 @@ static JSValueRef _jsLog(JSContextRef ctx, JSObjectRef function, JSObjectRef thi
         NSString* group = [entry group];
         if (![group isEqualToString:currentGroup]) {
             currentGroup = group;
-            addMenuItem(m_deviceButton, currentGroup, -1);
+            if (i != 0)
+                addMenuSeparator(m_deviceButton);
+            addMenuItem(m_deviceButton, currentGroup, nil, -1);
         }
         
-        addMenuItem(m_deviceButton, [entry title], currentItem++);
+        addMenuItem(m_deviceButton, [entry title], [entry icon], currentItem++);
     }
     
     // set the selected item
