@@ -360,4 +360,9 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
     return m_conversionParams;
 }
 
+-(NSTextView*) consoleView
+{
+    return m_consoleView;
+}
+
 @end

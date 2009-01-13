@@ -585,7 +585,7 @@ static JSValueRef _jsLog(JSContextRef ctx, JSObjectRef function, JSObjectRef thi
     
     [string appendString:@"\n"];
     
-    [transcoder log:string];
+    [transcoder log:[NSString stringWithFormat:@"JS log: %@\n", string]];
     
     return JSValueMakeUndefined(ctx);
 }

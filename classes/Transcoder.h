@@ -132,5 +132,6 @@ typedef enum FileStatus { FS_INVALID, FS_VALID, FS_ENCODING, FS_PAUSED, FS_FAILE
 -(void) commandFinished: (Command*) command status: (int) status;
 
 -(void) log: (NSString*) format, ...;
+-(void) logCommand: (NSString*) commandId withFormat: (NSString*) format, ...;
 
 @end

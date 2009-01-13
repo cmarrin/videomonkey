@@ -24,7 +24,6 @@
     //[[m_movieView movie] setSelection: range];
     
     //[[m_movieView movie] setAttribute: (NSValue) range forKey: QTMovieCurrentTimeAttribute];
-    printf("foo\n");
     //[m_movieView movie
 }
 

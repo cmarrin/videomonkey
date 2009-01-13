@@ -50,5 +50,6 @@ typedef enum { RS_STOPPED, RS_RUNNING, RS_PAUSED } RunStateType;
 -(void) setRunState: (RunStateType) state;
 
 -(ConversionParams*) conversionParams;
+-(NSTextView*) consoleView;
 
 @end

@@ -425,6 +425,9 @@ static NSImage* getFileStatusImage(FileStatus status)
         [m_logFile release];
     }
     
+    [self log: @"============================================================================\n"];
+    [self log: @"Begin transcode: %@ --> %@\n", [[self inputFileName] lastPathComponent], [[self outputFileName] lastPathComponent]];
+    
     // Make sure path exists
     NSString* logFilePath = [LOG_FILE_PATH stringByStandardizingPath];
     if (![[NSFileManager defaultManager] fileExistsAtPath: logFilePath])
@@ -563,6 +566,11 @@ static NSImage* getFileStatusImage(FileStatus status)
 
 -(void) finish: (int) status
 {
+    if (status == 0)
+        [self log: @"Transcode succeeded!\n"];
+    else
+        [self log: @"Transcode FAILED with error code: %d\n", status];
+        
     m_fileStatus = (status == 0) ? FS_SUCCEEDED : (status == 255) ? FS_VALID : FS_FAILED;
     [m_statusImageView setImage: getFileStatusImage(m_fileStatus)];
     m_progress = (status == 0) ? 1 : 0;
@@ -615,6 +623,21 @@ static NSImage* getFileStatusImage(FileStatus status)
     // Output to log file
     if (m_logFile)
         [m_logFile writeData:[s dataUsingEncoding:NSUTF8StringEncoding]];
+        
+    // Output to console
+    [[[[m_appController consoleView] textStorage] mutableString] appendString: s];
+    
+    // scroll to the end
+    NSRange range = NSMakeRange ([[[m_appController consoleView] string] length], 0);
+    [[m_appController consoleView] scrollRangeToVisible: range];    
+}
+
+-(void) logCommand: (NSString*) commandId withFormat: (NSString*) format, ...
+{
+    va_list args;
+    va_start(args, format);
+    NSString* string = [[NSString alloc] initWithFormat:format arguments:args];
+    [self log: @"    [Command %@] %@\n", commandId, string];
 }
 
 @end

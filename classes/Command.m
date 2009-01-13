@@ -11,7 +11,7 @@
 
 @implementation Command
 
--(Transcoder*) initWithTranscoder: (Transcoder*) transcoder command: (NSString*) command outputType: (CommandOutputType) type identifier: (id) id
+-(Transcoder*) initWithTranscoder: (Transcoder*) transcoder command: (NSString*) command outputType: (CommandOutputType) type identifier: (NSString*) id
 {
     self = [super init];
     if (self) {
@@ -41,10 +41,10 @@
     [args removeObjectAtIndex: 0];
     
     // log the command
-    [m_transcoder log: @"[Command %@] execute: %@ %@\n", 
-                            [m_id isEqualToString:@"last"] ? @"X" : m_id, 
-                            [launchPath lastPathComponent], 
-                            [args componentsJoinedByString: @" "]];
+    [m_transcoder logCommand: m_id withFormat:@""];
+    [m_transcoder logCommand: m_id withFormat:@"Command to execute:"];
+    [m_transcoder logCommand: m_id withFormat:@"    %@ %@", [launchPath lastPathComponent], [args componentsJoinedByString: @" "]];
+    [m_transcoder logCommand: m_id withFormat:@""];
     
     // execute the command
     [m_task setArguments: args];
@@ -127,7 +127,7 @@ static NSDictionary* makeDictionary(NSString* s)
     // If this looks like a progress line for ffmpeg, process it like that
     if (![response hasPrefix:@"frame="]) {
         if ([response length] > 0)
-            [m_transcoder log: @"[Command %@] %@\n", m_id, response];
+            [m_transcoder logCommand: m_id withFormat:@"--> %@", response];
         return;
     }
     
