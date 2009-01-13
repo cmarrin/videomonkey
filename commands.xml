@@ -195,7 +195,7 @@
         -->
         <device_group title="iTunes">
             <!-- All Apple Devices -->
-            <device title="All Apple Devices" icon="itunesfile">
+            <device title="All Devices" icon="itunesfile">
                 <checkbox which="0" title="H.264 Video (slower but better)">
                     <checked_params>
                         <param id="ffmpeg_vcodec" value="libx264" />

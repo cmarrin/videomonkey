@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<archive type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="7.03">
+<archive type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="7.02">
 	<data>
 		<int key="IBDocument.SystemTarget">1050</int>
-		<string key="IBDocument.SystemVersion">9E17</string>
-		<string key="IBDocument.InterfaceBuilderVersion">677</string>
-		<string key="IBDocument.AppKitVersion">949.31</string>
-		<string key="IBDocument.HIToolboxVersion">352.00</string>
+		<string key="IBDocument.SystemVersion">9G55</string>
+		<string key="IBDocument.InterfaceBuilderVersion">672</string>
+		<string key="IBDocument.AppKitVersion">949.43</string>
+		<string key="IBDocument.HIToolboxVersion">353.00</string>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
 			<integer value="503"/>
@@ -16,15 +16,6 @@
 			<string>com.apple.InterfaceBuilderKit</string>
 			<string>com.apple.QTKitIBPlugin</string>
 			<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-		</object>
-		<object class="NSMutableDictionary" key="IBDocument.Metadata">
-			<bool key="EncodedWithXMLCoder">YES</bool>
-			<object class="NSArray" key="dict.sortedKeys">
-				<bool key="EncodedWithXMLCoder">YES</bool>
-			</object>
-			<object class="NSMutableArray" key="dict.values">
-				<bool key="EncodedWithXMLCoder">YES</bool>
-			</object>
 		</object>
 		<object class="NSMutableArray" key="IBDocument.RootObjects" id="1048">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -1471,7 +1462,7 @@
 												<object class="NSFont" key="NSSupport">
 													<string key="NSName">LucidaGrande</string>
 													<double key="NSSize">1.200000e+01</double>
-													<int key="NSfFlags">4883</int>
+													<int key="NSfFlags">16</int>
 												</object>
 												<reference key="NSControlView" ref="668207334"/>
 												<int key="NSButtonFlags">-2038415105</int>
@@ -3910,10 +3901,10 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 							<string key="NSFrame">{{0, 65}, {327, 167}}</string>
 							<reference key="NSSuperview" ref="947487714"/>
 							<reference key="kCoderFillColor" ref="709913553"/>
-							<boolean value="YES" key="kCoderControllerVisible" id="5"/>
+							<integer value="1" key="kCoderControllerVisible" id="5"/>
 							<reference key="kCoderPreservesAspectRatio" ref="5"/>
 							<nil key="kCoderMovie"/>
-							<boolean value="NO" key="kCoderEditable" id="6"/>
+							<integer value="0" key="kCoderEditable" id="6"/>
 						</object>
 						<object class="NSButton" id="385888942">
 							<reference key="NSNextResponder" ref="947487714"/>
@@ -4920,6 +4911,22 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 						<reference key="destination" ref="897181040"/>
 					</object>
 					<int key="connectionID">2155</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">m_deviceImageView</string>
+						<reference key="source" ref="402522846"/>
+						<reference key="destination" ref="70099249"/>
+					</object>
+					<int key="connectionID">2156</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">m_deviceName</string>
+						<reference key="source" ref="402522846"/>
+						<reference key="destination" ref="648373860"/>
+					</object>
+					<int key="connectionID">2157</int>
 				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -8124,7 +8131,7 @@ J3MgbW9yZSBpbXBvcnRhbnQuA</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<reference ref="9"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>{{688, 851}, {379, 275}}</string>
+					<string>{{688, 481}, {379, 275}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -8162,8 +8169,8 @@ J3MgbW9yZSBpbXBvcnRhbnQuA</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<reference ref="9"/>
-					<string>{{174, 558}, {714, 528}}</string>
-					<string>{{174, 558}, {714, 528}}</string>
+					<string>{{109, 102}, {714, 528}}</string>
+					<string>{{109, 102}, {714, 528}}</string>
 					<reference ref="9"/>
 					<string>{{33, 99}, {480, 360}}</string>
 					<reference ref="5"/>
@@ -8309,7 +8316,7 @@ J3MgbW9yZSBpbXBvcnRhbnQuA</string>
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">2155</int>
+			<int key="maxID">2157</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -8396,6 +8403,8 @@ J3MgbW9yZSBpbXBvcnRhbnQuA</string>
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>m_conversionParamsTabView</string>
 							<string>m_deviceButton</string>
+							<string>m_deviceImageView</string>
+							<string>m_deviceName</string>
 							<string>m_mainWindow</string>
 							<string>m_performanceButton</string>
 						</object>
@@ -8403,6 +8412,8 @@ J3MgbW9yZSBpbXBvcnRhbnQuA</string>
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>NSTabView</string>
 							<string>NSPopUpButton</string>
+							<string>NSImageView</string>
+							<string>NSTextField</string>
 							<string>NSWindow</string>
 							<string>NSPopUpButton</string>
 						</object>

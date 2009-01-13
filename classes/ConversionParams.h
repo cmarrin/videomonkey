@@ -224,6 +224,8 @@
     IBOutlet NSTabView* m_conversionParamsTabView;
     IBOutlet NSPopUpButton* m_deviceButton;
     IBOutlet NSPopUpButton* m_performanceButton;
+    IBOutlet NSTextField* m_deviceName;
+    IBOutlet NSImageView* m_deviceImageView;
     
     DeviceEntry* m_defaultDevice;
     NSMutableArray* m_devices;

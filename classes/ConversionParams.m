@@ -955,7 +955,11 @@ static JSValueRef _jsLog(JSContextRef ctx, JSObjectRef function, JSObjectRef thi
     m_currentDevice = [self findDeviceEntryWithIndex:0];
     [m_currentDevice populateTabView: m_conversionParamsTabView];
     [m_currentDevice populatePerformanceButton: m_performanceButton];
-    
+
+	// set the device name and image
+	[m_deviceImageView setImage:getImage([m_currentDevice icon])];
+	[m_deviceName setStringValue:[m_currentDevice title]];
+
     // set the selected item
     // FIXME: need to get this from prefs
     [m_performanceButton selectItemWithTag:2];
@@ -972,6 +976,10 @@ static JSValueRef _jsLog(JSContextRef ctx, JSObjectRef function, JSObjectRef thi
     m_currentDevice = [self findDeviceEntryWithIndex:tag];
     [m_currentDevice populateTabView: m_conversionParamsTabView];
     [m_currentDevice populatePerformanceButton: m_performanceButton];
+	
+	// set the device name and image
+	[m_deviceImageView setImage:getImage([m_currentDevice icon])];
+	[m_deviceName setStringValue:[m_currentDevice title]];
 }
 
 - (IBAction)selectPerformance:(id)sender {
