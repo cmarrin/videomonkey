@@ -286,6 +286,11 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
     [m_fileListView reloadData];
 }
 
+-(IBAction)toggleConsoleDrawer:(id)sender
+{
+    [m_consoleDrawer toggle:sender];
+}
+
 -(IBAction)changeSaveToText:(id)sender
 {
     [m_savePath release];

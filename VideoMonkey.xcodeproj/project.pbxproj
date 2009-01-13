@@ -94,6 +94,7 @@
 		497E67170EEC5DD8000372EC /* Command.m in Sources */ = {isa = PBXBuildFile; fileRef = 497E67160EEC5DD8000372EC /* Command.m */; };
 		499A31770EDD97EB000C0AAF /* Transcoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 499A31760EDD97EB000C0AAF /* Transcoder.m */; };
 		499A31D30EDEE3E4000C0AAF /* mediainfo-inform.csv in Resources */ = {isa = PBXBuildFile; fileRef = 499A31D20EDEE3E4000C0AAF /* mediainfo-inform.csv */; };
+		49AAD9A70F1C232B0098F087 /* Console.png in Resources */ = {isa = PBXBuildFile; fileRef = 49AAD9A60F1C232B0098F087 /* Console.png */; };
 		49BC89A90ECD245F00027F1D /* MoviePanelController.m in Sources */ = {isa = PBXBuildFile; fileRef = 49BC89A70ECD245F00027F1D /* MoviePanelController.m */; };
 		49BC8CAA0ED6892400027F1D /* EncodeWorking0.png in Resources */ = {isa = PBXBuildFile; fileRef = 49BC8CA10ED6892400027F1D /* EncodeWorking0.png */; };
 		49BC8CAB0ED6892400027F1D /* EncodeWorking1.png in Resources */ = {isa = PBXBuildFile; fileRef = 49BC8CA20ED6892400027F1D /* EncodeWorking1.png */; };
@@ -213,6 +214,7 @@
 		499A31750EDD97EB000C0AAF /* Transcoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Transcoder.h; path = classes/Transcoder.h; sourceTree = "<group>"; };
 		499A31760EDD97EB000C0AAF /* Transcoder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Transcoder.m; path = classes/Transcoder.m; sourceTree = "<group>"; };
 		499A31D20EDEE3E4000C0AAF /* mediainfo-inform.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; lineEnding = 2; path = "mediainfo-inform.csv"; sourceTree = "<group>"; };
+		49AAD9A60F1C232B0098F087 /* Console.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Console.png; path = icons/Console.png; sourceTree = "<group>"; };
 		49BC89A70ECD245F00027F1D /* MoviePanelController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MoviePanelController.m; path = classes/MoviePanelController.m; sourceTree = "<group>"; };
 		49BC89A80ECD245F00027F1D /* MoviePanelController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MoviePanelController.h; path = classes/MoviePanelController.h; sourceTree = "<group>"; };
 		49BC8CA10ED6892400027F1D /* EncodeWorking0.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = EncodeWorking0.png; path = icons/EncodeWorking0.png; sourceTree = "<group>"; };
@@ -400,6 +402,7 @@
 		4910FEF90EC7C1C1001B578B /* Icons */ = {
 			isa = PBXGroup;
 			children = (
+				49AAD9A60F1C232B0098F087 /* Console.png */,
 				49636A4E0EE707E300F7B6D2 /* ok.png */,
 				49636A4C0EE707BA00F7B6D2 /* error.png */,
 				49636A460EE7078200F7B6D2 /* invalid.png */,
@@ -575,6 +578,7 @@
 				492D327E0EF18D8000AEB740 /* bin in Resources */,
 				49E9119B0EF86C3F009D0CAF /* ffpresets in Resources */,
 				49D4694A0F0F2E52005D70FD /* commands.xml in Resources */,
+				49AAD9A70F1C232B0098F087 /* Console.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

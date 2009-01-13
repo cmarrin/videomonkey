@@ -24,6 +24,8 @@ typedef enum { RS_STOPPED, RS_RUNNING, RS_PAUSED } RunStateType;
     IBOutlet NSToolbarItem* m_stopEncodeItem;
     IBOutlet ConversionParams* m_conversionParams;
     IBOutlet MoviePanelController* m_moviePanel;
+    IBOutlet NSDrawer* m_consoleDrawer;
+    IBOutlet NSTextView* m_consoleView;
     
     NSMutableArray* m_files;
     int m_draggedRow;
@@ -37,6 +39,7 @@ typedef enum { RS_STOPPED, RS_RUNNING, RS_PAUSED } RunStateType;
 -(IBAction)startEncode:(id)sender;
 -(IBAction)pauseEncode:(id)sender;
 -(IBAction)stopEncode:(id)sender;
+-(IBAction)toggleConsoleDrawer:(id)sender;
 
 -(IBAction)changeSaveToText:(id)sender;
 -(IBAction)selectSaveToPath:(id)sender;
