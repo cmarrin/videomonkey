@@ -8,6 +8,7 @@
 
 #import "AppController.h"
 #import "ConversionParams.h"
+#import "JavaScriptContext.h"
 #import "Transcoder.h"
 #import "ProgressCell.h"
 
@@ -15,10 +16,40 @@
 
 @implementation AppController
 
+static JSValueRef _jsLog(JSContextRef ctx, JSObjectRef function, JSObjectRef thisObject, size_t argumentCount, 
+                         const JSValueRef arguments[], JSValueRef* exception)
+{
+    JSObjectRef global = JSContextGetGlobalObject(ctx);
+    JSStringRef propString = JSStringCreateWithUTF8CString("$app");
+    JSValueRef jsValue = JSObjectGetProperty(ctx, global, propString, NULL);
+    JSObjectRef obj = JSValueToObject(ctx, jsValue, NULL);
+    AppController* appController = (AppController*) JSObjectGetPrivate(obj);
+
+    // make a string out of the args
+    NSMutableString* string = [[NSMutableString alloc] init];
+    for (int i = 0; i < argumentCount; ++i) {
+        JSStringRef jsString = JSValueToStringCopy(ctx, arguments[i], NULL);
+        [string appendString:[NSString stringWithJSString:jsString]];
+    }
+    
+    [string appendString:@"\n"];
+    
+    [appController log:[NSString stringWithFormat:@"JS log: %@\n", string]];
+    
+    return JSValueMakeUndefined(ctx);
+}
+
 - (id)init
 {
     if (self = [super init]) {
         m_files = [[NSMutableArray alloc] init];
+
+        // Create JS context
+        m_context = [[JavaScriptContext alloc] init];
+
+        // Add log method
+        [m_context addGlobalObject:@"$app" ofClass:NULL withPrivateData:self];
+        [m_context addGlobalFunctionProperty:@"log" withCallback:_jsLog];
     }
     return self;
 }
@@ -360,9 +391,24 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
     return m_conversionParams;
 }
 
--(NSTextView*) consoleView
+-(void) log: (NSString*) format, ...
 {
-    return m_consoleView;
+    va_list args;
+    va_start(args, format);
+    NSString* s = [[NSString alloc] initWithFormat:format arguments: args];
+    
+    // Output to stderr
+    fprintf(stderr, [s UTF8String]);
+    
+    // Output to log file
+    [(Transcoder*) [m_files objectAtIndex: m_currentEncoding] log: s];
+        
+    // Output to console
+    [[[m_consoleView textStorage] mutableString] appendString: s];
+    
+    // scroll to the end
+    NSRange range = NSMakeRange ([[m_consoleView string] length], 0);
+    [m_consoleView scrollRangeToVisible: range];    
 }
 
 @end

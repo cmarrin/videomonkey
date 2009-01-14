@@ -411,6 +411,98 @@ static NSImage* getFileStatusImage(FileStatus status)
     return m_passLogFileName;
 }
 
+-(NSString*) replaceParams:(NSString*) recipeString withContext: (JavaScriptContext*) context
+{
+    NSString* inputString = recipeString;
+    NSMutableString* outputString = [[NSMutableString alloc] init];
+    BOOL didSubstitute = YES;
+    
+    while (didSubstitute) {
+       didSubstitute = NO;
+       
+        NSArray* array = [inputString componentsSeparatedByString:@"$"];
+        [outputString setString:[array objectAtIndex:0]];
+        
+        BOOL firstTime = YES;
+        BOOL skipNext = NO;
+         
+        for (NSString* s in array) {
+            if (firstTime) {
+                firstTime = NO;
+                continue;
+            }
+                
+            if (skipNext) {
+                [outputString appendString:s];
+                skipNext = NO;
+                continue;
+            }
+                
+            // if s is of 0 length, it means there is a $$ sequence, in which case we output it as a literal $
+            // But we can't do that yet, because we would catch it as a substitution on the next pass. So we leave
+            // it doubled for now
+            if ([s length] == 0) {
+                skipNext = YES;
+                [outputString appendString:@"$$"];
+            }
+            
+            // pick out the param name
+            NSString* param;
+            NSString* other;
+            
+            if ([s characterAtIndex:0] == '(') {
+                // pick out param between parens
+                NSRange range = [s rangeOfString: @")"];
+                if (range.location == NSNotFound) {
+                    // invalid
+                    param = @"";
+                    other = @"";
+                }
+                else {
+                    param = [[s substringFromIndex:1] substringToIndex:range.location-1];
+                    other = [s substringFromIndex:range.location+1];
+                }
+            }
+            else {
+                // pick out param to next space
+                NSRange range = [s rangeOfString: @" "];
+                if (range.location == NSNotFound) {
+                    param = s;
+                    other = @"";
+                }
+                else {
+                    param = [s substringToIndex:range.location];
+                    other = [s substringFromIndex:range.location];
+                }
+            }
+            
+            // do param substitution
+            didSubstitute = YES;
+            NSString* substitution = [context stringParamForKey: param];
+            if (substitution)
+                [outputString appendString:substitution];
+            [outputString appendString:other];
+        }
+        
+        inputString = outputString;
+    }
+    
+    // All done substituting, now replace $$ with $
+    NSArray* array = [inputString componentsSeparatedByString:@"$$"];
+    [outputString setString:@""];
+    BOOL firstTime = YES;
+    
+    for (NSString* s in array) {
+        if (!firstTime)
+            [outputString appendString:@"$"];
+        else
+            firstTime = NO;
+        [outputString appendString: s];
+    }
+    
+    return outputString;
+}
+
 - (BOOL) startEncode
 {
     if ([m_outputFiles count] == 0 || !m_enabled)
@@ -425,8 +517,8 @@ static NSImage* getFileStatusImage(FileStatus status)
         [m_logFile release];
     }
     
-    [self log: @"============================================================================\n"];
-    [self log: @"Begin transcode: %@ --> %@\n", [[self inputFileName] lastPathComponent], [[self outputFileName] lastPathComponent]];
+    [m_appController log: @"============================================================================\n"];
+    [m_appController log: @"Begin transcode: %@ --> %@\n", [[self inputFileName] lastPathComponent], [[self outputFileName] lastPathComponent]];
     
     // Make sure path exists
     NSString* logFilePath = [LOG_FILE_PATH stringByStandardizingPath];
@@ -567,9 +659,9 @@ static NSImage* getFileStatusImage(FileStatus status)
 -(void) finish: (int) status
 {
     if (status == 0)
-        [self log: @"Transcode succeeded!\n"];
+        [m_appController log: @"Transcode succeeded!\n"];
     else
-        [self log: @"Transcode FAILED with error code: %d\n", status];
+        [m_appController log: @"Transcode FAILED with error code: %d\n", status];
         
     m_fileStatus = (status == 0) ? FS_SUCCEEDED : (status == 255) ? FS_VALID : FS_FAILED;
     [m_statusImageView setImage: getFileStatusImage(m_fileStatus)];
@@ -611,25 +703,11 @@ static NSImage* getFileStatusImage(FileStatus status)
         [self finish: status];
 }
 
--(void) log: (NSString*) format, ...
+-(void) logToFile: (NSString*) string
 {
-    va_list args;
-    va_start(args, format);
-    NSString* s = [[NSString alloc] initWithFormat:format arguments: args];
-    
-    // Output to stderr
-    fprintf(stderr, [s UTF8String]);
-    
     // Output to log file
     if (m_logFile)
-        [m_logFile writeData:[s dataUsingEncoding:NSUTF8StringEncoding]];
-        
-    // Output to console
-    [[[[m_appController consoleView] textStorage] mutableString] appendString: s];
-    
-    // scroll to the end
-    NSRange range = NSMakeRange ([[[m_appController consoleView] string] length], 0);
-    [[m_appController consoleView] scrollRangeToVisible: range];    
+        [m_logFile writeData:[string dataUsingEncoding:NSUTF8StringEncoding]];
 }
 
 -(void) logCommand: (NSString*) commandId withFormat: (NSString*) format, ...
@@ -637,7 +715,7 @@ static NSImage* getFileStatusImage(FileStatus status)
     va_list args;
     va_start(args, format);
     NSString* string = [[NSString alloc] initWithFormat:format arguments:args];
-    [self log: @"    [Command %@] %@\n", commandId, string];
+    [m_appController log: @"    [Command %@] %@\n", commandId, string];
 }
 
 @end

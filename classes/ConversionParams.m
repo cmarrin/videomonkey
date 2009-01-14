@@ -8,7 +8,6 @@
 
 #import "ConversionParams.h"
 #import "JavaScriptContext.h"
-#import "Transcoder.h"
 
 static NSImage* getImage(NSString* name)
 {
@@ -595,43 +594,10 @@ static void setButton(NSButton* button, NSString* title)
     return [self paramWithDefault: @"ffmpeg_vcodec"];
 }
 
-static JSValueRef _jsLog(JSContextRef ctx, JSObjectRef function, JSObjectRef thisObject, size_t argumentCount, 
-                         const JSValueRef arguments[], JSValueRef* exception)
-{
-    JSObjectRef global = JSContextGetGlobalObject(ctx);
-    JSStringRef propString = JSStringCreateWithUTF8CString("$transcoder");
-    JSValueRef jsValue = JSObjectGetProperty(ctx, global, propString, NULL);
-    JSObjectRef obj = JSValueToObject(ctx, jsValue, NULL);
-    Transcoder* transcoder = (Transcoder*) JSObjectGetPrivate(obj);
-
-    // make a string out of the args
-    NSMutableString* string = [[NSMutableString alloc] init];
-    for (int i = 0; i < argumentCount; ++i) {
-        JSStringRef jsString = JSValueToStringCopy(ctx, arguments[i], NULL);
-        [string appendString:[NSString stringWithJSString:jsString]];
-    }
-    
-    [string appendString:@"\n"];
-    
-    [transcoder log:[NSString stringWithFormat:@"JS log: %@\n", string]];
-    
-    return JSValueMakeUndefined(ctx);
-}
-
--(NSString*) recipeWithTabView:(NSTabView*) tabview performanceIndex:(int) perfIndex environment:(NSDictionary*) env transcoder:(Transcoder*) transcoder
+-(void) setCurrentParamsInJavaScriptContext:(JavaScriptContext*) context withTabView:(NSTabView*) tabview performanceIndex:(int) perfIndex
 {
     ConversionTab* tab = (ConversionTab*) [tabview selectedTabViewItem];
 
-    // Create JS context
-    JavaScriptContext* context = [[JavaScriptContext alloc] init];
-    
-    // Add log method
-    [context addGlobalObject:@"$transcoder" ofClass:NULL withPrivateData:transcoder];
-    [context addGlobalFunctionProperty:@"log" withCallback:_jsLog];
-    
-    // Add environment
-    [context addParams:env];
-    
     // Add params and commands from default device
     [m_defaultDevice addParamsToJavaScriptContext: context withTab: tab performanceIndex:perfIndex];
     
@@ -643,7 +609,8 @@ static JSValueRef _jsLog(JSContextRef ctx, JSObjectRef function, JSObjectRef thi
     
     // Execute script from this device
     [self evaluateScript: context withTab: tab performanceIndex:perfIndex];
-    
+
+/*
     // For each recipe item, execute its condition and if it returns true, that is the recipe to use
     NSString* recipeString;
     
@@ -654,12 +621,7 @@ static JSValueRef _jsLog(JSContextRef ctx, JSObjectRef function, JSObjectRef thi
             break;
         }
     }
-    
-    // Recursively replace all $xxx or $(xxx) entries in recipe with values from params in JS context
-    if (recipeString)
-        return [self replaceParams:recipeString withContext: context];
-    
-    return nil;
+*/
 }
 
 -(void) populateTabView:(NSTabView*) tabview
@@ -754,98 +716,6 @@ static JSValueRef _jsLog(JSContextRef ctx, JSObjectRef function, JSObjectRef thi
     // Evaluate scripts from currently selected performance item
     if (perfIndex >= 0 && [m_performanceItems count] > perfIndex)
         [context evaluateJavaScript: [(PerformanceItem*) [m_performanceItems objectAtIndex:perfIndex] script]];
-}
-
--(NSString*) replaceParams:(NSString*) recipeString withContext: (JavaScriptContext*) context
-{
-    NSString* inputString = recipeString;
-    NSMutableString* outputString = [[NSMutableString alloc] init];
-    BOOL didSubstitute = YES;
-    
-    while (didSubstitute) {
-       didSubstitute = NO;
-       
-        NSArray* array = [inputString componentsSeparatedByString:@"$"];
-        [outputString setString:[array objectAtIndex:0]];
-        
-        BOOL firstTime = YES;
-        BOOL skipNext = NO;
-         
-        for (NSString* s in array) {
-            if (firstTime) {
-                firstTime = NO;
-                continue;
-            }
-                
-            if (skipNext) {
-                [outputString appendString:s];
-                skipNext = NO;
-                continue;
-            }
-                
-            // if s is of 0 length, it means there is a $$ sequence, in which case we output it as a literal $
-            // But we can't do that yet, because we would catch it as a substitution on the next pass. So we leave
-            // it doubled for now
-            if ([s length] == 0) {
-                skipNext = YES;
-                [outputString appendString:@"$$"];
-            }
-            
-            // pick out the param name
-            NSString* param;
-            NSString* other;
-            
-            if ([s characterAtIndex:0] == '(') {
-                // pick out param between parens
-                NSRange range = [s rangeOfString: @")"];
-                if (range.location == NSNotFound) {
-                    // invalid
-                    param = @"";
-                    other = @"";
-                }
-                else {
-                    param = [[s substringFromIndex:1] substringToIndex:range.location-1];
-                    other = [s substringFromIndex:range.location+1];
-                }
-            }
-            else {
-                // pick out param to next space
-                NSRange range = [s rangeOfString: @" "];
-                if (range.location == NSNotFound) {
-                    param = s;
-                    other = @"";
-                }
-                else {
-                    param = [s substringToIndex:range.location];
-                    other = [s substringFromIndex:range.location];
-                }
-            }
-            
-            // do param substitution
-            didSubstitute = YES;
-            NSString* substitution = [context stringParamForKey: param];
-            if (substitution)
-                [outputString appendString:substitution];
-            [outputString appendString:other];
-        }
-        
-        inputString = outputString;
-    }
-    
-    // All done substituting, now replace $$ with $
-    NSArray* array = [inputString componentsSeparatedByString:@"$$"];
-    [outputString setString:@""];
-    BOOL firstTime = YES;
-    
-    for (NSString* s in array) {
-        if (!firstTime)
-            [outputString appendString:@"$"];
-        else
-            firstTime = NO;
-        [outputString appendString: s];
-    }
-    
-    return outputString;
 }
 
 @end
@@ -1004,11 +874,6 @@ static JSValueRef _jsLog(JSContextRef ctx, JSObjectRef function, JSObjectRef thi
 -(NSString*) videoFormat
 {
     return [m_currentDevice videoFormat];
-}
-
--(NSString*) recipeWithEnvironment:(NSDictionary*) env transcoder:(Transcoder*) transcoder
-{
-    return [m_currentDevice recipeWithTabView:m_conversionParamsTabView performanceIndex:[m_performanceButton indexOfSelectedItem] environment:env transcoder:transcoder];
 }
 
 @end

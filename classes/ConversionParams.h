@@ -58,7 +58,6 @@
 #define MAX_RADIOS 4
 
 @class JavaScriptContext;
-@class Transcoder;
 
 @interface ConversionTab : NSTabViewItem {
     IBOutlet NSButton* m_button0;
@@ -127,8 +126,7 @@
 -(NSArray*) recipes;
 -(NSString*) fileSuffix;
 -(NSString*) videoFormat;
--(NSString*) recipeWithTabView:(NSTabView*) tabview performanceIndex:(int) perfIndex environment:(NSDictionary*) env transcoder:(Transcoder*) transcoder;
--(NSString*) replaceParams:(NSString*) recipeString withContext: (JavaScriptContext*) context;
+-(void) setCurrentParamsInJavaScriptContext:(JavaScriptContext*) context withTabView:(NSTabView*) tabview performanceIndex:(int) perfIndex;
 
 -(void) populateTabView:(NSTabView*) tabview;
 -(void) populatePerformanceButton:(NSPopUpButton*) tabview;
@@ -220,7 +218,6 @@
 #define VC_WMV3 @"wmv3"
 
 @interface ConversionParams : NSObject {
-    IBOutlet NSWindow* m_mainWindow;
     IBOutlet NSTabView* m_conversionParamsTabView;
     IBOutlet NSPopUpButton* m_deviceButton;
     IBOutlet NSPopUpButton* m_performanceButton;
@@ -242,6 +239,5 @@
 -(NSString*) performance;
 -(NSString*) fileSuffix;
 -(NSString*) videoFormat;
--(NSString*) recipeWithEnvironment:(NSDictionary*) env transcoder:(Transcoder*) transcoder;
 
 @end

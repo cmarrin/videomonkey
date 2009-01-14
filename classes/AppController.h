@@ -9,6 +9,7 @@
 #import <Cocoa/Cocoa.h>
 
 @class ConversionParams;
+@class JavaScriptContext;
 @class MoviePanelController;
 @class Transcoder;
 
@@ -33,6 +34,8 @@ typedef enum { RS_STOPPED, RS_RUNNING, RS_PAUSED } RunStateType;
     int m_currentEncoding;
     RunStateType m_runState;
     BOOL m_isTerminated;
+
+    JavaScriptContext* m_context;
 }
 
 -(IBAction)clickFileEnable:(id)sender;
@@ -50,6 +53,7 @@ typedef enum { RS_STOPPED, RS_RUNNING, RS_PAUSED } RunStateType;
 -(void) setRunState: (RunStateType) state;
 
 -(ConversionParams*) conversionParams;
--(NSTextView*) consoleView;
+
+-(void) log: (NSString*) format, ...;
 
 @end
