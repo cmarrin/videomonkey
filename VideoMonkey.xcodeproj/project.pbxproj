@@ -26,7 +26,6 @@
 		491000110EC87BB3001B578B /* wii.png in Resources */ = {isa = PBXBuildFile; fileRef = 4910FFDC0EC87BB3001B578B /* wii.png */; };
 		491000120EC87BB3001B578B /* wma.png in Resources */ = {isa = PBXBuildFile; fileRef = 4910FFDD0EC87BB3001B578B /* wma.png */; };
 		491000130EC87BB3001B578B /* xbox360.png in Resources */ = {isa = PBXBuildFile; fileRef = 4910FFDE0EC87BB3001B578B /* xbox360.png */; };
-		491000680EC8AA16001B578B /* ConversionParams.m in Sources */ = {isa = PBXBuildFile; fileRef = 491000670EC8AA16001B578B /* ConversionParams.m */; };
 		4910018A0ECBE470001B578B /* MainMenu.nib in Resources */ = {isa = PBXBuildFile; fileRef = 491001880ECBE470001B578B /* MainMenu.nib */; };
 		491001D70ECBEEBC001B578B /* AppController.m in Sources */ = {isa = PBXBuildFile; fileRef = 491001D60ECBEEBC001B578B /* AppController.m */; };
 		4910FF120EC7C1D8001B578B /* add.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4910FEFA0EC7C1D8001B578B /* add.icns */; };
@@ -95,6 +94,7 @@
 		499A31D30EDEE3E4000C0AAF /* mediainfo-inform.csv in Resources */ = {isa = PBXBuildFile; fileRef = 499A31D20EDEE3E4000C0AAF /* mediainfo-inform.csv */; };
 		49AAD9A70F1C232B0098F087 /* Console.png in Resources */ = {isa = PBXBuildFile; fileRef = 49AAD9A60F1C232B0098F087 /* Console.png */; };
 		49AADAC60F1D12950098F087 /* tinyitunesfile.png in Resources */ = {isa = PBXBuildFile; fileRef = 49AADAC50F1D12950098F087 /* tinyitunesfile.png */; };
+		49AADBE10F1E55C80098F087 /* DeviceController.m in Sources */ = {isa = PBXBuildFile; fileRef = 49AADBE00F1E55C80098F087 /* DeviceController.m */; };
 		49BC89A90ECD245F00027F1D /* MoviePanelController.m in Sources */ = {isa = PBXBuildFile; fileRef = 49BC89A70ECD245F00027F1D /* MoviePanelController.m */; };
 		49BC8CAA0ED6892400027F1D /* EncodeWorking0.png in Resources */ = {isa = PBXBuildFile; fileRef = 49BC8CA10ED6892400027F1D /* EncodeWorking0.png */; };
 		49BC8CAB0ED6892400027F1D /* EncodeWorking1.png in Resources */ = {isa = PBXBuildFile; fileRef = 49BC8CA20ED6892400027F1D /* EncodeWorking1.png */; };
@@ -121,8 +121,6 @@
 		29B97324FDCFA39411CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
 		32CA4F630368D1EE00C91783 /* VideoMonkey_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoMonkey_Prefix.pch; sourceTree = "<group>"; };
-		491000660EC8AA16001B578B /* ConversionParams.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ConversionParams.h; path = classes/ConversionParams.h; sourceTree = "<group>"; };
-		491000670EC8AA16001B578B /* ConversionParams.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ConversionParams.m; path = classes/ConversionParams.m; sourceTree = "<group>"; };
 		491001890ECBE470001B578B /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = English.lproj/MainMenu.nib; sourceTree = "<group>"; };
 		491001D50ECBEEBC001B578B /* AppController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppController.h; path = classes/AppController.h; sourceTree = "<group>"; };
 		491001D60ECBEEBC001B578B /* AppController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppController.m; path = classes/AppController.m; sourceTree = "<group>"; };
@@ -215,6 +213,8 @@
 		499A31D20EDEE3E4000C0AAF /* mediainfo-inform.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; lineEnding = 2; path = "mediainfo-inform.csv"; sourceTree = "<group>"; };
 		49AAD9A60F1C232B0098F087 /* Console.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Console.png; path = icons/Console.png; sourceTree = "<group>"; };
 		49AADAC50F1D12950098F087 /* tinyitunesfile.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = tinyitunesfile.png; path = images/tinyitunesfile.png; sourceTree = "<group>"; };
+		49AADBDF0F1E55C80098F087 /* DeviceController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DeviceController.h; path = classes/DeviceController.h; sourceTree = "<group>"; };
+		49AADBE00F1E55C80098F087 /* DeviceController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DeviceController.m; path = classes/DeviceController.m; sourceTree = "<group>"; };
 		49BC89A70ECD245F00027F1D /* MoviePanelController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MoviePanelController.m; path = classes/MoviePanelController.m; sourceTree = "<group>"; };
 		49BC89A80ECD245F00027F1D /* MoviePanelController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MoviePanelController.h; path = classes/MoviePanelController.h; sourceTree = "<group>"; };
 		49BC8CA10ED6892400027F1D /* EncodeWorking0.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = EncodeWorking0.png; path = icons/EncodeWorking0.png; sourceTree = "<group>"; };
@@ -250,10 +250,10 @@
 		080E96DDFE201D6D7F000001 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				49AADBDF0F1E55C80098F087 /* DeviceController.h */,
+				49AADBE00F1E55C80098F087 /* DeviceController.m */,
 				495493810F17C8620007EC0E /* JavaScriptContext.h */,
 				495493820F17C8620007EC0E /* JavaScriptContext.m */,
-				491000660EC8AA16001B578B /* ConversionParams.h */,
-				491000670EC8AA16001B578B /* ConversionParams.m */,
 				491001D50ECBEEBC001B578B /* AppController.h */,
 				491001D60ECBEEBC001B578B /* AppController.m */,
 				49BC89A80ECD245F00027F1D /* MoviePanelController.h */,
@@ -590,13 +590,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				8D11072D0486CEB800E47090 /* main.m in Sources */,
-				491000680EC8AA16001B578B /* ConversionParams.m in Sources */,
 				491001D70ECBEEBC001B578B /* AppController.m in Sources */,
 				49BC89A90ECD245F00027F1D /* MoviePanelController.m in Sources */,
 				499A31770EDD97EB000C0AAF /* Transcoder.m in Sources */,
 				497E65AA0EE4F284000372EC /* ProgressCell.m in Sources */,
 				497E67170EEC5DD8000372EC /* Command.m in Sources */,
 				495493830F17C8620007EC0E /* JavaScriptContext.m in Sources */,
+				49AADBE10F1E55C80098F087 /* DeviceController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -1,14 +1,18 @@
 //
-//  ConversionParams.m
-//  ConversionParams
+//  DeviceController.m
+//  DeviceController
 //
 //  Created by Chris Marrin on 11/12/08.
 //  Copyright Chris Marrin 2008. All rights reserved.
 //
 
-#import "ConversionParams.h"
+#import "DeviceController.h"
 #import "JavaScriptContext.h"
 
+@interface NSObject (AppDelegate)
+-(void) log: (NSString*) format, ...;
+@end
+ 
 static NSImage* getImage(NSString* name)
 {
     NSString* path = [[NSBundle mainBundle] pathForResource:name ofType:@"png"];
@@ -609,19 +613,24 @@ static void setButton(NSButton* button, NSString* title)
     
     // Execute script from this device
     [self evaluateScript: context withTab: tab performanceIndex:perfIndex];
+}
 
-/*
+-(NSString*) recipeWithJavaScriptContext: (JavaScriptContext*) context
+{
     // For each recipe item, execute its condition and if it returns true, that is the recipe to use
     NSString* recipeString;
     
     for (Recipe* recipe in [self recipes]) {
         NSString* returnString = [context evaluateJavaScript:[recipe condition]];
+        if (!returnString)
+            return nil;
         if ([returnString boolValue]) {
             recipeString = [recipe recipe];
             break;
         }
     }
-*/
+    
+    return recipeString;
 }
 
 -(void) populateTabView:(NSTabView*) tabview
@@ -720,7 +729,7 @@ static void setButton(NSButton* button, NSString* title)
 
 @end
 
-@implementation ConversionParams
+@implementation DeviceController
 
 -(void) setPerformance: (int) index
 {
@@ -790,8 +799,109 @@ static void setButton(NSButton* button, NSString* title)
     return nil;
 }
 
+-(NSString*) replaceParams:(NSString*) recipeString
+{
+    if (!recipeString)
+        return nil;
+        
+    NSString* inputString = recipeString;
+    NSMutableString* outputString = [[NSMutableString alloc] init];
+    BOOL didSubstitute = YES;
+    
+    while (didSubstitute) {
+       didSubstitute = NO;
+       
+        NSArray* array = [inputString componentsSeparatedByString:@"$"];
+        [outputString setString:[array objectAtIndex:0]];
+        
+        BOOL firstTime = YES;
+        BOOL skipNext = NO;
+         
+        for (NSString* s in array) {
+            if (firstTime) {
+                firstTime = NO;
+                continue;
+            }
+                
+            if (skipNext) {
+                [outputString appendString:s];
+                skipNext = NO;
+                continue;
+            }
+                
+            // if s is of 0 length, it means there is a $$ sequence, in which case we output it as a literal $
+            // But we can't do that yet, because we would catch it as a substitution on the next pass. So we leave
+            // it doubled for now
+            if ([s length] == 0) {
+                skipNext = YES;
+                [outputString appendString:@"$$"];
+            }
+            
+            // pick out the param name
+            NSString* param;
+            NSString* other;
+            
+            if ([s characterAtIndex:0] == '(') {
+                // pick out param between parens
+                NSRange range = [s rangeOfString: @")"];
+                if (range.location == NSNotFound) {
+                    // invalid
+                    param = @"";
+                    other = @"";
+                }
+                else {
+                    param = [[s substringFromIndex:1] substringToIndex:range.location-1];
+                    other = [s substringFromIndex:range.location+1];
+                }
+            }
+            else {
+                // pick out param to next space
+                NSRange range = [s rangeOfString: @" "];
+                if (range.location == NSNotFound) {
+                    param = s;
+                    other = @"";
+                }
+                else {
+                    param = [s substringToIndex:range.location];
+                    other = [s substringFromIndex:range.location];
+                }
+            }
+            
+            // do param substitution
+            didSubstitute = YES;
+            NSString* substitution = [m_context stringParamForKey: param];
+            if (substitution)
+                [outputString appendString:substitution];
+            [outputString appendString:other];
+        }
+        
+        inputString = outputString;
+    }
+    
+    // All done substituting, now replace $$ with $
+    NSArray* array = [inputString componentsSeparatedByString:@"$$"];
+    [outputString setString:@""];
+    BOOL firstTime = YES;
+    
+    for (NSString* s in array) {
+        if (!firstTime)
+            [outputString appendString:@"$"];
+        else
+            firstTime = NO;
+        [outputString appendString: s];
+    }
+    
+    return outputString;
+}
+
 - (void) awakeFromNib
 {
+    // Create JS context
+    m_context = [[JavaScriptContext alloc] init];
+    
+    // make sure delegate sets up the context
+    [self setDelegate: m_delegate];
+
     // load the XML file with all the commands and device setup
     [self initCommands];
     
@@ -823,7 +933,7 @@ static void setButton(NSButton* button, NSString* title)
     [m_deviceButton selectItemWithTag:0];
     
     m_currentDevice = [self findDeviceEntryWithIndex:0];
-    [m_currentDevice populateTabView: m_conversionParamsTabView];
+    [m_currentDevice populateTabView: m_deviceControllerTabView];
     [m_currentDevice populatePerformanceButton: m_performanceButton];
 
 	// set the device name and image
@@ -844,7 +954,7 @@ static void setButton(NSButton* button, NSString* title)
 - (IBAction)selectDevice:(id)sender {
     int tag = [[sender selectedItem] tag];
     m_currentDevice = [self findDeviceEntryWithIndex:tag];
-    [m_currentDevice populateTabView: m_conversionParamsTabView];
+    [m_currentDevice populateTabView: m_deviceControllerTabView];
     [m_currentDevice populatePerformanceButton: m_performanceButton];
 	
 	// set the device name and image
@@ -874,6 +984,53 @@ static void setButton(NSButton* button, NSString* title)
 -(NSString*) videoFormat
 {
     return [m_currentDevice videoFormat];
+}
+
+ static JSValueRef _jsLog(JSContextRef ctx, JSObjectRef function, JSObjectRef thisObject, size_t argumentCount, 
+                         const JSValueRef arguments[], JSValueRef* exception)
+{
+    JSObjectRef global = JSContextGetGlobalObject(ctx);
+    JSStringRef propString = JSStringCreateWithUTF8CString("$app");
+    JSValueRef jsValue = JSObjectGetProperty(ctx, global, propString, NULL);
+    JSObjectRef obj = JSValueToObject(ctx, jsValue, NULL);
+    id delegate = (id) JSObjectGetPrivate(obj);
+
+    // make a string out of the args
+    NSMutableString* string = [[NSMutableString alloc] init];
+    for (int i = 0; i < argumentCount; ++i) {
+        JSStringRef jsString = JSValueToStringCopy(ctx, arguments[i], NULL);
+        [string appendString:[NSString stringWithJSString:jsString]];
+    }
+    
+    [string appendString:@"\n"];
+    
+    if ([delegate respondsToSelector: @selector(log:)])
+        [delegate log:[NSString stringWithFormat:@"JS log: %@\n", string]];
+    
+    return JSValueMakeUndefined(ctx);
+}
+
+-(void) setDelegate:(id) delegate
+{
+    m_delegate = delegate;
+    
+    if (m_context) {
+        // Add log method
+        [m_context addGlobalObject:@"$app" ofClass:NULL withPrivateData:m_delegate];
+        [m_context addGlobalFunctionProperty:@"log" withCallback:_jsLog];
+    }
+}
+
+-(void) setCurrentParams
+{
+    [m_currentDevice setCurrentParamsInJavaScriptContext:m_context withTabView:m_deviceControllerTabView performanceIndex:[m_performanceButton indexOfSelectedItem]];
+}
+
+-(NSString*) recipeWithEnvironment: (NSDictionary*) env
+{
+    [m_context addParams:env];
+    NSString* recipe = [m_currentDevice recipeWithJavaScriptContext:m_context];
+    return [self replaceParams: recipe];
 }
 
 @end

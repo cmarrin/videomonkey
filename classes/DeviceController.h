@@ -1,6 +1,6 @@
 //
-//  ConversionParams.h
-//  ConversionParams
+//  DeviceController.h
+//  DeviceController
 //
 //  Created by Chris Marrin on 11/12/08.
 //  Copyright Chris Marrin 2008. All rights reserved.
@@ -126,8 +126,9 @@
 -(NSArray*) recipes;
 -(NSString*) fileSuffix;
 -(NSString*) videoFormat;
--(void) setCurrentParamsInJavaScriptContext:(JavaScriptContext*) context withTabView:(NSTabView*) tabview performanceIndex:(int) perfIndex;
 
+-(void) setCurrentParamsInJavaScriptContext:(JavaScriptContext*) context withTabView:(NSTabView*) tabview performanceIndex:(int) perfIndex;
+-(NSString*) recipeWithJavaScriptContext: (JavaScriptContext*) context;
 -(void) populateTabView:(NSTabView*) tabview;
 -(void) populatePerformanceButton:(NSPopUpButton*) tabview;
 -(void) addParamsToJavaScriptContext: (JavaScriptContext*) context withTab: (ConversionTab*) tab performanceIndex:(int) perfIndex;
@@ -217,8 +218,8 @@
 #define VC_H264 @"h.264"
 #define VC_WMV3 @"wmv3"
 
-@interface ConversionParams : NSObject {
-    IBOutlet NSTabView* m_conversionParamsTabView;
+@interface DeviceController : NSObject {
+    IBOutlet NSTabView* m_deviceControllerTabView;
     IBOutlet NSPopUpButton* m_deviceButton;
     IBOutlet NSPopUpButton* m_performanceButton;
     IBOutlet NSTextField* m_deviceName;
@@ -230,6 +231,9 @@
     DeviceEntry* m_currentDevice;
     NSString* m_currentPerformance;
     BOOL m_isTwoPass;
+
+    JavaScriptContext* m_context;
+    id m_delegate;
 }
 
 -(IBAction)selectDevice:(id)sender;
@@ -239,5 +243,10 @@
 -(NSString*) performance;
 -(NSString*) fileSuffix;
 -(NSString*) videoFormat;
+
+-(void) setDelegate:(id) delegate;
+-(void) setCurrentParams;
+-(NSString*) recipeWithEnvironment: (NSDictionary*) env;
+
 
 @end

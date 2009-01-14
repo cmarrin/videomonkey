@@ -9,7 +9,7 @@
 #import "Transcoder.h"
 #import "AppController.h"
 #import "Command.h"
-#import "ConversionParams.h"
+#import "DeviceController.h"
 
 @implementation TranscoderFileInfo
 
@@ -391,7 +391,7 @@ static NSImage* getFileStatusImage(FileStatus status)
 
 -(NSString*) ffmpeg_vpre
 {
-    return [[m_appController conversionParams] performance];
+    return [[m_appController deviceController] performance];
 }
 
 -(int) outputFileSize
@@ -411,96 +411,25 @@ static NSImage* getFileStatusImage(FileStatus status)
     return m_passLogFileName;
 }
 
--(NSString*) replaceParams:(NSString*) recipeString withContext: (JavaScriptContext*) context
+-(void) finish: (int) status
 {
-    NSString* inputString = recipeString;
-    NSMutableString* outputString = [[NSMutableString alloc] init];
-    BOOL didSubstitute = YES;
-    
-    while (didSubstitute) {
-       didSubstitute = NO;
-       
-        NSArray* array = [inputString componentsSeparatedByString:@"$"];
-        [outputString setString:[array objectAtIndex:0]];
+    if (status == 0)
+        [m_appController log: @"Transcode succeeded!\n"];
+    else
+        [m_appController log: @"Transcode FAILED with error code: %d\n", status];
         
-        BOOL firstTime = YES;
-        BOOL skipNext = NO;
-         
-        for (NSString* s in array) {
-            if (firstTime) {
-                firstTime = NO;
-                continue;
-            }
-                
-            if (skipNext) {
-                [outputString appendString:s];
-                skipNext = NO;
-                continue;
-            }
-                
-            // if s is of 0 length, it means there is a $$ sequence, in which case we output it as a literal $
-            // But we can't do that yet, because we would catch it as a substitution on the next pass. So we leave
-            // it doubled for now
-            if ([s length] == 0) {
-                skipNext = YES;
-                [outputString appendString:@"$$"];
-            }
-            
-            // pick out the param name
-            NSString* param;
-            NSString* other;
-            
-            if ([s characterAtIndex:0] == '(') {
-                // pick out param between parens
-                NSRange range = [s rangeOfString: @")"];
-                if (range.location == NSNotFound) {
-                    // invalid
-                    param = @"";
-                    other = @"";
-                }
-                else {
-                    param = [[s substringFromIndex:1] substringToIndex:range.location-1];
-                    other = [s substringFromIndex:range.location+1];
-                }
-            }
-            else {
-                // pick out param to next space
-                NSRange range = [s rangeOfString: @" "];
-                if (range.location == NSNotFound) {
-                    param = s;
-                    other = @"";
-                }
-                else {
-                    param = [s substringToIndex:range.location];
-                    other = [s substringFromIndex:range.location];
-                }
-            }
-            
-            // do param substitution
-            didSubstitute = YES;
-            NSString* substitution = [context stringParamForKey: param];
-            if (substitution)
-                [outputString appendString:substitution];
-            [outputString appendString:other];
-        }
-        
-        inputString = outputString;
-    }
+    m_fileStatus = (status == 0) ? FS_SUCCEEDED : (status == 255) ? FS_VALID : FS_FAILED;
+    [m_statusImageView setImage: getFileStatusImage(m_fileStatus)];
+    m_progress = (status == 0) ? 1 : 0;
+    [m_progressIndicator setDoubleValue: m_progress];
+    [m_appController encodeFinished:self];
+    [m_logFile closeFile];
+    [m_logFile release];
+    m_logFile = nil;
     
-    // All done substituting, now replace $$ with $
-    NSArray* array = [inputString componentsSeparatedByString:@"$$"];
-    [outputString setString:@""];
-    BOOL firstTime = YES;
-    
-    for (NSString* s in array) {
-        if (!firstTime)
-            [outputString appendString:@"$"];
-        else
-            firstTime = NO;
-        [outputString appendString: s];
-    }
-    
-    return outputString;
+    // toss output file is not successful
+    if (m_fileStatus != FS_SUCCEEDED)
+        [[NSFileManager defaultManager] removeFileAtPath:[self outputFileName] handler:nil];
 }
 
 - (BOOL) startEncode
@@ -571,12 +500,11 @@ static NSImage* getFileStatusImage(FileStatus status)
     [env setValue: vpre_pass1 forKey: @"ffmpeg_vpre_pass1"];
     
     // get recipe
-    NSString* recipe = [[m_appController conversionParams] recipeWithEnvironment: env transcoder: self];
+    NSString* recipe = [[m_appController deviceController] recipeWithEnvironment: env];
 
     if ([recipe length] == 0) {
-        NSBeginAlertSheet(@"Internal Error", nil, nil, nil, [[NSApplication sharedApplication] mainWindow], 
-                          nil, nil, nil, nil, 
-                          @"Transcoder attempted to execute an empty command");
+        [m_appController log:@"*** ERROR: No recipe returned, probably due to a previous JavaScript error\n"];
+        [self finish: -1];
         return NO;
     }
     
@@ -654,27 +582,6 @@ static NSImage* getFileStatusImage(FileStatus status)
         
     m_fileStatus = FS_ENCODING;
     return YES;
-}
-
--(void) finish: (int) status
-{
-    if (status == 0)
-        [m_appController log: @"Transcode succeeded!\n"];
-    else
-        [m_appController log: @"Transcode FAILED with error code: %d\n", status];
-        
-    m_fileStatus = (status == 0) ? FS_SUCCEEDED : (status == 255) ? FS_VALID : FS_FAILED;
-    [m_statusImageView setImage: getFileStatusImage(m_fileStatus)];
-    m_progress = (status == 0) ? 1 : 0;
-    [m_progressIndicator setDoubleValue: m_progress];
-    [m_appController encodeFinished:self];
-    [m_logFile closeFile];
-    [m_logFile release];
-    m_logFile = nil;
-    
-    // toss output file is not successful
-    if (m_fileStatus != FS_SUCCEEDED)
-        [[NSFileManager defaultManager] removeFileAtPath:[self outputFileName] handler:nil];
 }
 
 -(BOOL) stopEncode

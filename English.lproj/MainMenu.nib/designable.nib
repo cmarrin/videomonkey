@@ -3871,7 +3871,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 				<string key="NSClassName">NSFontManager</string>
 			</object>
 			<object class="NSCustomObject" id="402522846">
-				<string key="NSClassName">ConversionParams</string>
+				<string key="NSClassName">DeviceController</string>
 			</object>
 			<object class="NSCustomObject" id="98230273">
 				<string key="NSClassName">AppController</string>
@@ -4402,14 +4402,6 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 					<int key="connectionID">449</int>
 				</object>
 				<object class="IBConnectionRecord">
-					<object class="IBOutletConnection" key="connection">
-						<string key="label">m_conversionParamsTabView</string>
-						<reference key="source" ref="402522846"/>
-						<reference key="destination" ref="32007006"/>
-					</object>
-					<int key="connectionID">1001</int>
-				</object>
-				<object class="IBConnectionRecord">
 					<object class="IBActionConnection" key="connection">
 						<string key="label">makeKeyAndOrderFront:</string>
 						<reference key="source" ref="461588446"/>
@@ -4563,14 +4555,6 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBOutletConnection" key="connection">
-						<string key="label">m_conversionParams</string>
-						<reference key="source" ref="98230273"/>
-						<reference key="destination" ref="402522846"/>
-					</object>
-					<int key="connectionID">2024</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBOutletConnection" key="connection">
 						<string key="label">m_moviePanel</string>
 						<reference key="source" ref="98230273"/>
 						<reference key="destination" ref="179961847"/>
@@ -4624,14 +4608,6 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 						<reference key="destination" ref="668207334"/>
 					</object>
 					<int key="connectionID">2071</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBOutletConnection" key="connection">
-						<string key="label">m_mainWindow</string>
-						<reference key="source" ref="402522846"/>
-						<reference key="destination" ref="972006081"/>
-					</object>
-					<int key="connectionID">2087</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBActionConnection" key="connection">
@@ -4936,6 +4912,22 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 						<reference key="destination" ref="648373860"/>
 					</object>
 					<int key="connectionID">2157</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">m_deviceControllerTabView</string>
+						<reference key="source" ref="402522846"/>
+						<reference key="destination" ref="32007006"/>
+					</object>
+					<int key="connectionID">2158</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">m_deviceController</string>
+						<reference key="source" ref="98230273"/>
+						<reference key="destination" ref="402522846"/>
+					</object>
+					<int key="connectionID">2159</int>
 				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -5719,7 +5711,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 						<int key="objectID">982</int>
 						<reference key="object" ref="402522846"/>
 						<reference key="parent" ref="1049"/>
-						<string key="objectName">Conversion Params</string>
+						<string key="objectName">Device Controller</string>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">1014</int>
@@ -8317,7 +8309,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">2157</int>
+			<int key="maxID">2159</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -8354,7 +8346,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>m_consoleDrawer</string>
 							<string>m_consoleView</string>
-							<string>m_conversionParams</string>
+							<string>m_deviceController</string>
 							<string>m_fileListView</string>
 							<string>m_moviePanel</string>
 							<string>m_pauseEncodeItem</string>
@@ -8367,7 +8359,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>NSDrawer</string>
 							<string>NSTextView</string>
-							<string>ConversionParams</string>
+							<string>DeviceController</string>
 							<string>NSTableView</string>
 							<string>MoviePanelController</string>
 							<string>NSToolbarItem</string>
@@ -8380,56 +8372,6 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBProjectSource</string>
 						<string key="minorKey">classes/AppController.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
-					<string key="className">ConversionParams</string>
-					<string key="superclassName">NSObject</string>
-					<object class="NSMutableDictionary" key="actions">
-						<bool key="EncodedWithXMLCoder">YES</bool>
-						<object class="NSMutableArray" key="dict.sortedKeys">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>selectDevice:</string>
-							<string>selectPerformance:</string>
-						</object>
-						<object class="NSMutableArray" key="dict.values">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>id</string>
-							<string>id</string>
-						</object>
-					</object>
-					<object class="NSMutableDictionary" key="outlets">
-						<bool key="EncodedWithXMLCoder">YES</bool>
-						<object class="NSMutableArray" key="dict.sortedKeys">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>m_conversionParamsTabView</string>
-							<string>m_deviceButton</string>
-							<string>m_deviceImageView</string>
-							<string>m_deviceName</string>
-							<string>m_mainWindow</string>
-							<string>m_performanceButton</string>
-						</object>
-						<object class="NSMutableArray" key="dict.values">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>NSTabView</string>
-							<string>NSPopUpButton</string>
-							<string>NSImageView</string>
-							<string>NSTextField</string>
-							<string>NSWindow</string>
-							<string>NSPopUpButton</string>
-						</object>
-					</object>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier" id="200474271">
-						<string key="majorKey">IBProjectSource</string>
-						<string key="minorKey">classes/ConversionParams.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
-					<string key="className">ConversionParams</string>
-					<string key="superclassName">NSObject</string>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<string key="majorKey">IBUserSource</string>
-						<string key="minorKey"/>
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">
@@ -8476,7 +8418,10 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 							<string>NSTextField</string>
 						</object>
 					</object>
-					<reference key="sourceIdentifier" ref="200474271"/>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier" id="150064134">
+						<string key="majorKey">IBProjectSource</string>
+						<string key="minorKey">classes/DeviceController.h</string>
+					</object>
 				</object>
 				<object class="IBPartialClassDescription">
 					<string key="className">ConversionTab</string>
@@ -8485,6 +8430,45 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 						<string key="majorKey">IBUserSource</string>
 						<string key="minorKey"/>
 					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">DeviceController</string>
+					<string key="superclassName">NSObject</string>
+					<object class="NSMutableDictionary" key="actions">
+						<bool key="EncodedWithXMLCoder">YES</bool>
+						<object class="NSMutableArray" key="dict.sortedKeys">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>selectDevice:</string>
+							<string>selectPerformance:</string>
+						</object>
+						<object class="NSMutableArray" key="dict.values">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>id</string>
+							<string>id</string>
+						</object>
+					</object>
+					<object class="NSMutableDictionary" key="outlets">
+						<bool key="EncodedWithXMLCoder">YES</bool>
+						<object class="NSMutableArray" key="dict.sortedKeys">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>m_delegate</string>
+							<string>m_deviceButton</string>
+							<string>m_deviceControllerTabView</string>
+							<string>m_deviceImageView</string>
+							<string>m_deviceName</string>
+							<string>m_performanceButton</string>
+						</object>
+						<object class="NSMutableArray" key="dict.values">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>id</string>
+							<string>NSPopUpButton</string>
+							<string>NSTabView</string>
+							<string>NSImageView</string>
+							<string>NSTextField</string>
+							<string>NSPopUpButton</string>
+						</object>
+					</object>
+					<reference key="sourceIdentifier" ref="150064134"/>
 				</object>
 				<object class="IBPartialClassDescription">
 					<string key="className">MoviePanelController</string>
