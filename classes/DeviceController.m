@@ -894,6 +894,19 @@ static void setButton(NSButton* button, NSString* title)
     return outputString;
 }
 
+-(void) setCurrentDevice: (DeviceEntry*) device
+{
+    m_currentDevice = device;
+    [m_currentDevice populateTabView: m_deviceControllerTabView];
+    [m_currentDevice populatePerformanceButton: m_performanceButton];
+
+	// set the device name and image
+	[m_deviceImageView setImage:getImage([m_currentDevice icon])];
+	[m_deviceName setStringValue:[m_currentDevice title]];
+    
+    [self setCurrentParams];
+}
+
 - (void) awakeFromNib
 {
     // Create JS context
@@ -931,14 +944,7 @@ static void setButton(NSButton* button, NSString* title)
     // set the selected item
     // FIXME: need to get this from prefs
     [m_deviceButton selectItemWithTag:0];
-    
-    m_currentDevice = [self findDeviceEntryWithIndex:0];
-    [m_currentDevice populateTabView: m_deviceControllerTabView];
-    [m_currentDevice populatePerformanceButton: m_performanceButton];
-
-	// set the device name and image
-	[m_deviceImageView setImage:getImage([m_currentDevice icon])];
-	[m_deviceName setStringValue:[m_currentDevice title]];
+    [self setCurrentDevice:[self findDeviceEntryWithIndex:0]];
 
     // set the selected item
     // FIXME: need to get this from prefs
@@ -952,14 +958,7 @@ static void setButton(NSButton* button, NSString* title)
 }
 
 - (IBAction)selectDevice:(id)sender {
-    int tag = [[sender selectedItem] tag];
-    m_currentDevice = [self findDeviceEntryWithIndex:tag];
-    [m_currentDevice populateTabView: m_deviceControllerTabView];
-    [m_currentDevice populatePerformanceButton: m_performanceButton];
-	
-	// set the device name and image
-	[m_deviceImageView setImage:getImage([m_currentDevice icon])];
-	[m_deviceName setStringValue:[m_currentDevice title]];
+    [self setCurrentDevice:[self findDeviceEntryWithIndex:[[sender selectedItem] tag]]];
 }
 
 - (IBAction)selectPerformance:(id)sender {
