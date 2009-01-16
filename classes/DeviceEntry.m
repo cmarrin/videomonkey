@@ -7,12 +7,23 @@
 //
 
 #import "DeviceEntry.h"
+#import "DeviceController.h"
 #import "JavaScriptContext.h"
 
+//
+//
+// Application delegate interface
+//
+//
 @interface NSObject (AppDelegate)
 -(void) log: (NSString*) format, ...;
 @end
  
+//
+//
+// Static functions used in this file
+//
+//
 static NSString* stringAttribute(NSXMLElement* element, NSString* name)
 {
     NSXMLNode* node = [element attributeForName:name];
@@ -84,6 +95,11 @@ static NSString* parseScripts(NSXMLElement* element)
     return script;
 }
 
+//
+//
+// Device Tab interface
+//
+//
 @implementation DeviceTab
 
 -(NSString*) deviceName
@@ -143,8 +159,7 @@ static void setButton(NSButton* button, NSString* title)
 
 -(void) setQuality: (NSArray*) qualityStops
 {
-    // We can draw a slider with 2, 3, or 5 tick marks. There is one more entry in the array than tick
-    // marks. The entry at index 0 just sets the minumum bitrate to use.
+    // We can draw a slider with 2, 3, or 5 tick marks. 
     // If we see any other number in the array we will turn off the quality slider
     [m_slider setHidden:NO];
     [m_sliderLabel1 setHidden:NO];
@@ -153,29 +168,29 @@ static void setButton(NSButton* button, NSString* title)
     [m_sliderLabel4 setHidden:NO];
     [m_sliderLabel5 setHidden:NO];
     
-    if ([qualityStops count] == 3) {
+    if ([qualityStops count] == 2) {
         [m_slider setNumberOfTickMarks:2];
-        [m_sliderLabel1 setStringValue:[(QualityStop*) [qualityStops objectAtIndex:1] title]];
+        [m_sliderLabel1 setStringValue:[(QualityStop*) [qualityStops objectAtIndex:0] title]];
         [m_sliderLabel2 setHidden:YES];
         [m_sliderLabel3 setHidden:YES];
         [m_sliderLabel4 setHidden:YES];
+        [m_sliderLabel5 setStringValue:[(QualityStop*) [qualityStops objectAtIndex:1] title]];
+    }
+    else if ([qualityStops count] == 3) {
+        [m_slider setNumberOfTickMarks:3];
+        [m_sliderLabel1 setStringValue:[(QualityStop*) [qualityStops objectAtIndex:0] title]];
+        [m_sliderLabel2 setHidden:YES];
+        [m_sliderLabel3 setStringValue:[(QualityStop*) [qualityStops objectAtIndex:1] title]];
+        [m_sliderLabel4 setHidden:YES];
         [m_sliderLabel5 setStringValue:[(QualityStop*) [qualityStops objectAtIndex:2] title]];
     }
-    else if ([qualityStops count] == 4) {
-        [m_slider setNumberOfTickMarks:3];
-        [m_sliderLabel1 setStringValue:[(QualityStop*) [qualityStops objectAtIndex:1] title]];
-        [m_sliderLabel2 setHidden:YES];
-        [m_sliderLabel3 setStringValue:[(QualityStop*) [qualityStops objectAtIndex:2] title]];
-        [m_sliderLabel4 setHidden:YES];
-        [m_sliderLabel5 setStringValue:[(QualityStop*) [qualityStops objectAtIndex:3] title]];
-    }
-    else if ([qualityStops count] == 6) {
+    else if ([qualityStops count] == 5) {
         [m_slider setNumberOfTickMarks:5];
-        [m_sliderLabel1 setStringValue:[(QualityStop*) [qualityStops objectAtIndex:1] title]];
-        [m_sliderLabel2 setStringValue:[(QualityStop*) [qualityStops objectAtIndex:2] title]];
-        [m_sliderLabel3 setStringValue:[(QualityStop*) [qualityStops objectAtIndex:3] title]];
-        [m_sliderLabel4 setStringValue:[(QualityStop*) [qualityStops objectAtIndex:4] title]];
-        [m_sliderLabel5 setStringValue:[(QualityStop*) [qualityStops objectAtIndex:5] title]];
+        [m_sliderLabel1 setStringValue:[(QualityStop*) [qualityStops objectAtIndex:0] title]];
+        [m_sliderLabel2 setStringValue:[(QualityStop*) [qualityStops objectAtIndex:1] title]];
+        [m_sliderLabel3 setStringValue:[(QualityStop*) [qualityStops objectAtIndex:2] title]];
+        [m_sliderLabel4 setStringValue:[(QualityStop*) [qualityStops objectAtIndex:3] title]];
+        [m_sliderLabel5 setStringValue:[(QualityStop*) [qualityStops objectAtIndex:4] title]];
     }
     else 
         [m_slider setHidden:YES];
@@ -215,8 +230,27 @@ static void setButton(NSButton* button, NSString* title)
     return (int) (value * ticks) + 1;
 }
 
+- (IBAction)sliderChanged:(id)sender {
+    double value = [sender doubleValue];
+    if (value != m_sliderValue) {
+        m_sliderValue = value;
+        [m_deviceController uiChanged];
+    }
+}
+
+-(double) sliderValue
+{
+    m_sliderValue = [m_slider doubleValue];
+    return m_sliderValue;
+}
+
 @end
 
+//
+//
+// QualityStop interface
+//
+//
 @implementation QualityStop
 
 +(QualityStop*) qualityStopWithElement: (NSXMLElement*) element
@@ -251,8 +285,18 @@ static void setButton(NSButton* button, NSString* title)
     return m_script;
 }
 
+-(double) bitrate
+{
+    return m_bitrate;
+}
+
 @end
 
+//
+//
+// PerformanceItem interface
+//
+//
 @implementation PerformanceItem
 
 +(PerformanceItem*) performanceItemWithElement: (NSXMLElement*) element
@@ -288,6 +332,11 @@ static void setButton(NSButton* button, NSString* title)
 
 @end
 
+//
+//
+// Recipe interface
+//
+//
 @implementation Recipe
 
 +(Recipe*) recipeWithElement: (NSXMLElement*) element
@@ -310,6 +359,11 @@ static void setButton(NSButton* button, NSString* title)
 
 @end
 
+//
+//
+// Checkbox interface
+//
+//
 @implementation Checkbox
 
 +(Checkbox*) checkboxWithElement: (NSXMLElement*) element
@@ -358,6 +412,11 @@ static void setButton(NSButton* button, NSString* title)
 
 @end
 
+//
+//
+// Menu interface
+//
+//
 @implementation Menu
 
 +(Menu*) menuWithElement: (NSXMLElement*) element
@@ -408,17 +467,24 @@ static void setButton(NSButton* button, NSString* title)
 
 @end
 
+//
+//
+// DeviceEntry interface
+//
+//
 @implementation DeviceEntry
 
 -(void) parseQualityStops: (NSArray*) array
 {
     for (int i = 0; i < [array count]; ++i) {
         NSXMLElement* element = (NSXMLElement*) [array objectAtIndex:i];
-        int which = (int) doubleAttribute(element, @"which");
-        if (which < 0 || which > 5)
-            continue;
-        [m_qualityStops insertObject:[QualityStop qualityStopWithElement: element] atIndex:which];
+        [m_qualityStops addObject:[QualityStop qualityStopWithElement: element]];
     }
+    
+    // The only legal number of quality stops is 0, 2, 3, and 5
+    int count = [m_qualityStops count];
+    if (count != 2 && count != 3 && count != 5)
+        [m_qualityStops removeAllObjects];
 }
 
 -(void) parsePerformanceItems: (NSArray*) array
@@ -502,11 +568,11 @@ static void setButton(NSButton* button, NSString* title)
     
     // Set the device tab enum
     if ([m_menus count] == 0)
-        m_deviceTab = DT_NO_MENUS;
+        m_deviceTabName = DT_NO_MENUS;
     else if ([m_menus count] == 1 && [[(Menu*) [m_menus objectAtIndex:0] itemTitles] count] <= 3)
-        m_deviceTab = DT_RADIO_2_CHECK;
+        m_deviceTabName = DT_RADIO_2_CHECK;
     else
-        m_deviceTab = DT_2_MENU_2_CHECK;
+        m_deviceTabName = DT_2_MENU_2_CHECK;
     
     return self;
 }
@@ -557,21 +623,39 @@ static void setButton(NSButton* button, NSString* title)
     return [self paramWithDefault: @"ffmpeg_vcodec"];
 }
 
--(void) setCurrentParamsInJavaScriptContext:(JavaScriptContext*) context withTabView:(NSTabView*) tabview performanceIndex:(int) perfIndex
+-(double) bitrate
 {
-    DeviceTab* tab = (DeviceTab*) [tabview selectedTabViewItem];
+    int count = [[self qualityStops] count];
+    double sliderValue = [m_deviceTab sliderValue] * (count-1);
+    
+    // handle special case
+    if (sliderValue >= (count-1))
+        return [[[self qualityStops] objectAtIndex:count-1] bitrate];
+    
+    int firstIndex = (int) sliderValue;
+    if (firstIndex == count-1)
+        firstIndex--;
+    
+    double minBitrate = [[[self qualityStops] objectAtIndex:firstIndex] bitrate];
+    double maxBitrate = [[[self qualityStops] objectAtIndex:firstIndex+1] bitrate];
 
+    sliderValue = fmod(sliderValue, 1);
+    return sliderValue * (maxBitrate-minBitrate) + minBitrate;
+}
+
+-(void) setCurrentParamsInJavaScriptContext:(JavaScriptContext*) context performanceIndex:(int) perfIndex
+{
     // Add params and commands from default device
-    [m_defaultDevice addParamsToJavaScriptContext: context withTab: tab performanceIndex:perfIndex];
+    [m_defaultDevice addParamsToJavaScriptContext: context performanceIndex:perfIndex];
     
     // Add params and commands from this device
-    [self addParamsToJavaScriptContext: context withTab: tab performanceIndex:perfIndex];
+    [self addParamsToJavaScriptContext: context performanceIndex:perfIndex];
     
     // Execute script from default device
-    [m_defaultDevice evaluateScript: context withTab: tab performanceIndex:perfIndex];
+    [m_defaultDevice evaluateScript: context performanceIndex:perfIndex];
     
     // Execute script from this device
-    [self evaluateScript: context withTab: tab performanceIndex:perfIndex];
+    [self evaluateScript: context performanceIndex:perfIndex];
 }
 
 -(NSString*) recipeWithJavaScriptContext: (JavaScriptContext*) context
@@ -594,12 +678,12 @@ static void setButton(NSButton* button, NSString* title)
 
 -(void) populateTabView:(NSTabView*) tabview
 {
-    [tabview selectTabViewItemWithIdentifier:m_deviceTab];
-    DeviceTab* tab = (DeviceTab*) [tabview selectedTabViewItem];
+    [tabview selectTabViewItemWithIdentifier:m_deviceTabName];
+    m_deviceTab = (DeviceTab*) [tabview selectedTabViewItem];
     
-    [tab setCheckboxes: m_checkboxes];
-    [tab setMenus: m_menus];
-    [tab setQuality: [self qualityStops]];
+    [m_deviceTab setCheckboxes: m_checkboxes];
+    [m_deviceTab setMenus: m_menus];
+    [m_deviceTab setQuality: [self qualityStops]];
 }
 
 -(void) populatePerformanceButton: (NSPopUpButton*) button
@@ -619,7 +703,7 @@ static void setButton(NSButton* button, NSString* title)
     }
 }
 
--(void) addParamsToJavaScriptContext: (JavaScriptContext*) context withTab: (DeviceTab*) tab performanceIndex:(int) perfIndex
+-(void) addParamsToJavaScriptContext: (JavaScriptContext*) context performanceIndex:(int) perfIndex
 {
     // Add global params and commands
     [context addParams: m_params];
@@ -627,7 +711,7 @@ static void setButton(NSButton* button, NSString* title)
     // Add params and commands from currently selected checkboxes
     int i = 0;
     for (Checkbox* checkbox in m_checkboxes) {
-        int state = [tab checkboxState:i];
+        int state = [m_deviceTab checkboxState:i];
         if (state == 0)
             [context addParams: [checkbox uncheckedParams]];
         else if (state == 1)
@@ -638,23 +722,23 @@ static void setButton(NSButton* button, NSString* title)
     // Add params and commands from currently selected menu items
     i = 0;
     for (Menu* menu in m_menus) {
-        int state = [tab menuState:i];
+        int state = [m_deviceTab menuState:i];
         if (state >= 0)
             [context addParams: (NSDictionary*) [[menu itemParams] objectAtIndex:state]];
         i++;
     }
     
     // Add params and commands from currently selected quality stop
-    int state = [tab qualityState];
-    if (state >= 0 && [m_qualityStops count] > state)
-        [context addParams: [(QualityStop*) [m_qualityStops objectAtIndex:state] params]];
+    int state = [m_deviceTab qualityState];
+    if (state >= 0 && [[self qualityStops] count] > state)
+        [context addParams: [(QualityStop*) [[self qualityStops] objectAtIndex:state] params]];
     
     // Add params and commands from currently selected performance item
     if (perfIndex >= 0 && [m_performanceItems count] > perfIndex)
         [context addParams: [(PerformanceItem*) [m_performanceItems objectAtIndex:perfIndex] params]];
 }
 
--(void) evaluateScript: (JavaScriptContext*) context withTab: (DeviceTab*) tab performanceIndex:(int) perfIndex
+-(void) evaluateScript: (JavaScriptContext*) context performanceIndex:(int) perfIndex
 {
     // Evaluate global script
     [context evaluateJavaScript:m_script];
@@ -662,7 +746,7 @@ static void setButton(NSButton* button, NSString* title)
     // Evaluate scripts from currently selected checkboxes
     int i = 0;
     for (Checkbox* checkbox in m_checkboxes) {
-        int state = [tab checkboxState:i];
+        int state = [m_deviceTab checkboxState:i];
         if (state == 0)
             [context evaluateJavaScript: [checkbox uncheckedScript]];
         else if (state == 1)
@@ -673,16 +757,16 @@ static void setButton(NSButton* button, NSString* title)
     // Evaluate scripts from currently selected menu items
     i = 0;
     for (Menu* menu in m_menus) {
-        int state = [tab menuState:i];
+        int state = [m_deviceTab menuState:i];
         if (state >= 0)
             [context evaluateJavaScript: (NSString*)[[menu itemScripts] objectAtIndex:state]];
         i++;
     }
     
     // Evaluate scripts from currently selected quality stop
-    int state = [tab qualityState];
-    if (state >= 0 && [m_qualityStops count] > state)
-        [context evaluateJavaScript: [(QualityStop*) [m_qualityStops objectAtIndex:state] script]];
+    int state = [m_deviceTab qualityState];
+    if (state >= 0 && [[self qualityStops] count] > state)
+        [context evaluateJavaScript: [(QualityStop*) [[self qualityStops] objectAtIndex:state] script]];
     
     // Evaluate scripts from currently selected performance item
     if (perfIndex >= 0 && [m_performanceItems count] > perfIndex)

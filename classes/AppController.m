@@ -42,6 +42,8 @@
 
     [m_stopEncodeItem setEnabled: NO];
     [m_pauseEncodeItem setEnabled: NO];
+    
+    [m_deviceController setDelegate:self];
 }
 
 // dataSource methods
@@ -198,6 +200,8 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
                     [transcoder addInputFile: [filenames objectAtIndex:i]];
                     [transcoder addOutputFile: getOutputFileName([filenames objectAtIndex:i], m_savePath, [m_deviceController fileSuffix])];
                     [transcoder setVideoFormat: [m_deviceController videoFormat]];
+                    [transcoder setBitrate: [m_deviceController bitrate]];
+                    
                     [m_moviePanel setMovie: [filenames objectAtIndex:i]];
                     
                     if (row < 0)
@@ -371,12 +375,22 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
     fprintf(stderr, [s UTF8String]);
     
     // Output to log file
-    [(Transcoder*) [m_files objectAtIndex: m_currentEncoding] logToFile: s];
+    if ([m_files count] > m_currentEncoding)
+        [(Transcoder*) [m_files objectAtIndex: m_currentEncoding] logToFile: s];
+        
+    // Output to consoleView
     [[[m_consoleView textStorage] mutableString] appendString: s];
     
     // scroll to the end
     NSRange range = NSMakeRange ([[m_consoleView string] length], 0);
     [m_consoleView scrollRangeToVisible: range];    
+}
+
+-(void) uiChanged
+{
+    double bitrate = [m_deviceController bitrate];
+    for (Transcoder* transcoder in m_files )
+        [transcoder setBitrate: bitrate];
 }
 
 @end

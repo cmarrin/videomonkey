@@ -12,6 +12,7 @@
 
 @interface NSObject (AppDelegate)
 -(void) log: (NSString*) format, ...;
+-(void) uiChanged;
 @end
  
 static NSImage* getImage(NSString* name)
@@ -323,7 +324,12 @@ static void addMenuSeparator(NSPopUpButton* button)
     return [m_currentDevice videoFormat];
 }
 
- static JSValueRef _jsLog(JSContextRef ctx, JSObjectRef function, JSObjectRef thisObject, size_t argumentCount, 
+-(double) bitrate
+{
+    return [m_currentDevice bitrate];
+}
+
+static JSValueRef _jsLog(JSContextRef ctx, JSObjectRef function, JSObjectRef thisObject, size_t argumentCount, 
                          const JSValueRef arguments[], JSValueRef* exception)
 {
     JSObjectRef global = JSContextGetGlobalObject(ctx);
@@ -360,7 +366,7 @@ static void addMenuSeparator(NSPopUpButton* button)
 
 -(void) setCurrentParams
 {
-    [m_currentDevice setCurrentParamsInJavaScriptContext:m_context withTabView:m_deviceControllerTabView performanceIndex:[m_performanceButton indexOfSelectedItem]];
+    [m_currentDevice setCurrentParamsInJavaScriptContext:m_context performanceIndex:[m_performanceButton indexOfSelectedItem]];
 }
 
 -(NSString*) recipeWithEnvironment: (NSDictionary*) env
@@ -368,6 +374,11 @@ static void addMenuSeparator(NSPopUpButton* button)
     [m_context addParams:env];
     NSString* recipe = [m_currentDevice recipeWithJavaScriptContext:m_context];
     return [self replaceParams: recipe];
+}
+
+-(void) uiChanged
+{
+    [m_delegate uiChanged];
 }
 
 @end

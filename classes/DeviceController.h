@@ -73,6 +73,7 @@
     DeviceEntry* m_currentDevice;
     NSString* m_currentPerformance;
     BOOL m_isTwoPass;
+    double m_bitrate;
 
     JavaScriptContext* m_context;
     id m_delegate;
@@ -85,10 +86,12 @@
 -(NSString*) performance;
 -(NSString*) fileSuffix;
 -(NSString*) videoFormat;
+-(double) bitrate;
 
 -(void) setDelegate:(id) delegate;
 -(void) setCurrentParams;
 -(NSString*) recipeWithEnvironment: (NSDictionary*) env;
 
+-(void) uiChanged;
 
 @end

@@ -57,6 +57,7 @@
 #define MAX_MENUS 4
 #define MAX_RADIOS 4
 
+@class DeviceController;
 @class JavaScriptContext;
 
 @interface DeviceTab : NSTabViewItem {
@@ -78,7 +79,13 @@
     IBOutlet NSTextField* m_sliderLabel3;
     IBOutlet NSTextField* m_sliderLabel4;
     IBOutlet NSTextField* m_sliderLabel5;
+    
+    IBOutlet DeviceController* m_deviceController;
+    
+    double m_sliderValue;
 }
+
+-(IBAction)sliderChanged:(id)sender;
 
 -(NSString*) deviceName;
 
@@ -89,6 +96,7 @@
 -(int) checkboxState:(int) index;
 -(int) menuState:(int) index;
 -(int) qualityState;
+-(double) sliderValue;
 
 @end
 
@@ -96,45 +104,6 @@
 #define DT_RADIO_2_CHECK @"radio2check"
 #define DT_2_MENU_2_CHECK @"2menu2check"
 #define DT_DVD @"dvd"
-
-@interface DeviceEntry : NSObject {
-    NSString* m_icon;
-    NSString* m_title;
-    NSString* m_groupTitle;
-    
-    DeviceEntry* m_defaultDevice;
-    
-    NSString* m_deviceTab;
-    
-    NSMutableArray* m_qualityStops;
-    NSMutableArray* m_performanceItems;
-    NSMutableArray* m_recipes;
-    NSMutableDictionary* m_params;
-    NSString* m_script;
-    NSMutableArray* m_checkboxes;
-    NSMutableArray* m_menus;
-}
-
-+(DeviceEntry*) deviceEntryWithElement: (NSXMLElement*) element inGroup: (NSString*) group withDefaults: (DeviceEntry*) defaults;
--(DeviceEntry*) initWithElement: (NSXMLElement*) element inGroup: (NSString*) group withDefaults: (DeviceEntry*) defaults;
-
--(NSString*) group;
--(NSString*) title;
--(NSString*) icon;
--(NSArray*) qualityStops;
--(NSArray*) performanceItems;
--(NSArray*) recipes;
--(NSString*) fileSuffix;
--(NSString*) videoFormat;
-
--(void) setCurrentParamsInJavaScriptContext:(JavaScriptContext*) context withTabView:(NSTabView*) tabview performanceIndex:(int) perfIndex;
--(NSString*) recipeWithJavaScriptContext: (JavaScriptContext*) context;
--(void) populateTabView:(NSTabView*) tabview;
--(void) populatePerformanceButton:(NSPopUpButton*) tabview;
--(void) addParamsToJavaScriptContext: (JavaScriptContext*) context withTab: (DeviceTab*) tab performanceIndex:(int) perfIndex;
--(void) evaluateScript: (JavaScriptContext*) context withTab: (DeviceTab*) tab performanceIndex:(int) perfIndex;
-
-@end
 
 @interface QualityStop : NSObject {
     NSString* m_title;
@@ -150,6 +119,7 @@
 -(NSString*) title;
 -(NSDictionary*) params;
 -(NSString*) script;
+-(double) bitrate;
 
 @end
 
@@ -212,5 +182,50 @@
 -(NSArray*) itemParams;
 -(NSArray*) itemScripts;
 -(NSString*) title;
+
+@end
+
+@interface DeviceEntry : NSObject {
+    NSString* m_icon;
+    NSString* m_title;
+    NSString* m_groupTitle;
+    
+    DeviceEntry* m_defaultDevice;
+    
+    NSString* m_deviceTabName;
+    DeviceTab* m_deviceTab;
+    
+    NSMutableArray* m_qualityStops;
+    NSMutableArray* m_performanceItems;
+    NSMutableArray* m_recipes;
+    NSMutableDictionary* m_params;
+    NSString* m_script;
+    NSMutableArray* m_checkboxes;
+    NSMutableArray* m_menus;
+    
+    double m_minBitrate;
+    double m_maxBitrate;
+    int m_currentQualityStopIndex;
+}
+
++(DeviceEntry*) deviceEntryWithElement: (NSXMLElement*) element inGroup: (NSString*) group withDefaults: (DeviceEntry*) defaults;
+-(DeviceEntry*) initWithElement: (NSXMLElement*) element inGroup: (NSString*) group withDefaults: (DeviceEntry*) defaults;
+
+-(NSString*) group;
+-(NSString*) title;
+-(NSString*) icon;
+-(NSArray*) qualityStops;
+-(NSArray*) performanceItems;
+-(NSArray*) recipes;
+-(NSString*) fileSuffix;
+-(NSString*) videoFormat;
+-(double) bitrate;
+
+-(void) setCurrentParamsInJavaScriptContext:(JavaScriptContext*) context performanceIndex:(int) perfIndex;
+-(NSString*) recipeWithJavaScriptContext: (JavaScriptContext*) context;
+-(void) populateTabView:(NSTabView*) tabview;
+-(void) populatePerformanceButton:(NSPopUpButton*) tabview;
+-(void) addParamsToJavaScriptContext: (JavaScriptContext*) context performanceIndex:(int) perfIndex;
+-(void) evaluateScript: (JavaScriptContext*) context performanceIndex:(int) perfIndex;
 
 @end

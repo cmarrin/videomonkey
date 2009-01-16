@@ -11,7 +11,6 @@
         <!ATTLIST command id CDATA "">
     <!ELEMENT quality    (quality_stop*)>
     <!ELEMENT quality_stop    (script|param|command)*>
-        <!ATTLIST quality_stop which CDATA "">
         <!ATTLIST quality_stop title CDATA "">
         <!ATTLIST quality_stop bitrate CDATA "">
     <!ELEMENT performance    (performance_item*)>
@@ -104,28 +103,27 @@
             ]]>
         </script>
         <quality>
-            <quality_stop which="0" bitrate="200000" />
-            <quality_stop which="1" title="Tiny" bitrate="400000">
+            <quality_stop title="Tiny" bitrate="400000">
                 <script> audio('low') </script> 
                 <param id="size" value="640x480" />
                 <param id="frame_rate" value="0.5" />
             </quality_stop>
-            <quality_stop which="2" title="Low" bitrate="800000">
+            <quality_stop title="Low" bitrate="800000">
                 <script> audio('high') </script> 
                 <param id="size" value="640x480" />
                 <param id="frame_rate" value="1" />
             </quality_stop>
-            <quality_stop which="3" title="Standard" bitrate="1100000">
+            <quality_stop title="Standard" bitrate="1100000">
                 <script> audio('high') </script> 
                 <param id="size" value="640x480" />
                 <param id="frame_rate" value="1" />
             </quality_stop>
-            <quality_stop which="4" title="High" bitrate="1500000">
+            <quality_stop title="High" bitrate="1500000">
                 <script> audio('high') </script> 
                 <param id="size" value="640x480" />
                 <param id="frame_rate" value="1" />
             </quality_stop>
-            <quality_stop which="5" title="Go Nuts" bitrate="2000000">
+            <quality_stop title="Go Nuts" bitrate="2000000">
                 <script> audio('high') </script> 
                 <param id="size" value="640x480" />
                 <param id="frame_rate" value="1" />
@@ -209,28 +207,27 @@
             <!-- iPod 5G -->
             <device title="iPod5G" icon="ipod">
                 <quality>
-                    <quality_stop which="0" bitrate="200000" />
-                    <quality_stop which="1" title="EDGE" bitrate="50000">
+                    <quality_stop title="EDGE" bitrate="50000">
                         <script> audio('low') </script> 
                         <param id="size" value="192x144" />
                         <param id="frame_rate" value="0.5" />
                     </quality_stop>
-                    <quality_stop which="2" title="3G" bitrate="100000">
+                    <quality_stop title="3G" bitrate="100000">
                         <script> audio('medium') </script> 
                         <param id="size" value="480x320" />
                         <param id="frame_rate" value="1" />
                     </quality_stop>
-                    <quality_stop which="3" title="WiFi" bitrate="1100000">
+                    <quality_stop title="WiFi" bitrate="1100000">
                         <script> audio('high') </script> 
                         <param id="size" value="480x320" />
                         <param id="frame_rate" value="1" />
                     </quality_stop>
-                    <quality_stop which="4" title="High" bitrate="1800000">
+                    <quality_stop title="High" bitrate="1800000">
                         <script> audio('high') </script> 
                         <param id="size" value="640x480" />
                         <param id="frame_rate" value="1" />
                     </quality_stop>
-                    <quality_stop which="5" title="Go Nuts" bitrate="3000000">
+                    <quality_stop title="Go Nuts" bitrate="3000000">
                         <script> audio('high') </script> 
                         <param id="size" value="640x480" />
                         <param id="frame_rate" value="1" />
@@ -257,28 +254,27 @@
             <!-- iPod classic -->
             <device title="iPod classic" icon="ipod">
                 <quality>
-                    <quality_stop which="0" bitrate="200000" />
-                    <quality_stop which="1" title="EDGE" bitrate="50000">
+                    <quality_stop title="EDGE" bitrate="50000">
                         <script> audio('low') </script> 
                         <param id="size" value="192x144" />
                         <param id="frame_rate" value="0.5" />
                     </quality_stop>
-                    <quality_stop which="2" title="3G" bitrate="100000">
+                    <quality_stop title="3G" bitrate="100000">
                         <script> audio('medium') </script> 
                         <param id="size" value="480x320" />
                         <param id="frame_rate" value="1" />
                     </quality_stop>
-                    <quality_stop which="3" title="WiFi" bitrate="1100000">
+                    <quality_stop title="WiFi" bitrate="1100000">
                         <script> audio('high') </script> 
                         <param id="size" value="480x320" />
                         <param id="frame_rate" value="1" />
                     </quality_stop>
-                    <quality_stop which="4" title="High" bitrate="1800000">
+                    <quality_stop title="High" bitrate="1800000">
                         <script> audio('high') </script> 
                         <param id="size" value="640x480" />
                         <param id="frame_rate" value="1" />
                     </quality_stop>
-                    <quality_stop which="5" title="Go Nuts" bitrate="3000000">
+                    <quality_stop title="Go Nuts" bitrate="3000000">
                         <script> audio('high') </script> 
                         <param id="size" value="640x480" />
                         <param id="frame_rate" value="1" />
@@ -305,28 +301,27 @@
             <!-- iPod nano -->
             <device title="iPod nano" icon="nano">
                 <quality>
-                    <quality_stop which="0" bitrate="200000" />
-                    <quality_stop which="1" title="EDGE" bitrate="50000">
+                    <quality_stop title="EDGE" bitrate="50000">
                         <script> audio('low') </script> 
                         <param id="size" value="192x144" />
                         <param id="frame_rate" value="0.5" />
                     </quality_stop>
-                    <quality_stop which="2" title="3G" bitrate="100000">
+                    <quality_stop title="3G" bitrate="100000">
                         <script> audio('medium') </script> 
                         <param id="size" value="480x320" />
                         <param id="frame_rate" value="1" />
                     </quality_stop>
-                    <quality_stop which="3" title="WiFi" bitrate="1100000">
+                    <quality_stop title="WiFi" bitrate="1100000">
                         <script> audio('high') </script> 
                         <param id="size" value="480x320" />
                         <param id="frame_rate" value="1" />
                     </quality_stop>
-                    <quality_stop which="4" title="High" bitrate="1800000">
+                    <quality_stop title="High" bitrate="1800000">
                         <script> audio('high') </script> 
                         <param id="size" value="640x480" />
                         <param id="frame_rate" value="1" />
                     </quality_stop>
-                    <quality_stop which="5" title="Go Nuts" bitrate="3000000">
+                    <quality_stop title="Go Nuts" bitrate="3000000">
                         <script> audio('high') </script> 
                         <param id="size" value="640x480" />
                         <param id="frame_rate" value="1" />
@@ -353,28 +348,27 @@
             <!-- iPhone -->
             <device title="iPhone" icon="iphone">
                 <quality>
-                    <quality_stop which="0" bitrate="200000" />
-                    <quality_stop which="1" title="EDGE" bitrate="50000">
+                    <quality_stop title="EDGE" bitrate="50000">
                         <script> audio('low') </script> 
                         <param id="size" value="192x144" />
                         <param id="frame_rate" value="0.5" />
                     </quality_stop>
-                    <quality_stop which="2" title="3G" bitrate="100000">
+                    <quality_stop title="3G" bitrate="100000">
                         <script> audio('medium') </script> 
                         <param id="size" value="480x320" />
                         <param id="frame_rate" value="1" />
                     </quality_stop>
-                    <quality_stop which="3" title="WiFi" bitrate="1100000">
+                    <quality_stop title="WiFi" bitrate="1100000">
                         <script> audio('high') </script> 
                         <param id="size" value="480x320" />
                         <param id="frame_rate" value="1" />
                     </quality_stop>
-                    <quality_stop which="4" title="High" bitrate="1800000">
+                    <quality_stop title="High" bitrate="1800000">
                         <script> audio('high') </script> 
                         <param id="size" value="640x480" />
                         <param id="frame_rate" value="1" />
                     </quality_stop>
-                    <quality_stop which="5" title="Go Nuts" bitrate="3000000">
+                    <quality_stop title="Go Nuts" bitrate="3000000">
                         <script> audio('high') </script> 
                         <param id="size" value="640x480" />
                         <param id="frame_rate" value="1" />
@@ -401,28 +395,27 @@
             <!-- iPod touch -->
             <device title="iPod touch" icon="iphone">
                 <quality>
-                    <quality_stop which="0" bitrate="200000" />
-                    <quality_stop which="1" title="EDGE" bitrate="50000">
+                    <quality_stop title="EDGE" bitrate="50000">
                         <script> audio('low') </script> 
                         <param id="size" value="192x144" />
                         <param id="frame_rate" value="0.5" />
                     </quality_stop>
-                    <quality_stop which="2" title="3G" bitrate="100000">
+                    <quality_stop title="3G" bitrate="100000">
                         <script> audio('medium') </script> 
                         <param id="size" value="480x320" />
                         <param id="frame_rate" value="1" />
                     </quality_stop>
-                    <quality_stop which="3" title="WiFi" bitrate="1100000">
+                    <quality_stop title="WiFi" bitrate="1100000">
                         <script> audio('high') </script> 
                         <param id="size" value="480x320" />
                         <param id="frame_rate" value="1" />
                     </quality_stop>
-                    <quality_stop which="4" title="High" bitrate="1800000">
+                    <quality_stop title="High" bitrate="1800000">
                         <script> audio('high') </script> 
                         <param id="size" value="640x480" />
                         <param id="frame_rate" value="1" />
                     </quality_stop>
-                    <quality_stop which="5" title="Go Nuts" bitrate="3000000">
+                    <quality_stop title="Go Nuts" bitrate="3000000">
                         <script> audio('high') </script> 
                         <param id="size" value="640x480" />
                         <param id="frame_rate" value="1" />
@@ -449,28 +442,27 @@
             <!-- Apple TV -->
             <device title="Apple TV" icon="appletv">
                 <quality>
-                    <quality_stop which="0" bitrate="200000" />
-                    <quality_stop which="1" title="EDGE" bitrate="50000">
+                    <quality_stop title="EDGE" bitrate="50000">
                         <script> audio('low') </script> 
                         <param id="size" value="192x144" />
                         <param id="frame_rate" value="0.5" />
                     </quality_stop>
-                    <quality_stop which="2" title="3G" bitrate="100000">
+                    <quality_stop title="3G" bitrate="100000">
                         <script> audio('medium') </script> 
                         <param id="size" value="480x320" />
                         <param id="frame_rate" value="1" />
                     </quality_stop>
-                    <quality_stop which="3" title="WiFi" bitrate="1100000">
+                    <quality_stop title="WiFi" bitrate="1100000">
                         <script> audio('high') </script> 
                         <param id="size" value="480x320" />
                         <param id="frame_rate" value="1" />
                     </quality_stop>
-                    <quality_stop which="4" title="High" bitrate="1800000">
+                    <quality_stop title="High" bitrate="1800000">
                         <script> audio('high') </script> 
                         <param id="size" value="640x480" />
                         <param id="frame_rate" value="1" />
                     </quality_stop>
-                    <quality_stop which="5" title="Go Nuts" bitrate="3000000">
+                    <quality_stop title="Go Nuts" bitrate="3000000">
                         <script> audio('high') </script> 
                         <param id="size" value="640x480" />
                         <param id="frame_rate" value="1" />
@@ -517,28 +509,27 @@
             <!-- DVD -->
             <device title="DVD" icon="cd">
                 <quality>
-                    <quality_stop which="0" bitrate="200000" />
-                    <quality_stop which="1" title="EDGE" bitrate="50000">
+                    <quality_stop title="EDGE" bitrate="50000">
                         <script> audio('low') </script> 
                         <param id="size" value="192x144" />
                         <param id="frame_rate" value="0.5" />
                     </quality_stop>
-                    <quality_stop which="2" title="3G" bitrate="100000">
+                    <quality_stop title="3G" bitrate="100000">
                         <script> audio('medium') </script> 
                         <param id="size" value="480x320" />
                         <param id="frame_rate" value="1" />
                     </quality_stop>
-                    <quality_stop which="3" title="WiFi" bitrate="1100000">
+                    <quality_stop title="WiFi" bitrate="1100000">
                         <script> audio('high') </script> 
                         <param id="size" value="480x320" />
                         <param id="frame_rate" value="1" />
                     </quality_stop>
-                    <quality_stop which="4" title="High" bitrate="1800000">
+                    <quality_stop title="High" bitrate="1800000">
                         <script> audio('high') </script> 
                         <param id="size" value="640x480" />
                         <param id="frame_rate" value="1" />
                     </quality_stop>
-                    <quality_stop which="5" title="Go Nuts" bitrate="3000000">
+                    <quality_stop title="Go Nuts" bitrate="3000000">
                         <script> audio('high') </script> 
                         <param id="size" value="640x480" />
                         <param id="frame_rate" value="1" />
@@ -565,28 +556,27 @@
             <!-- Tivo Series 2 -->
             <device title="Tivo Series 2" icon="tivo">
                 <quality>
-                    <quality_stop which="0" bitrate="200000" />
-                    <quality_stop which="1" title="EDGE" bitrate="50000">
+                    <quality_stop title="EDGE" bitrate="50000">
                         <script> audio('low') </script> 
                         <param id="size" value="192x144" />
                         <param id="frame_rate" value="0.5" />
                     </quality_stop>
-                    <quality_stop which="2" title="3G" bitrate="100000">
+                    <quality_stop title="3G" bitrate="100000">
                         <script> audio('medium') </script> 
                         <param id="size" value="480x320" />
                         <param id="frame_rate" value="1" />
                     </quality_stop>
-                    <quality_stop which="3" title="WiFi" bitrate="1100000">
+                    <quality_stop title="WiFi" bitrate="1100000">
                         <script> audio('high') </script> 
                         <param id="size" value="480x320" />
                         <param id="frame_rate" value="1" />
                     </quality_stop>
-                    <quality_stop which="4" title="High" bitrate="1800000">
+                    <quality_stop title="High" bitrate="1800000">
                         <script> audio('high') </script> 
                         <param id="size" value="640x480" />
                         <param id="frame_rate" value="1" />
                     </quality_stop>
-                    <quality_stop which="5" title="Go Nuts" bitrate="3000000">
+                    <quality_stop title="Go Nuts" bitrate="3000000">
                         <script> audio('high') </script> 
                         <param id="size" value="640x480" />
                         <param id="frame_rate" value="1" />
@@ -613,28 +603,27 @@
             <!-- Tivo Series 3 -->
             <device title="Tivo Series 3" icon="tivo">
                 <quality>
-                    <quality_stop which="0" bitrate="200000" />
-                    <quality_stop which="1" title="EDGE" bitrate="50000">
+                    <quality_stop title="EDGE" bitrate="50000">
                         <script> audio('low') </script> 
                         <param id="size" value="192x144" />
                         <param id="frame_rate" value="0.5" />
                     </quality_stop>
-                    <quality_stop which="2" title="3G" bitrate="100000">
+                    <quality_stop title="3G" bitrate="100000">
                         <script> audio('medium') </script> 
                         <param id="size" value="480x320" />
                         <param id="frame_rate" value="1" />
                     </quality_stop>
-                    <quality_stop which="3" title="WiFi" bitrate="1100000">
+                    <quality_stop title="WiFi" bitrate="1100000">
                         <script> audio('high') </script> 
                         <param id="size" value="480x320" />
                         <param id="frame_rate" value="1" />
                     </quality_stop>
-                    <quality_stop which="4" title="High" bitrate="1800000">
+                    <quality_stop title="High" bitrate="1800000">
                         <script> audio('high') </script> 
                         <param id="size" value="640x480" />
                         <param id="frame_rate" value="1" />
                     </quality_stop>
-                    <quality_stop which="5" title="Go Nuts" bitrate="3000000">
+                    <quality_stop title="Go Nuts" bitrate="3000000">
                         <script> audio('high') </script> 
                         <param id="size" value="640x480" />
                         <param id="frame_rate" value="1" />
@@ -661,28 +650,27 @@
             <!-- 3g Cell Phones -->
             <device title="3g Cell Phones" icon="3g">
                 <quality>
-                    <quality_stop which="0" bitrate="200000" />
-                    <quality_stop which="1" title="EDGE" bitrate="50000">
+                    <quality_stop title="EDGE" bitrate="50000">
                         <script> audio('low') </script> 
                         <param id="size" value="192x144" />
                         <param id="frame_rate" value="0.5" />
                     </quality_stop>
-                    <quality_stop which="2" title="3G" bitrate="100000">
+                    <quality_stop title="3G" bitrate="100000">
                         <script> audio('medium') </script> 
                         <param id="size" value="480x320" />
                         <param id="frame_rate" value="1" />
                     </quality_stop>
-                    <quality_stop which="3" title="WiFi" bitrate="1100000">
+                    <quality_stop title="WiFi" bitrate="1100000">
                         <script> audio('high') </script> 
                         <param id="size" value="480x320" />
                         <param id="frame_rate" value="1" />
                     </quality_stop>
-                    <quality_stop which="4" title="High" bitrate="1800000">
+                    <quality_stop title="High" bitrate="1800000">
                         <script> audio('high') </script> 
                         <param id="size" value="640x480" />
                         <param id="frame_rate" value="1" />
                     </quality_stop>
-                    <quality_stop which="5" title="Go Nuts" bitrate="3000000">
+                    <quality_stop title="Go Nuts" bitrate="3000000">
                         <script> audio('high') </script> 
                         <param id="size" value="640x480" />
                         <param id="frame_rate" value="1" />
@@ -729,28 +717,27 @@
             <!-- PSP -->
             <device title="PSP" icon="psp">
                 <quality>
-                    <quality_stop which="0" bitrate="200000" />
-                    <quality_stop which="1" title="EDGE" bitrate="50000">
+                    <quality_stop title="EDGE" bitrate="50000">
                         <script> audio('low') </script> 
                         <param id="size" value="192x144" />
                         <param id="frame_rate" value="0.5" />
                     </quality_stop>
-                    <quality_stop which="2" title="3G" bitrate="100000">
+                    <quality_stop title="3G" bitrate="100000">
                         <script> audio('medium') </script> 
                         <param id="size" value="480x320" />
                         <param id="frame_rate" value="1" />
                     </quality_stop>
-                    <quality_stop which="3" title="WiFi" bitrate="1100000">
+                    <quality_stop title="WiFi" bitrate="1100000">
                         <script> audio('high') </script> 
                         <param id="size" value="480x320" />
                         <param id="frame_rate" value="1" />
                     </quality_stop>
-                    <quality_stop which="4" title="High" bitrate="1800000">
+                    <quality_stop title="High" bitrate="1800000">
                         <script> audio('high') </script> 
                         <param id="size" value="640x480" />
                         <param id="frame_rate" value="1" />
                     </quality_stop>
-                    <quality_stop which="5" title="Go Nuts" bitrate="3000000">
+                    <quality_stop title="Go Nuts" bitrate="3000000">
                         <script> audio('high') </script> 
                         <param id="size" value="640x480" />
                         <param id="frame_rate" value="1" />
@@ -777,28 +764,27 @@
             <!-- Playstation 3 -->
             <device title="Playstation 3" icon="ps3">
                 <quality>
-                    <quality_stop which="0" bitrate="200000" />
-                    <quality_stop which="1" title="EDGE" bitrate="50000">
+                    <quality_stop title="EDGE" bitrate="50000">
                         <script> audio('low') </script> 
                         <param id="size" value="192x144" />
                         <param id="frame_rate" value="0.5" />
                     </quality_stop>
-                    <quality_stop which="2" title="3G" bitrate="100000">
+                    <quality_stop title="3G" bitrate="100000">
                         <script> audio('medium') </script> 
                         <param id="size" value="480x320" />
                         <param id="frame_rate" value="1" />
                     </quality_stop>
-                    <quality_stop which="3" title="WiFi" bitrate="1100000">
+                    <quality_stop title="WiFi" bitrate="1100000">
                         <script> audio('high') </script> 
                         <param id="size" value="480x320" />
                         <param id="frame_rate" value="1" />
                     </quality_stop>
-                    <quality_stop which="4" title="High" bitrate="1800000">
+                    <quality_stop title="High" bitrate="1800000">
                         <script> audio('high') </script> 
                         <param id="size" value="640x480" />
                         <param id="frame_rate" value="1" />
                     </quality_stop>
-                    <quality_stop which="5" title="Go Nuts" bitrate="3000000">
+                    <quality_stop title="Go Nuts" bitrate="3000000">
                         <script> audio('high') </script> 
                         <param id="size" value="640x480" />
                         <param id="frame_rate" value="1" />
@@ -825,28 +811,27 @@
             <!-- Nintendo Wii -->
             <device title="Nintendo Wii" icon="wii">
                 <quality>
-                    <quality_stop which="0" bitrate="200000" />
-                    <quality_stop which="1" title="EDGE" bitrate="50000">
+                    <quality_stop title="EDGE" bitrate="50000">
                         <script> audio('low') </script> 
                         <param id="size" value="192x144" />
                         <param id="frame_rate" value="0.5" />
                     </quality_stop>
-                    <quality_stop which="2" title="3G" bitrate="100000">
+                    <quality_stop title="3G" bitrate="100000">
                         <script> audio('medium') </script> 
                         <param id="size" value="480x320" />
                         <param id="frame_rate" value="1" />
                     </quality_stop>
-                    <quality_stop which="3" title="WiFi" bitrate="1100000">
+                    <quality_stop title="WiFi" bitrate="1100000">
                         <script> audio('high') </script> 
                         <param id="size" value="480x320" />
                         <param id="frame_rate" value="1" />
                     </quality_stop>
-                    <quality_stop which="4" title="High" bitrate="1800000">
+                    <quality_stop title="High" bitrate="1800000">
                         <script> audio('high') </script> 
                         <param id="size" value="640x480" />
                         <param id="frame_rate" value="1" />
                     </quality_stop>
-                    <quality_stop which="5" title="Go Nuts" bitrate="3000000">
+                    <quality_stop title="Go Nuts" bitrate="3000000">
                         <script> audio('high') </script> 
                         <param id="size" value="640x480" />
                         <param id="frame_rate" value="1" />
@@ -893,28 +878,27 @@
             <!-- MP4 -->
             <device title="MP4" icon="file">
                 <quality>
-                    <quality_stop which="0" bitrate="200000" />
-                    <quality_stop which="1" title="EDGE" bitrate="50000">
+                    <quality_stop title="EDGE" bitrate="50000">
                         <script> audio('low') </script> 
                         <param id="size" value="192x144" />
                         <param id="frame_rate" value="0.5" />
                     </quality_stop>
-                    <quality_stop which="2" title="3G" bitrate="100000">
+                    <quality_stop title="3G" bitrate="100000">
                         <script> audio('medium') </script> 
                         <param id="size" value="480x320" />
                         <param id="frame_rate" value="1" />
                     </quality_stop>
-                    <quality_stop which="3" title="WiFi" bitrate="1100000">
+                    <quality_stop title="WiFi" bitrate="1100000">
                         <script> audio('high') </script> 
                         <param id="size" value="480x320" />
                         <param id="frame_rate" value="1" />
                     </quality_stop>
-                    <quality_stop which="4" title="High" bitrate="1800000">
+                    <quality_stop title="High" bitrate="1800000">
                         <script> audio('high') </script> 
                         <param id="size" value="640x480" />
                         <param id="frame_rate" value="1" />
                     </quality_stop>
-                    <quality_stop which="5" title="Go Nuts" bitrate="3000000">
+                    <quality_stop title="Go Nuts" bitrate="3000000">
                         <script> audio('high') </script> 
                         <param id="size" value="640x480" />
                         <param id="frame_rate" value="1" />
@@ -941,28 +925,27 @@
             <!-- QuickTime -->
             <device title="QuickTime" icon="file">
                 <quality>
-                    <quality_stop which="0" bitrate="200000" />
-                    <quality_stop which="1" title="EDGE" bitrate="50000">
+                    <quality_stop title="EDGE" bitrate="50000">
                         <script> audio('low') </script> 
                         <param id="size" value="192x144" />
                         <param id="frame_rate" value="0.5" />
                     </quality_stop>
-                    <quality_stop which="2" title="3G" bitrate="100000">
+                    <quality_stop title="3G" bitrate="100000">
                         <script> audio('medium') </script> 
                         <param id="size" value="480x320" />
                         <param id="frame_rate" value="1" />
                     </quality_stop>
-                    <quality_stop which="3" title="WiFi" bitrate="1100000">
+                    <quality_stop title="WiFi" bitrate="1100000">
                         <script> audio('high') </script> 
                         <param id="size" value="480x320" />
                         <param id="frame_rate" value="1" />
                     </quality_stop>
-                    <quality_stop which="4" title="High" bitrate="1800000">
+                    <quality_stop title="High" bitrate="1800000">
                         <script> audio('high') </script> 
                         <param id="size" value="640x480" />
                         <param id="frame_rate" value="1" />
                     </quality_stop>
-                    <quality_stop which="5" title="Go Nuts" bitrate="3000000">
+                    <quality_stop title="Go Nuts" bitrate="3000000">
                         <script> audio('high') </script> 
                         <param id="size" value="640x480" />
                         <param id="frame_rate" value="1" />
@@ -989,28 +972,27 @@
             <!-- WMV -->
             <device title="WMV" icon="wma">
                 <quality>
-                    <quality_stop which="0" bitrate="200000" />
-                    <quality_stop which="1" title="EDGE" bitrate="50000">
+                    <quality_stop title="EDGE" bitrate="50000">
                         <script> audio('low') </script> 
                         <param id="size" value="192x144" />
                         <param id="frame_rate" value="0.5" />
                     </quality_stop>
-                    <quality_stop which="2" title="3G" bitrate="100000">
+                    <quality_stop title="3G" bitrate="100000">
                         <script> audio('medium') </script> 
                         <param id="size" value="480x320" />
                         <param id="frame_rate" value="1" />
                     </quality_stop>
-                    <quality_stop which="3" title="WiFi" bitrate="1100000">
+                    <quality_stop title="WiFi" bitrate="1100000">
                         <script> audio('high') </script> 
                         <param id="size" value="480x320" />
                         <param id="frame_rate" value="1" />
                     </quality_stop>
-                    <quality_stop which="4" title="High" bitrate="1800000">
+                    <quality_stop title="High" bitrate="1800000">
                         <script> audio('high') </script> 
                         <param id="size" value="640x480" />
                         <param id="frame_rate" value="1" />
                     </quality_stop>
-                    <quality_stop which="5" title="Go Nuts" bitrate="3000000">
+                    <quality_stop title="Go Nuts" bitrate="3000000">
                         <script> audio('high') </script> 
                         <param id="size" value="640x480" />
                         <param id="frame_rate" value="1" />
@@ -1037,28 +1019,27 @@
             <!-- Flash -->
             <device title="Flash" icon="flash">
                 <quality>
-                    <quality_stop which="0" bitrate="200000" />
-                    <quality_stop which="1" title="EDGE" bitrate="50000">
+                    <quality_stop title="EDGE" bitrate="50000">
                         <script> audio('low') </script> 
                         <param id="size" value="192x144" />
                         <param id="frame_rate" value="0.5" />
                     </quality_stop>
-                    <quality_stop which="2" title="3G" bitrate="100000">
+                    <quality_stop title="3G" bitrate="100000">
                         <script> audio('medium') </script> 
                         <param id="size" value="480x320" />
                         <param id="frame_rate" value="1" />
                     </quality_stop>
-                    <quality_stop which="3" title="WiFi" bitrate="1100000">
+                    <quality_stop title="WiFi" bitrate="1100000">
                         <script> audio('high') </script> 
                         <param id="size" value="480x320" />
                         <param id="frame_rate" value="1" />
                     </quality_stop>
-                    <quality_stop which="4" title="High" bitrate="1800000">
+                    <quality_stop title="High" bitrate="1800000">
                         <script> audio('high') </script> 
                         <param id="size" value="640x480" />
                         <param id="frame_rate" value="1" />
                     </quality_stop>
-                    <quality_stop which="5" title="Go Nuts" bitrate="3000000">
+                    <quality_stop title="Go Nuts" bitrate="3000000">
                         <script> audio('high') </script> 
                         <param id="size" value="640x480" />
                         <param id="frame_rate" value="1" />
@@ -1085,28 +1066,27 @@
             <!-- MPEG -->
             <device title="MPEG" icon="file">
                 <quality>
-                    <quality_stop which="0" bitrate="200000" />
-                    <quality_stop which="1" title="EDGE" bitrate="50000">
+                    <quality_stop title="EDGE" bitrate="50000">
                         <script> audio('low') </script> 
                         <param id="size" value="192x144" />
                         <param id="frame_rate" value="0.5" />
                     </quality_stop>
-                    <quality_stop which="2" title="3G" bitrate="100000">
+                    <quality_stop title="3G" bitrate="100000">
                         <script> audio('medium') </script> 
                         <param id="size" value="480x320" />
                         <param id="frame_rate" value="1" />
                     </quality_stop>
-                    <quality_stop which="3" title="WiFi" bitrate="1100000">
+                    <quality_stop title="WiFi" bitrate="1100000">
                         <script> audio('high') </script> 
                         <param id="size" value="480x320" />
                         <param id="frame_rate" value="1" />
                     </quality_stop>
-                    <quality_stop which="4" title="High" bitrate="1800000">
+                    <quality_stop title="High" bitrate="1800000">
                         <script> audio('high') </script> 
                         <param id="size" value="640x480" />
                         <param id="frame_rate" value="1" />
                     </quality_stop>
-                    <quality_stop which="5" title="Go Nuts" bitrate="3000000">
+                    <quality_stop title="Go Nuts" bitrate="3000000">
                         <script> audio('high') </script> 
                         <param id="size" value="640x480" />
                         <param id="frame_rate" value="1" />
