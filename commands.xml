@@ -98,7 +98,22 @@
             
             params.special_qt = params.is_quicktime == "true" && params.input_video_codec == "wmv3";
             
-            log("hello there");
+            // adjust video frame size
+           log("Input Video Size=", params.input_video_width, "x", params.input_video_height);
+           log("Requested Video Size=", params.frame_width, "x", params.frame_height);
+             var inputAspect = params.input_video_width / params.input_video_height;
+            var requestedAspect = params.frame_width / params.frame_height;
+            if (inputAspect > requestedAspect) {
+                // shorten height
+                params.output_video_width = params.frame_width;
+				params.output_video_height = params.frame_width / requestedAspect;
+			}
+			else {
+				// shorten width
+				params.output_video_height = params.frame_height;
+				params.output_video_width = params.frame_height * requestedAspect;
+			}
+            log("Video Size=", params.output_video_width, "x", params.output_video_height);
             
             ]]>
         </script>
@@ -350,27 +365,32 @@
                 <quality>
                     <quality_stop title="EDGE" bitrate="50000">
                         <script> audio('low') </script> 
-                        <param id="size" value="192x144" />
+                        <param id="frame_width" value="192" />
+                        <param id="frame_height" value="144" />
                         <param id="frame_rate" value="0.5" />
                     </quality_stop>
                     <quality_stop title="3G" bitrate="100000">
                         <script> audio('medium') </script> 
-                        <param id="size" value="480x320" />
+                        <param id="frame_width" value="480" />
+                        <param id="frame_height" value="320" />
                         <param id="frame_rate" value="1" />
                     </quality_stop>
                     <quality_stop title="WiFi" bitrate="1100000">
                         <script> audio('high') </script> 
-                        <param id="size" value="480x320" />
+                        <param id="frame_width" value="480" />
+                        <param id="frame_height" value="320" />
                         <param id="frame_rate" value="1" />
                     </quality_stop>
                     <quality_stop title="High" bitrate="1800000">
                         <script> audio('high') </script> 
-                        <param id="size" value="640x480" />
+                        <param id="frame_width" value="640" />
+                        <param id="frame_height" value="480" />
                         <param id="frame_rate" value="1" />
                     </quality_stop>
                     <quality_stop title="Go Nuts" bitrate="3000000">
                         <script> audio('high') </script> 
-                        <param id="size" value="640x480" />
+                        <param id="frame_width" value="640" />
+                        <param id="frame_height" value="480" />
                         <param id="frame_rate" value="1" />
                     </quality_stop>
                 </quality>

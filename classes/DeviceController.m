@@ -372,6 +372,7 @@ static JSValueRef _jsLog(JSContextRef ctx, JSObjectRef function, JSObjectRef thi
 -(NSString*) recipeWithEnvironment: (NSDictionary*) env
 {
     [m_context addParams:env];
+    [self setCurrentParams];
     NSString* recipe = [m_currentDevice recipeWithJavaScriptContext:m_context];
     return [self replaceParams: recipe];
 }

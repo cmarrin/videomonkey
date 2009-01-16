@@ -391,6 +391,7 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
     double bitrate = [m_deviceController bitrate];
     for (Transcoder* transcoder in m_files )
         [transcoder setBitrate: bitrate];
+    [m_fileListView reloadData];
 }
 
 @end
