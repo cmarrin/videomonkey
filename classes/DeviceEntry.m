@@ -227,7 +227,8 @@ static void setButton(NSButton* button, NSString* title)
         value = 0;
     else if (value > 1)
         value = 1;
-    return (int) (value * ticks) + 1;
+        
+    return (int) (value * ticks + 0.5);
 }
 
 - (IBAction)sliderChanged:(id)sender {

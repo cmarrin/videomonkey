@@ -40,8 +40,13 @@
         <command id="ffmpeg_pass0"> -vpre $ffmpeg_vpre </command>
         <command id="ffmpeg_pass1"> -vpre $ffmpeg_vpre_pass1 -pass 1 -passlogfile $pass_log_file </command>
         <command id="ffmpeg_pass2"> -vpre $ffmpeg_vpre -pass 2 -passlogfile $pass_log_file </command>
-        <command id="ffmpeg_options">
-            -vcodec $ffmpeg_vcodec -b $bitrate -s $(output_video_width)x$(output_video_height) -aspect $(output_video_width):$(output_video_height)</command>
+        <command id="ffmpeg_options"> $ffmpeg_video_options $ffmpeg_audio_options </command>
+		<command id="ffmpeg_video_options">
+            -vcodec $ffmpeg_vcodec -b $bitrate -s $(output_video_width)x$(output_video_height) -aspect $(output_video_width):$(output_video_height) -r $(output_frame_rate):1000
+		</command>
+		<command id="ffmpeg_audio_options">
+			-acodec libfaac -ab $audio_bitrate -ar $audio_sample_rate -ac $audio_channels
+		</command>
         <command id="quicktime_to_audio_file"> $qt_export $input_file --video=0 $tmp_audio_file </command>
         <command id="correct_yuv"> $yuvcorrect -v 0 -Y LUMINANCE_1.20_0_255_0_255 -Y CHROMINANCE_0_1.04_128_1.04_128_0_255 </command>
         <command id="quicktime_to_yuv"> $movtoy4m -f -w $input_video_width -h $input_video_height -F $framerate -a $aspect_ratio $input_file | $correct_yuv </command>
@@ -65,9 +70,9 @@
             function audio(type)
             {
                 switch(type) {
-                    case "low":    params.audio_bitrate =  16000; params.audio_sample_rate = 11025; params.audio_channels = 1; break;
-                    case "medium": params.audio_bitrate =  32000; params.audio_sample_rate = 22050; params.audio_channels = 1; break;
-                    case "high":   params.audio_bitrate = 128000; params.audio_sample_rate = 48000; params.audio_channels = 2; break;
+                    case "low":    params.audio_bitrate =  "16k"; params.audio_sample_rate = 11025; params.audio_channels = 1; break;
+                    case "medium": params.audio_bitrate =  "32k"; params.audio_sample_rate = 22050; params.audio_channels = 1; break;
+                    case "high":   params.audio_bitrate = "128k"; params.audio_sample_rate = 48000; params.audio_channels = 2; break;
                 }
             }
             
@@ -99,21 +104,25 @@
             params.special_qt = params.is_quicktime == "true" && params.input_video_codec == "wmv3";
             
             // adjust video frame size
-           log("Input Video Size=", params.input_video_width, "x", params.input_video_height);
-           log("Requested Video Size=", params.frame_width, "x", params.frame_height);
-             var inputAspect = params.input_video_width / params.input_video_height;
+            var inputAspect = params.input_video_width / params.input_video_height;
             var requestedAspect = params.frame_width / params.frame_height;
             if (inputAspect > requestedAspect) {
                 // shorten height
                 params.output_video_width = params.frame_width;
-				params.output_video_height = params.frame_width / requestedAspect;
+				params.output_video_height = params.frame_width / inputAspect;
 			}
 			else {
 				// shorten width
 				params.output_video_height = params.frame_height;
-				params.output_video_width = params.frame_height * requestedAspect;
+				params.output_video_width = params.frame_height * inputAspect;
 			}
-            log("Video Size=", params.output_video_width, "x", params.output_video_height);
+			
+			// Make frame size divisible by 16
+			params.output_video_width = Math.round(params.output_video_width / 16) * 16;
+			params.output_video_height = Math.round(params.output_video_height / 16) * 16;
+			
+			// set frame rate
+			params.output_frame_rate = params.input_frame_rate * params.frame_rate * 1000;
             
             ]]>
         </script>

@@ -488,9 +488,7 @@ static NSImage* getFileStatusImage(FileStatus status)
     [env setValue: [[NSNumber numberWithInt: [self inputVideoWidthDiv16]] stringValue] forKey: @"output_video_width"];
     [env setValue: [[NSNumber numberWithInt: [self inputVideoHeightDiv16]] stringValue] forKey: @"output_video_height"];
     [env setValue: [[NSNumber numberWithInt: [self bitrate]] stringValue] forKey: @"bitrate"];
-    
-    int frameRate = (int) ([self inputVideoFrameRate] * 1000);
-    [env setValue: [NSString stringWithFormat: @"%d:1000", frameRate] forKey: @"framerate"];
+    [env setValue: [[NSNumber numberWithInt: [self inputVideoFrameRate]] stringValue] forKey: @"input_frame_rate"];
     
     [env setValue: [self ffmpeg_vcodec] forKey: @"ffmpeg_vcodec"];
     
