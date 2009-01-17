@@ -86,6 +86,7 @@
 }
 
 -(IBAction)sliderChanged:(id)sender;
+-(IBAction)controlChanged:(id)sender;
 
 -(NSString*) deviceName;
 

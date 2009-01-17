@@ -239,6 +239,11 @@ static void setButton(NSButton* button, NSString* title)
     }
 }
 
+-(IBAction)controlChanged:(id)sender
+{
+    [m_deviceController uiChanged];
+}
+
 -(double) sliderValue
 {
     m_sliderValue = [m_slider doubleValue];

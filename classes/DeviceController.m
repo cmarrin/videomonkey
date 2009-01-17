@@ -229,8 +229,6 @@ static void addMenuSeparator(NSPopUpButton* button)
 	// set the device name and image
 	[m_deviceImageView setImage:getImage([m_currentDevice icon])];
 	[m_deviceName setStringValue:[m_currentDevice title]];
-    
-    [self setCurrentParams];
 }
 
 - (void) awakeFromNib
@@ -275,6 +273,8 @@ static void addMenuSeparator(NSPopUpButton* button)
     // set the selected item
     // FIXME: need to get this from prefs
     [m_performanceButton selectItemWithTag:2];
+    
+    [self setCurrentParams];
 }
 
 - (BOOL)validateMenuItem:(NSMenuItem *)menuItem
@@ -288,7 +288,6 @@ static void addMenuSeparator(NSPopUpButton* button)
 }
 
 - (IBAction)selectPerformance:(id)sender {
-    [self setCurrentParams];
     [self uiChanged];
 }
 
@@ -357,6 +356,7 @@ static JSValueRef _jsLog(JSContextRef ctx, JSObjectRef function, JSObjectRef thi
 
 -(void) uiChanged
 {
+    [self setCurrentParams];
     [m_delegate uiChanged];
 }
 

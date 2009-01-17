@@ -8,7 +8,7 @@
 		<string key="IBDocument.HIToolboxVersion">352.00</string>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
-			<integer value="372"/>
+			<integer value="1348"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -4049,6 +4049,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 								</object>
 								<string key="NSFrame">{{1, 1}, {362, 273}}</string>
 								<reference key="NSSuperview" ref="546498873"/>
+								<reference key="NSNextKeyView" ref="897181040"/>
 								<reference key="NSDocView" ref="897181040"/>
 								<reference key="NSBGColor" ref="750519141"/>
 								<object class="NSCursor" key="NSCursor">
@@ -4060,7 +4061,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 							<object class="NSScroller" id="811027863">
 								<reference key="NSNextResponder" ref="546498873"/>
 								<int key="NSvFlags">256</int>
-								<string key="NSFrame">{{363, 1}, {15, 259}}</string>
+								<string key="NSFrame">{{363, 1}, {15, 273}}</string>
 								<reference key="NSSuperview" ref="546498873"/>
 								<reference key="NSTarget" ref="546498873"/>
 								<string key="NSAction">_doScroller:</string>
@@ -4080,6 +4081,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 						</object>
 						<string key="NSFrameSize">{379, 275}</string>
 						<reference key="NSSuperview" ref="255340955"/>
+						<reference key="NSNextKeyView" ref="693118750"/>
 						<int key="NSsFlags">18</int>
 						<reference key="NSVScroller" ref="811027863"/>
 						<reference key="NSHScroller" ref="173135271"/>
@@ -4911,6 +4913,78 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 						<reference key="destination" ref="402522846"/>
 					</object>
 					<int key="connectionID">2166</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">controlChanged:</string>
+						<reference key="source" ref="28671661"/>
+						<reference key="destination" ref="129613565"/>
+					</object>
+					<int key="connectionID">2167</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">controlChanged:</string>
+						<reference key="source" ref="28671661"/>
+						<reference key="destination" ref="197603681"/>
+					</object>
+					<int key="connectionID">2168</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">controlChanged:</string>
+						<reference key="source" ref="910176919"/>
+						<reference key="destination" ref="176060659"/>
+					</object>
+					<int key="connectionID">2169</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">controlChanged:</string>
+						<reference key="source" ref="910176919"/>
+						<reference key="destination" ref="1063443774"/>
+					</object>
+					<int key="connectionID">2170</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">controlChanged:</string>
+						<reference key="source" ref="910176919"/>
+						<reference key="destination" ref="1029604041"/>
+					</object>
+					<int key="connectionID">2171</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">controlChanged:</string>
+						<reference key="source" ref="637136577"/>
+						<reference key="destination" ref="949339403"/>
+					</object>
+					<int key="connectionID">2172</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">controlChanged:</string>
+						<reference key="source" ref="637136577"/>
+						<reference key="destination" ref="78017057"/>
+					</object>
+					<int key="connectionID">2173</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">controlChanged:</string>
+						<reference key="source" ref="637136577"/>
+						<reference key="destination" ref="918014708"/>
+					</object>
+					<int key="connectionID">2174</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">controlChanged:</string>
+						<reference key="source" ref="637136577"/>
+						<reference key="destination" ref="750711183"/>
+					</object>
+					<int key="connectionID">2175</int>
 				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -8292,7 +8366,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">2166</int>
+			<int key="maxID">2175</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -8403,8 +8477,17 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 					<string key="className">DeviceTab</string>
 					<string key="superclassName">NSTabViewItem</string>
 					<object class="NSMutableDictionary" key="actions">
-						<string key="NS.key.0">sliderChanged:</string>
-						<string key="NS.object.0">id</string>
+						<bool key="EncodedWithXMLCoder">YES</bool>
+						<object class="NSMutableArray" key="dict.sortedKeys">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>controlChanged:</string>
+							<string>sliderChanged:</string>
+						</object>
+						<object class="NSMutableArray" key="dict.values">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>id</string>
+							<string>id</string>
+						</object>
 					</object>
 					<object class="NSMutableDictionary" key="outlets">
 						<bool key="EncodedWithXMLCoder">YES</bool>

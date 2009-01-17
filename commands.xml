@@ -430,10 +430,8 @@
                 </checkbox>
                 <menu which="0" title="Best for:">
                     <menu_item title="iPhone Screen">
-                        <param id="ffmpeg_vcodec" value="libx264" />
-                    </menu_item>
+                     </menu_item>
                     <menu_item title="TV Screen">
-                        <param id="ffmpeg_vcodec" value="mpeg4" />
                     </menu_item>
                 </menu>
             </device>
