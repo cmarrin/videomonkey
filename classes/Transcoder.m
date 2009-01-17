@@ -538,11 +538,12 @@ static NSImage* getFileStatusImage(FileStatus status)
     enumerator = [m_commands objectEnumerator];
     Command* command = [enumerator nextObject];
     m_isLastCommandRunning = NO;
+    int i = 0;
     
     while(command) {
         Command* nextCommand = [enumerator nextObject];
         
-        if ([[enumerator allObjects] count] == 0)
+        if (++i >= [m_commands count])
             m_isLastCommandRunning = YES;
         [command execute: nextCommand];
         command = nextCommand;
