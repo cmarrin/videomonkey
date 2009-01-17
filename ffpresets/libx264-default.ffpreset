@@ -16,3 +16,4 @@ qmax=51
 qdiff=4
 directpred=1
 flags2=+fastpskip
+rc_eq='blurCplx^(1-qComp)'

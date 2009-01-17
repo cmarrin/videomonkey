@@ -45,7 +45,7 @@
             -vcodec $ffmpeg_vcodec -b $bitrate -s $(output_video_width)x$(output_video_height) -aspect $(output_video_width):$(output_video_height) -r $(output_frame_rate):1000
 		</command>
 		<command id="ffmpeg_audio_options">
-			-acodec libfaac -ab $audio_bitrate -ar $audio_sample_rate -ac $audio_channels
+			-acodec $ffmpeg_acodec -ab $audio_bitrate -ar $audio_sample_rate -ac $audio_channels
 		</command>
         <command id="quicktime_to_audio_file"> $qt_export $input_file --video=0 $tmp_audio_file </command>
         <command id="correct_yuv"> $yuvcorrect -v 0 -Y LUMINANCE_1.20_0_255_0_255 -Y CHROMINANCE_0_1.04_128_1.04_128_0_255 </command>
@@ -103,7 +103,10 @@
             
             params.special_qt = params.is_quicktime == "true" && params.input_video_codec == "wmv3";
             
-            // adjust video frame size
+log("special_qt=",params.special_qt);
+  			log("is_quicktime=", params.is_quicktime, ", input_video_codec=", params.input_video_codec, ", has_audio=", params.has_audio, ", is_2_pass=", params.is_2_pass);
+
+           // adjust video frame size
             var inputAspect = params.input_video_width / params.input_video_height;
             var requestedAspect = params.frame_width / params.frame_height;
             if (inputAspect > requestedAspect) {
@@ -123,7 +126,8 @@
 			
 			// set frame rate
 			params.output_frame_rate = params.input_frame_rate * params.frame_rate * 1000;
-            
+			
+           
             ]]>
         </script>
         <quality>
@@ -155,55 +159,59 @@
         </quality>
         <performance>
             <performance_item title="Fastest">
-                <param id="two_pass" value="" />
+                <param id="is_2_pass" value="false" />
                 <param id="ffmpeg_vpre" value="fastest" />
             </performance_item>
             <performance_item title="Fast">
-                <param id="two_pass" value="" />
+                <param id="is_2_pass" value="false" />
                 <param id="ffmpeg_vpre" value="default" />
             </performance_item>
             <performance_item title="Normal">
-                <param id="two_pass" value="" />
+                <param id="is_2_pass" value="false" />
                 <param id="ffmpeg_vpre" value="normal" />
             </performance_item>
             <performance_item title="Normal (2 pass)">
-                <param id="two_pass" value="_2pass" />
-                <param id="ffmpeg_vpre" value="normal" />
-            </performance_item>
+              	<param id="is_2_pass" value="true" />
+               	<param id="ffmpeg_vpre" value="normal" />
+               	<param id="ffmpeg_vpre_pass1" value="normal-pass1" />
+             </performance_item>
             <performance_item title="High Quality">
-                <param id="two_pass" value="" />
+                <param id="is_2_pass" value="false" />
                 <param id="ffmpeg_vpre" value="hq" />
             </performance_item>
             <performance_item title="High Quality (2 pass)">
-                <param id="two_pass" value="_2pass" />
+                <param id="is_2_pass" value="true" />
                 <param id="ffmpeg_vpre" value="hq" />
+              	<param id="ffmpeg_vpre_pass1" value="hq-pass1" />
+				<script> log("ffmpeg_vpre_pass1=", params.ffmpeg_vpre_pass1) </script>
             </performance_item>
         </performance>
         <param id="ffmpeg_vcodec" value="libx264" />
+        <param id="ffmpeg_acodec" value="libfaac" />
         <param id="video_suffix" value="mp4" />
         <recipes>
-            <recipe condition="all(!params.special_qt, !params.has_audio, !params.is_2_pass)">
+            <recipe condition="all(params.special_qt=='false', params.has_audio=='false', params.is_2_pass=='false')">
                 $normal_pass0
             </recipe>
-            <recipe condition="all(!params.special_qt, !params.has_audio, params.is_2_pass)">
+            <recipe condition="all(params.special_qt=='false', params.has_audio=='false', params.is_2_pass=='true')">
                 $normal_pass1 ; $normal_pass2
             </recipe>
-            <recipe condition="all(!params.special_qt, params.has_audio, !params.is_2_pass)">
+            <recipe condition="all(params.special_qt=='false', params.has_audio=='true', params.is_2_pass=='false')">
                 $normal_pass0
             </recipe>
-            <recipe condition="all(!params.special_qt, params.has_audio, params.is_2_pass)">
+            <recipe condition="all(params.special_qt=='false', params.has_audio=='true', params.is_2_pass=='true')">
                 $normal_pass1 ; $normal_pass2
             </recipe>
-            <recipe condition="all(params.special_qt, !params.has_audio, !params.is_2_pass)">
+            <recipe condition="all(params.special_qt=='true', params.has_audio=='false', params.is_2_pass=='false')">
                 $quicktime_v_pass0
             </recipe>
-            <recipe condition="all(params.special_qt, !params.has_audio, params.is_2_pass)">
+            <recipe condition="all(params.special_qt=='true', params.has_audio=='false', params.is_2_pass=='true')">
                 $quicktime_v_pass1 ; $quicktime_v_pass2
             </recipe>
-            <recipe condition="all(params.special_qt, params.has_audio, !params.is_2_pass)">
+            <recipe condition="all(params.special_qt=='true', params.has_audio=='true', params.is_2_pass=='false')">
                 $quicktime_to_audio_file ; $quicktime_av_pass0
             </recipe>
-            <recipe condition="all(params.special_qt, params.has_audio, params.is_2_pass)">
+            <recipe condition="all(params.special_qt=='true', params.has_audio=='true', params.is_2_pass=='true')">
                 $quicktime_to_audio_file ; $quicktime_av_pass1 ; $quicktime_av_pass2
             </recipe>
         </recipes>

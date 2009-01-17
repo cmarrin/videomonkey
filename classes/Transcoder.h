@@ -121,7 +121,6 @@ typedef enum FileStatus { FS_INVALID, FS_VALID, FS_ENCODING, FS_PAUSED, FS_FAILE
 -(NSString*) passLogFileName;
 
 -(NSString*) ffmpeg_vcodec;
--(NSString*) ffmpeg_vpre;
 
 -(BOOL) startEncode;
 -(BOOL) pauseEncode;

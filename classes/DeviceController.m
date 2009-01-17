@@ -70,19 +70,6 @@ static void addMenuSeparator(NSPopUpButton* button)
 
 @implementation DeviceController
 
--(void) setPerformance: (int) index
-{
-    switch(index)
-    {
-        case 0: m_currentPerformance = @"fastest"; m_isTwoPass = NO;    break;
-        case 1: m_currentPerformance = @"default"; m_isTwoPass = NO;    break;
-        case 2: m_currentPerformance = @"normal"; m_isTwoPass = NO;     break;
-        case 3: m_currentPerformance = @"normal"; m_isTwoPass = YES;    break;
-        case 4: m_currentPerformance = @"hq"; m_isTwoPass = NO;         break;
-        case 5: m_currentPerformance = @"hq"; m_isTwoPass = YES;        break;
-    }
-}
-
 -(void) initCommands
 {
     NSURL* url = [NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"commands" ofType:@"xml"]];
@@ -288,7 +275,6 @@ static void addMenuSeparator(NSPopUpButton* button)
     // set the selected item
     // FIXME: need to get this from prefs
     [m_performanceButton selectItemWithTag:2];
-    [self setPerformance: [m_performanceButton indexOfSelectedItem]];
 }
 
 - (BOOL)validateMenuItem:(NSMenuItem *)menuItem
@@ -298,20 +284,12 @@ static void addMenuSeparator(NSPopUpButton* button)
 
 - (IBAction)selectDevice:(id)sender {
     [self setCurrentDevice:[self findDeviceEntryWithIndex:[[sender selectedItem] tag]]];
+    [self uiChanged];
 }
 
 - (IBAction)selectPerformance:(id)sender {
-    [self setPerformance: [sender indexOfSelectedItem]];
-}
-
--(BOOL) isTwoPass
-{
-    return m_isTwoPass;
-}
-
--(NSString*) performance
-{
-    return m_currentPerformance;
+    [self setCurrentParams];
+    [self uiChanged];
 }
 
 -(NSString*) fileSuffix

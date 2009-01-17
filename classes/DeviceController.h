@@ -71,8 +71,6 @@
     NSMutableArray* m_devices;
     
     DeviceEntry* m_currentDevice;
-    NSString* m_currentPerformance;
-    BOOL m_isTwoPass;
     double m_bitrate;
 
     JavaScriptContext* m_context;
@@ -82,8 +80,6 @@
 -(IBAction)selectDevice:(id)sender;
 -(IBAction)selectPerformance:(id)sender;
 
--(BOOL) isTwoPass;
--(NSString*) performance;
 -(NSString*) fileSuffix;
 -(NSString*) videoFormat;
 -(double) bitrate;

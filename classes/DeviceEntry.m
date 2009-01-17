@@ -662,7 +662,7 @@ static void setButton(NSButton* button, NSString* title)
 -(NSString*) recipeWithJavaScriptContext: (JavaScriptContext*) context
 {
     // For each recipe item, execute its condition and if it returns true, that is the recipe to use
-    NSString* recipeString;
+    NSString* recipeString = nil;
     
     for (Recipe* recipe in [self recipes]) {
         NSString* returnString = [context evaluateJavaScript:[recipe condition]];

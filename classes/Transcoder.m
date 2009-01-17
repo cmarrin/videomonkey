@@ -389,11 +389,6 @@ static NSImage* getFileStatusImage(FileStatus status)
         return @"libx264";
 }
 
--(NSString*) ffmpeg_vpre
-{
-    return [[m_appController deviceController] performance];
-}
-
 -(int) outputFileSize
 {
     double playTime = [self playTime];
@@ -490,12 +485,12 @@ static NSImage* getFileStatusImage(FileStatus status)
     [env setValue: [[NSNumber numberWithInt: [self bitrate]] stringValue] forKey: @"bitrate"];
     [env setValue: [[NSNumber numberWithInt: [self inputVideoFrameRate]] stringValue] forKey: @"input_frame_rate"];
     
+    [env setValue: ([self isInputQuicktime] ? @"true" : @"false") forKey: @"is_quicktime"];
+    [env setValue: ([self hasInputAudio] ? @"true" : @"false") forKey: @"has_audio"];
+
+    [env setValue: [self inputVideoFormat] forKey: @"input_video_codec"];
+
     [env setValue: [self ffmpeg_vcodec] forKey: @"ffmpeg_vcodec"];
-    
-    NSString* vpre = [self ffmpeg_vpre];
-    NSString* vpre_pass1 = [NSString stringWithFormat:@"%@-pass1", vpre]; 
-    [env setValue: vpre forKey: @"ffmpeg_vpre"];
-    [env setValue: vpre_pass1 forKey: @"ffmpeg_vpre_pass1"];
     
     // get recipe
     NSString* recipe = [[m_appController deviceController] recipeWithEnvironment: env];
