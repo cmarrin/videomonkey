@@ -2,7 +2,6 @@ coder=1
 flags=+loop
 cmp=+chroma
 partitions=+parti8x8+parti4x4+partp8x8+partb8x8
-me_method=umh
 subq=8
 me_range=16
 g=250
@@ -19,4 +18,7 @@ refs=4
 directpred=3
 trellis=1
 flags2=+bpyramid+wpred+mixed_refs+dct8x8+fastpskip
-rc_eq='blurCplx^(1-qComp)'
+
+mbd=rd
+cmp=2
+subcmp=2

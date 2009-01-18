@@ -227,8 +227,10 @@ static void addMenuSeparator(NSPopUpButton* button)
     [m_currentDevice populatePerformanceButton: m_performanceButton];
 
 	// set the device name and image
-	[m_deviceImageView setImage:getImage([m_currentDevice icon])];
-	[m_deviceName setStringValue:[m_currentDevice title]];
+    if (m_currentDevice) {
+        [m_deviceImageView setImage:getImage([m_currentDevice icon])];
+        [m_deviceName setStringValue:[m_currentDevice title]];
+    }
 }
 
 - (void) awakeFromNib

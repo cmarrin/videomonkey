@@ -674,6 +674,7 @@ static void setButton(NSButton* button, NSString* title)
         if (!returnString)
             return nil;
         if ([returnString boolValue]) {
+            NSLog(@"****** selected recipe with condition '%@'\n", [recipe condition]);
             recipeString = [recipe recipe];
             break;
         }
@@ -714,6 +715,15 @@ static void setButton(NSButton* button, NSString* title)
     // Add global params and commands
     [context addParams: m_params];
 
+    // Add params and commands from currently selected quality stop
+    int state = [m_deviceTab qualityState];
+    if (state >= 0 && [[self qualityStops] count] > state)
+        [context addParams: [(QualityStop*) [[self qualityStops] objectAtIndex:state] params]];
+    
+    // Add params and commands from currently selected performance item
+    if (perfIndex >= 0 && [m_performanceItems count] > perfIndex)
+        [context addParams: [(PerformanceItem*) [m_performanceItems objectAtIndex:perfIndex] params]];
+
     // Add params and commands from currently selected checkboxes
     int i = 0;
     for (Checkbox* checkbox in m_checkboxes) {
@@ -732,16 +742,7 @@ static void setButton(NSButton* button, NSString* title)
         if (state >= 0)
             [context addParams: (NSDictionary*) [[menu itemParams] objectAtIndex:state]];
         i++;
-    }
-    
-    // Add params and commands from currently selected quality stop
-    int state = [m_deviceTab qualityState];
-    if (state >= 0 && [[self qualityStops] count] > state)
-        [context addParams: [(QualityStop*) [[self qualityStops] objectAtIndex:state] params]];
-    
-    // Add params and commands from currently selected performance item
-    if (perfIndex >= 0 && [m_performanceItems count] > perfIndex)
-        [context addParams: [(PerformanceItem*) [m_performanceItems objectAtIndex:perfIndex] params]];
+    }    
 }
 
 -(void) evaluateScript: (JavaScriptContext*) context performanceIndex:(int) perfIndex

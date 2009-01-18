@@ -37,9 +37,12 @@
 ]>
 <videomonkey>
     <default_device>
-        <command id="ffmpeg_pass0"> -vpre $ffmpeg_vpre </command>
-        <command id="ffmpeg_pass1"> -vpre $ffmpeg_vpre_pass1 -pass 1 -passlogfile $pass_log_file </command>
-        <command id="ffmpeg_pass2"> -vpre $ffmpeg_vpre -pass 2 -passlogfile $pass_log_file </command>
+        <command id="ffmpeg_single_pass_presets"> -vpre $ffmpeg_vpre </command>
+        <command id="ffmpeg_pass1_presets"> -vpre $ffmpeg_vpre_pass1 -pass 1 -passlogfile $pass_log_file </command>
+        <command id="ffmpeg_pass2_presets"> -vpre $ffmpeg_vpre -pass 2 -passlogfile $pass_log_file </command>
+        <command id="ffmpeg_single_pass_options"> $ffmpeg_single_pass_presets </command>
+        <command id="ffmpeg_pass1_options"> $ffmpeg_pass1_presets -pass 1 -passlogfile $pass_log_file </command>
+        <command id="ffmpeg_pass2_options"> $ffmpeg_pass2_presets -pass 2 -passlogfile $pass_log_file </command>
         <command id="ffmpeg_options"> $ffmpeg_video_options $ffmpeg_audio_options </command>
 		<command id="ffmpeg_video_options">
             -vcodec $ffmpeg_vcodec -b $bitrate -s $(output_video_width)x$(output_video_height) -aspect $(output_video_width):$(output_video_height) -r $(output_frame_rate):1000
@@ -55,15 +58,15 @@
         <command id="yuv_to_ffmpeg_av"> $ffmpeg -y -i - -i $tmp_audio_file </command>
         <command id="yuv_to_ffmpeg_v"> $ffmpeg -y -i - </command>
         <command id="ffmpeg_normal"> $ffmpeg -y -i $input_file </command>
-        <command id="quicktime_av_pass0"> $quicktime_to_yuv | $yuv_to_ffmpeg_av $ffmpeg_options $ffmpeg_pass0 $output_file </command>
-        <command id="quicktime_av_pass1"> $quicktime_to_yuv | $yuv_to_ffmpeg_av $ffmpeg_options $ffmpeg_pass1 $output_file </command>
-        <command id="quicktime_av_pass2"> $quicktime_to_yuv | $yuv_to_ffmpeg_av $ffmpeg_options $ffmpeg_pass2 $output_file </command>
-        <command id="quicktime_v_pass0"> $quicktime_to_yuv | $yuv_to_ffmpeg_v $ffmpeg_options $ffmpeg_pass0 $output_file </command>
-        <command id="quicktime_v_pass1"> $quicktime_to_yuv | $yuv_to_ffmpeg_v $ffmpeg_options $ffmpeg_pass1 $output_file </command>
-        <command id="quicktime_v_pass2"> $quicktime_to_yuv | $yuv_to_ffmpeg_v $ffmpeg_options $ffmpeg_pass2 $output_file </command>
-        <command id="normal_pass0"> $ffmpeg_normal $ffmpeg_options $ffmpeg_pass0 $output_file </command>
-        <command id="normal_pass1"> $ffmpeg_normal $ffmpeg_options $ffmpeg_pass1 $output_file </command>
-        <command id="normal_pass2"> $ffmpeg_normal $ffmpeg_options $ffmpeg_pass2 $output_file </command>
+        <command id="quicktime_av_single_pass"> $quicktime_to_yuv | $yuv_to_ffmpeg_av $ffmpeg_options $ffmpeg_single_pass_options $output_file </command>
+        <command id="quicktime_av_pass1"> $quicktime_to_yuv | $yuv_to_ffmpeg_av $ffmpeg_options $ffmpeg_pass1_options $output_file </command>
+        <command id="quicktime_av_pass2"> $quicktime_to_yuv | $yuv_to_ffmpeg_av $ffmpeg_options $ffmpeg_pass2_options $output_file </command>
+        <command id="quicktime_v_single_pass"> $quicktime_to_yuv | $yuv_to_ffmpeg_v $ffmpeg_options $ffmpeg_single_pass_options $output_file </command>
+        <command id="quicktime_v_pass1"> $quicktime_to_yuv | $yuv_to_ffmpeg_v $ffmpeg_options $ffmpeg_pass1_options $output_file </command>
+        <command id="quicktime_v_pass2"> $quicktime_to_yuv | $yuv_to_ffmpeg_v $ffmpeg_options $ffmpeg_pass2_options $output_file </command>
+        <command id="normal_single_pass"> $ffmpeg_normal $ffmpeg_options $ffmpeg_single_pass_options $output_file </command>
+        <command id="normal_pass1"> $ffmpeg_normal $ffmpeg_options $ffmpeg_pass1_options $output_file </command>
+        <command id="normal_pass2"> $ffmpeg_normal $ffmpeg_options $ffmpeg_pass2_options $output_file </command>
         <script>
             <![CDATA[
             
@@ -114,29 +117,35 @@
                 return name;
             }
             
-            params.special_qt = params.is_quicktime == "true" && params.input_video_codec == "wmv3";
+			function adjustVideoParams()
+			{
+            	params.special_qt = params.is_quicktime == "true" && params.input_video_codec == "wmv3";
             
-           // adjust video frame size
-            var inputAspect = params.input_video_width / params.input_video_height;
-            var requestedAspect = params.frame_width / params.frame_height;
-            if (inputAspect > requestedAspect) {
-                // shorten height
-                params.output_video_width = params.frame_width;
-				params.output_video_height = params.frame_width / inputAspect;
+	           // adjust video frame size
+	            var inputAspect = params.input_video_width / params.input_video_height;
+	            var requestedAspect = params.frame_width / params.frame_height;
+	            if (inputAspect > requestedAspect) {
+	                // shorten height
+	                params.output_video_width = params.frame_width;
+					params.output_video_height = params.frame_width / inputAspect;
+				}
+				else {
+					// shorten width
+					params.output_video_height = params.frame_height;
+					params.output_video_width = params.frame_height * inputAspect;
+				}
+			
+				// Make frame size divisible by 16
+				params.output_video_width = Math.round(params.output_video_width / 16) * 16;
+				params.output_video_height = Math.round(params.output_video_height / 16) * 16;
+				
+				log("*** set video size to ", params.output_video_width, "x", params.output_video_height);
+			
+				// set frame rate
+				params.output_frame_rate = params.input_frame_rate * params.frame_rate * 1000;
 			}
-			else {
-				// shorten width
-				params.output_video_height = params.frame_height;
-				params.output_video_width = params.frame_height * inputAspect;
-			}
 			
-			// Make frame size divisible by 16
-			params.output_video_width = Math.round(params.output_video_width / 16) * 16;
-			params.output_video_height = Math.round(params.output_video_height / 16) * 16;
-			
-			// set frame rate
-			params.output_frame_rate = params.input_frame_rate * params.frame_rate * 1000;
-			
+			adjustVideoParams();
            
             ]]>
         </script>
@@ -200,25 +209,25 @@
         <param id="video_suffix" value="mp4" />
         <recipes>
             <recipe condition="all(!bool(params.special_qt), !bool(params.has_audio), !bool(params.is_2_pass))">
-                $normal_pass0
+                $normal_single_pass
             </recipe>
             <recipe condition="all(!bool(params.special_qt), !bool(params.has_audio), bool(params.is_2_pass))">
                 $normal_pass1 ; $normal_pass2
             </recipe>
             <recipe condition="all(!bool(params.special_qt), bool(params.has_audio), !bool(params.is_2_pass))">
-                $normal_pass0
+                $normal_single_pass
             </recipe>
             <recipe condition="all(!bool(params.special_qt), bool(params.has_audio), bool(params.is_2_pass))">
                 $normal_pass1 ; $normal_pass2
             </recipe>
             <recipe condition="all(bool(params.special_qt), !bool(params.has_audio), !bool(params.is_2_pass))">
-                $quicktime_v_pass0
+                $quicktime_v_single_pass
             </recipe>
             <recipe condition="all(bool(params.special_qt), !bool(params.has_audio), bool(params.is_2_pass))">
                 $quicktime_v_pass1 ; $quicktime_v_pass2
             </recipe>
             <recipe condition="all(bool(params.special_qt), bool(params.has_audio), !bool(params.is_2_pass))">
-                $quicktime_to_audio_file ; $quicktime_av_pass0
+                $quicktime_to_audio_file ; $quicktime_av_single_pass
             </recipe>
             <recipe condition="all(bool(params.special_qt), bool(params.has_audio), bool(params.is_2_pass))">
                 $quicktime_to_audio_file ; $quicktime_av_pass1 ; $quicktime_av_pass2
@@ -235,6 +244,38 @@
         <device_group title="iTunes">
             <!-- All Apple Devices -->
             <device title="All Apple Devices" icon="itunesfile">
+               <quality>
+                    <quality_stop title="EDGE" bitrate="50000">
+                        <script> audio('low') </script> 
+                        <param id="frame_width" value="192" />
+                        <param id="frame_height" value="144" />
+                        <param id="frame_rate" value="0.5" />
+                    </quality_stop>
+                    <quality_stop title="3G" bitrate="100000">
+                        <script> audio('medium') </script> 
+                        <param id="frame_width" value="320" />
+                        <param id="frame_height" value="240" />
+                        <param id="frame_rate" value="1" />
+                    </quality_stop>
+                    <quality_stop title="WiFi" bitrate="1100000">
+                        <script> audio('high') </script> 
+                        <param id="frame_width" value="480" />
+                        <param id="frame_height" value="320" />
+                        <param id="frame_rate" value="1" />
+                    </quality_stop>
+                    <quality_stop title="High" bitrate="1800000">
+                        <script> audio('high') </script> 
+                        <param id="frame_width" value="640" />
+                        <param id="frame_height" value="480" />
+                        <param id="frame_rate" value="1" />
+                    </quality_stop>
+                    <quality_stop title="Go Nuts" bitrate="3000000">
+                        <script> audio('high') </script> 
+                        <param id="frame_width" value="640" />
+                        <param id="frame_height" value="480" />
+                        <param id="frame_rate" value="1" />
+                    </quality_stop>
+                </quality>
                 <checkbox which="0" title="H.264 Video (slower but better)">
                     <checked_params>
                         <param id="ffmpeg_vcodec" value="libx264" />
@@ -243,34 +284,61 @@
                         <param id="ffmpeg_vcodec" value="mpeg4" />
                     </unchecked_params>
                 </checkbox>
-            </device>
+                <menu which="0" title="Best for:">
+                	<menu_item title="iPhone Screen">
+						<script>
+							if (params.frame_width == 640) {
+								log("adjusting size from 640x480 to 480x320");
+								params.frame_width = 480;
+								params.frame_height = 320;
+								adjustVideoParams();
+							}
+						</script>
+                    </menu_item>
+                    <menu_item title="TV Screen">
+ 						<script>
+							if (params.frame_width == 320) {
+								log("adjusting size from 320x240 to 480x320");
+								params.frame_width = 480;
+								params.frame_height = 320;
+								adjustVideoParams();
+							}
+						</script>
+                   </menu_item>
+                </menu>
+             </device>
             
             <!-- iPod 5G -->
             <device title="iPod5G" icon="ipod">
-                <quality>
+               <quality>
                     <quality_stop title="EDGE" bitrate="50000">
                         <script> audio('low') </script> 
-                        <param id="size" value="192x144" />
+                        <param id="frame_width" value="192" />
+                        <param id="frame_height" value="144" />
                         <param id="frame_rate" value="0.5" />
                     </quality_stop>
                     <quality_stop title="3G" bitrate="100000">
                         <script> audio('medium') </script> 
-                        <param id="size" value="480x320" />
+                        <param id="frame_width" value="320" />
+                        <param id="frame_height" value="240" />
                         <param id="frame_rate" value="1" />
                     </quality_stop>
                     <quality_stop title="WiFi" bitrate="1100000">
                         <script> audio('high') </script> 
-                        <param id="size" value="480x320" />
+                        <param id="frame_width" value="480" />
+                        <param id="frame_height" value="320" />
                         <param id="frame_rate" value="1" />
                     </quality_stop>
                     <quality_stop title="High" bitrate="1800000">
                         <script> audio('high') </script> 
-                        <param id="size" value="640x480" />
+                        <param id="frame_width" value="640" />
+                        <param id="frame_height" value="480" />
                         <param id="frame_rate" value="1" />
                     </quality_stop>
                     <quality_stop title="Go Nuts" bitrate="3000000">
                         <script> audio('high') </script> 
-                        <param id="size" value="640x480" />
+                        <param id="frame_width" value="640" />
+                        <param id="frame_height" value="480" />
                         <param id="frame_rate" value="1" />
                     </quality_stop>
                 </quality>
@@ -283,41 +351,60 @@
                     </unchecked_params>
                 </checkbox>
                 <menu which="0" title="Best for:">
-                    <menu_item title="iPhone Screen">
-                        <param id="ffmpeg_vcodec" value="libx264" />
+                	<menu_item title="iPhone Screen">
+						<script>
+							if (params.frame_width == 640) {
+								log("adjusting size from 640x480 to 480x320");
+								params.frame_width = 480;
+								params.frame_height = 320;
+								adjustVideoParams();
+							}
+						</script>
                     </menu_item>
                     <menu_item title="TV Screen">
-                        <param id="ffmpeg_vcodec" value="mpeg4" />
-                    </menu_item>
+ 						<script>
+							if (params.frame_width == 320) {
+								log("adjusting size from 320x240 to 480x320");
+								params.frame_width = 480;
+								params.frame_height = 320;
+								adjustVideoParams();
+							}
+						</script>
+                   </menu_item>
                 </menu>
-            </device>
+             </device>
             
             <!-- iPod classic -->
             <device title="iPod classic" icon="ipod">
-                <quality>
+               <quality>
                     <quality_stop title="EDGE" bitrate="50000">
                         <script> audio('low') </script> 
-                        <param id="size" value="192x144" />
+                        <param id="frame_width" value="192" />
+                        <param id="frame_height" value="144" />
                         <param id="frame_rate" value="0.5" />
                     </quality_stop>
                     <quality_stop title="3G" bitrate="100000">
                         <script> audio('medium') </script> 
-                        <param id="size" value="480x320" />
+                        <param id="frame_width" value="320" />
+                        <param id="frame_height" value="240" />
                         <param id="frame_rate" value="1" />
                     </quality_stop>
                     <quality_stop title="WiFi" bitrate="1100000">
                         <script> audio('high') </script> 
-                        <param id="size" value="480x320" />
+                        <param id="frame_width" value="480" />
+                        <param id="frame_height" value="320" />
                         <param id="frame_rate" value="1" />
                     </quality_stop>
                     <quality_stop title="High" bitrate="1800000">
                         <script> audio('high') </script> 
-                        <param id="size" value="640x480" />
+                        <param id="frame_width" value="640" />
+                        <param id="frame_height" value="480" />
                         <param id="frame_rate" value="1" />
                     </quality_stop>
                     <quality_stop title="Go Nuts" bitrate="3000000">
                         <script> audio('high') </script> 
-                        <param id="size" value="640x480" />
+                        <param id="frame_width" value="640" />
+                        <param id="frame_height" value="480" />
                         <param id="frame_rate" value="1" />
                     </quality_stop>
                 </quality>
@@ -330,41 +417,60 @@
                     </unchecked_params>
                 </checkbox>
                 <menu which="0" title="Best for:">
-                    <menu_item title="iPhone Screen">
-                        <param id="ffmpeg_vcodec" value="libx264" />
+                	<menu_item title="iPhone Screen">
+						<script>
+							if (params.frame_width == 640) {
+								log("adjusting size from 640x480 to 480x320");
+								params.frame_width = 480;
+								params.frame_height = 320;
+								adjustVideoParams();
+							}
+						</script>
                     </menu_item>
                     <menu_item title="TV Screen">
-                        <param id="ffmpeg_vcodec" value="mpeg4" />
-                    </menu_item>
+ 						<script>
+							if (params.frame_width == 320) {
+								log("adjusting size from 320x240 to 480x320");
+								params.frame_width = 480;
+								params.frame_height = 320;
+								adjustVideoParams();
+							}
+						</script>
+                   </menu_item>
                 </menu>
-            </device>
+             </device>
             
             <!-- iPod nano -->
             <device title="iPod nano" icon="nano">
-                <quality>
+               <quality>
                     <quality_stop title="EDGE" bitrate="50000">
                         <script> audio('low') </script> 
-                        <param id="size" value="192x144" />
+                        <param id="frame_width" value="192" />
+                        <param id="frame_height" value="144" />
                         <param id="frame_rate" value="0.5" />
                     </quality_stop>
                     <quality_stop title="3G" bitrate="100000">
                         <script> audio('medium') </script> 
-                        <param id="size" value="480x320" />
+                        <param id="frame_width" value="320" />
+                        <param id="frame_height" value="240" />
                         <param id="frame_rate" value="1" />
                     </quality_stop>
                     <quality_stop title="WiFi" bitrate="1100000">
                         <script> audio('high') </script> 
-                        <param id="size" value="480x320" />
+                        <param id="frame_width" value="480" />
+                        <param id="frame_height" value="320" />
                         <param id="frame_rate" value="1" />
                     </quality_stop>
                     <quality_stop title="High" bitrate="1800000">
                         <script> audio('high') </script> 
-                        <param id="size" value="640x480" />
+                        <param id="frame_width" value="640" />
+                        <param id="frame_height" value="480" />
                         <param id="frame_rate" value="1" />
                     </quality_stop>
                     <quality_stop title="Go Nuts" bitrate="3000000">
                         <script> audio('high') </script> 
-                        <param id="size" value="640x480" />
+                        <param id="frame_width" value="640" />
+                        <param id="frame_height" value="480" />
                         <param id="frame_rate" value="1" />
                     </quality_stop>
                 </quality>
@@ -377,12 +483,26 @@
                     </unchecked_params>
                 </checkbox>
                 <menu which="0" title="Best for:">
-                    <menu_item title="iPhone Screen">
-                        <param id="ffmpeg_vcodec" value="libx264" />
+                	<menu_item title="iPhone Screen">
+						<script>
+							if (params.frame_width == 640) {
+								log("adjusting size from 640x480 to 480x320");
+								params.frame_width = 480;
+								params.frame_height = 320;
+								adjustVideoParams();
+							}
+						</script>
                     </menu_item>
                     <menu_item title="TV Screen">
-                        <param id="ffmpeg_vcodec" value="mpeg4" />
-                    </menu_item>
+ 						<script>
+							if (params.frame_width == 320) {
+								log("adjusting size from 320x240 to 480x320");
+								params.frame_width = 480;
+								params.frame_height = 320;
+								adjustVideoParams();
+							}
+						</script>
+                   </menu_item>
                 </menu>
             </device>
 
@@ -397,8 +517,8 @@
                     </quality_stop>
                     <quality_stop title="3G" bitrate="100000">
                         <script> audio('medium') </script> 
-                        <param id="frame_width" value="480" />
-                        <param id="frame_height" value="320" />
+                        <param id="frame_width" value="320" />
+                        <param id="frame_height" value="240" />
                         <param id="frame_rate" value="1" />
                     </quality_stop>
                     <quality_stop title="WiFi" bitrate="1100000">
@@ -429,39 +549,60 @@
                     </unchecked_params>
                 </checkbox>
                 <menu which="0" title="Best for:">
-                    <menu_item title="iPhone Screen">
-                     </menu_item>
-                    <menu_item title="TV Screen">
+                	<menu_item title="iPhone Screen">
+						<script>
+							if (params.frame_width == 640) {
+								log("adjusting size from 640x480 to 480x320");
+								params.frame_width = 480;
+								params.frame_height = 320;
+								adjustVideoParams();
+							}
+						</script>
                     </menu_item>
+                    <menu_item title="TV Screen">
+ 						<script>
+							if (params.frame_width == 320) {
+								log("adjusting size from 320x240 to 480x320");
+								params.frame_width = 480;
+								params.frame_height = 320;
+								adjustVideoParams();
+							}
+						</script>
+                   </menu_item>
                 </menu>
             </device>
             
             <!-- iPod touch -->
             <device title="iPod touch" icon="iphone">
-                <quality>
+               <quality>
                     <quality_stop title="EDGE" bitrate="50000">
                         <script> audio('low') </script> 
-                        <param id="size" value="192x144" />
+                        <param id="frame_width" value="192" />
+                        <param id="frame_height" value="144" />
                         <param id="frame_rate" value="0.5" />
                     </quality_stop>
                     <quality_stop title="3G" bitrate="100000">
                         <script> audio('medium') </script> 
-                        <param id="size" value="480x320" />
+                        <param id="frame_width" value="320" />
+                        <param id="frame_height" value="240" />
                         <param id="frame_rate" value="1" />
                     </quality_stop>
                     <quality_stop title="WiFi" bitrate="1100000">
                         <script> audio('high') </script> 
-                        <param id="size" value="480x320" />
+                        <param id="frame_width" value="480" />
+                        <param id="frame_height" value="320" />
                         <param id="frame_rate" value="1" />
                     </quality_stop>
                     <quality_stop title="High" bitrate="1800000">
                         <script> audio('high') </script> 
-                        <param id="size" value="640x480" />
+                        <param id="frame_width" value="640" />
+                        <param id="frame_height" value="480" />
                         <param id="frame_rate" value="1" />
                     </quality_stop>
                     <quality_stop title="Go Nuts" bitrate="3000000">
                         <script> audio('high') </script> 
-                        <param id="size" value="640x480" />
+                        <param id="frame_width" value="640" />
+                        <param id="frame_height" value="480" />
                         <param id="frame_rate" value="1" />
                     </quality_stop>
                 </quality>
@@ -474,41 +615,60 @@
                     </unchecked_params>
                 </checkbox>
                 <menu which="0" title="Best for:">
-                    <menu_item title="iPhone Screen">
-                        <param id="ffmpeg_vcodec" value="libx264" />
+                	<menu_item title="iPhone Screen">
+						<script>
+							if (params.frame_width == 640) {
+								log("adjusting size from 640x480 to 480x320");
+								params.frame_width = 480;
+								params.frame_height = 320;
+								adjustVideoParams();
+							}
+						</script>
                     </menu_item>
                     <menu_item title="TV Screen">
-                        <param id="ffmpeg_vcodec" value="mpeg4" />
-                    </menu_item>
+ 						<script>
+							if (params.frame_width == 320) {
+								log("adjusting size from 320x240 to 480x320");
+								params.frame_width = 480;
+								params.frame_height = 320;
+								adjustVideoParams();
+							}
+						</script>
+                   </menu_item>
                 </menu>
-            </device>
+             </device>
             
             <!-- Apple TV -->
             <device title="Apple TV" icon="appletv">
-                <quality>
+               <quality>
                     <quality_stop title="EDGE" bitrate="50000">
                         <script> audio('low') </script> 
-                        <param id="size" value="192x144" />
+                        <param id="frame_width" value="192" />
+                        <param id="frame_height" value="144" />
                         <param id="frame_rate" value="0.5" />
                     </quality_stop>
                     <quality_stop title="3G" bitrate="100000">
                         <script> audio('medium') </script> 
-                        <param id="size" value="480x320" />
+                        <param id="frame_width" value="320" />
+                        <param id="frame_height" value="240" />
                         <param id="frame_rate" value="1" />
                     </quality_stop>
                     <quality_stop title="WiFi" bitrate="1100000">
                         <script> audio('high') </script> 
-                        <param id="size" value="480x320" />
+                        <param id="frame_width" value="480" />
+                        <param id="frame_height" value="320" />
                         <param id="frame_rate" value="1" />
                     </quality_stop>
                     <quality_stop title="High" bitrate="1800000">
                         <script> audio('high') </script> 
-                        <param id="size" value="640x480" />
+                        <param id="frame_width" value="640" />
+                        <param id="frame_height" value="480" />
                         <param id="frame_rate" value="1" />
                     </quality_stop>
                     <quality_stop title="Go Nuts" bitrate="3000000">
                         <script> audio('high') </script> 
-                        <param id="size" value="640x480" />
+                        <param id="frame_width" value="640" />
+                        <param id="frame_height" value="480" />
                         <param id="frame_rate" value="1" />
                     </quality_stop>
                 </quality>
@@ -521,15 +681,29 @@
                     </unchecked_params>
                 </checkbox>
                 <menu which="0" title="Best for:">
-                    <menu_item title="iPhone Screen">
-                        <param id="ffmpeg_vcodec" value="libx264" />
+                	<menu_item title="iPhone Screen">
+						<script>
+							if (params.frame_width == 640) {
+								log("adjusting size from 640x480 to 480x320");
+								params.frame_width = 480;
+								params.frame_height = 320;
+								adjustVideoParams();
+							}
+						</script>
                     </menu_item>
                     <menu_item title="TV Screen">
-                        <param id="ffmpeg_vcodec" value="mpeg4" />
-                    </menu_item>
+ 						<script>
+							if (params.frame_width == 320) {
+								log("adjusting size from 320x240 to 480x320");
+								params.frame_width = 480;
+								params.frame_height = 320;
+								adjustVideoParams();
+							}
+						</script>
+                   </menu_item>
                 </menu>
-            </device>
-        </device_group>
+			</device>
+         </device_group>
 
 
         <!--

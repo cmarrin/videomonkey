@@ -132,9 +132,9 @@
         
         // standardize video codec name
         NSString* f = VC_H264;
-        if ([info->m_videoCodec caseInsensitiveCompare:@"vc-1" == NSOrderedSame] || [info->m_videoCodec caseInsensitiveCompare:@"wmv3" == NSOrderedSame])
+        if ([info->m_videoCodec caseInsensitiveCompare:@"vc-1"] == NSOrderedSame || [info->m_videoCodec caseInsensitiveCompare:@"wmv3"] == NSOrderedSame)
             f = VC_WMV3;
-        else if ([info->m_videoCodec caseInsensitiveCompare:@"avc" == NSOrderedSame] || [info->m_videoCodec caseInsensitiveCompare:@"avc1" == NSOrderedSame])
+        else if ([info->m_videoCodec caseInsensitiveCompare:@"avc"] == NSOrderedSame || [info->m_videoCodec caseInsensitiveCompare:@"avc1"] == NSOrderedSame)
             f = VC_H264;
     
         info->m_videoCodec = f;
