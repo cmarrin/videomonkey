@@ -102,7 +102,7 @@
         
     [info setFormat: [general objectAtIndex:1]];
     info->m_isQuicktime = [[general objectAtIndex:2] isEqualToString:@"QuickTime"];
-    info->m_playTime = [[general objectAtIndex:3] doubleValue] / 1000;
+    info->m_duration = [[general objectAtIndex:3] doubleValue] / 1000;
     info->m_bitrate = [[general objectAtIndex:4] doubleValue];
 
     if ([info->m_format length] == 0)
@@ -266,10 +266,10 @@ static NSImage* getFileStatusImage(FileStatus status)
     return ([m_outputFiles count] == 0) ? VC_H264 : ((TranscoderFileInfo*) [m_outputFiles objectAtIndex: 0])->m_videoCodec;
 }
 
--(double) playTime
+-(double) duration
 {
     if ([m_inputFiles count] > 0)
-        return ((TranscoderFileInfo*) [m_inputFiles objectAtIndex: 0])->m_playTime;
+        return ((TranscoderFileInfo*) [m_inputFiles objectAtIndex: 0])->m_duration;
     return -1;
 }
 
@@ -278,7 +278,12 @@ static NSImage* getFileStatusImage(FileStatus status)
     return m_progress;
 }
 
--(BOOL) isEnabled
+-(NSValue*) progressCell
+{
+    return [NSValue valueWithPointer:self];
+}
+
+-(BOOL) enabled
 {
     return m_enabled;
 }
@@ -391,9 +396,9 @@ static NSImage* getFileStatusImage(FileStatus status)
 
 -(int) outputFileSize
 {
-    double playTime = [self playTime];
+    double duration = [self duration];
     double bitrate = [self bitrate];
-    return (int) (playTime * bitrate / 8);
+    return (int) (duration * bitrate / 8);
 }
 
 -(NSString*) tempAudioFileName

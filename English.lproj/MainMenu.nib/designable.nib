@@ -8,7 +8,7 @@
 		<string key="IBDocument.HIToolboxVersion">353.00</string>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
-			<integer value="482"/>
+			<integer value="1991"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -1101,7 +1101,7 @@
 											<object class="NSMutableArray" key="NSTableColumns">
 												<bool key="EncodedWithXMLCoder">YES</bool>
 												<object class="NSTableColumn" id="226952793">
-													<string key="NSIdentifier">enable</string>
+													<string key="NSIdentifier">enabled</string>
 													<double key="NSWidth">2.000000e+01</double>
 													<double key="NSMinWidth">2.000000e+01</double>
 													<double key="NSMaxWidth">2.000000e+01</double>
@@ -4205,6 +4205,25 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 				<nil key="NSParentWindow"/>
 				<nil key="NSDelegate"/>
 			</object>
+			<object class="NSArrayController" id="2824">
+				<object class="NSMutableArray" key="NSDeclaredKeys">
+					<bool key="EncodedWithXMLCoder">YES</bool>
+					<string>enable</string>
+					<string>progress</string>
+					<string>inputFileName</string>
+					<string>outputFileSize</string>
+					<string>duration</string>
+					<string>enabled</string>
+					<string>progressCell</string>
+				</object>
+				<string key="NSObjectClassName">Transcoder</string>
+				<bool key="NSEditable">YES</bool>
+				<object class="_NSManagedProxy" key="_NSManagedProxy"/>
+				<bool key="NSAvoidsEmptySelection">YES</bool>
+				<bool key="NSSelectsInsertedObjects">YES</bool>
+				<bool key="NSFilterRestrictsInsertion">YES</bool>
+				<bool key="NSClearsFilterPredicateOnInsertion">YES</bool>
+			</object>
 		</object>
 		<object class="IBObjectContainer" key="IBDocument.Objects">
 			<object class="NSMutableArray" key="connectionRecords">
@@ -4248,14 +4267,6 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 						<reference key="destination" ref="759406840"/>
 					</object>
 					<int key="connectionID">127</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">orderFrontStandardAboutPanel:</string>
-						<reference key="source" ref="1021"/>
-						<reference key="destination" ref="238522557"/>
-					</object>
-					<int key="connectionID">142</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBActionConnection" key="connection">
@@ -4459,22 +4470,6 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBOutletConnection" key="connection">
-						<string key="label">dataSource</string>
-						<reference key="source" ref="8035353"/>
-						<reference key="destination" ref="98230273"/>
-					</object>
-					<int key="connectionID">1043</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBOutletConnection" key="connection">
-						<string key="label">m_fileListView</string>
-						<reference key="source" ref="98230273"/>
-						<reference key="destination" ref="8035353"/>
-					</object>
-					<int key="connectionID">1044</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBOutletConnection" key="connection">
 						<string key="label">m_totalProgressBar</string>
 						<reference key="source" ref="98230273"/>
 						<reference key="destination" ref="89264272"/>
@@ -4528,14 +4523,6 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 						<reference key="destination" ref="509104401"/>
 					</object>
 					<int key="connectionID">1994</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">clickFileEnable:</string>
-						<reference key="source" ref="98230273"/>
-						<reference key="destination" ref="1061787789"/>
-					</object>
-					<int key="connectionID">1995</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBOutletConnection" key="connection">
@@ -5088,6 +5075,150 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 						<reference key="destination" ref="750711183"/>
 					</object>
 					<int key="connectionID">2175</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">value: arrangedObjects.inputFileName</string>
+						<reference key="source" ref="238664448"/>
+						<reference key="destination" ref="2824"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="238664448"/>
+							<reference key="NSDestination" ref="2824"/>
+							<string key="NSLabel">value: arrangedObjects.inputFileName</string>
+							<string key="NSBinding">value</string>
+							<string key="NSKeyPath">arrangedObjects.inputFileName</string>
+							<object class="NSDictionary" key="NSOptions">
+								<string key="NS.key.0">NSConditionallySetsEditable</string>
+								<reference key="NS.object.0" ref="5"/>
+							</object>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">2186</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">value: arrangedObjects.outputFileSize</string>
+						<reference key="source" ref="821079771"/>
+						<reference key="destination" ref="2824"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="821079771"/>
+							<reference key="NSDestination" ref="2824"/>
+							<string key="NSLabel">value: arrangedObjects.outputFileSize</string>
+							<string key="NSBinding">value</string>
+							<string key="NSKeyPath">arrangedObjects.outputFileSize</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">2187</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">value: arrangedObjects.duration</string>
+						<reference key="source" ref="1072457651"/>
+						<reference key="destination" ref="2824"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="1072457651"/>
+							<reference key="NSDestination" ref="2824"/>
+							<string key="NSLabel">value: arrangedObjects.duration</string>
+							<string key="NSBinding">value</string>
+							<string key="NSKeyPath">arrangedObjects.duration</string>
+							<object class="NSDictionary" key="NSOptions">
+								<string key="NS.key.0">NSConditionallySetsEditable</string>
+								<reference key="NS.object.0" ref="5"/>
+							</object>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">2188</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">value: arrangedObjects.enabled</string>
+						<reference key="source" ref="226952793"/>
+						<reference key="destination" ref="2824"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="226952793"/>
+							<reference key="NSDestination" ref="2824"/>
+							<string key="NSLabel">value: arrangedObjects.enabled</string>
+							<string key="NSBinding">value</string>
+							<string key="NSKeyPath">arrangedObjects.enabled</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">2192</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">m_appController</string>
+						<reference key="source" ref="2824"/>
+						<reference key="destination" ref="98230273"/>
+					</object>
+					<int key="connectionID">2198</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">m_fileListView</string>
+						<reference key="source" ref="2824"/>
+						<reference key="destination" ref="8035353"/>
+					</object>
+					<int key="connectionID">2199</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">m_fileListController</string>
+						<reference key="source" ref="98230273"/>
+						<reference key="destination" ref="2824"/>
+					</object>
+					<int key="connectionID">2201</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">dataSource</string>
+						<reference key="source" ref="8035353"/>
+						<reference key="destination" ref="2824"/>
+					</object>
+					<int key="connectionID">2212</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">content</string>
+						<reference key="source" ref="2824"/>
+						<reference key="destination" ref="98230273"/>
+					</object>
+					<int key="connectionID">2217</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">contentArray: fileList</string>
+						<reference key="source" ref="2824"/>
+						<reference key="destination" ref="98230273"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="2824"/>
+							<reference key="NSDestination" ref="98230273"/>
+							<string key="NSLabel">contentArray: fileList</string>
+							<string key="NSBinding">contentArray</string>
+							<string key="NSKeyPath">fileList</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">2219</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">value: arrangedObjects.progressCell</string>
+						<reference key="source" ref="286245961"/>
+						<reference key="destination" ref="2824"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="286245961"/>
+							<reference key="NSDestination" ref="2824"/>
+							<string key="NSLabel">value: arrangedObjects.progressCell</string>
+							<string key="NSBinding">value</string>
+							<string key="NSKeyPath">arrangedObjects.progressCell</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">2220</int>
 				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -7247,6 +7378,11 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 						<reference key="object" ref="336931662"/>
 						<reference key="parent" ref="347983908"/>
 					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">2178</int>
+						<reference key="object" ref="2824"/>
+						<reference key="parent" ref="1049"/>
+					</object>
 				</object>
 			</object>
 			<object class="NSMutableDictionary" key="flattenedProperties">
@@ -7577,6 +7713,8 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 					<string>2176.IBPluginDependency</string>
 					<string>2177.CustomClassName</string>
 					<string>2177.IBPluginDependency</string>
+					<string>2178.CustomClassName</string>
+					<string>2178.IBPluginDependency</string>
 					<string>219.IBPluginDependency</string>
 					<string>219.ImportedFromIB2</string>
 					<string>23.IBPluginDependency</string>
@@ -8323,6 +8461,8 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>DurationFormatter</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<string>FileListController</string>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<reference ref="9"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -8348,8 +8488,8 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<reference ref="9"/>
-					<string>{{165, 547}, {714, 528}}</string>
-					<string>{{165, 547}, {714, 528}}</string>
+					<string>{{149, 538}, {714, 528}}</string>
+					<string>{{149, 538}, {714, 528}}</string>
 					<reference ref="9"/>
 					<string>{{33, 99}, {480, 360}}</string>
 					<reference ref="9"/>
@@ -8495,7 +8635,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">2177</int>
+			<int key="maxID">2220</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -8508,7 +8648,6 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 						<object class="NSMutableArray" key="dict.sortedKeys">
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>changeSaveToText:</string>
-							<string>clickFileEnable:</string>
 							<string>pauseEncode:</string>
 							<string>selectSaveToPath:</string>
 							<string>startEncode:</string>
@@ -8517,7 +8656,6 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>id</string>
 							<string>id</string>
 							<string>id</string>
 							<string>id</string>
@@ -8533,7 +8671,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 							<string>m_consoleDrawer</string>
 							<string>m_consoleView</string>
 							<string>m_deviceController</string>
-							<string>m_fileListView</string>
+							<string>m_fileListController</string>
 							<string>m_moviePanel</string>
 							<string>m_pauseEncodeItem</string>
 							<string>m_saveToPathTextField</string>
@@ -8546,7 +8684,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 							<string>NSDrawer</string>
 							<string>NSTextView</string>
 							<string>DeviceController</string>
-							<string>NSTableView</string>
+							<string>FileListController</string>
 							<string>MoviePanelController</string>
 							<string>NSToolbarItem</string>
 							<string>NSTextField</string>
@@ -8672,6 +8810,31 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier" id="937468002">
 						<string key="majorKey">IBProjectSource</string>
 						<string key="minorKey">classes/Formatters.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">FileListController</string>
+					<string key="superclassName">NSArrayController</string>
+					<object class="NSMutableDictionary" key="actions">
+						<string key="NS.key.0">clickFileEnable:</string>
+						<string key="NS.object.0">id</string>
+					</object>
+					<object class="NSMutableDictionary" key="outlets">
+						<bool key="EncodedWithXMLCoder">YES</bool>
+						<object class="NSMutableArray" key="dict.sortedKeys">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>m_appController</string>
+							<string>m_fileListView</string>
+						</object>
+						<object class="NSMutableArray" key="dict.values">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>AppController</string>
+							<string>NSTableView</string>
+						</object>
+					</object>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBProjectSource</string>
+						<string key="minorKey">classes/FileListController.h</string>
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">

@@ -135,7 +135,7 @@ static NSDictionary* makeDictionary(NSString* s)
     NSRange range = [response rangeOfString: @"time="];
     NSString* timeString = [response substringFromIndex:(range.location + range.length)];
     double time = [timeString doubleValue];
-    [m_transcoder setProgressForCommand: self to: time / [m_transcoder playTime]];
+    [m_transcoder setProgressForCommand: self to: time / [m_transcoder duration]];
 }
 
 -(void) processRead: (NSNotification*) note

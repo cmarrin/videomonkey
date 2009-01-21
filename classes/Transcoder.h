@@ -23,7 +23,7 @@ typedef enum FileStatus { FS_INVALID, FS_VALID, FS_ENCODING, FS_PAUSED, FS_FAILE
   @public
     // General
     NSString* m_format;
-    double m_playTime;
+    double m_duration;
     double m_bitrate;
     BOOL m_isQuicktime;
     
@@ -94,10 +94,11 @@ typedef enum FileStatus { FS_INVALID, FS_VALID, FS_ENCODING, FS_PAUSED, FS_FAILE
 -(double) bitrate;
 -(void) setVideoFormat: (NSString*) format;
 
--(double) playTime;
+-(double) duration;
+-(NSValue*) progressCell;
 
 -(double) progress;
--(BOOL) isEnabled;
+-(BOOL) enabled;
 -(void) setEnabled: (BOOL) b;
 -(NSProgressIndicator*) progressIndicator;
 -(NSImageView*) statusImageView;

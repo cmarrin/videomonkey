@@ -92,6 +92,7 @@
 		497E67170EEC5DD8000372EC /* Command.m in Sources */ = {isa = PBXBuildFile; fileRef = 497E67160EEC5DD8000372EC /* Command.m */; };
 		4983925A0F1EB70E00C23782 /* DeviceEntry.m in Sources */ = {isa = PBXBuildFile; fileRef = 498392590F1EB70E00C23782 /* DeviceEntry.m */; };
 		4983960D0F269AC400C23782 /* Formatters.m in Sources */ = {isa = PBXBuildFile; fileRef = 4983960C0F269AC400C23782 /* Formatters.m */; };
+		498397370F278F2400C23782 /* FileListController.m in Sources */ = {isa = PBXBuildFile; fileRef = 498397360F278F2400C23782 /* FileListController.m */; };
 		499A31770EDD97EB000C0AAF /* Transcoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 499A31760EDD97EB000C0AAF /* Transcoder.m */; };
 		499A31D30EDEE3E4000C0AAF /* mediainfo-inform.csv in Resources */ = {isa = PBXBuildFile; fileRef = 499A31D20EDEE3E4000C0AAF /* mediainfo-inform.csv */; };
 		49AAD9A70F1C232B0098F087 /* Console.png in Resources */ = {isa = PBXBuildFile; fileRef = 49AAD9A60F1C232B0098F087 /* Console.png */; };
@@ -214,6 +215,8 @@
 		498392590F1EB70E00C23782 /* DeviceEntry.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DeviceEntry.m; path = classes/DeviceEntry.m; sourceTree = "<group>"; };
 		4983960B0F269AC400C23782 /* Formatters.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Formatters.h; path = classes/Formatters.h; sourceTree = "<group>"; };
 		4983960C0F269AC400C23782 /* Formatters.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Formatters.m; path = classes/Formatters.m; sourceTree = "<group>"; };
+		498397350F278F2400C23782 /* FileListController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FileListController.h; path = classes/FileListController.h; sourceTree = "<group>"; };
+		498397360F278F2400C23782 /* FileListController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FileListController.m; path = classes/FileListController.m; sourceTree = "<group>"; };
 		499A31750EDD97EB000C0AAF /* Transcoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Transcoder.h; path = classes/Transcoder.h; sourceTree = "<group>"; };
 		499A31760EDD97EB000C0AAF /* Transcoder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Transcoder.m; path = classes/Transcoder.m; sourceTree = "<group>"; };
 		499A31D20EDEE3E4000C0AAF /* mediainfo-inform.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; lineEnding = 2; path = "mediainfo-inform.csv"; sourceTree = "<group>"; };
@@ -274,6 +277,8 @@
 				497E65A90EE4F284000372EC /* ProgressCell.m */,
 				497E67150EEC5DD8000372EC /* Command.h */,
 				497E67160EEC5DD8000372EC /* Command.m */,
+				498397350F278F2400C23782 /* FileListController.h */,
+				498397360F278F2400C23782 /* FileListController.m */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -609,6 +614,7 @@
 				49AADBE10F1E55C80098F087 /* DeviceController.m in Sources */,
 				4983925A0F1EB70E00C23782 /* DeviceEntry.m in Sources */,
 				4983960D0F269AC400C23782 /* Formatters.m in Sources */,
+				498397370F278F2400C23782 /* FileListController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

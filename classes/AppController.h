@@ -9,6 +9,7 @@
 #import <Cocoa/Cocoa.h>
 
 @class DeviceController;
+@class FileListController;
 @class JavaScriptContext;
 @class MoviePanelController;
 @class Transcoder;
@@ -17,7 +18,6 @@ typedef enum { RS_STOPPED, RS_RUNNING, RS_PAUSED } RunStateType;
 
 @interface AppController : NSObject {
 @private
-    IBOutlet NSTableView* m_fileListView;
     IBOutlet NSProgressIndicator* m_totalProgressBar;
     IBOutlet NSTextField* m_saveToPathTextField;
     IBOutlet NSToolbarItem* m_startEncodeItem;
@@ -27,16 +27,19 @@ typedef enum { RS_STOPPED, RS_RUNNING, RS_PAUSED } RunStateType;
     IBOutlet MoviePanelController* m_moviePanel;
     IBOutlet NSDrawer* m_consoleDrawer;
     IBOutlet NSTextView* m_consoleView;
+    IBOutlet FileListController* m_fileListController;
     
-    NSMutableArray* m_files;
-    int m_draggedRow;
     NSString* m_savePath;
     int m_currentEncoding;
     RunStateType m_runState;
     BOOL m_isTerminated;
+    
+    NSArray* m_fileList;
 }
 
--(IBAction)clickFileEnable:(id)sender;
+@property (retain) NSArray* fileList;
+@property (readonly) DeviceController* deviceController;
+
 -(IBAction)startEncode:(id)sender;
 -(IBAction)pauseEncode:(id)sender;
 -(IBAction)stopEncode:(id)sender;
@@ -45,12 +48,12 @@ typedef enum { RS_STOPPED, RS_RUNNING, RS_PAUSED } RunStateType;
 -(IBAction)changeSaveToText:(id)sender;
 -(IBAction)selectSaveToPath:(id)sender;
 
+-(Transcoder*) transcoderForFileName:(NSString*) fileName;
+
 -(void) setProgressFor: (Transcoder*) transcoder to: (double) progress;
 -(void) encodeFinished: (Transcoder*) transcoder;
 
 -(void) setRunState: (RunStateType) state;
-
--(DeviceController*) deviceController;
 
 -(void) log: (NSString*) format, ...;
 

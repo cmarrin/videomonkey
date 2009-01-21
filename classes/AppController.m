@@ -8,49 +8,15 @@
 
 #import "AppController.h"
 #import "DeviceController.h"
+#import "FileListController.h"
 #import "JavaScriptContext.h"
+#import "MoviePanelController.h"
 #import "Transcoder.h"
-#import "ProgressCell.h"
-
-#define FileListItemType @"FileListItemType"
 
 @implementation AppController
 
-- (id)init
-{
-    if (self = [super init]) {
-        m_files = [[NSMutableArray alloc] init];
-    }
-    return self;
-}
-
-- (void)dealloc
-{
-    [m_files release];
-    [super dealloc];
-}
-
-- (void) awakeFromNib
-{
-	// Register to accept filename drag/drop
-	[m_fileListView registerForDraggedTypes:[NSArray arrayWithObjects:NSFilenamesPboardType, FileListItemType, nil]];
-    
-    // Setup ProgressCell
-    [[m_fileListView tableColumnWithIdentifier: @"progress"] setDataCell: [[ProgressCell alloc] init]];
-
-    [m_totalProgressBar setUsesThreadedAnimation:YES];
-
-    [m_stopEncodeItem setEnabled: NO];
-    [m_pauseEncodeItem setEnabled: NO];
-    
-    [m_deviceController setDelegate:self];
-}
-
-// dataSource methods
-- (int)numberOfRowsInTableView: (NSTableView *)aTableView
-{
-    return [m_files count];
-}
+@synthesize fileList = m_fileList;
+@synthesize deviceController = m_deviceController;
 
 static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, NSString* suffix)
 {
@@ -78,120 +44,45 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
     return filename;
 }
 
-- (id)tableView: (NSTableView *)aTableView
-    objectValueForTableColumn: (NSTableColumn *)aTableColumn
-    row: (int)rowIndex
+- (id)init
 {
-    if ([[aTableColumn identifier] isEqualToString: @"enable"])
-        return [NSNumber numberWithBool:[[m_files objectAtIndex: rowIndex] isEnabled]];
-    if ([[aTableColumn identifier] isEqualToString: @"progress"])
-        return [NSValue valueWithPointer:[m_files objectAtIndex: rowIndex]];
-    if ([[aTableColumn identifier] isEqualToString: @"filename"])
-        return [[m_files objectAtIndex: rowIndex] inputFileName];
-    if ([[aTableColumn identifier] isEqualToString: @"filesize"])
-        return [NSNumber numberWithInt:[[m_files objectAtIndex: rowIndex] outputFileSize]];
-    if ([[aTableColumn identifier] isEqualToString: @"duration"])
-        return [NSNumber numberWithDouble:[[m_files objectAtIndex: rowIndex] playTime]];
-    return nil;
+    self = [super init];
+    m_fileList = [[NSMutableArray alloc] init];
+    return self;
 }
 
-// dragging methods
-- (BOOL)tableView: (NSTableView *)aTableView
-    writeRows: (NSArray *)rows
-    toPasteboard: (NSPasteboard *)pboard
+- (void)dealloc
 {
-    // This method is called after it has been determined that a drag should begin, but before the drag has been started.  
-    // To refuse the drag, return NO.  To start a drag, return YES and place the drag data onto the pasteboard (data, owner, etc...).  
-    // The drag image and other drag related information will be set up and provided by the table view once this call returns with YES.  
-    // The rows array is the list of row numbers that will be participating in the drag.
-    if ([rows count] > 1)	// don't allow dragging with more than one row
-        return NO;
-    
-    // get rid of any selections
-    [m_fileListView deselectAll:nil];
-    m_draggedRow = [[rows objectAtIndex: 0] intValue];
-    // the NSArray "rows" is actually an array of the indecies dragged
-    
-    // declare our dragged type in the paste board
-    [pboard declareTypes: [NSArray arrayWithObjects: NSFilenamesPboardType, FileListItemType, nil] owner: self];
-    
-    // put the string value into the paste board
-    [pboard setString: [[m_files objectAtIndex: m_draggedRow] inputFileName] forType: FileListItemType];
-    
-    return YES;
+    [m_fileList release];
+    [super dealloc];
 }
 
-- (NSDragOperation)tableView: (NSTableView *)aTableView
-    validateDrop: (id <NSDraggingInfo>)item
-    proposedRow: (int)row
-    proposedDropOperation: (NSTableViewDropOperation)op
+- (void) awakeFromNib
 {
-    // prevent row from highlighting during drag
-    return (op == NSTableViewDropAbove) ? NSDragOperationMove : NSDragOperationNone;
+    [m_totalProgressBar setUsesThreadedAnimation:YES];
+
+    [m_stopEncodeItem setEnabled: NO];
+    [m_pauseEncodeItem setEnabled: NO];
+    
+    [m_deviceController setDelegate:self];
 }
 
-- (BOOL)tableView:(NSTableView*)aTableView
-    acceptDrop: (id <NSDraggingInfo>)item
-    row: (int)row
-    dropOperation:(NSTableViewDropOperation)op
+-(Transcoder*) transcoderForFileName:(NSString*) fileName
 {
-    // This method is called when the mouse is released over an outline view that previously decided to allow 
-    // a drop via the validateDrop method.  The data source should incorporate the data from the dragging 
-    // pasteboard at this time.
-    NSPasteboard *pboard = [item draggingPasteboard];	// get the paste board
-    NSString *aString;
+    Transcoder* transcoder = [[Transcoder alloc] initWithController:self];
+    [transcoder addInputFile: fileName];
+    [transcoder addOutputFile: getOutputFileName(fileName, m_savePath, [m_deviceController fileSuffix])];
+    [transcoder setVideoFormat: [m_deviceController videoFormat]];
+    [transcoder setBitrate: [m_deviceController bitrate]];
     
-    if ([pboard availableTypeFromArray:[NSArray arrayWithObjects: NSFilenamesPboardType, FileListItemType, nil]])
-    {
-        // test to see if the string for the type we defined in the paste board.
-        // if doesn't, do nothing.
-        aString = [pboard stringForType: FileListItemType];
-        
-        if (aString) {
-            // handle move of an item in the table
-            // remove the index that got dragged, now that we are accepting the dragging
-            id obj = [m_files objectAtIndex: m_draggedRow];
-            [obj retain];
-            [m_files removeObjectAtIndex: m_draggedRow];
-            
-            // insert the new string (same one that got dragger) into the array
-            if (row > [m_files count])
-                [m_files addObject: obj];
-            else
-                [m_files insertObject: obj atIndex: (row > m_draggedRow) ? (row-1) : row];
-        
-            [obj release];
-            [m_fileListView reloadData];
-        }
-        else {
-            // handle add of a new filename(s)
-            NSArray *filenames = [pboard propertyListForType:NSFilenamesPboardType];
-            if (filenames) {
-                for (int i= 0; i < [filenames count]; i++) {
-                    Transcoder* transcoder = [[Transcoder alloc] initWithController:self];
-                    [transcoder addInputFile: [filenames objectAtIndex:i]];
-                    [transcoder addOutputFile: getOutputFileName([filenames objectAtIndex:i], m_savePath, [m_deviceController fileSuffix])];
-                    [transcoder setVideoFormat: [m_deviceController videoFormat]];
-                    [transcoder setBitrate: [m_deviceController bitrate]];
-                    
-                    [m_moviePanel setMovie: [filenames objectAtIndex:i]];
-                    
-                    if (row < 0)
-                        [m_files addObject:transcoder];
-                    else
-                        [m_files insertObject: transcoder atIndex: row];
-                }
-                [m_fileListView reloadData];
-            }
-        }
-    }
+    [m_moviePanel setMovie: fileName];
     
-    return YES;
+    return transcoder;
 }
 
 -(void) setOutputFileName
 {
-    NSEnumerator* e = [m_files objectEnumerator];
+    NSEnumerator* e = [m_fileList objectEnumerator];
     Transcoder* transcoder;
     NSString* suffix = [m_deviceController fileSuffix];
     NSString* format = [m_deviceController videoFormat];
@@ -202,13 +93,6 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
     }
 }
 
--(IBAction)clickFileEnable:(id)sender
-{
-    Transcoder* tr = [m_files objectAtIndex:[sender selectedRow]];
-    [tr setEnabled: ![tr isEnabled]];
-    [m_fileListView reloadData];
-}
-
 - (BOOL)validateToolbarItem:(NSToolbarItem *)theItem
 {
     return [theItem isEnabled];
@@ -217,14 +101,14 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
 -(void) startNextEncode
 {
     if (!m_isTerminated) {
-        if (++m_currentEncoding < [m_files count]) {
-            [[m_files objectAtIndex: m_currentEncoding] startEncode];
+        if (++m_currentEncoding < [m_fileList count]) {
+            [[m_fileList objectAtIndex: m_currentEncoding] startEncode];
             return;
         }
     }
     else {
         [m_totalProgressBar setDoubleValue: 0];
-        [m_fileListView reloadData];
+        [m_fileListController reloadData];
     }
     
     [self setRunState: RS_STOPPED];
@@ -236,7 +120,7 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
     m_isTerminated = NO;
     
     if (m_runState == RS_PAUSED) {
-        [[m_files objectAtIndex: m_currentEncoding] resumeEncode];
+        [[m_fileList objectAtIndex: m_currentEncoding] resumeEncode];
         [self setRunState: RS_RUNNING];
     }
     else {
@@ -250,17 +134,17 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
 
 - (IBAction)pauseEncode:(id)sender
 {
-    [[m_files objectAtIndex: m_currentEncoding] pauseEncode];
+    [[m_fileList objectAtIndex: m_currentEncoding] pauseEncode];
     [self setRunState: RS_PAUSED];
-    [m_fileListView reloadData];
+    [m_fileListController reloadData];
 }
 
 - (IBAction)stopEncode:(id)sender
 {
     m_isTerminated = YES;
-    [[m_files objectAtIndex: m_currentEncoding] stopEncode];
+    [[m_fileList objectAtIndex: m_currentEncoding] stopEncode];
     [self setRunState: RS_STOPPED];
-    [m_fileListView reloadData];
+    [m_fileListController reloadData];
 }
 
 -(IBAction)toggleConsoleDrawer:(id)sender
@@ -297,13 +181,13 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
 -(void) setProgressFor: (Transcoder*) transcoder to: (double) progress
 {
     [m_totalProgressBar setDoubleValue: progress];
-    [m_fileListView reloadData];
+    [m_fileListController reloadData];
 }
 
 -(void) encodeFinished: (Transcoder*) transcoder
 {
     [m_totalProgressBar setDoubleValue: m_isTerminated ? 0 : 1];
-    [m_fileListView reloadData];
+    [m_fileListController reloadData];
     [self startNextEncode];
 }
 
@@ -347,8 +231,8 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
     fprintf(stderr, [s UTF8String]);
     
     // Output to log file
-    if ([m_files count] > m_currentEncoding)
-        [(Transcoder*) [m_files objectAtIndex: m_currentEncoding] logToFile: s];
+    if ([m_fileList count] > m_currentEncoding)
+        [(Transcoder*) [m_fileList objectAtIndex: m_currentEncoding] logToFile: s];
         
     // Output to consoleView
     [[[m_consoleView textStorage] mutableString] appendString: s];
@@ -361,9 +245,9 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
 -(void) uiChanged
 {
     double bitrate = [m_deviceController bitrate];
-    for (Transcoder* transcoder in m_files )
+    for (Transcoder* transcoder in m_fileList)
         [transcoder setBitrate: bitrate];
-    [m_fileListView reloadData];
+    [m_fileListController reloadData];
 }
 
 @end
