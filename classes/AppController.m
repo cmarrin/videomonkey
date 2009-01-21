@@ -52,34 +52,6 @@
     return [m_files count];
 }
 
-static NSString* formatDuration(double duration)
-{
-    int ms = (int) round(fmod(duration, 1) * 1000);
-    int hrs = (int) duration;
-    int sec = hrs % 60;
-    hrs /= 60;
-    int min = hrs % 60;
-    hrs /= 60;
-    if (hrs == 0 && min == 0)
-        return [NSString stringWithFormat:@"%.2fs", ((double) sec + ((double) ms / 1000.0))];
-    else if (hrs == 0)
-        return [NSString stringWithFormat:@"%dm %ds", min, sec];
-    else
-        return [NSString stringWithFormat:@"%dh %dm", hrs, min];
-}
-
-static NSString* formatFileSize(int size)
-{
-    if (size < 10000)
-        return [NSString stringWithFormat:@"%dB", size];
-    else if (size < 1000000)
-        return [NSString stringWithFormat:@"%.1fKB", (double) size/1000.0];
-    else if (size < 1000000000)
-        return [NSString stringWithFormat:@"%.1fMB", (double) size/1000000.0];
-    else
-        return [NSString stringWithFormat:@"%.1fGB", (double) size/1000000000.0];
-}
-
 static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, NSString* suffix)
 {
     // extract filename
@@ -117,9 +89,9 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
     if ([[aTableColumn identifier] isEqualToString: @"filename"])
         return [[m_files objectAtIndex: rowIndex] inputFileName];
     if ([[aTableColumn identifier] isEqualToString: @"filesize"])
-        return formatFileSize([[m_files objectAtIndex: rowIndex] outputFileSize]);
+        return [NSNumber numberWithInt:[[m_files objectAtIndex: rowIndex] outputFileSize]];
     if ([[aTableColumn identifier] isEqualToString: @"duration"])
-        return formatDuration([[m_files objectAtIndex: rowIndex] playTime]);
+        return [NSNumber numberWithDouble:[[m_files objectAtIndex: rowIndex] playTime]];
     return nil;
 }
 
