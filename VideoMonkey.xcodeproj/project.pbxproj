@@ -108,6 +108,9 @@
 		49BC8CB00ED6892400027F1D /* Pause.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 49BC8CA70ED6892400027F1D /* Pause.tiff */; };
 		49BC8CB10ED6892400027F1D /* Play.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 49BC8CA80ED6892400027F1D /* Play.tiff */; };
 		49BC8CB20ED6892400027F1D /* Stop.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 49BC8CA90ED6892400027F1D /* Stop.tiff */; };
+		49D467B20F2828400095A2AB /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 49D467B10F2828400095A2AB /* Sparkle.framework */; };
+		49D467BE0F28289C0095A2AB /* Sparkle.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 49D467B10F2828400095A2AB /* Sparkle.framework */; };
+		49D468220F28CFA30095A2AB /* dsa_pub.pem in Resources */ = {isa = PBXBuildFile; fileRef = 49D468210F28CFA30095A2AB /* dsa_pub.pem */; };
 		49D4694A0F0F2E52005D70FD /* commands.xml in Resources */ = {isa = PBXBuildFile; fileRef = 49D469490F0F2E52005D70FD /* commands.xml */; };
 		49E9119B0EF86C3F009D0CAF /* ffpresets in Resources */ = {isa = PBXBuildFile; fileRef = 49E911930EF86C3F009D0CAF /* ffpresets */; };
 		49FC93830ECB3CCD0058CDBB /* QTKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 49FC93820ECB3CCD0058CDBB /* QTKit.framework */; };
@@ -115,6 +118,20 @@
 		8D11072D0486CEB800E47090 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; settings = {ATTRIBUTES = (); }; };
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		49D467BD0F2828980095A2AB /* Copy Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				49D467BE0F28289C0095A2AB /* Sparkle.framework in Copy Frameworks */,
+			);
+			name = "Copy Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		089C165DFE840E0CC02AAC07 /* English */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/InfoPlist.strings; sourceTree = "<group>"; };
@@ -235,6 +252,8 @@
 		49BC8CA70ED6892400027F1D /* Pause.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = Pause.tiff; path = icons/Pause.tiff; sourceTree = "<group>"; };
 		49BC8CA80ED6892400027F1D /* Play.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = Play.tiff; path = icons/Play.tiff; sourceTree = "<group>"; };
 		49BC8CA90ED6892400027F1D /* Stop.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = Stop.tiff; path = icons/Stop.tiff; sourceTree = "<group>"; };
+		49D467B10F2828400095A2AB /* Sparkle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Sparkle.framework; sourceTree = "<group>"; };
+		49D468210F28CFA30095A2AB /* dsa_pub.pem */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = dsa_pub.pem; sourceTree = "<group>"; };
 		49D469490F0F2E52005D70FD /* commands.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = commands.xml; sourceTree = "<group>"; };
 		49E911930EF86C3F009D0CAF /* ffpresets */ = {isa = PBXFileReference; lastKnownFileType = folder; path = ffpresets; sourceTree = "<group>"; };
 		49FC93820ECB3CCD0058CDBB /* QTKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QTKit.framework; path = /System/Library/Frameworks/QTKit.framework; sourceTree = "<absolute>"; };
@@ -250,6 +269,7 @@
 				8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */,
 				49FC93830ECB3CCD0058CDBB /* QTKit.framework in Frameworks */,
 				495493890F18078B0007EC0E /* JavaScriptCore.framework in Frameworks */,
+				49D467B20F2828400095A2AB /* Sparkle.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -286,6 +306,7 @@
 		1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				49D467B10F2828400095A2AB /* Sparkle.framework */,
 				495493880F18078B0007EC0E /* JavaScriptCore.framework */,
 				49FC93820ECB3CCD0058CDBB /* QTKit.framework */,
 				1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */,
@@ -335,6 +356,7 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				49D468210F28CFA30095A2AB /* dsa_pub.pem */,
 				49E911930EF86C3F009D0CAF /* ffpresets */,
 				492D327D0EF18D8000AEB740 /* bin */,
 				499A31D20EDEE3E4000C0AAF /* mediainfo-inform.csv */,
@@ -466,6 +488,7 @@
 			buildConfigurationList = C01FCF4A08A954540054247B /* Build configuration list for PBXNativeTarget "VideoMonkey" */;
 			buildPhases = (
 				8D1107290486CEB800E47090 /* Resources */,
+				49D467BD0F2828980095A2AB /* Copy Frameworks */,
 				8D11072C0486CEB800E47090 /* Sources */,
 				8D11072E0486CEB800E47090 /* Frameworks */,
 			);
@@ -594,6 +617,7 @@
 				49D4694A0F0F2E52005D70FD /* commands.xml in Resources */,
 				49AAD9A70F1C232B0098F087 /* Console.png in Resources */,
 				49AADAC60F1D12950098F087 /* tinyitunesfile.png in Resources */,
+				49D468220F28CFA30095A2AB /* dsa_pub.pem in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -645,6 +669,10 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				COPY_PHASE_STRIP = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)\"",
+				);
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_MODEL_TUNING = G5;
@@ -662,6 +690,10 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)\"",
+				);
 				GCC_MODEL_TUNING = G5;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = VideoMonkey_Prefix.pch;
