@@ -13,9 +13,9 @@
             <pubDate>Thu Jan 22 16:50:23 PST 2009</pubDate>
             <enclosure  url="http://videomonkey.org/releases/videomonkey-0.1.zip" 
                         sparkle:version="0.1" 
-                        length="1623481" 
+                        length="13359347" 
                         type="application/octet-stream" 
-                        sparkle:dsaSignature="BAFJW4B6B1K1JyW30nbkBwainOzrN6EQuAh" 
+                        sparkle:dsaSignature="MCwCFAVbAgtBD2JJ8IiHWLsLjqQPhzsRAhQ6Me/CW0fa5NVz7+8/3EK23M1hHw==" 
             />
         </item>
     </channel>

@@ -9,7 +9,7 @@
 	<key>CFBundleIconFile</key>
 	<string>VideoMonkey</string>
 	<key>CFBundleIdentifier</key>
-	<string>org.videomonkey.${PRODUCT_NAME:identifier}</string>
+	<string>org.VideoMonkey.${PRODUCT_NAME:identifier}</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
