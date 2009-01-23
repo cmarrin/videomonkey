@@ -254,6 +254,8 @@
 		49BC8CA90ED6892400027F1D /* Stop.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = Stop.tiff; path = icons/Stop.tiff; sourceTree = "<group>"; };
 		49D467B10F2828400095A2AB /* Sparkle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Sparkle.framework; sourceTree = "<group>"; };
 		49D468210F28CFA30095A2AB /* dsa_pub.pem */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = dsa_pub.pem; sourceTree = "<group>"; };
+		49D468360F294B350095A2AB /* videomonkeycast.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = videomonkeycast.xml; sourceTree = "<group>"; };
+		49D4690A0F2960AB0095A2AB /* releasenotes.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = releasenotes.html; sourceTree = "<group>"; };
 		49D469490F0F2E52005D70FD /* commands.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = commands.xml; sourceTree = "<group>"; };
 		49E911930EF86C3F009D0CAF /* ffpresets */ = {isa = PBXFileReference; lastKnownFileType = folder; path = ffpresets; sourceTree = "<group>"; };
 		49FC93820ECB3CCD0058CDBB /* QTKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QTKit.framework; path = /System/Library/Frameworks/QTKit.framework; sourceTree = "<absolute>"; };
@@ -349,6 +351,8 @@
 			children = (
 				32CA4F630368D1EE00C91783 /* VideoMonkey_Prefix.pch */,
 				29B97316FDCFA39411CA2CEA /* main.m */,
+				49D468360F294B350095A2AB /* videomonkeycast.xml */,
+				49D4690A0F2960AB0095A2AB /* releasenotes.html */,
 			);
 			name = "Other Sources";
 			sourceTree = "<group>";
