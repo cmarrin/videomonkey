@@ -100,11 +100,14 @@ static void addMenuSeparator(NSPopUpButton* button)
     for (int i = 0; i < [deviceGroups count]; ++i) {
         NSXMLElement* deviceGroupElement = (NSXMLElement*) [deviceGroups objectAtIndex:i];
         NSString* groupTitle = stringAttribute(deviceGroupElement, @"title");
+
+        DeviceEntry* commonDevice = [DeviceEntry deviceEntryWithElement: findChildElement(deviceGroupElement, @"common_device") inGroup: groupTitle withDefaults: m_defaultDevice];
+
         NSArray* devices = [deviceGroupElement elementsForName:@"device"];
         
         for (int j = 0; j < [devices count]; ++j) {
             NSXMLElement* deviceElement = (NSXMLElement*) [devices objectAtIndex:j];
-            DeviceEntry* entry = [DeviceEntry deviceEntryWithElement: deviceElement inGroup: groupTitle withDefaults: m_defaultDevice];
+            DeviceEntry* entry = [DeviceEntry deviceEntryWithElement: deviceElement inGroup: groupTitle withDefaults: commonDevice];
             if (entry)
                 [m_devices addObject: entry];
         }
@@ -352,7 +355,7 @@ static JSValueRef _jsLog(JSContextRef ctx, JSObjectRef function, JSObjectRef thi
 {
     [m_context addParams:env];
     [self setCurrentParams];
-    NSString* recipe = [m_currentDevice recipeWithJavaScriptContext:m_context];
+    NSString* recipe = [m_context stringParamForKey:@"recipe"];
     return [self replaceParams: recipe];
 }
 

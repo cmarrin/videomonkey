@@ -139,18 +139,6 @@
 
 @end
 
-@interface Recipe : NSObject {
-    NSString* m_recipe;
-    NSString* m_condition;
-}
-
-+(Recipe*) recipeWithElement: (NSXMLElement*) element;
-
--(NSString*) recipe;
--(NSString*) condition;
-
-@end
-
 @interface Checkbox : NSObject {
     NSString* m_title;
     
@@ -223,7 +211,6 @@
 -(double) bitrate;
 
 -(void) setCurrentParamsInJavaScriptContext:(JavaScriptContext*) context performanceIndex:(int) perfIndex;
--(NSString*) recipeWithJavaScriptContext: (JavaScriptContext*) context;
 -(void) populateTabView:(NSTabView*) tabview;
 -(void) populatePerformanceButton:(NSPopUpButton*) tabview;
 -(void) addParamsToJavaScriptContext: (JavaScriptContext*) context performanceIndex:(int) perfIndex;

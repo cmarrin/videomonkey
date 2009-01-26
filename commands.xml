@@ -5,7 +5,8 @@
     <!ELEMENT param    EMPTY>
         <!ATTLIST param id CDATA "">
         <!ATTLIST param value CDATA "">
-    <!ELEMENT default_device    (quality|performance|recipes|script|param|command)*>
+	<!ELEMENT default_device    (quality|performance|script|param|command)*>
+	<!ELEMENT common_device    (quality|performance|script|param|command)*>
     <!ELEMENT devices    (device_group*)>
     <!ELEMENT command    (#PCDATA)>
         <!ATTLIST command id CDATA "">
@@ -16,12 +17,9 @@
     <!ELEMENT performance    (performance_item*)>
     <!ELEMENT performance_item    (script|param|command)*>
         <!ATTLIST performance_item title CDATA "">
-    <!ELEMENT recipes    (recipe*)>
-    <!ELEMENT recipe    (#PCDATA)>
-        <!ATTLIST recipe condition CDATA "">
-    <!ELEMENT device_group    (device*)>
+    <!ELEMENT device_group    (common_device?,device*)>
         <!ATTLIST device_group title CDATA "">
-    <!ELEMENT device    (quality|performance|recipes|script|param|command|checkbox|menu)*>
+    <!ELEMENT device    (quality|performance|script|param|command|checkbox|menu)*>
         <!ATTLIST device title CDATA "">
         <!ATTLIST device icon CDATA "">
     <!ELEMENT checkbox    (checked_params|unchecked_params)*>
@@ -37,36 +35,6 @@
 ]>
 <videomonkey>
     <default_device>
-        <command id="ffmpeg_single_pass_presets"> -vpre $ffmpeg_vpre </command>
-        <command id="ffmpeg_pass1_presets"> -vpre $ffmpeg_vpre_pass1 -pass 1 -passlogfile $pass_log_file </command>
-        <command id="ffmpeg_pass2_presets"> -vpre $ffmpeg_vpre -pass 2 -passlogfile $pass_log_file </command>
-        <command id="ffmpeg_single_pass_options"> $ffmpeg_single_pass_presets </command>
-        <command id="ffmpeg_pass1_options"> $ffmpeg_pass1_presets -pass 1 -passlogfile $pass_log_file </command>
-        <command id="ffmpeg_pass2_options"> $ffmpeg_pass2_presets -pass 2 -passlogfile $pass_log_file </command>
-        <command id="ffmpeg_options"> $ffmpeg_video_options $ffmpeg_audio_options </command>
-		<command id="ffmpeg_video_options">
-            -vcodec $ffmpeg_vcodec -b $bitrate -s $(output_video_width)x$(output_video_height) -aspect $(output_video_width):$(output_video_height) -r $(output_frame_rate):1000
-		</command>
-		<command id="ffmpeg_audio_options">
-			-acodec $ffmpeg_acodec -ab $audio_bitrate -ar $audio_sample_rate -ac $audio_channels
-		</command>
-        <command id="quicktime_to_audio_file"> $qt_export $input_file --video=0 $tmp_audio_file </command>
-        <command id="correct_yuv"> $yuvcorrect -v 0 -Y LUMINANCE_1.20_0_255_0_255 -Y CHROMINANCE_0_1.04_128_1.04_128_0_255 </command>
-        <command id="quicktime_to_yuv">
-			$movtoy4m -f -w $input_video_width -h $input_video_height -F $(output_frame_rate):1000 -a $(output_video_width):$(output_video_height) $input_file | $correct_yuv 
-		</command>
-        <command id="yuv_to_ffmpeg_av"> $ffmpeg -y -i - -i $tmp_audio_file </command>
-        <command id="yuv_to_ffmpeg_v"> $ffmpeg -y -i - </command>
-        <command id="ffmpeg_normal"> $ffmpeg -y -i $input_file </command>
-        <command id="quicktime_av_single_pass"> $quicktime_to_yuv | $yuv_to_ffmpeg_av $ffmpeg_options $ffmpeg_single_pass_options $output_file </command>
-        <command id="quicktime_av_pass1"> $quicktime_to_yuv | $yuv_to_ffmpeg_av $ffmpeg_options $ffmpeg_pass1_options $output_file </command>
-        <command id="quicktime_av_pass2"> $quicktime_to_yuv | $yuv_to_ffmpeg_av $ffmpeg_options $ffmpeg_pass2_options $output_file </command>
-        <command id="quicktime_v_single_pass"> $quicktime_to_yuv | $yuv_to_ffmpeg_v $ffmpeg_options $ffmpeg_single_pass_options $output_file </command>
-        <command id="quicktime_v_pass1"> $quicktime_to_yuv | $yuv_to_ffmpeg_v $ffmpeg_options $ffmpeg_pass1_options $output_file </command>
-        <command id="quicktime_v_pass2"> $quicktime_to_yuv | $yuv_to_ffmpeg_v $ffmpeg_options $ffmpeg_pass2_options $output_file </command>
-        <command id="normal_single_pass"> $ffmpeg_normal $ffmpeg_options $ffmpeg_single_pass_options $output_file </command>
-        <command id="normal_pass1"> $ffmpeg_normal $ffmpeg_options $ffmpeg_pass1_options $output_file </command>
-        <command id="normal_pass2"> $ffmpeg_normal $ffmpeg_options $ffmpeg_pass2_options $output_file </command>
         <script>
             <![CDATA[
             
@@ -206,35 +174,10 @@
         </performance>
         <param id="ffmpeg_vcodec" value="libx264" />
         <param id="ffmpeg_acodec" value="libfaac" />
-        <param id="video_suffix" value="mp4" />
-        <recipes>
-            <recipe condition="all(!bool(params.special_qt), !bool(params.has_audio), !bool(params.is_2_pass))">
-                $normal_single_pass
-            </recipe>
-            <recipe condition="all(!bool(params.special_qt), !bool(params.has_audio), bool(params.is_2_pass))">
-                $normal_pass1 ; $normal_pass2
-            </recipe>
-            <recipe condition="all(!bool(params.special_qt), bool(params.has_audio), !bool(params.is_2_pass))">
-                $normal_single_pass
-            </recipe>
-            <recipe condition="all(!bool(params.special_qt), bool(params.has_audio), bool(params.is_2_pass))">
-                $normal_pass1 ; $normal_pass2
-            </recipe>
-            <recipe condition="all(bool(params.special_qt), !bool(params.has_audio), !bool(params.is_2_pass))">
-                $quicktime_v_single_pass
-            </recipe>
-            <recipe condition="all(bool(params.special_qt), !bool(params.has_audio), bool(params.is_2_pass))">
-                $quicktime_v_pass1 ; $quicktime_v_pass2
-            </recipe>
-            <recipe condition="all(bool(params.special_qt), bool(params.has_audio), !bool(params.is_2_pass))">
-                $quicktime_to_audio_file ; $quicktime_av_single_pass
-            </recipe>
-            <recipe condition="all(bool(params.special_qt), bool(params.has_audio), bool(params.is_2_pass))">
-                $quicktime_to_audio_file ; $quicktime_av_pass1 ; $quicktime_av_pass2
-            </recipe>
-        </recipes>
-    </default_device>
-    <devices>
+    	<param id="video_suffix" value="mp4" />
+	</default_device>
+	
+	<devices>
     
         <!--
         
@@ -242,7 +185,68 @@
             
         -->
         <device_group title="iTunes">
-            <!-- All Apple Devices -->
+			<common_device>
+	 	        <command id="correct_yuv">
+					$yuvcorrect -v 0 -Y LUMINANCE_1.20_0_255_0_255 -Y CHROMINANCE_0_1.04_128_1.04_128_0_255
+				</command>
+		        <command id="quicktime_to_yuv">
+					$movtoy4m -f -w $input_video_width -h $input_video_height -F $(output_frame_rate):1000 
+						-a $(output_video_width):$(output_video_height) $input_file | $correct_yuv 
+				</command>
+		        <command id="yuv_to_ffmpeg_av"> $ffmpeg -y -i - -i $tmp_audio_file </command>
+		        <command id="yuv_to_ffmpeg_v"> $ffmpeg -y -i - </command>
+		        <command id="ffmpeg_normal"> $ffmpeg -y -i $input_file </command>
+		        <command id="quicktime_av_single_pass">
+					$quicktime_to_yuv | $yuv_to_ffmpeg_av $ffmpeg_options $ffmpeg_single_pass_options $output_file
+				</command>
+		        <command id="quicktime_av_pass1"> 
+					$quicktime_to_yuv | $yuv_to_ffmpeg_av $ffmpeg_options $ffmpeg_pass1_options $output_file 
+				</command>
+		        <command id="quicktime_av_pass2">
+					$quicktime_to_yuv | $yuv_to_ffmpeg_av $ffmpeg_options $ffmpeg_pass2_options $output_file
+				</command>
+		        <command id="quicktime_v_single_pass"> 
+					$quicktime_to_yuv | $yuv_to_ffmpeg_v $ffmpeg_options $ffmpeg_single_pass_options $output_file
+				</command>
+		        <command id="quicktime_v_pass1">
+					$quicktime_to_yuv | $yuv_to_ffmpeg_v $ffmpeg_options $ffmpeg_pass1_options $output_file
+				</command>
+		        <command id="quicktime_v_pass2">
+					$quicktime_to_yuv | $yuv_to_ffmpeg_v $ffmpeg_options $ffmpeg_pass2_options $output_file
+				</command>
+		        <command id="normal_pass1">
+					$ffmpeg_normal $ffmpeg_options $ffmpeg_pass1_options $output_file
+				</command>
+		        <command id="normal_pass2">
+					$ffmpeg_normal $ffmpeg_options $ffmpeg_pass2_options $output_file
+				</command>
+		        <command id="normal_single_pass">
+					$ffmpeg_normal $ffmpeg_options $ffmpeg_single_pass_options $output_file
+				</command>
+				<script>
+	           		<![CDATA[
+
+					if (	 !bool(params.special_qt) && !bool(params.has_audio) && !bool(params.is_2_pass))
+		            	params.recipe = "$normal_single_pass";
+					else if (!bool(params.special_qt) && !bool(params.has_audio) && bool(params.is_2_pass))
+			            params.recipe = "$normal_pass1 ; $normal_pass2";
+					else if (!bool(params.special_qt) && bool(params.has_audio) && !bool(params.is_2_pass))
+				        params.recipe = "$normal_single_pass";
+					else if (!bool(params.special_qt) && bool(params.has_audio) && bool(params.is_2_pass))
+						params.recipe = "$normal_pass1 ; $normal_pass2";
+					else if (bool(params.special_qt) && !bool(params.has_audio) && !bool(params.is_2_pass))
+						params.recipe = "$quicktime_v_single_pass";
+					else if (bool(params.special_qt) && !bool(params.has_audio) && bool(params.is_2_pass))
+						params.recipe = "$quicktime_v_pass1 ; $quicktime_v_pass2";
+					else if (bool(params.special_qt) && bool(params.has_audio) && !bool(params.is_2_pass))
+						params.recipe = "$quicktime_to_audio_file ; $quicktime_av_single_pass";
+					else if (bool(params.special_qt) && bool(params.has_audio) && bool(params.is_2_pass))
+						params.recipe = "$quicktime_to_audio_file ; $quicktime_av_pass1 ; $quicktime_av_pass2";
+
+		            ]]>
+		        </script>
+ 			</common_device>
+           	<!-- All Apple Devices -->
             <device title="All Apple Devices" icon="itunesfile">
                <quality>
                     <quality_stop title="EDGE" bitrate="50000">
@@ -552,7 +556,6 @@
                 	<menu_item title="iPhone Screen">
 						<script>
 							if (params.frame_width == 640) {
-								log("adjusting size from 640x480 to 480x320");
 								params.frame_width = 480;
 								params.frame_height = 320;
 								adjustVideoParams();
@@ -562,7 +565,6 @@
                     <menu_item title="TV Screen">
  						<script>
 							if (params.frame_width == 320) {
-								log("adjusting size from 320x240 to 480x320");
 								params.frame_width = 480;
 								params.frame_height = 320;
 								adjustVideoParams();

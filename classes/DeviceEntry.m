@@ -340,33 +340,6 @@ static void setButton(NSButton* button, NSString* title)
 
 //
 //
-// Recipe interface
-//
-//
-@implementation Recipe
-
-+(Recipe*) recipeWithElement: (NSXMLElement*) element
-{
-    Recipe* obj = [[Recipe alloc] init];
-    obj->m_recipe = [NSString stringWithString:content(element)];
-    obj->m_condition = [NSString stringWithString:stringAttribute(element, @"condition")];
-    return obj;
-}
-
--(NSString*) recipe
-{
-    return m_recipe;
-}
-
--(NSString*) condition
-{
-    return m_condition;
-}
-
-@end
-
-//
-//
 // Checkbox interface
 //
 //
@@ -501,15 +474,6 @@ static void setButton(NSButton* button, NSString* title)
     }
 }
 
--(void) parseRecipes: (NSArray*) array
-{
-    for (int i = 0; i < [array count]; ++i) {
-        NSXMLElement* element = (NSXMLElement*) [array objectAtIndex:i];
-
-        [m_recipes addObject:[Recipe recipeWithElement: element]];
-    }
-}
-
 -(void) parseCheckboxes: (NSArray*) array
 {
     for (int i = 0; i < [array count]; ++i) {
@@ -556,9 +520,6 @@ static void setButton(NSButton* button, NSString* title)
     
     // handle performance
     [self parsePerformanceItems:[findChildElement(element, @"performance") elementsForName: @"performance_item"]];
-    
-    // handle recipes
-    [self parseRecipes:[findChildElement(element, @"recipes") elementsForName: @"recipe"]];
     
     // handle params
     parseParams(element, m_params);
@@ -651,36 +612,11 @@ static void setButton(NSButton* button, NSString* title)
 
 -(void) setCurrentParamsInJavaScriptContext:(JavaScriptContext*) context performanceIndex:(int) perfIndex
 {
-    // Add params and commands from default device
-    [m_defaultDevice addParamsToJavaScriptContext: context performanceIndex:perfIndex];
-    
     // Add params and commands from this device
     [self addParamsToJavaScriptContext: context performanceIndex:perfIndex];
     
-    // Execute script from default device
-    [m_defaultDevice evaluateScript: context performanceIndex:perfIndex];
-    
     // Execute script from this device
     [self evaluateScript: context performanceIndex:perfIndex];
-}
-
--(NSString*) recipeWithJavaScriptContext: (JavaScriptContext*) context
-{
-    // For each recipe item, execute its condition and if it returns true, that is the recipe to use
-    NSString* recipeString = nil;
-    
-    for (Recipe* recipe in [self recipes]) {
-        NSString* returnString = [context evaluateJavaScript:[recipe condition]];
-        if (!returnString)
-            return nil;
-        if ([returnString boolValue]) {
-            NSLog(@"****** selected recipe with condition '%@'\n", [recipe condition]);
-            recipeString = [recipe recipe];
-            break;
-        }
-    }
-    
-    return recipeString;
 }
 
 -(void) populateTabView:(NSTabView*) tabview
@@ -712,6 +648,10 @@ static void setButton(NSButton* button, NSString* title)
 
 -(void) addParamsToJavaScriptContext: (JavaScriptContext*) context performanceIndex:(int) perfIndex
 {
+    // Add params and commands from default device (recursive)
+    if (m_defaultDevice)
+        [m_defaultDevice addParamsToJavaScriptContext: context performanceIndex:perfIndex];
+    
     // Add global params and commands
     [context addParams: m_params];
 
@@ -747,6 +687,10 @@ static void setButton(NSButton* button, NSString* title)
 
 -(void) evaluateScript: (JavaScriptContext*) context performanceIndex:(int) perfIndex
 {
+    // Execute script from default device (recursive)
+    if (m_defaultDevice)
+        [m_defaultDevice evaluateScript: context performanceIndex:perfIndex];
+    
     // Evaluate global script
     [context evaluateJavaScript:m_script];
 
