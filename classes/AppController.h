@@ -53,8 +53,6 @@ typedef enum { RS_STOPPED, RS_RUNNING, RS_PAUSED } RunStateType;
 -(void) setProgressFor: (Transcoder*) transcoder to: (double) progress;
 -(void) encodeFinished: (Transcoder*) transcoder;
 
--(void) setRunState: (RunStateType) state;
-
 -(void) log: (NSString*) format, ...;
 
 @end

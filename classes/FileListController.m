@@ -110,7 +110,6 @@
                 }
                 
                 [m_fileListView reloadData];
-                //[m_appController setRunState: RS_CURRENT];
             }
         }
     }
@@ -125,7 +124,6 @@
     Transcoder* transcoder = [m_appController transcoderForFileName: filename];
     [self addObject:transcoder];
     [m_fileListView reloadData];
-    //[m_appController setRunState: RS_CURRENT];
 }
 
 @end

@@ -66,7 +66,7 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
     
     [m_deviceController setDelegate:self];
     
-    [self setRunState: RS_STOPPED];
+    m_runState = RS_STOPPED;
 }
 
 -(Transcoder*) transcoderForFileName:(NSString*) fileName
@@ -124,7 +124,7 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
         [m_fileListController reloadData];
     }
     
-    [self setRunState: RS_STOPPED];
+    m_runState =  RS_STOPPED;
 }
 
 - (IBAction)startEncode:(id)sender
@@ -134,11 +134,11 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
     
     if (m_runState == RS_PAUSED) {
         [[m_fileList objectAtIndex: m_currentEncoding] resumeEncode];
-        [self setRunState: RS_RUNNING];
+        m_runState = RS_RUNNING;
     }
     else {
         [self setOutputFileName];
-        [self setRunState: RS_RUNNING];
+        m_runState = RS_RUNNING;
     
         m_currentEncoding = -1;
         [self startNextEncode];
@@ -148,7 +148,7 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
 - (IBAction)pauseEncode:(id)sender
 {
     [[m_fileList objectAtIndex: m_currentEncoding] pauseEncode];
-    [self setRunState: RS_PAUSED];
+    m_runState = RS_PAUSED;
     [m_fileListController reloadData];
 }
 
@@ -156,7 +156,7 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
 {
     m_isTerminated = YES;
     [[m_fileList objectAtIndex: m_currentEncoding] stopEncode];
-    [self setRunState: RS_STOPPED];
+    m_runState = RS_STOPPED;
     [m_fileListController reloadData];
 }
 
@@ -202,41 +202,6 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
     [m_totalProgressBar setDoubleValue: m_isTerminated ? 0 : 1];
     [m_fileListController reloadData];
     [self startNextEncode];
-}
-
--(void) setRunState: (RunStateType) state
-{
-    m_runState = state;
-    return;
-    
-    if ([m_fileList count] == 0) {
-        [m_startEncodeItem setEnabled: NO];
-        [m_startEncodeItem setLabel:@"Start"];
-        [m_stopEncodeItem setEnabled: NO];
-        [m_pauseEncodeItem setEnabled: NO];
-        return;
-    }
-    
-    switch(m_runState) {
-        case RS_STOPPED:
-            [m_startEncodeItem setEnabled: YES];
-            [m_startEncodeItem setLabel:@"Start"];
-            [m_stopEncodeItem setEnabled: NO];
-            [m_pauseEncodeItem setEnabled: NO];
-            break;
-        case RS_RUNNING:
-            [m_startEncodeItem setEnabled: NO];
-            [m_startEncodeItem setLabel:@"Start"];
-            [m_stopEncodeItem setEnabled: YES];
-            [m_pauseEncodeItem setEnabled: YES];
-            break;
-        case RS_PAUSED:
-            [m_startEncodeItem setEnabled: YES];
-            [m_startEncodeItem setLabel:@"Resume"];
-            [m_stopEncodeItem setEnabled: YES];
-            [m_pauseEncodeItem setEnabled: NO];
-            break;
-    }
 }
 
 -(DeviceController*) deviceController
