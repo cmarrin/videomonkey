@@ -14,7 +14,7 @@
 @class MoviePanelController;
 @class Transcoder;
 
-typedef enum { RS_CURRENT, RS_STOPPED, RS_RUNNING, RS_PAUSED } RunStateType;
+typedef enum { RS_STOPPED, RS_RUNNING, RS_PAUSED } RunStateType;
 
 @interface AppController : NSObject {
 @private

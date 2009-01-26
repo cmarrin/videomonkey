@@ -97,6 +97,17 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
 
 - (BOOL)validateToolbarItem:(NSToolbarItem *)theItem
 {
+    if (theItem == m_startEncodeItem) {
+        [m_startEncodeItem setLabel:(m_runState == RS_PAUSED) ? @"Resume" : @"Start"];
+        return [m_fileList count] > 0 && m_runState != RS_RUNNING;
+    }
+        
+    if (theItem == m_stopEncodeItem)
+        return [m_fileList count] > 0 && m_runState != RS_STOPPED;
+        
+    if (theItem == m_pauseEncodeItem)
+        return [m_fileList count] > 0 && m_runState == RS_RUNNING;
+        
     return [theItem isEnabled];
 }
 
@@ -195,8 +206,8 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
 
 -(void) setRunState: (RunStateType) state
 {
-    if (state != RS_CURRENT)
-        m_runState = state;
+    m_runState = state;
+    return;
     
     if ([m_fileList count] == 0) {
         [m_startEncodeItem setEnabled: NO];
@@ -260,6 +271,12 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
     for (Transcoder* transcoder in m_fileList)
         [transcoder setBitrate: bitrate];
     [m_fileListController reloadData];
+}
+
+- (BOOL)application:(NSApplication *)theApplication openFile:(NSString *)filename
+{
+    [m_fileListController addFile:filename];
+    return YES;
 }
 
 @end

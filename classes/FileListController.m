@@ -110,7 +110,7 @@
                 }
                 
                 [m_fileListView reloadData];
-                [m_appController setRunState: RS_CURRENT];
+                //[m_appController setRunState: RS_CURRENT];
             }
         }
     }
@@ -119,5 +119,13 @@
 }
 
 // End of dragging methods
+
+-(void) addFile:(NSString*) filename
+{
+    Transcoder* transcoder = [m_appController transcoderForFileName: filename];
+    [self addObject:transcoder];
+    [m_fileListView reloadData];
+    //[m_appController setRunState: RS_CURRENT];
+}
 
 @end
