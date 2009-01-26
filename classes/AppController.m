@@ -65,6 +65,8 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
     [m_pauseEncodeItem setEnabled: NO];
     
     [m_deviceController setDelegate:self];
+    
+    [self setRunState: RS_STOPPED];
 }
 
 -(Transcoder*) transcoderForFileName:(NSString*) fileName
@@ -193,7 +195,17 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
 
 -(void) setRunState: (RunStateType) state
 {
-    m_runState = state;
+    if (state != RS_CURRENT)
+        m_runState = state;
+    
+    if ([m_fileList count] == 0) {
+        [m_startEncodeItem setEnabled: NO];
+        [m_startEncodeItem setLabel:@"Start"];
+        [m_stopEncodeItem setEnabled: NO];
+        [m_pauseEncodeItem setEnabled: NO];
+        return;
+    }
+    
     switch(m_runState) {
         case RS_STOPPED:
             [m_startEncodeItem setEnabled: YES];

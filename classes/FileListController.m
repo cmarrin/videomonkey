@@ -110,6 +110,7 @@
                 }
                 
                 [m_fileListView reloadData];
+                [m_appController setRunState: RS_CURRENT];
             }
         }
     }
