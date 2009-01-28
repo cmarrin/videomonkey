@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4908A3970F301E4E003B65E0 /* releasenotes.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 4908A3960F301E4E003B65E0 /* releasenotes.rtf */; };
+		4908A3B70F302179003B65E0 /* releasenotes.html in Resources */ = {isa = PBXBuildFile; fileRef = 4908A3B60F302179003B65E0 /* releasenotes.html */; };
 		491000000EC87BB3001B578B /* tinyipod.png in Resources */ = {isa = PBXBuildFile; fileRef = 4910FFCB0EC87BB3001B578B /* tinyipod.png */; };
 		491000020EC87BB3001B578B /* tinynano.png in Resources */ = {isa = PBXBuildFile; fileRef = 4910FFCD0EC87BB3001B578B /* tinynano.png */; };
 		491000030EC87BB3001B578B /* tinyogg.png in Resources */ = {isa = PBXBuildFile; fileRef = 4910FFCE0EC87BB3001B578B /* tinyogg.png */; };
@@ -88,7 +90,6 @@
 		49636A4D0EE707BA00F7B6D2 /* error.png in Resources */ = {isa = PBXBuildFile; fileRef = 49636A4C0EE707BA00F7B6D2 /* error.png */; };
 		49636A4F0EE707E300F7B6D2 /* ok.png in Resources */ = {isa = PBXBuildFile; fileRef = 49636A4E0EE707E300F7B6D2 /* ok.png */; };
 		497E65AA0EE4F284000372EC /* ProgressCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 497E65A90EE4F284000372EC /* ProgressCell.m */; };
-		497E67100EEC24FA000372EC /* commands.plist in Resources */ = {isa = PBXBuildFile; fileRef = 497E670F0EEC24FA000372EC /* commands.plist */; };
 		497E67170EEC5DD8000372EC /* Command.m in Sources */ = {isa = PBXBuildFile; fileRef = 497E67160EEC5DD8000372EC /* Command.m */; };
 		4983925A0F1EB70E00C23782 /* DeviceEntry.m in Sources */ = {isa = PBXBuildFile; fileRef = 498392590F1EB70E00C23782 /* DeviceEntry.m */; };
 		4983960D0F269AC400C23782 /* Formatters.m in Sources */ = {isa = PBXBuildFile; fileRef = 4983960C0F269AC400C23782 /* Formatters.m */; };
@@ -141,6 +142,8 @@
 		29B97324FDCFA39411CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
 		32CA4F630368D1EE00C91783 /* VideoMonkey_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoMonkey_Prefix.pch; sourceTree = "<group>"; };
+		4908A3960F301E4E003B65E0 /* releasenotes.rtf */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; path = releasenotes.rtf; sourceTree = "<group>"; };
+		4908A3B60F302179003B65E0 /* releasenotes.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = releasenotes.html; sourceTree = "<group>"; };
 		491001890ECBE470001B578B /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = English.lproj/MainMenu.nib; sourceTree = "<group>"; };
 		491001D50ECBEEBC001B578B /* AppController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppController.h; path = classes/AppController.h; sourceTree = "<group>"; };
 		491001D60ECBEEBC001B578B /* AppController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppController.m; path = classes/AppController.m; sourceTree = "<group>"; };
@@ -225,7 +228,6 @@
 		49636A4E0EE707E300F7B6D2 /* ok.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = ok.png; path = icons/ok.png; sourceTree = "<group>"; };
 		497E65A80EE4F284000372EC /* ProgressCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ProgressCell.h; path = classes/ProgressCell.h; sourceTree = "<group>"; };
 		497E65A90EE4F284000372EC /* ProgressCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ProgressCell.m; path = classes/ProgressCell.m; sourceTree = "<group>"; };
-		497E670F0EEC24FA000372EC /* commands.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = commands.plist; sourceTree = "<group>"; wrapsLines = 1; };
 		497E67150EEC5DD8000372EC /* Command.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Command.h; path = classes/Command.h; sourceTree = "<group>"; };
 		497E67160EEC5DD8000372EC /* Command.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Command.m; path = classes/Command.m; sourceTree = "<group>"; };
 		498392580F1EB70E00C23782 /* DeviceEntry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DeviceEntry.h; path = classes/DeviceEntry.h; sourceTree = "<group>"; };
@@ -255,7 +257,6 @@
 		49D467B10F2828400095A2AB /* Sparkle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Sparkle.framework; sourceTree = "<group>"; };
 		49D468210F28CFA30095A2AB /* dsa_pub.pem */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = dsa_pub.pem; sourceTree = "<group>"; };
 		49D468360F294B350095A2AB /* videomonkeycast.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = videomonkeycast.xml; sourceTree = "<group>"; };
-		49D4690A0F2960AB0095A2AB /* releasenotes.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = releasenotes.html; sourceTree = "<group>"; };
 		49D469490F0F2E52005D70FD /* commands.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = commands.xml; sourceTree = "<group>"; };
 		49E911930EF86C3F009D0CAF /* ffpresets */ = {isa = PBXFileReference; lastKnownFileType = folder; path = ffpresets; sourceTree = "<group>"; };
 		49FC93820ECB3CCD0058CDBB /* QTKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QTKit.framework; path = /System/Library/Frameworks/QTKit.framework; sourceTree = "<absolute>"; };
@@ -352,7 +353,6 @@
 				32CA4F630368D1EE00C91783 /* VideoMonkey_Prefix.pch */,
 				29B97316FDCFA39411CA2CEA /* main.m */,
 				49D468360F294B350095A2AB /* videomonkeycast.xml */,
-				49D4690A0F2960AB0095A2AB /* releasenotes.html */,
 			);
 			name = "Other Sources";
 			sourceTree = "<group>";
@@ -369,8 +369,9 @@
 				8D1107310486CEB800E47090 /* Info.plist */,
 				089C165CFE840E0CC02AAC07 /* InfoPlist.strings */,
 				491001880ECBE470001B578B /* MainMenu.nib */,
-				497E670F0EEC24FA000372EC /* commands.plist */,
 				49D469490F0F2E52005D70FD /* commands.xml */,
+				4908A3960F301E4E003B65E0 /* releasenotes.rtf */,
+				4908A3B60F302179003B65E0 /* releasenotes.html */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -615,13 +616,14 @@
 				49636A4B0EE7078200F7B6D2 /* readyunknown.png in Resources */,
 				49636A4D0EE707BA00F7B6D2 /* error.png in Resources */,
 				49636A4F0EE707E300F7B6D2 /* ok.png in Resources */,
-				497E67100EEC24FA000372EC /* commands.plist in Resources */,
 				492D327E0EF18D8000AEB740 /* bin in Resources */,
 				49E9119B0EF86C3F009D0CAF /* ffpresets in Resources */,
 				49D4694A0F0F2E52005D70FD /* commands.xml in Resources */,
 				49AAD9A70F1C232B0098F087 /* Console.png in Resources */,
 				49AADAC60F1D12950098F087 /* tinyitunesfile.png in Resources */,
 				49D468220F28CFA30095A2AB /* dsa_pub.pem in Resources */,
+				4908A3970F301E4E003B65E0 /* releasenotes.rtf in Resources */,
+				4908A3B70F302179003B65E0 /* releasenotes.html in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
