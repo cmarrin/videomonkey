@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		4908A3970F301E4E003B65E0 /* releasenotes.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 4908A3960F301E4E003B65E0 /* releasenotes.rtf */; };
 		4908A3B70F302179003B65E0 /* releasenotes.html in Resources */ = {isa = PBXBuildFile; fileRef = 4908A3B60F302179003B65E0 /* releasenotes.html */; };
 		491000000EC87BB3001B578B /* tinyipod.png in Resources */ = {isa = PBXBuildFile; fileRef = 4910FFCB0EC87BB3001B578B /* tinyipod.png */; };
 		491000020EC87BB3001B578B /* tinynano.png in Resources */ = {isa = PBXBuildFile; fileRef = 4910FFCD0EC87BB3001B578B /* tinynano.png */; };
@@ -142,7 +141,6 @@
 		29B97324FDCFA39411CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
 		32CA4F630368D1EE00C91783 /* VideoMonkey_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoMonkey_Prefix.pch; sourceTree = "<group>"; };
-		4908A3960F301E4E003B65E0 /* releasenotes.rtf */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; path = releasenotes.rtf; sourceTree = "<group>"; };
 		4908A3B60F302179003B65E0 /* releasenotes.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = releasenotes.html; sourceTree = "<group>"; };
 		491001890ECBE470001B578B /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = English.lproj/MainMenu.nib; sourceTree = "<group>"; };
 		491001D50ECBEEBC001B578B /* AppController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppController.h; path = classes/AppController.h; sourceTree = "<group>"; };
@@ -370,7 +368,6 @@
 				089C165CFE840E0CC02AAC07 /* InfoPlist.strings */,
 				491001880ECBE470001B578B /* MainMenu.nib */,
 				49D469490F0F2E52005D70FD /* commands.xml */,
-				4908A3960F301E4E003B65E0 /* releasenotes.rtf */,
 				4908A3B60F302179003B65E0 /* releasenotes.html */,
 			);
 			name = Resources;
@@ -622,7 +619,6 @@
 				49AAD9A70F1C232B0098F087 /* Console.png in Resources */,
 				49AADAC60F1D12950098F087 /* tinyitunesfile.png in Resources */,
 				49D468220F28CFA30095A2AB /* dsa_pub.pem in Resources */,
-				4908A3970F301E4E003B65E0 /* releasenotes.rtf in Resources */,
 				4908A3B70F302179003B65E0 /* releasenotes.html in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

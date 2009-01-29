@@ -247,7 +247,8 @@ static void addMenuSeparator(NSPopUpButton* button)
     // load the XML file with all the commands and device setup
     [self initCommands];
     
-    int idx = [m_deviceButton indexOfSelectedItem];
+    int deviceIndex = [m_deviceButton indexOfSelectedItem];
+    int performanceIndex = [m_performanceButton indexOfSelectedItem];
     
     // populate the device menu
     [m_deviceButton removeAllItems];
@@ -273,13 +274,12 @@ static void addMenuSeparator(NSPopUpButton* button)
     }
     
     // set the selected item
-    // FIXME: need to get this from prefs
-    [m_deviceButton selectItemWithTag:0];
+    [m_deviceButton selectItemAtIndex:deviceIndex];
     [self setCurrentDevice:[self findDeviceEntryWithIndex:0]];
 
     // set the selected item
     // FIXME: need to get this from prefs
-    [m_performanceButton selectItemWithTag:2];
+    [m_performanceButton selectItemAtIndex:performanceIndex];
     
     [self setCurrentParams];
 }
