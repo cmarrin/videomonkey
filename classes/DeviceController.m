@@ -247,6 +247,8 @@ static void addMenuSeparator(NSPopUpButton* button)
     // load the XML file with all the commands and device setup
     [self initCommands];
     
+    int idx = [m_deviceButton indexOfSelectedItem];
+    
     // populate the device menu
     [m_deviceButton removeAllItems];
     
