@@ -133,15 +133,15 @@ static void addMenuSeparator(NSPopUpButton* button)
     if (!recipeString)
         return nil;
         
-    NSString* inputString = recipeString;
-    NSMutableString* outputString = [[NSMutableString alloc] init];
+    NSString* string = recipeString;
+    NSMutableString* tmpString = [[NSMutableString alloc] init];
     BOOL didSubstitute = YES;
     
     while (didSubstitute) {
        didSubstitute = NO;
        
-        NSArray* array = [inputString componentsSeparatedByString:@"$"];
-        [outputString setString:[array objectAtIndex:0]];
+        NSArray* array = [string componentsSeparatedByString:@"$"];
+        [tmpString setString:[array objectAtIndex:0]];
         
         BOOL firstTime = YES;
         BOOL skipNext = NO;
@@ -153,7 +153,7 @@ static void addMenuSeparator(NSPopUpButton* button)
             }
                 
             if (skipNext) {
-                [outputString appendString:s];
+                [tmpString appendString:s];
                 skipNext = NO;
                 continue;
             }
@@ -163,7 +163,7 @@ static void addMenuSeparator(NSPopUpButton* button)
             // it doubled for now
             if ([s length] == 0) {
                 skipNext = YES;
-                [outputString appendString:@"$$"];
+                [tmpString appendString:@"$$"];
             }
             
             // pick out the param name
@@ -200,27 +200,30 @@ static void addMenuSeparator(NSPopUpButton* button)
             didSubstitute = YES;
             NSString* substitution = [m_context stringParamForKey: param];
             if (substitution)
-                [outputString appendString:substitution];
-            [outputString appendString:other];
+                [tmpString appendString:substitution];
+            [tmpString appendString:other];
         }
         
-        inputString = outputString;
+        string = tmpString;
     }
     
     // All done substituting, now replace $$ with $
-    NSArray* array = [inputString componentsSeparatedByString:@"$$"];
-    [outputString setString:@""];
-    BOOL firstTime = YES;
-    
+    NSArray* array = [string componentsSeparatedByString:@"$$"];
+    string = [array componentsJoinedByString:@"$"];
+
+    // Finally, get rid of all '\n' chars and extra whitespace
+    array = [string componentsSeparatedByString:@"\n"];
+    [tmpString setString:@""];
+    BOOL isFirst = YES;
     for (NSString* s in array) {
-        if (!firstTime)
-            [outputString appendString:@"$"];
+        if (!isFirst)
+            [tmpString appendString:@" "];
         else
-            firstTime = NO;
-        [outputString appendString: s];
+            isFirst = NO;
+        [tmpString appendString:[s stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]]];
     }
     
-    return outputString;
+    return tmpString;
 }
 
 -(void) setCurrentDevice: (DeviceEntry*) device

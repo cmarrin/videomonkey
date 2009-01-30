@@ -186,6 +186,23 @@
         -->
         <device_group title="iTunes">
 			<common_device>
+		        <command id="ffmpeg_single_pass_options">
+					-vpre $ffmpeg_vpre
+				</command>
+		        <command id="ffmpeg_pass1_options">
+					-vpre $ffmpeg_vpre_pass1 -pass 1 -passlogfile $pass_log_file
+				</command>
+		        <command id="ffmpeg_pass2_options">
+					-vpre $ffmpeg_vpre -pass 2 -passlogfile $pass_log_file
+				</command>
+		        <command id="ffmpeg_options">
+		            -vcodec $ffmpeg_vcodec -b $bitrate -s $(output_video_width)x$(output_video_height) 
+						-aspect $(output_video_width):$(output_video_height) -r $(output_frame_rate):1000
+					-acodec $ffmpeg_acodec -ab $audio_bitrate -ar $audio_sample_rate -ac $audio_channels
+				</command>
+		        <command id="quicktime_to_audio_file">
+					$qt_export $input_file --video=0 $tmp_audio_file
+				</command>
 	 	        <command id="correct_yuv">
 					$yuvcorrect -v 0 -Y LUMINANCE_1.20_0_255_0_255 -Y CHROMINANCE_0_1.04_128_1.04_128_0_255
 				</command>
@@ -225,7 +242,7 @@
 				</command>
 				<script>
 	           		<![CDATA[
-
+					var mp4 = params.ffmpeg_vcodec == "mpeg4";
 					if (	 !bool(params.special_qt) && !bool(params.has_audio) && !bool(params.is_2_pass))
 		            	params.recipe = "$normal_single_pass";
 					else if (!bool(params.special_qt) && !bool(params.has_audio) && bool(params.is_2_pass))
