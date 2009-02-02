@@ -22,6 +22,7 @@
     <!ELEMENT device    (quality|performance|script|param|command|checkbox|menu)*>
         <!ATTLIST device title CDATA "">
         <!ATTLIST device icon CDATA "">
+        <!ATTLIST device enabled CDATA "">
     <!ELEMENT checkbox    (checked_params|unchecked_params)*>
         <!ATTLIST checkbox which CDATA "">
         <!ATTLIST checkbox title CDATA "">
@@ -732,7 +733,7 @@
         -->
         <device_group title="Video Devices">
             <!-- DV -->
-            <device title="DV" icon="dv">
+            <device title="DV" icon="dv" enabled="false">
                 <checkbox which="0" title="H.264 Video (slower but better)">
                     <checked_params>
                         <param id="ffmpeg_vcodec" value="libx264" />
@@ -744,7 +745,7 @@
             </device>
             
             <!-- DVD -->
-            <device title="DVD" icon="cd">
+            <device title="DVD" icon="cd" enabled="false">
                 <quality>
                     <quality_stop title="EDGE" bitrate="50000">
                         <script> audio('low') </script> 
@@ -791,7 +792,7 @@
             </device>
             
             <!-- Tivo Series 2 -->
-            <device title="Tivo Series 2" icon="tivo">
+            <device title="Tivo Series 2" icon="tivo" enabled="false">
                 <quality>
                     <quality_stop title="EDGE" bitrate="50000">
                         <script> audio('low') </script> 
@@ -838,7 +839,7 @@
             </device>
             
             <!-- Tivo Series 3 -->
-            <device title="Tivo Series 3" icon="tivo">
+            <device title="Tivo Series 3" icon="tivo" enabled="false">
                 <quality>
                     <quality_stop title="EDGE" bitrate="50000">
                         <script> audio('low') </script> 
@@ -885,7 +886,7 @@
             </device>
 
             <!-- 3g Cell Phones -->
-            <device title="3g Cell Phones" icon="3g">
+            <device title="3g Cell Phones" icon="3g" enabled="false">
                 <quality>
                     <quality_stop title="EDGE" bitrate="50000">
                         <script> audio('low') </script> 
@@ -940,7 +941,7 @@
         -->
         <device_group title="Game Systems">
             <!-- XBox 360 -->
-            <device title="XBox 360" icon="xbox360">
+            <device title="XBox 360" icon="xbox360" enabled="false">
                 <checkbox which="0" title="H.264 Video (slower but better)">
                     <checked_params>
                         <param id="ffmpeg_vcodec" value="libx264" />
@@ -952,7 +953,7 @@
             </device>
             
             <!-- PSP -->
-            <device title="PSP" icon="psp">
+            <device title="PSP" icon="psp" enabled="false">
                 <quality>
                     <quality_stop title="EDGE" bitrate="50000">
                         <script> audio('low') </script> 
@@ -999,7 +1000,7 @@
             </device>
             
             <!-- Playstation 3 -->
-            <device title="Playstation 3" icon="ps3">
+            <device title="Playstation 3" icon="ps3" enabled="false">
                 <quality>
                     <quality_stop title="EDGE" bitrate="50000">
                         <script> audio('low') </script> 
@@ -1046,7 +1047,7 @@
             </device>
             
             <!-- Nintendo Wii -->
-            <device title="Nintendo Wii" icon="wii">
+            <device title="Nintendo Wii" icon="wii" enabled="false">
                 <quality>
                     <quality_stop title="EDGE" bitrate="50000">
                         <script> audio('low') </script> 
@@ -1101,7 +1102,7 @@
         -->
         <device_group title="Generic Formats">
             <!-- AVI -->
-            <device title="AVI" icon="file">
+            <device title="AVI" icon="file" enabled="false">
                 <checkbox which="0" title="H.264 Video (slower but better)">
                     <checked_params>
                         <param id="ffmpeg_vcodec" value="libx264" />
@@ -1113,7 +1114,7 @@
             </device>
             
             <!-- MP4 -->
-            <device title="MP4" icon="file">
+            <device title="MP4" icon="file" enabled="false">
                 <quality>
                     <quality_stop title="EDGE" bitrate="50000">
                         <script> audio('low') </script> 
@@ -1160,7 +1161,7 @@
             </device>
             
             <!-- QuickTime -->
-            <device title="QuickTime" icon="file">
+            <device title="QuickTime" icon="file" enabled="false">
                 <quality>
                     <quality_stop title="EDGE" bitrate="50000">
                         <script> audio('low') </script> 
@@ -1207,7 +1208,7 @@
             </device>
             
             <!-- WMV -->
-            <device title="WMV" icon="wma">
+            <device title="WMV" icon="wma" enabled="false">
                 <quality>
                     <quality_stop title="EDGE" bitrate="50000">
                         <script> audio('low') </script> 
@@ -1254,7 +1255,7 @@
             </device>
 
             <!-- Flash -->
-            <device title="Flash" icon="flash">
+            <device title="Flash" icon="flash" enabled="false">
                 <quality>
                     <quality_stop title="EDGE" bitrate="50000">
                         <script> audio('low') </script> 
@@ -1301,7 +1302,7 @@
             </device>
             
             <!-- MPEG -->
-            <device title="MPEG" icon="file">
+            <device title="MPEG" icon="file" enabled="false">
                 <quality>
                     <quality_stop title="EDGE" bitrate="50000">
                         <script> audio('low') </script> 

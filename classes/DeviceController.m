@@ -33,7 +33,7 @@ static NSXMLElement* findChildElement(NSXMLElement* element, NSString* name)
     return [[element elementsForName:name] lastObject];
 }
 
-static void addMenuItem(NSPopUpButton* button, NSString* title, NSString* icon, int tag)
+static void addMenuItem(NSPopUpButton* button, NSString* title, NSString* icon, int tag, BOOL enabled)
 {
     NSMenuItem* item = [[NSMenuItem alloc] init];
     [item setTag:tag];
@@ -49,6 +49,7 @@ static void addMenuItem(NSPopUpButton* button, NSString* title, NSString* icon, 
     else {
         [item setIndentationLevel:1];
         [item setTitle:title];
+        [item setEnabled:enabled];
         if (icon) {
             NSString* iconName = [NSString stringWithFormat:@"tiny%@", icon];
             NSImage* image = getImage(iconName);
@@ -270,10 +271,10 @@ static void addMenuSeparator(NSPopUpButton* button)
             currentGroup = group;
             if (i != 0)
                 addMenuSeparator(m_deviceButton);
-            addMenuItem(m_deviceButton, currentGroup, nil, -1);
+            addMenuItem(m_deviceButton, currentGroup, nil, -1, false);
         }
         
-        addMenuItem(m_deviceButton, [entry title], [entry icon], currentItem++);
+        addMenuItem(m_deviceButton, [entry title], [entry icon], currentItem++, [entry enabled]);
     }
     
     // set the selected item

@@ -178,6 +178,7 @@
     NSString* m_icon;
     NSString* m_title;
     NSString* m_groupTitle;
+    BOOL m_enabled;
     
     DeviceEntry* m_defaultDevice;
     
@@ -203,6 +204,7 @@
 -(NSString*) group;
 -(NSString*) title;
 -(NSString*) icon;
+-(BOOL) enabled;
 -(NSArray*) qualityStops;
 -(NSArray*) performanceItems;
 -(NSArray*) recipes;

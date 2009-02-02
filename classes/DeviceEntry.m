@@ -35,9 +35,10 @@ static double doubleAttribute(NSXMLElement* element, NSString* name)
     return [stringAttribute(element, name) doubleValue];
 }
 
-static BOOL boolAttribute(NSXMLElement* element, NSString* name)
+static BOOL boolAttribute(NSXMLElement* element, NSString* name, BOOL defaultValue)
 {
-    return [stringAttribute(element, name) boolValue];
+    NSString* s = stringAttribute(element, name);
+    return ([s length] > 0) ? [s boolValue] : defaultValue;
 }
 
 static NSString* content(NSXMLElement* element)
@@ -507,6 +508,7 @@ static void setButton(NSButton* button, NSString* title)
     m_icon = [NSString stringWithString:stringAttribute(element, @"icon")];
     m_title = [NSString stringWithString:stringAttribute(element, @"title")];
     m_groupTitle = [NSString stringWithString:group ? group : @""];
+    m_enabled = boolAttribute(element, @"enabled", true);
     
     m_qualityStops = [[NSMutableArray alloc] init];
     m_performanceItems = [[NSMutableArray alloc] init];
@@ -557,6 +559,11 @@ static void setButton(NSButton* button, NSString* title)
 -(NSString*) icon
 {
     return m_icon;
+}
+
+-(BOOL) enabled
+{
+    return m_enabled;
 }
 
 -(NSArray*) qualityStops
