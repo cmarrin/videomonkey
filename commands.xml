@@ -700,6 +700,14 @@
                         <param id="ffmpeg_vcodec" value="mpeg4" />
                     </unchecked_params>
                 </checkbox>
+				<checkbox which="1" title="Keep Surround Track (if possible)">
+                    <checked_params>
+                        <param id="keep_surround_track" value="true" />
+                    </checked_params>
+                    <unchecked_params>
+                        <param id="keep_surround_track" value="false" />
+                    </unchecked_params>
+                </checkbox>
                 <menu which="0" title="Best for:">
                 	<menu_item title="iPhone Screen">
 						<script>
