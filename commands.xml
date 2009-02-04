@@ -298,7 +298,7 @@
                         <param id="frame_rate" value="1" />
                     </quality_stop>
                 </quality>
-                <checkbox which="0" title="H.264 Video (slower but better)">
+                <checkbox which="0" title="H.264 Video">
                     <checked_params>
                         <param id="ffmpeg_vcodec" value="libx264" />
                     </checked_params>
@@ -364,7 +364,7 @@
                         <param id="frame_rate" value="1" />
                     </quality_stop>
                 </quality>
-                <checkbox which="0" title="H.264 Video (slower but better)">
+                <checkbox which="0" title="H.264 Video">
                     <checked_params>
                         <param id="ffmpeg_vcodec" value="libx264" />
                     </checked_params>
@@ -430,7 +430,7 @@
                         <param id="frame_rate" value="1" />
                     </quality_stop>
                 </quality>
-                <checkbox which="0" title="H.264 Video (slower but better)">
+                <checkbox which="0" title="H.264 Video">
                     <checked_params>
                         <param id="ffmpeg_vcodec" value="libx264" />
                     </checked_params>
@@ -496,7 +496,7 @@
                         <param id="frame_rate" value="1" />
                     </quality_stop>
                 </quality>
-                <checkbox which="0" title="H.264 Video (slower but better)">
+                <checkbox which="0" title="H.264 Video">
                     <checked_params>
                         <param id="ffmpeg_vcodec" value="libx264" />
                     </checked_params>
@@ -562,7 +562,7 @@
                         <param id="frame_rate" value="1" />
                     </quality_stop>
                 </quality>
-                <checkbox which="0" title="H.264 Video (slower but better)">
+                <checkbox which="0" title="H.264 Video">
                     <checked_params>
                         <param id="ffmpeg_vcodec" value="libx264" />
                     </checked_params>
@@ -626,7 +626,7 @@
                         <param id="frame_rate" value="1" />
                     </quality_stop>
                 </quality>
-                <checkbox which="0" title="H.264 Video (slower but better)">
+                <checkbox which="0" title="H.264 Video">
                     <checked_params>
                         <param id="ffmpeg_vcodec" value="libx264" />
                     </checked_params>
@@ -692,7 +692,7 @@
                         <param id="frame_rate" value="1" />
                     </quality_stop>
                 </quality>
-                <checkbox which="0" title="H.264 Video (slower but better)">
+                <checkbox which="0" title="H.264 Video">
                     <checked_params>
                         <param id="ffmpeg_vcodec" value="libx264" />
                     </checked_params>
@@ -700,7 +700,7 @@
                         <param id="ffmpeg_vcodec" value="mpeg4" />
                     </unchecked_params>
                 </checkbox>
-				<checkbox which="1" title="Keep Surround Track (if possible)">
+				<checkbox which="1" title="Keep Surround Track">
                     <checked_params>
                         <param id="keep_surround_track" value="true" />
                     </checked_params>
@@ -742,7 +742,7 @@
         <device_group title="Video Devices">
             <!-- DV -->
             <device title="DV" icon="dv" enabled="false">
-                <checkbox which="0" title="H.264 Video (slower but better)">
+                <checkbox which="0" title="H.264 Video">
                     <checked_params>
                         <param id="ffmpeg_vcodec" value="libx264" />
                     </checked_params>
@@ -781,7 +781,7 @@
                         <param id="frame_rate" value="1" />
                     </quality_stop>
                 </quality>
-                <checkbox which="0" title="H.264 Video (slower but better)">
+                <checkbox which="0" title="H.264 Video">
                     <checked_params>
                         <param id="ffmpeg_vcodec" value="libx264" />
                     </checked_params>
@@ -828,7 +828,7 @@
                         <param id="frame_rate" value="1" />
                     </quality_stop>
                 </quality>
-                <checkbox which="0" title="H.264 Video (slower but better)">
+                <checkbox which="0" title="H.264 Video">
                     <checked_params>
                         <param id="ffmpeg_vcodec" value="libx264" />
                     </checked_params>
@@ -875,7 +875,7 @@
                         <param id="frame_rate" value="1" />
                     </quality_stop>
                 </quality>
-                <checkbox which="0" title="H.264 Video (slower but better)">
+                <checkbox which="0" title="H.264 Video">
                     <checked_params>
                         <param id="ffmpeg_vcodec" value="libx264" />
                     </checked_params>
@@ -922,7 +922,7 @@
                         <param id="frame_rate" value="1" />
                     </quality_stop>
                 </quality>
-                <checkbox which="0" title="H.264 Video (slower but better)">
+                <checkbox which="0" title="H.264 Video">
                     <checked_params>
                         <param id="ffmpeg_vcodec" value="libx264" />
                     </checked_params>
@@ -950,7 +950,7 @@
         <device_group title="Game Systems">
             <!-- XBox 360 -->
             <device title="XBox 360" icon="xbox360" enabled="false">
-                <checkbox which="0" title="H.264 Video (slower but better)">
+                <checkbox which="0" title="H.264 Video">
                     <checked_params>
                         <param id="ffmpeg_vcodec" value="libx264" />
                     </checked_params>
@@ -989,7 +989,7 @@
                         <param id="frame_rate" value="1" />
                     </quality_stop>
                 </quality>
-                <checkbox which="0" title="H.264 Video (slower but better)">
+                <checkbox which="0" title="H.264 Video">
                     <checked_params>
                         <param id="ffmpeg_vcodec" value="libx264" />
                     </checked_params>
@@ -1036,7 +1036,7 @@
                         <param id="frame_rate" value="1" />
                     </quality_stop>
                 </quality>
-                <checkbox which="0" title="H.264 Video (slower but better)">
+                <checkbox which="0" title="H.264 Video">
                     <checked_params>
                         <param id="ffmpeg_vcodec" value="libx264" />
                     </checked_params>
@@ -1083,7 +1083,7 @@
                         <param id="frame_rate" value="1" />
                     </quality_stop>
                 </quality>
-                <checkbox which="0" title="H.264 Video (slower but better)">
+                <checkbox which="0" title="H.264 Video">
                     <checked_params>
                         <param id="ffmpeg_vcodec" value="libx264" />
                     </checked_params>
@@ -1111,7 +1111,7 @@
         <device_group title="Generic Formats">
             <!-- AVI -->
             <device title="AVI" icon="file" enabled="false">
-                <checkbox which="0" title="H.264 Video (slower but better)">
+                <checkbox which="0" title="H.264 Video">
                     <checked_params>
                         <param id="ffmpeg_vcodec" value="libx264" />
                     </checked_params>
@@ -1150,7 +1150,7 @@
                         <param id="frame_rate" value="1" />
                     </quality_stop>
                 </quality>
-                <checkbox which="0" title="H.264 Video (slower but better)">
+                <checkbox which="0" title="H.264 Video">
                     <checked_params>
                         <param id="ffmpeg_vcodec" value="libx264" />
                     </checked_params>
@@ -1197,7 +1197,7 @@
                         <param id="frame_rate" value="1" />
                     </quality_stop>
                 </quality>
-                <checkbox which="0" title="H.264 Video (slower but better)">
+                <checkbox which="0" title="H.264 Video">
                     <checked_params>
                         <param id="ffmpeg_vcodec" value="libx264" />
                     </checked_params>
@@ -1244,7 +1244,7 @@
                         <param id="frame_rate" value="1" />
                     </quality_stop>
                 </quality>
-                <checkbox which="0" title="H.264 Video (slower but better)">
+                <checkbox which="0" title="H.264 Video">
                     <checked_params>
                         <param id="ffmpeg_vcodec" value="libx264" />
                     </checked_params>
@@ -1291,7 +1291,7 @@
                         <param id="frame_rate" value="1" />
                     </quality_stop>
                 </quality>
-                <checkbox which="0" title="H.264 Video (slower but better)">
+                <checkbox which="0" title="H.264 Video">
                     <checked_params>
                         <param id="ffmpeg_vcodec" value="libx264" />
                     </checked_params>
@@ -1338,7 +1338,7 @@
                         <param id="frame_rate" value="1" />
                     </quality_stop>
                 </quality>
-                <checkbox which="0" title="H.264 Video (slower but better)">
+                <checkbox which="0" title="H.264 Video">
                     <checked_params>
                         <param id="ffmpeg_vcodec" value="libx264" />
                     </checked_params>

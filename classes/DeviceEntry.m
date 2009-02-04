@@ -113,6 +113,7 @@ static void setButton(NSButton* button, NSString* title)
     if (title) {
         [button setHidden:NO];
         [button setTitle:title];
+        [button sizeToFit];
     }
     else
         [button setHidden:YES];
