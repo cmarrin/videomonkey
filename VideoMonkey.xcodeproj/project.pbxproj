@@ -79,6 +79,8 @@
 		4910FFFD0EC87BB3001B578B /* tinyflac.png in Resources */ = {isa = PBXBuildFile; fileRef = 4910FFC80EC87BB3001B578B /* tinyflac.png */; };
 		4910FFFE0EC87BB3001B578B /* tinyflash.png in Resources */ = {isa = PBXBuildFile; fileRef = 4910FFC90EC87BB3001B578B /* tinyflash.png */; };
 		4910FFFF0EC87BB3001B578B /* tinyiphone.png in Resources */ = {isa = PBXBuildFile; fileRef = 4910FFCA0EC87BB3001B578B /* tinyiphone.png */; };
+		492BCAC40F61F03E00BCBF24 /* Sparkle.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 495DBF940F616C64000E5D62 /* Sparkle.framework */; };
+		492BCAD80F61F08300BCBF24 /* videomonkeycast.xml in Resources */ = {isa = PBXBuildFile; fileRef = 492BCAD70F61F08300BCBF24 /* videomonkeycast.xml */; };
 		492D327E0EF18D8000AEB740 /* bin in Resources */ = {isa = PBXBuildFile; fileRef = 492D327D0EF18D8000AEB740 /* bin */; };
 		494917A90EDE07AF0083743F /* VideoMonkey.icns in Resources */ = {isa = PBXBuildFile; fileRef = 494917A80EDE07AF0083743F /* VideoMonkey.icns */; };
 		495493830F17C8620007EC0E /* JavaScriptContext.m in Sources */ = {isa = PBXBuildFile; fileRef = 495493820F17C8620007EC0E /* JavaScriptContext.m */; };
@@ -125,6 +127,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				492BCAC40F61F03E00BCBF24 /* Sparkle.framework in Copy Frameworks */,
 			);
 			name = "Copy Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -212,6 +215,7 @@
 		4910FFDC0EC87BB3001B578B /* wii.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = wii.png; path = images/wii.png; sourceTree = "<group>"; };
 		4910FFDD0EC87BB3001B578B /* wma.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = wma.png; path = images/wma.png; sourceTree = "<group>"; };
 		4910FFDE0EC87BB3001B578B /* xbox360.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = xbox360.png; path = images/xbox360.png; sourceTree = "<group>"; };
+		492BCAD70F61F08300BCBF24 /* videomonkeycast.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = videomonkeycast.xml; path = sparkle/videomonkeycast.xml; sourceTree = "<group>"; };
 		492D327D0EF18D8000AEB740 /* bin */ = {isa = PBXFileReference; lastKnownFileType = folder; path = bin; sourceTree = "<group>"; };
 		494917A80EDE07AF0083743F /* VideoMonkey.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = VideoMonkey.icns; path = icons/VideoMonkey.icns; sourceTree = "<group>"; };
 		495493810F17C8620007EC0E /* JavaScriptContext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JavaScriptContext.h; path = classes/JavaScriptContext.h; sourceTree = "<group>"; };
@@ -252,7 +256,6 @@
 		49BC8CA80ED6892400027F1D /* Play.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = Play.tiff; path = icons/Play.tiff; sourceTree = "<group>"; };
 		49BC8CA90ED6892400027F1D /* Stop.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = Stop.tiff; path = icons/Stop.tiff; sourceTree = "<group>"; };
 		49D468210F28CFA30095A2AB /* dsa_pub.pem */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = dsa_pub.pem; sourceTree = "<group>"; };
-		49D468360F294B350095A2AB /* videomonkeycast.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = videomonkeycast.xml; sourceTree = "<group>"; };
 		49D469490F0F2E52005D70FD /* commands.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = commands.xml; sourceTree = "<group>"; };
 		49E911930EF86C3F009D0CAF /* ffpresets */ = {isa = PBXFileReference; lastKnownFileType = folder; path = ffpresets; sourceTree = "<group>"; };
 		49FC93820ECB3CCD0058CDBB /* QTKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QTKit.framework; path = /System/Library/Frameworks/QTKit.framework; sourceTree = "<absolute>"; };
@@ -346,9 +349,9 @@
 		29B97315FDCFA39411CA2CEA /* Other Sources */ = {
 			isa = PBXGroup;
 			children = (
+				492BCAD70F61F08300BCBF24 /* videomonkeycast.xml */,
 				32CA4F630368D1EE00C91783 /* VideoMonkey_Prefix.pch */,
 				29B97316FDCFA39411CA2CEA /* main.m */,
-				49D468360F294B350095A2AB /* videomonkeycast.xml */,
 			);
 			name = "Other Sources";
 			sourceTree = "<group>";
@@ -618,6 +621,7 @@
 				49AADAC60F1D12950098F087 /* tinyitunesfile.png in Resources */,
 				49D468220F28CFA30095A2AB /* dsa_pub.pem in Resources */,
 				4908A3B70F302179003B65E0 /* releasenotes.html in Resources */,
+				492BCAD80F61F08300BCBF24 /* videomonkeycast.xml in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
