@@ -48,3 +48,38 @@
 }
 
 @end
+
+@implementation FrameSizeFormatter
+
+- (NSString *)stringForObjectValue:(id)anObject
+{
+    int frameSize = [anObject intValue];
+    int width = frameSize >> 16;
+    int height = frameSize & 0xffff;
+    
+    return [NSString stringWithFormat:@"%dx%d", width, height];
+}
+
+@end
+
+@implementation BitrateFormatter
+
+- (NSString *)stringForObjectValue:(id)anObject
+{
+    double bitrate = [anObject doubleValue];
+    
+    if (bitrate < 0 || bitrate > 4000000000)
+        return @"unknown";
+    
+    if (bitrate < 10000)
+        return [NSString stringWithFormat:@"%dbps", (int) bitrate];
+    else if (bitrate < 1000000)
+        return [NSString stringWithFormat:@"%dKbps", (int) bitrate/1000];
+    else if (bitrate < 1000000000)
+        return [NSString stringWithFormat:@"%dMbps", (int) bitrate/1000000];
+    else
+        return [NSString stringWithFormat:@"%dGbps", (int) bitrate/1000000000];
+}
+
+@end
+

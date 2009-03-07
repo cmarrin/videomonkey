@@ -82,6 +82,7 @@ typedef enum FileStatus { FS_INVALID, FS_VALID, FS_ENCODING, FS_PAUSED, FS_FAILE
     NSFileHandle* m_logFile;
     NSString* m_tempAudioFileName;
     NSString* m_passLogFileName;
+    NSString* m_audioQuality;
 }
 
 -(Transcoder*) initWithController: (AppController*) controller;
@@ -121,7 +122,12 @@ typedef enum FileStatus { FS_INVALID, FS_VALID, FS_ENCODING, FS_PAUSED, FS_FAILE
 -(NSString*) tempAudioFileName;
 -(NSString*) passLogFileName;
 
+-(int) frameSize; // This is a composite (upper 16 bits width, lower 16 bits height)
+-(NSString*) audioQuality;
+
 -(NSString*) ffmpeg_vcodec;
+
+-(void) setParams;
 
 -(BOOL) startEncode;
 -(BOOL) pauseEncode;

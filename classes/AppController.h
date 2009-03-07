@@ -45,6 +45,7 @@ typedef enum { RS_STOPPED, RS_RUNNING, RS_PAUSED } RunStateType;
 -(IBAction)stopEncode:(id)sender;
 -(IBAction)toggleConsoleDrawer:(id)sender;
 
+
 -(IBAction)changeSaveToText:(id)sender;
 -(IBAction)selectSaveToPath:(id)sender;
 
@@ -54,5 +55,8 @@ typedef enum { RS_STOPPED, RS_RUNNING, RS_PAUSED } RunStateType;
 -(void) encodeFinished: (Transcoder*) transcoder;
 
 -(void) log: (NSString*) format, ...;
+
+// delegate method
+-(void) uiChanged;
 
 @end

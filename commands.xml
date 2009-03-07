@@ -122,6 +122,8 @@
 				params.output_frame_rate = params.input_frame_rate * params.frame_rate * 1000;
 			}
 			
+			audio("high");
+			
 			adjustVideoParams();
            
             ]]>

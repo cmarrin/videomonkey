@@ -23,3 +23,17 @@
 
 @end
 
+@interface FrameSizeFormatter : NSNumberFormatter {
+}
+
+- (NSString *)stringForObjectValue:(id)anObject;
+
+@end
+
+@interface BitrateFormatter : NSNumberFormatter {
+}
+
+- (NSString *)stringForObjectValue:(id)anObject;
+
+@end
+

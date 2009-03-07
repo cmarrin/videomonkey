@@ -85,8 +85,9 @@
 -(double) bitrate;
 
 -(void) setDelegate:(id) delegate;
--(void) setCurrentParams;
--(NSString*) recipeWithEnvironment: (NSDictionary*) env;
+-(void) setCurrentParamsWithEnvironment: (NSDictionary*) env;
+-(NSString*) recipe;
+-(NSString*) paramForKey:(NSString*) key;
 
 -(void) uiChanged;
 

@@ -165,7 +165,7 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
     [m_consoleDrawer toggle:sender];
 }
 
--(IBAction)changeSaveToText:(id)sender
+ -(IBAction)changeSaveToText:(id)sender
 {
     [m_savePath release];
     m_savePath = [m_saveToPathTextField stringValue];
@@ -233,8 +233,11 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
 -(void) uiChanged
 {
     double bitrate = [m_deviceController bitrate];
-    for (Transcoder* transcoder in m_fileList)
+    for (Transcoder* transcoder in m_fileList) {
         [transcoder setBitrate: bitrate];
+        [transcoder setParams];
+    }
+    
     [m_fileListController reloadData];
 }
 

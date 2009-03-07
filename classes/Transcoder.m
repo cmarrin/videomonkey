@@ -203,6 +203,16 @@ static NSImage* getFileStatusImage(FileStatus status)
 
     return self;
 }
+
+-(void) dealloc
+{
+    [m_progressIndicator removeFromSuperview];
+    [m_statusImageView removeFromSuperview];
+    [m_progressIndicator release];
+    [m_statusImageView release];
+    
+    [super dealloc];
+}
     
 - (int) addInputFile: (NSString*) filename
 {
@@ -411,6 +421,74 @@ static NSImage* getFileStatusImage(FileStatus status)
     return m_passLogFileName;
 }
 
+-(int) frameSize
+{
+    // This is a composite (upper 16 bits width, lower 16 bits height)
+    int width = ((TranscoderFileInfo*) [m_outputFiles objectAtIndex: 0])->m_width;
+    int height = ((TranscoderFileInfo*) [m_outputFiles objectAtIndex: 0])->m_height;
+    return (width << 16) | height;
+}
+
+-(NSString*) audioQuality
+{
+    return m_audioQuality;
+}
+
+-(void) setParams
+{
+    if ([m_outputFiles count] == 0 || !m_enabled)
+        return;
+        
+    // build the environment
+    NSMutableDictionary* env = [[NSMutableDictionary alloc] init];
+
+    // fill in the environment
+    NSString* cmdPath = [NSString stringWithString: [[NSBundle mainBundle] resourcePath]];
+    [env setValue: [cmdPath stringByAppendingPathComponent: @"bin/ffmpeg"] forKey: @"ffmpeg"];
+    [env setValue: [cmdPath stringByAppendingPathComponent: @"bin/qt_export"] forKey: @"qt_export"];
+    [env setValue: [cmdPath stringByAppendingPathComponent: @"bin/movtoy4m"] forKey: @"movtoy4m"];
+    [env setValue: [cmdPath stringByAppendingPathComponent: @"bin/yuvadjust"] forKey: @"yuvadjust"];
+    [env setValue: [cmdPath stringByAppendingPathComponent: @"bin/yuvcorrect"] forKey: @"yuvcorrect"];
+
+    // fill in the filenames
+    [env setValue: [self inputFileName] forKey: @"input_file"];
+    [env setValue: [self outputFileName] forKey: @"output_file"];
+    [env setValue: [self tempAudioFileName] forKey: @"tmp_audio_file"];
+    [env setValue: [self passLogFileName] forKey: @"pass_log_file"];
+    
+    // fill in params
+    [env setValue: [[NSNumber numberWithInt: [self inputVideoWidth]] stringValue] forKey: @"input_video_width"];
+    [env setValue: [[NSNumber numberWithInt: [self inputVideoHeight]] stringValue] forKey: @"input_video_height"];
+    [env setValue: [[NSNumber numberWithInt: [self inputVideoWidthDiv16]] stringValue] forKey: @"output_video_width"];
+    [env setValue: [[NSNumber numberWithInt: [self inputVideoHeightDiv16]] stringValue] forKey: @"output_video_height"];
+    [env setValue: [[NSNumber numberWithInt: [self bitrate]] stringValue] forKey: @"bitrate"];
+    [env setValue: [[NSNumber numberWithInt: [self inputVideoFrameRate]] stringValue] forKey: @"input_frame_rate"];
+    
+    [env setValue: ([self isInputQuicktime] ? @"true" : @"false") forKey: @"is_quicktime"];
+    [env setValue: ([self hasInputAudio] ? @"true" : @"false") forKey: @"has_audio"];
+
+    [env setValue: [self inputVideoFormat] forKey: @"input_video_codec"];
+
+    [env setValue: [self ffmpeg_vcodec] forKey: @"ffmpeg_vcodec"];
+    
+    // set the params
+    [[m_appController deviceController] setCurrentParamsWithEnvironment:env];
+    
+    // save some of the values
+    if ([m_outputFiles count] > 0) {
+        int width = [[[m_appController deviceController] paramForKey:@"output_video_width"] intValue];
+        int height = [[[m_appController deviceController] paramForKey:@"output_video_height"] intValue];
+        if (width > 32767)
+            width = 32767;
+        if (height > 32767)
+            height = 32767;
+        ((TranscoderFileInfo*) [m_outputFiles objectAtIndex: 0])->m_width = width;
+        ((TranscoderFileInfo*) [m_outputFiles objectAtIndex: 0])->m_height = height;
+    }
+    
+    m_audioQuality = [[m_appController deviceController] paramForKey:@"audio_quality_string"];
+}
+
 -(void) finish: (int) status
 {
     if (status == 0)
@@ -464,41 +542,11 @@ static NSImage* getFileStatusImage(FileStatus status)
     // make sure the tmp tmp files do not exist
     [[NSFileManager defaultManager] removeFileAtPath:m_tempAudioFileName handler:nil];
     [[NSFileManager defaultManager] removeFileAtPath:m_passLogFileName handler:nil];
-
-    // build the environment
-    NSMutableDictionary* env = [[NSMutableDictionary alloc] init];
-
-    // fill in the environment
-    NSString* cmdPath = [NSString stringWithString: [[NSBundle mainBundle] resourcePath]];
-    [env setValue: [cmdPath stringByAppendingPathComponent: @"bin/ffmpeg"] forKey: @"ffmpeg"];
-    [env setValue: [cmdPath stringByAppendingPathComponent: @"bin/qt_export"] forKey: @"qt_export"];
-    [env setValue: [cmdPath stringByAppendingPathComponent: @"bin/movtoy4m"] forKey: @"movtoy4m"];
-    [env setValue: [cmdPath stringByAppendingPathComponent: @"bin/yuvadjust"] forKey: @"yuvadjust"];
-    [env setValue: [cmdPath stringByAppendingPathComponent: @"bin/yuvcorrect"] forKey: @"yuvcorrect"];
-
-    // fill in the filenames
-    [env setValue: [self inputFileName] forKey: @"input_file"];
-    [env setValue: [self outputFileName] forKey: @"output_file"];
-    [env setValue: [self tempAudioFileName] forKey: @"tmp_audio_file"];
-    [env setValue: [self passLogFileName] forKey: @"pass_log_file"];
     
-    // fill in params
-    [env setValue: [[NSNumber numberWithInt: [self inputVideoWidth]] stringValue] forKey: @"input_video_width"];
-    [env setValue: [[NSNumber numberWithInt: [self inputVideoHeight]] stringValue] forKey: @"input_video_height"];
-    [env setValue: [[NSNumber numberWithInt: [self inputVideoWidthDiv16]] stringValue] forKey: @"output_video_width"];
-    [env setValue: [[NSNumber numberWithInt: [self inputVideoHeightDiv16]] stringValue] forKey: @"output_video_height"];
-    [env setValue: [[NSNumber numberWithInt: [self bitrate]] stringValue] forKey: @"bitrate"];
-    [env setValue: [[NSNumber numberWithInt: [self inputVideoFrameRate]] stringValue] forKey: @"input_frame_rate"];
-    
-    [env setValue: ([self isInputQuicktime] ? @"true" : @"false") forKey: @"is_quicktime"];
-    [env setValue: ([self hasInputAudio] ? @"true" : @"false") forKey: @"has_audio"];
+    [self setParams];
 
-    [env setValue: [self inputVideoFormat] forKey: @"input_video_codec"];
-
-    [env setValue: [self ffmpeg_vcodec] forKey: @"ffmpeg_vcodec"];
-    
     // get recipe
-    NSString* recipe = [[m_appController deviceController] recipeWithEnvironment: env];
+    NSString* recipe = [[m_appController deviceController] recipe];
 
     if ([recipe length] == 0) {
         [m_appController log:@"*** ERROR: No recipe returned, probably due to a previous JavaScript error\n"];

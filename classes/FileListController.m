@@ -21,11 +21,12 @@
 	[m_fileListView registerForDraggedTypes:[NSArray arrayWithObjects:NSFilenamesPboardType, FileListItemType, nil]];
 
     // Setup ProgressCell
-    [[m_fileListView tableColumnWithIdentifier: @"progress"] setDataCell: [[ProgressCell alloc] init]];
+    m_progressCell = [[ProgressCell alloc] init];
 }
 
 -(void) reloadData
 {
+    [[m_fileListView tableColumnWithIdentifier: @"progress"] setDataCell: m_progressCell];
     [m_fileListView reloadData];
 }
 
@@ -95,7 +96,7 @@
                 [self insertObject: obj atArrangedObjectIndex: (row > m_draggedRow) ? (row-1) : row];
         
             [obj release];
-            [m_fileListView reloadData];
+            [self reloadData];
         }
         else {
             // handle add of a new filename(s)
@@ -107,9 +108,11 @@
                         [self addObject:transcoder];
                     else
                         [self insertObject: transcoder atArrangedObjectIndex: row];
+                        
+                    [transcoder release];
                 }
                 
-                [m_fileListView reloadData];
+                [m_appController uiChanged];    
             }
         }
     }
@@ -123,7 +126,38 @@
 {
     Transcoder* transcoder = [m_appController transcoderForFileName: filename];
     [self addObject:transcoder];
-    [m_fileListView reloadData];
+    [transcoder release];
+    [m_appController uiChanged];    
+}
+
+-(IBAction)addFiles:(id)sender
+{
+    // Ask for file names
+    NSOpenPanel* panel = [NSOpenPanel openPanel];
+    [panel setCanChooseFiles:YES];
+    [panel setCanChooseDirectories:NO];
+    [panel setCanCreateDirectories:NO];
+    [panel setAllowsMultipleSelection:YES];
+    [panel setTitle:@"Choose a File"];
+    [panel setPrompt:@"Add"];
+    if ([panel runModalForTypes: nil] == NSOKButton) {
+        for (NSString* filename in [panel filenames])
+            [self addFile:filename];
+    }
+}
+
+-(IBAction)clearAll:(id)sender
+{
+    printf("************* clearAll before\n");
+    
+    [self selectAll:sender];
+    [self remove:sender];
+    printf("************* clearAll after\n");
+}
+
+-(IBAction)selectAll:(id)sender
+{
+    [self setSelectedObjects:[self arrangedObjects]];
 }
 
 @end

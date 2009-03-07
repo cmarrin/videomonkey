@@ -15,9 +15,15 @@
     IBOutlet AppController* m_appController;
 
     int m_draggedRow;
+    id m_progressCell;
 }
 
 -(void) reloadData;
+
 -(void) addFile:(NSString*) filename;
+
+-(IBAction)addFiles:(id)sender;
+-(IBAction)clearAll:(id)sender;
+-(IBAction)selectAll:(id)sender;
 
 @end

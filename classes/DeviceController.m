@@ -279,13 +279,13 @@ static void addMenuSeparator(NSPopUpButton* button)
     
     // set the selected item
     [m_deviceButton selectItemAtIndex:deviceIndex];
-    [self setCurrentDevice:[self findDeviceEntryWithIndex:0]];
+    [self setCurrentDevice:[self findDeviceEntryWithIndex:[[m_deviceButton itemAtIndex: deviceIndex] tag]]];
 
     // set the selected item
     // FIXME: need to get this from prefs
     [m_performanceButton selectItemAtIndex:performanceIndex];
     
-    [self setCurrentParams];
+    [self setCurrentParamsWithEnvironment:nil];
 }
 
 - (BOOL)validateMenuItem:(NSMenuItem *)menuItem
@@ -350,22 +350,26 @@ static JSValueRef _jsLog(JSContextRef ctx, JSObjectRef function, JSObjectRef thi
     }
 }
 
--(void) setCurrentParams
+-(void) setCurrentParamsWithEnvironment: (NSDictionary*) env
 {
+    if (env)
+        [m_context addParams:env];
     [m_currentDevice setCurrentParamsInJavaScriptContext:m_context performanceIndex:[m_performanceButton indexOfSelectedItem]];
 }
 
--(NSString*) recipeWithEnvironment: (NSDictionary*) env
+-(NSString*) recipe
 {
-    [m_context addParams:env];
-    [self setCurrentParams];
     NSString* recipe = [m_context stringParamForKey:@"recipe"];
     return [self replaceParams: recipe];
 }
 
+-(NSString*) paramForKey:(NSString*) key
+{
+    return [m_context stringParamForKey: key];
+}
+
 -(void) uiChanged
 {
-    [self setCurrentParams];
     [m_delegate uiChanged];
 }
 
