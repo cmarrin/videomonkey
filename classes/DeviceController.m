@@ -333,8 +333,6 @@ static JSValueRef _jsLog(JSContextRef ctx, JSObjectRef function, JSObjectRef thi
         [string appendString:[NSString stringWithJSString:jsString]];
     }
     
-    [string appendString:@"\n"];
-    
     if ([delegate respondsToSelector: @selector(log:)])
         [delegate log:[NSString stringWithFormat:@"JS log: %@\n", string]];
     

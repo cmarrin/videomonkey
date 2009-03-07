@@ -623,6 +623,10 @@ static void setButton(NSButton* button, NSString* title)
     // Add params and commands from this device
     [self addParamsToJavaScriptContext: context performanceIndex:perfIndex];
     
+    // Add bitrate
+    [context setStringParam:[[NSNumber numberWithDouble: [self bitrate]] stringValue] forKey:@"bitrate"];
+
+    
     // Execute script from this device
     [self evaluateScript: context performanceIndex:perfIndex];
 }
