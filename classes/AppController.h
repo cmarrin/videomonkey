@@ -56,6 +56,8 @@ typedef enum { RS_STOPPED, RS_RUNNING, RS_PAUSED } RunStateType;
 
 -(void) log: (NSString*) format, ...;
 
+-(void) setSelectedFile: (int) index;
+
 // delegate method
 -(void) uiChanged;
 

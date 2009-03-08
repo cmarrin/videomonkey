@@ -114,10 +114,6 @@
 				params.output_video_width = Math.round(params.output_video_width / 16) * 16;
 				params.output_video_height = Math.round(params.output_video_height / 16) * 16;
 				
-				log("Frame Size   : ", params.output_video_width, "x", params.output_video_height);
-				log("Audio Quality: ", params.audio_quality_string);
-				log("Bitrate      : ", params.bitrate);
-			
 				// set frame rate
 				params.output_frame_rate = params.input_frame_rate * params.frame_rate * 1000;
 			}
@@ -364,7 +360,6 @@
                 	<menu_item title="iPod Screen">
 						<script>
 							if (params.frame_width == 640) {
-								log("adjusting size from 640x480 to 480x320");
 								params.frame_width = 480;
 								params.frame_height = 320;
 								adjustVideoParams();
@@ -374,7 +369,6 @@
                     <menu_item title="TV Screen">
  						<script>
 							if (params.frame_width == 320) {
-								log("adjusting size from 320x240 to 480x320");
 								params.frame_width = 480;
 								params.frame_height = 320;
 								adjustVideoParams();
@@ -430,7 +424,6 @@
                 	<menu_item title="iPod Screen">
 						<script>
 							if (params.frame_width == 640) {
-								log("adjusting size from 640x480 to 480x320");
 								params.frame_width = 480;
 								params.frame_height = 320;
 								adjustVideoParams();
@@ -440,7 +433,6 @@
                     <menu_item title="TV Screen">
  						<script>
 							if (params.frame_width == 320) {
-								log("adjusting size from 320x240 to 480x320");
 								params.frame_width = 480;
 								params.frame_height = 320;
 								adjustVideoParams();
@@ -496,7 +488,6 @@
                 	<menu_item title="iPod Screen">
 						<script>
 							if (params.frame_width == 640) {
-								log("adjusting size from 640x480 to 480x320");
 								params.frame_width = 480;
 								params.frame_height = 320;
 								adjustVideoParams();
@@ -506,7 +497,6 @@
                     <menu_item title="TV Screen">
  						<script>
 							if (params.frame_width == 320) {
-								log("adjusting size from 320x240 to 480x320");
 								params.frame_width = 480;
 								params.frame_height = 320;
 								adjustVideoParams();
@@ -626,7 +616,6 @@
                 	<menu_item title="iPod Screen">
 						<script>
 							if (params.frame_width == 640) {
-								log("adjusting size from 640x480 to 480x320");
 								params.frame_width = 480;
 								params.frame_height = 320;
 								adjustVideoParams();
@@ -636,7 +625,6 @@
                     <menu_item title="TV Screen">
  						<script>
 							if (params.frame_width == 320) {
-								log("adjusting size from 320x240 to 480x320");
 								params.frame_width = 480;
 								params.frame_height = 320;
 								adjustVideoParams();

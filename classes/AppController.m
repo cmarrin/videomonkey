@@ -76,9 +76,6 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
     [transcoder addOutputFile: getOutputFileName(fileName, m_savePath, [m_deviceController fileSuffix])];
     [transcoder setVideoFormat: [m_deviceController videoFormat]];
     [transcoder setBitrate: [m_deviceController bitrate]];
-    
-    [m_moviePanel setMovie: fileName];
-    
     return transcoder;
 }
 
@@ -228,6 +225,11 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
     // scroll to the end
     NSRange range = NSMakeRange ([[m_consoleView string] length], 0);
     [m_consoleView scrollRangeToVisible: range];    
+}
+
+-(void) setSelectedFile: (int) index
+{
+    [m_moviePanel setMovie: (index < 0) ? nil : [((Transcoder*) [m_fileList objectAtIndex:index]) inputFileName]];
 }
 
 -(void) uiChanged

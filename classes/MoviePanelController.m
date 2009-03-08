@@ -13,7 +13,6 @@
 @implementation MoviePanelController
 
 - (void)awakeFromNib {
-    m_filename = [[NSMutableString alloc] init];
     m_isVisible = NO;
     m_movieIsSet = NO;
     m_controlHeight = [[[m_movieView window] contentView] frame].size.height - [m_movieView frame].size.height;
@@ -67,10 +66,11 @@
     if ([filename isEqualToString:m_filename] && m_movieIsSet)
         return;
     
-    [m_filename setString: filename];
+    [m_filename release];
+    m_filename = [filename retain];
 
     if (m_isVisible) {
-        if (![QTMovie canInitWithFile: filename]) {
+        if (m_filename && ![QTMovie canInitWithFile: filename]) {
             NSBeginAlertSheet(@"Can't Show Movie", nil, nil, nil, [m_movieView window], 
                           nil, nil, nil, nil, 
                           @"The movie '%@' can't be opened by QuickTime. Try transcoding it to "
@@ -78,15 +78,12 @@
             [m_movieView setMovie:nil];
         }
         else {
-            QTMovie* movie = [QTMovie movieWithFile:filename error:nil];
-            [m_movieView setMovie:movie];
-            
-            // set the aspect ratio of its window
-            NSSize size = [(NSValue*) [movie attributeForKey:QTMovieNaturalSizeAttribute] sizeValue];
-            size.height += [m_movieView movieControllerBounds].size.height + m_controlHeight;
-            [[m_movieView window] setContentAspectRatio:size];
-            [[m_movieView window] setContentSize:size];
-            [m_movieView setEditable:YES];
+            if (m_filename) {
+                QTMovie* movie = [QTMovie movieWithFile:filename error:nil];
+                [m_movieView setMovie:movie];
+            }
+            else
+                [m_movieView setMovie:nil];
         }
         
         m_movieIsSet = YES;

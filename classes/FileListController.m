@@ -17,16 +17,17 @@
 
 - (void) awakeFromNib
 {
+    [m_fileListView setDelegate:self];
+    
 	// Register to accept filename drag/drop
 	[m_fileListView registerForDraggedTypes:[NSArray arrayWithObjects:NSFilenamesPboardType, FileListItemType, nil]];
 
     // Setup ProgressCell
-    m_progressCell = [[ProgressCell alloc] init];
+    [[m_fileListView tableColumnWithIdentifier: @"progress"] setDataCell: [[ProgressCell alloc] init]];
 }
 
 -(void) reloadData
 {
-    [[m_fileListView tableColumnWithIdentifier: @"progress"] setDataCell: m_progressCell];
     [m_fileListView reloadData];
 }
 
@@ -101,26 +102,41 @@
         else {
             // handle add of a new filename(s)
             NSArray *filenames = [pboard propertyListForType:NSFilenamesPboardType];
+            
+            // We create all the transcoders and then add them all at once. If we add a
+            // transcoder too soon, the next transcoders validateInputFile will create 
+            // and wait for a task, which will execute the runloop, which will try to 
+            // render the incomplete transcoder and get an assertion.
+            NSMutableArray* transcoders = [[NSMutableArray alloc] init];
+            
             if (filenames) {
-                for (int i= 0; i < [filenames count]; i++) {
-                    Transcoder* transcoder = [m_appController transcoderForFileName: [filenames objectAtIndex:i]];
-                    if (row < 0)
-                        [self addObject:transcoder];
-                    else
-                        [self insertObject: transcoder atArrangedObjectIndex: row];
-                        
+                for (NSString* filename in filenames) {
+                    Transcoder* transcoder = [m_appController transcoderForFileName: filename];
+                    [transcoders addObject: transcoder];
                     [transcoder release];
                 }
                 
+                for (Transcoder* transcoder in transcoders)
+                    [self addObject:transcoder];
+                        
                 [m_appController uiChanged];    
             }
+            
+            [transcoders release];
         }
     }
     
     return YES;
 }
 
-// End of dragging methods
+- (void)tableViewSelectionDidChange:(NSNotification *)aNotification
+{
+    // If we have only one item selected, set it otherwise set nothing
+    [m_appController setSelectedFile: ([m_fileListView numberOfSelectedRows] != 1) ? -1 :
+                                        [m_fileListView selectedRow]];
+}
+
+// End of delegation methods
 
 -(void) addFile:(NSString*) filename
 {
@@ -148,11 +164,8 @@
 
 -(IBAction)clearAll:(id)sender
 {
-    printf("************* clearAll before\n");
-    
     [self selectAll:sender];
     [self remove:sender];
-    printf("************* clearAll after\n");
 }
 
 -(IBAction)selectAll:(id)sender

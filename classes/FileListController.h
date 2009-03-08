@@ -15,7 +15,6 @@
     IBOutlet AppController* m_appController;
 
     int m_draggedRow;
-    id m_progressCell;
 }
 
 -(void) reloadData;

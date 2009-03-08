@@ -23,8 +23,6 @@
 {
     Transcoder* tr = (Transcoder*) [[self objectValue] pointerValue];
     
-    printf("************* drawInterior (%p)\n", tr);
-    
     // make sure neither is in the view right now
     [[tr statusImageView] removeFromSuperview];
     [[tr progressIndicator] removeFromSuperview];
