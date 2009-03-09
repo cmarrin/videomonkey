@@ -447,7 +447,7 @@ static NSImage* getFileStatusImage(FileStatus status)
 
 -(void) setParams
 {
-    if ([m_outputFiles count] == 0 || !m_enabled)
+    if ([m_outputFiles count] == 0)
         return;
         
     // build the environment

@@ -47,8 +47,8 @@
     [m_transcoder logCommand: m_id withFormat:@""];
     
     // execute the command
-    [m_task setArguments: args];
-    [m_task setLaunchPath: launchPath];
+    [m_task setArguments: [NSArray arrayWithObjects: @"-c", m_command, nil]];
+    [m_task setLaunchPath: @"/bin/sh"];
     [m_task setStandardError: [m_messagePipe fileHandleForWriting]];
     
     if (m_outputType == OT_PIPE) {

@@ -114,10 +114,12 @@
                     Transcoder* transcoder = [m_appController transcoderForFileName: filename];
                     [transcoders addObject: transcoder];
                     [transcoder release];
+                    [self addObject:transcoder];
+                    [self reloadData];
                 }
                 
-                for (Transcoder* transcoder in transcoders)
-                    [self addObject:transcoder];
+                //for (Transcoder* transcoder in transcoders)
+                //    [self addObject:transcoder];
                         
                 [m_appController uiChanged];    
             }

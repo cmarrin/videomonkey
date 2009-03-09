@@ -185,8 +185,11 @@ static void addMenuSeparator(NSPopUpButton* button)
                 }
             }
             else {
-                // pick out param to next space
-                NSRange range = [s rangeOfString: @" "];
+                // pick out param
+                NSMutableCharacterSet* nonIdentifierSet = [NSMutableCharacterSet alphanumericCharacterSet];
+                [nonIdentifierSet addCharactersInString:@"_"];
+                [nonIdentifierSet invert];
+                NSRange range = [s rangeOfCharacterFromSet:nonIdentifierSet];
                 if (range.location == NSNotFound) {
                     param = s;
                     other = @"";
