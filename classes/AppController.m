@@ -265,4 +265,30 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
     return YES;
 }
 
+-(void) terminateApp:(id) sender
+{
+    [[NSApplication sharedApplication] terminate:sender];
+}
+
+-(void) sheetDidDismiss:(NSWindow *) sheet returnCode:(int) returnCode contextInfo:(void  *) contextInfo
+{
+    if (returnCode == NSAlertAlternateReturn)
+        [self terminateApp:self];
+}
+
+- (BOOL)windowShouldClose:(id)window
+{
+    if (m_runState != RS_STOPPED) {
+        NSBeginAlertSheet(@"Are you sure you want to quit?", @"Continue", @"Quit", nil, 
+                            [[NSApplication sharedApplication] mainWindow], 
+                            self, nil, @selector(sheetDidDismiss:returnCode:contextInfo:), nil, 
+                            @"Encoding is in progress. Any unfinished encoding will be cancelled.");
+        return NO;
+    }
+    
+    [self terminateApp:self];
+    return YES;
+}
+
+
 @end

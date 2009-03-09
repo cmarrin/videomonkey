@@ -621,10 +621,15 @@ static void setButton(NSButton* button, NSString* title)
     else if (sliderValue < 0)
         sliderValue = 0;
     
-    sliderValue *= count - 1;
-    *stop = (sliderValue == 1) ? (count-1) : ((int) sliderValue);    
-    
-    *q = fmod(sliderValue, 1);
+    if (sliderValue == 1) {
+        *stop = count-2;
+        *q = 1;
+    }
+    else {
+        sliderValue *= count - 1;
+        *stop = (int) sliderValue;    
+        *q = fmod(sliderValue, 1);
+    }
 }
 
 -(void) setCurrentParamsInJavaScriptContext:(JavaScriptContext*) context performanceIndex:(int) perfIndex

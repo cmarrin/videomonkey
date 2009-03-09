@@ -45,6 +45,7 @@ typedef enum { RS_STOPPED, RS_RUNNING, RS_PAUSED } RunStateType;
 -(IBAction)stopEncode:(id)sender;
 -(IBAction)toggleConsoleDrawer:(id)sender;
 
+- (BOOL)windowShouldClose:(id)window;
 
 -(IBAction)changeSaveToText:(id)sender;
 -(IBAction)selectSaveToPath:(id)sender;

@@ -119,32 +119,12 @@
            
             ]]>
         </script>
-        <quality>
-            <quality_stop title="Tiny" bitrate="400000">
-                <script> audio('low') </script> 
-                <param id="size" value="640x480" />
-                <param id="frame_rate" value="0.5" />
-            </quality_stop>
-            <quality_stop title="Low" bitrate="800000">
-                <script> audio('high') </script> 
-                <param id="size" value="640x480" />
-                <param id="frame_rate" value="1" />
-            </quality_stop>
-            <quality_stop title="Standard" bitrate="1100000">
-                <script> audio('high') </script> 
-                <param id="size" value="640x480" />
-                <param id="frame_rate" value="1" />
-            </quality_stop>
-            <quality_stop title="High" bitrate="1500000">
-                <script> audio('high') </script> 
-                <param id="size" value="640x480" />
-                <param id="frame_rate" value="1" />
-            </quality_stop>
-            <quality_stop title="Go Nuts" bitrate="2000000">
-                <script> audio('high') </script> 
-                <param id="size" value="640x480" />
-                <param id="frame_rate" value="1" />
-            </quality_stop>
+       	<quality>
+             <quality_stop title="Tiny" />
+            <quality_stop title="Low" />
+            <quality_stop title="Standard" />
+            <quality_stop title="High" />
+        	<quality_stop title="Go Nuts" />
         </quality>
         <performance>
             <performance_item title="Fastest">
@@ -242,13 +222,6 @@
 		        <command id="normal_single_pass">
 					$ffmpeg_normal $ffmpeg_options $ffmpeg_single_pass_options "$output_file"
 				</command>
-               	<quality>
-                     <quality_stop title="Tiny" />
-                    <quality_stop title="Low" />
-                    <quality_stop title="Standard" />
-                    <quality_stop title="High" />
-                	<quality_stop title="Go Nuts" />
-                </quality>
 				<script>
 	           		<![CDATA[
 	
@@ -297,10 +270,10 @@
 					
 					var bitrateQualityMap = {
 						//							mp4								h.264
-						"All Apple Devices": 	[ [ 300, 600, 1000, 1800, 2500 ], [ 300, 600, 1000, 1200, 1500 ] ], 
-						"iPod": 				[ [ 300, 600, 1000, 1800, 2500 ], [ 300, 600, 1000, 1200, 1500 ] ], 
-						"iPhone": 				[ [ 300, 600, 1000, 1800, 2500 ], [ 300, 600, 1000, 1200, 1500 ] ], 
-						"iPod touch": 			[ [ 300, 600, 1000, 1800, 2500 ], [ 300, 600, 1000, 1200, 1500 ] ], 
+						"All Apple Devices": 	[ [ 300,  600, 1000, 1800, 2500 ], [ 300,  600, 1000, 1200, 1500 ] ], 
+						"iPod": 				[ [ 300,  600, 1000, 1800, 2500 ], [ 300,  600, 1000, 1200, 1500 ] ], 
+						"iPhone": 				[ [  60,  150, 1000, 1800, 2500 ], [  60,  150, 1000, 1200, 1500 ] ], 
+						"iPod touch": 			[ [ 300,  600, 1000, 1800, 2500 ], [ 300,  600, 1000, 1200, 1500 ] ], 
 						"Apple TV": 			[ [ 500, 1500, 2000, 2500, 3000 ], [ 500, 1500, 2500, 3750, 5000 ] ]
 					};
 					
@@ -327,8 +300,8 @@
 					adjustVideoParams();
 					
 					// set bitrate
-					var bitrateMin = bitrateQualityMap[title][h264 ? 1 : 0][qualityStop];
-					var bitrateMax = bitrateQualityMap[title][h264 ? 1 : 0][qualityStop+1];
+					var bitrateMin = bitrateQualityMap[title][h264 ? 1 : 0][qualityStop] * 1000;
+					var bitrateMax = bitrateQualityMap[title][h264 ? 1 : 0][qualityStop+1] * 1000;
 					params.bitrate = (bitrateMax - bitrateMin) * quality + bitrateMin;
 					
 					// set audio quality
@@ -338,6 +311,11 @@
                    		case "medium": params.audio_bitrate =  "32k"; params.audio_sample_rate = 22050; params.audio_channels = 1; break;
                    		case "high":   params.audio_bitrate = "128k"; params.audio_sample_rate = 48000; params.audio_channels = 2; break;
                		}
+               		
+               		// set the frame rate
+               		params.frame_rate = 1;
+               		if (title != "Apple TV" && qualityStop == 0)
+               		    params.frame_rate = 0.5;
 
 					// set endoder
 					params.ffmpeg_vcodec = h264 ? "libx264" : "mpeg4";

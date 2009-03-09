@@ -495,6 +495,7 @@ static NSImage* getFileStatusImage(FileStatus status)
     }
     
     m_audioQuality = [[m_appController deviceController] paramForKey:@"audio_quality"];
+    [self setBitrate: [[[m_appController deviceController] paramForKey:@"bitrate"] floatValue]];
 }
 
 -(void) finish: (int) status

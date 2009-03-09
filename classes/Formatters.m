@@ -73,12 +73,12 @@
     
     if (bitrate < 10000)
         return [NSString stringWithFormat:@"%dbps", (int) bitrate];
-    else if (bitrate < 1000000)
-        return [NSString stringWithFormat:@"%.1fKbps", bitrate/1000.0];
-    else if (bitrate < 1000000000)
-        return [NSString stringWithFormat:@"%.1fMbps", bitrate/1000000.0];
+    else if (bitrate < 10000000)
+        return [NSString stringWithFormat:@"%dKbps", (int) (bitrate/1000.0)];
+    else if (bitrate < 10000000000)
+        return [NSString stringWithFormat:@"%dMbps", (int) (bitrate/1000000.0)];
     else
-        return [NSString stringWithFormat:@"%.1fGbps", bitrate/1000000000.0];
+        return [NSString stringWithFormat:@"%dGbps", (int) (bitrate/1000000000.0)];
 }
 
 @end
