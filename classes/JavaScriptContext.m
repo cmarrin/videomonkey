@@ -60,6 +60,11 @@
     return ret;
 }
 
++(JavaScriptObject*) javaScriptObject: (JavaScriptContext*) ctx withJSValue:(JSValueRef) value;
+{
+    return [JavaScriptObject javaScriptObject: ctx withJSObject: JSValueToObject([ctx jsContext], value, NULL)];
+}
+
 - (void)dealloc
 {
     JSValueUnprotect([m_context jsContext], m_jsObject);
@@ -96,6 +101,20 @@
     m_jsContext = NULL;
 	[super dealloc];
 }
+
+-(void) showSyntaxError:(JSValueRef) error
+{
+    if (!JSValueIsNull(m_jsContext, error)) {
+        JavaScriptObject* obj = [JavaScriptObject javaScriptObject:self withJSValue:error];
+		JSValueRef line = JSObjectGetProperty(m_jsContext, [obj jsObject], [@"line" jsStringValue], NULL);
+        double lineNumber = JSValueToNumber(m_jsContext, line, NULL);
+        NSString* errorString = [NSString stringWithJSValue: error fromContext: m_jsContext];
+        
+        NSString* alertString = [NSString stringWithFormat: @"%@ at line %d", errorString, (int) lineNumber];
+        NSRunAlertPanel(@"JavaScript error in evaluation", alertString, nil, nil, nil);
+    }
+}
+
 
 	/* -vsCallJSFunction:withParameters: is much like the vsprintf function in that
 	it receives a va_list rather than a variable length argument list.  This
@@ -336,11 +355,10 @@
         /* evaluate the string as a JavaScript inside of the JavaScript context. */
         JSValueRef error = JSValueMakeNull(m_jsContext);
 
-		JSValueRef result = JSEvaluateScript( m_jsContext, scriptJS, NULL, NULL, 0, &error );
+		JSValueRef result = JSEvaluateScript( m_jsContext, scriptJS, NULL, [@"MyScript" jsStringValue], 0, &error );
         
-        if (!JSValueIsNull(m_jsContext, error)) {                
-            NSString* errorString = [NSString stringWithJSValue: error fromContext: m_jsContext];
-            NSRunAlertPanel(@"JavaScript error in evaluation", errorString, nil, nil, nil);
+        if (!JSValueIsNull(m_jsContext, error)) {
+            [self showSyntaxError: error];
         }
         else if ( result != NULL)
 			resultString = [NSString stringWithJSValue:result fromContext: m_jsContext];

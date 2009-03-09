@@ -459,9 +459,6 @@ static NSImage* getFileStatusImage(FileStatus status)
     // fill in params
     [env setValue: [[NSNumber numberWithInt: [self inputVideoWidth]] stringValue] forKey: @"input_video_width"];
     [env setValue: [[NSNumber numberWithInt: [self inputVideoHeight]] stringValue] forKey: @"input_video_height"];
-    [env setValue: [[NSNumber numberWithInt: [self inputVideoWidthDiv16]] stringValue] forKey: @"output_video_width"];
-    [env setValue: [[NSNumber numberWithInt: [self inputVideoHeightDiv16]] stringValue] forKey: @"output_video_height"];
-    [env setValue: [[NSNumber numberWithInt: [self bitrate]] stringValue] forKey: @"bitrate"];
     [env setValue: [[NSNumber numberWithInt: [self inputVideoFrameRate]] stringValue] forKey: @"input_frame_rate"];
     
     [env setValue: ([self isInputQuicktime] ? @"true" : @"false") forKey: @"is_quicktime"];
@@ -486,7 +483,7 @@ static NSImage* getFileStatusImage(FileStatus status)
         ((TranscoderFileInfo*) [m_outputFiles objectAtIndex: 0])->m_height = height;
     }
     
-    m_audioQuality = [[m_appController deviceController] paramForKey:@"audio_quality_string"];
+    m_audioQuality = [[m_appController deviceController] paramForKey:@"audio_quality"];
 }
 
 -(void) finish: (int) status

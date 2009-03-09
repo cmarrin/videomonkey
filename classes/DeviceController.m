@@ -312,11 +312,6 @@ static void addMenuSeparator(NSPopUpButton* button)
     return [m_currentDevice videoFormat];
 }
 
--(double) bitrate
-{
-    return [m_currentDevice bitrate];
-}
-
 static JSValueRef _jsLog(JSContextRef ctx, JSObjectRef function, JSObjectRef thisObject, size_t argumentCount, 
                          const JSValueRef arguments[], JSValueRef* exception)
 {
@@ -354,6 +349,7 @@ static JSValueRef _jsLog(JSContextRef ctx, JSObjectRef function, JSObjectRef thi
 {
     if (env)
         [m_context addParams:env];
+        
     [m_currentDevice setCurrentParamsInJavaScriptContext:m_context performanceIndex:[m_performanceButton indexOfSelectedItem]];
 }
 

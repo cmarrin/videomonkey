@@ -43,7 +43,7 @@
             
             function audio(type)
             {
-                params.audio_quality_string = type;
+                params.audio_quality = type;
                 switch(type) {
                     case "low":    params.audio_bitrate =  "16k"; params.audio_sample_rate = 11025; params.audio_channels = 1; break;
                     case "medium": params.audio_bitrate =  "32k"; params.audio_sample_rate = 22050; params.audio_channels = 1; break;
@@ -62,22 +62,17 @@
 				return false;
 			}
 			
-            function all()
-            {
-               for (var i = 0; i < arguments.length; ++i)
-                    if (!arguments[i])
-                        return false;
-                return true;
-            }
-            
-            function any()
-            {
-                for (var i = 0; i < arguments.length; ++i)
-                    if (arguments[i])
-                        return true;
-                return false;
-            }
-            
+			function number(v)
+			{
+				if (typeof(v) == "number")
+					return v;
+				if (typeof(v) == "boolean")
+					return v ? 1 : 0;
+				if (typeof(v) == "string")
+					return parseFloat(v);
+				return 0;
+			}
+			
             function standardizeVideoCodecName(name)
             {
                 if (caseInsensitiveCompare(name, "vc-1"))
@@ -247,9 +242,107 @@
 		        <command id="normal_single_pass">
 					$ffmpeg_normal $ffmpeg_options $ffmpeg_single_pass_options $output_file
 				</command>
+               	<quality>
+                     <quality_stop title="Tiny" />
+                    <quality_stop title="Low" />
+                    <quality_stop title="Standard" />
+                    <quality_stop title="High" />
+                	<quality_stop title="Go Nuts" />
+                </quality>
 				<script>
 	           		<![CDATA[
-					var mp4 = params.ffmpeg_vcodec == "mpeg4";
+	
+					// At this point, we know what 2 quality stops we are between (params.quality_stop and params.quality_stop+1)
+					// and we know what percentage of the way between the two we are (params.quality). We also which device we have 
+					// selected (params.title), whether we are doing h.264 or mpeg4 (params.h264), and whether we want to optimize 
+					// for TV or iPod (params.for_tv). From this we need to compute params.frame_width, params.frame_height,
+					// params.audio_quality and params.bitrate.
+					
+					// We support a number of standard frame sizes. After adjusting these sizes according to the flags
+					// (h264, forTV), we determine the actual frame size using these as maximum values, taking
+					// into account aspect ratio.
+					
+					var frameSizes = {
+						"tiny":  [  192,  144 ],
+						"small": [  320,  240 ],
+						"iphone":[  480,  320 ],
+						"sdef":  [  640,  480 ],
+						"idef":  [ 1280,  720 ],
+						"hdef":  [ 1920, 1080 ]
+					};
+					
+					var deviceFrameSizeMap = {
+						//								0			1			2			3			4
+						"All Apple Devices": 	[	[ 	"small",	"iphone", 	"sdef", 	"sdef", 	"sdef" ], 	// mp4 && for iPod
+												  	[ 	"small",	"iphone", 	"sdef", 	"sdef", 	"sdef" ], 	// mp4 && for TV
+													[ 	"small",	"iphone", 	"sdef", 	"sdef", 	"sdef" ], 	// h.264 && for iPod
+													[ 	"small",	"iphone", 	"sdef", 	"sdef", 	"sdef" ] ],	// h.264 && for TV
+						"iPod": 				[ 	[ 	"tiny", 	"small", 	"small", 	"small", 	"small" ],  // mp4 && for iPod
+												  	[ 	"small",	"iphone", 	"sdef", 	"sdef", 	"sdef" ], 	// mp4 && for TV
+													[ 	"tiny",		"small", 	"small", 	"small", 	"small" ], 	// h.264 && for iPod
+													[ 	"small",	"iphone", 	"sdef", 	"sdef", 	"sdef" ] ],	// h.264 && for TV
+						"iPhone": 				[ 	[ 	"tiny", 	"small", 	"iphone", 	"iphone", 	"iphone" ], // mp4 && for iPod
+												  	[ 	"small",	"iphone", 	"sdef", 	"sdef", 	"sdef" ], 	// mp4 && for TV
+													[ 	"tiny",		"small", 	"iphone", 	"iphone", 	"iphone" ], // h.264 && for iPod
+													[ 	"small",	"iphone", 	"sdef", 	"sdef", 	"sdef" ] ],	// h.264 && for TV
+						"iPod touch": 			[ 	[ 	"tiny", 	"small", 	"iphone", 	"iphone", 	"iphone" ],	// mp4 && for iPod
+												  	[ 	"small",	"iphone", 	"sdef", 	"sdef", 	"sdef" ], 	// mp4 && for TV
+													[ 	"tiny",		"small", 	"iphone", 	"iphone", 	"iphone" ], // h.264 && for iPod
+													[ 	"small",	"iphone", 	"sdef", 	"sdef", 	"sdef" ] ],	// h.264 && for TV
+						"Apple TV": 			[ 	[ 	"sdef", 	"sdef", 	"sdef", 	"sdef", 	"sdef" ] 	// mp4 && for iPod
+												  	[ 	"sdef",		"sdef", 	"sdef", 	"sdef", 	"sdef" ], 	// mp4 && for TV
+													[ 	"idef",		"idef", 	"idef", 	"idef", 	"idef" ], 	// h.264 && for iPod
+													[ 	"idef",		"idef", 	"idef", 	"idef", 	"idef" ] ]	// h.264 && for TV
+					};
+					
+					var bitrateQualityMap = {
+						//							mp4								h.264
+						"All Apple Devices": 	[ [ 300, 600, 1000, 1800, 2500 ], [ 300, 600, 1000, 1200, 1500 ] ], 
+						"iPod": 				[ [ 300, 600, 1000, 1800, 2500 ], [ 300, 600, 1000, 1200, 1500 ] ], 
+						"iPhone": 				[ [ 300, 600, 1000, 1800, 2500 ], [ 300, 600, 1000, 1200, 1500 ] ], 
+						"iPod touch": 			[ [ 300, 600, 1000, 1800, 2500 ], [ 300, 600, 1000, 1200, 1500 ] ], 
+						"Apple TV": 			[ [ 500, 1500, 2000, 2500, 3000 ], [ 500, 1500, 2500, 3750, 5000 ] ]
+					};
+					
+					var audioQualityMap = {
+						//							0			1			2			3			4
+						"All Apple Devices": 	[ 	"low", 		"high", 	"high", 	"high", 	"high" ],
+						"iPod": 				[ 	"low", 		"high", 	"high", 	"high", 	"high" ],
+						"iPhone": 				[ 	"low", 		"medium", 	"high", 	"high", 	"high" ],
+						"iPod touch": 			[ 	"low", 		"high", 	"high", 	"high", 	"high" ],
+						"Apple TV": 			[ 	"high", 	"high", 	"high", 	"high", 	"high" ]
+					};
+					
+					var title = params.title;
+					var qualityStop = number(params.quality_stop);
+					var quality = number(params.quality);
+					var h264 = bool(params.h264);
+					var forTV = bool(params.forTV);
+					
+					// set frame size
+					var index = (h264 ? 2 : 0) + (forTV ? 1 : 0);
+					var sizeString = deviceFrameSizeMap[title][index][qualityStop];
+					params.frame_width = frameSizes[sizeString][0];
+					params.frame_height = frameSizes[sizeString][1];
+					adjustVideoParams();
+					
+					// set bitrate
+					var bitrateMin = bitrateQualityMap[title][h264 ? 1 : 0][qualityStop];
+					var bitrateMax = bitrateQualityMap[title][h264 ? 1 : 0][qualityStop+1];
+					params.bitrate = (bitrateMax - bitrateMin) * quality + bitrateMin;
+					
+					// set audio quality
+               		params.audio_quality = audioQualityMap[title][qualityStop];
+               		switch(params.audio_quality) {
+                   		case "low":    params.audio_bitrate =  "16k"; params.audio_sample_rate = 11025; params.audio_channels = 1; break;
+                   		case "medium": params.audio_bitrate =  "32k"; params.audio_sample_rate = 22050; params.audio_channels = 1; break;
+                   		case "high":   params.audio_bitrate = "128k"; params.audio_sample_rate = 48000; params.audio_channels = 2; break;
+               		}
+
+					// set endoder
+					params.ffmpeg_vcodec = h264 ? "libx264" : "mpeg4";
+
+					// construct the recipe
 					if (	 !bool(params.special_qt) && !bool(params.has_audio) && !bool(params.is_2_pass))
 		            	params.recipe = "$normal_single_pass";
 					else if (!bool(params.special_qt) && !bool(params.has_audio) && bool(params.is_2_pass))
@@ -272,419 +365,98 @@
  			</common_device>
            	<!-- All Apple Devices -->
             <device title="All Apple Devices" icon="itunesfile">
-               <quality>
-                    <quality_stop title="Tiny" bitrate="300000">
-                        <script> audio('low') </script> 
-                        <param id="frame_width" value="320" />
-                        <param id="frame_height" value="240" />
-                        <param id="frame_rate" value="0.5" />
-                    </quality_stop>
-                    <quality_stop title="Low" bitrate="600000">
-                        <script> audio('high') </script> 
-                        <param id="frame_width" value="480" />
-                        <param id="frame_height" value="320" />
-                        <param id="frame_rate" value="1" />
-                    </quality_stop>
-                    <quality_stop title="Standard" bitrate="1000000">
-                        <script> audio('high') </script> 
-                        <param id="frame_width" value="640" />
-                        <param id="frame_height" value="480" />
-                        <param id="frame_rate" value="1" />
-                    </quality_stop>
-                    <quality_stop title="High" bitrate="1800000">
-                        <script> audio('high') </script> 
-                        <param id="frame_width" value="640" />
-                        <param id="frame_height" value="480" />
-                        <param id="frame_rate" value="1" />
-                    </quality_stop>
-                    <quality_stop title="Go Nuts" bitrate="2400000">
-                        <script> audio('high') </script> 
-                        <param id="frame_width" value="640" />
-                        <param id="frame_height" value="480" />
-                        <param id="frame_rate" value="1" />
-                    </quality_stop>
-                </quality>
-                <checkbox which="0" title="H.264 Video">
+                 <checkbox which="0" title="H.264 Video">
                     <checked_params>
-                        <param id="ffmpeg_vcodec" value="libx264" />
+                       	<param id="h264" value="true" />
                     </checked_params>
                     <unchecked_params>
-                        <param id="ffmpeg_vcodec" value="mpeg4" />
+                    	<param id="h264" value="true" />
                     </unchecked_params>
                 </checkbox>
-             </device>
+			</device>
             
-            <!-- iPod 5G -->
-            <device title="iPod5G" icon="ipod">
-               <quality>
-                    <quality_stop title="Tiny" bitrate="300000">
-                        <script> audio('low') </script> 
-                        <param id="frame_width" value="192" />
-                        <param id="frame_height" value="144" />
-                        <param id="frame_rate" value="0.5" />
-                    </quality_stop>
-                    <quality_stop title="Low" bitrate="600000">
-                        <script> audio('high') </script> 
-                        <param id="frame_width" value="320" />
-                        <param id="frame_height" value="240" />
-                        <param id="frame_rate" value="1" />
-                    </quality_stop>
-                    <quality_stop title="Standard" bitrate="1000000">
-                        <script> audio('high') </script> 
-                        <param id="frame_width" value="320" />
-                        <param id="frame_height" value="240" />
-                        <param id="frame_rate" value="1" />
-                    </quality_stop>
-                    <quality_stop title="High" bitrate="1200000">
-                        <script> audio('high') </script> 
-                        <param id="frame_width" value="320" />
-                        <param id="frame_height" value="240" />
-                        <param id="frame_rate" value="1" />
-                    </quality_stop>
-                    <quality_stop title="Go Nuts" bitrate="1500000">
-                        <script> audio('high') </script> 
-                        <param id="frame_width" value="320" />
-                        <param id="frame_height" value="240" />
-                        <param id="frame_rate" value="1" />
-                    </quality_stop>
-                </quality>
-                <checkbox which="0" title="H.264 Video">
+            <!-- iPod -->
+            <device title="iPod" icon="ipod">
+            	<checkbox which="0" title="H.264 Video">
                     <checked_params>
-                        <param id="ffmpeg_vcodec" value="libx264" />
+                       	<param id="h264" value="true" />
                     </checked_params>
                     <unchecked_params>
-                        <param id="ffmpeg_vcodec" value="mpeg4" />
+                    	<param id="h264" value="true" />
                     </unchecked_params>
                 </checkbox>
                 <menu which="0" title="Best for:">
                 	<menu_item title="iPod Screen">
-						<script>
-							if (params.frame_width == 640) {
-								params.frame_width = 480;
-								params.frame_height = 320;
-								adjustVideoParams();
-							}
-						</script>
+                       	<param id="forTV" value="false" />
                     </menu_item>
                     <menu_item title="TV Screen">
- 						<script>
-							if (params.frame_width == 320) {
-								params.frame_width = 480;
-								params.frame_height = 320;
-								adjustVideoParams();
-							}
-						</script>
-                   </menu_item>
-                </menu>
-             </device>
-            
-            <!-- iPod classic -->
-            <device title="iPod classic" icon="ipod">
-               <quality>
-                    <quality_stop title="Tiny" bitrate="300000">
-                        <script> audio('low') </script> 
-                        <param id="frame_width" value="192" />
-                        <param id="frame_height" value="144" />
-                        <param id="frame_rate" value="0.5" />
-                    </quality_stop>
-                    <quality_stop title="Low" bitrate="600000">
-                        <script> audio('medium') </script> 
-                        <param id="frame_width" value="320" />
-                        <param id="frame_height" value="240" />
-                        <param id="frame_rate" value="1" />
-                    </quality_stop>
-                    <quality_stop title="Standard" bitrate="1000000">
-                        <script> audio('high') </script> 
-                        <param id="frame_width" value="320" />
-                        <param id="frame_height" value="240" />
-                        <param id="frame_rate" value="1" />
-                    </quality_stop>
-                    <quality_stop title="High" bitrate="1800000">
-                        <script> audio('high') </script> 
-                        <param id="frame_width" value="320" />
-                        <param id="frame_height" value="240" />
-                        <param id="frame_rate" value="1" />
-                    </quality_stop>
-                    <quality_stop title="Go Nuts" bitrate="2400000">
-                        <script> audio('high') </script> 
-                        <param id="frame_width" value="320" />
-                        <param id="frame_height" value="240" />
-                        <param id="frame_rate" value="1" />
-                    </quality_stop>
-                </quality>
-                <checkbox which="0" title="H.264 Video">
-                    <checked_params>
-                        <param id="ffmpeg_vcodec" value="libx264" />
-                    </checked_params>
-                    <unchecked_params>
-                        <param id="ffmpeg_vcodec" value="mpeg4" />
-                    </unchecked_params>
-                </checkbox>
-                <menu which="0" title="Best for:">
-                	<menu_item title="iPod Screen">
-						<script>
-							if (params.frame_width == 640) {
-								params.frame_width = 480;
-								params.frame_height = 320;
-								adjustVideoParams();
-							}
-						</script>
-                    </menu_item>
-                    <menu_item title="TV Screen">
- 						<script>
-							if (params.frame_width == 320) {
-								params.frame_width = 480;
-								params.frame_height = 320;
-								adjustVideoParams();
-							}
-						</script>
-                   </menu_item>
-                </menu>
-             </device>
-            
-            <!-- iPod nano -->
-            <device title="iPod nano" icon="nano">
-               <quality>
-                    <quality_stop title="Tiny" bitrate="300000">
-                        <script> audio('low') </script> 
-                        <param id="frame_width" value="192" />
-                        <param id="frame_height" value="144" />
-                        <param id="frame_rate" value="0.5" />
-                    </quality_stop>
-                    <quality_stop title="Low" bitrate="600000">
-                        <script> audio('medium') </script> 
-                        <param id="frame_width" value="320" />
-                        <param id="frame_height" value="240" />
-                        <param id="frame_rate" value="1" />
-                    </quality_stop>
-                    <quality_stop title="Standard" bitrate="1000000">
-                        <script> audio('high') </script> 
-                        <param id="frame_width" value="320" />
-                        <param id="frame_height" value="240" />
-                        <param id="frame_rate" value="1" />
-                    </quality_stop>
-                    <quality_stop title="High" bitrate="1800000">
-                        <script> audio('high') </script> 
-                        <param id="frame_width" value="320" />
-                        <param id="frame_height" value="240" />
-                        <param id="frame_rate" value="1" />
-                    </quality_stop>
-                    <quality_stop title="Go Nuts" bitrate="2400000">
-                        <script> audio('high') </script> 
-                        <param id="frame_width" value="320" />
-                        <param id="frame_height" value="240" />
-                        <param id="frame_rate" value="1" />
-                    </quality_stop>
-                </quality>
-                <checkbox which="0" title="H.264 Video">
-                    <checked_params>
-                        <param id="ffmpeg_vcodec" value="libx264" />
-                    </checked_params>
-                    <unchecked_params>
-                        <param id="ffmpeg_vcodec" value="mpeg4" />
-                    </unchecked_params>
-                </checkbox>
-                <menu which="0" title="Best for:">
-                	<menu_item title="iPod Screen">
-						<script>
-							if (params.frame_width == 640) {
-								params.frame_width = 480;
-								params.frame_height = 320;
-								adjustVideoParams();
-							}
-						</script>
-                    </menu_item>
-                    <menu_item title="TV Screen">
- 						<script>
-							if (params.frame_width == 320) {
-								params.frame_width = 480;
-								params.frame_height = 320;
-								adjustVideoParams();
-							}
-						</script>
-                   </menu_item>
+                       	<param id="forTV" value="true" />
+                   	</menu_item>
                 </menu>
             </device>
-
+            
             <!-- iPhone -->
             <device title="iPhone" icon="iphone">
-                <quality>
-                    <quality_stop title="EDGE" bitrate="60000">
-                        <script> audio('low') </script> 
-                        <param id="frame_width" value="192" />
-                        <param id="frame_height" value="144" />
-                        <param id="frame_rate" value="0.5" />
-                    </quality_stop>
-                    <quality_stop title="3G" bitrate="150000">
-                        <script> audio('medium') </script> 
-                        <param id="frame_width" value="320" />
-                        <param id="frame_height" value="240" />
-                        <param id="frame_rate" value="1" />
-                    </quality_stop>
-                    <quality_stop title="WiFi" bitrate="1000000">
-                        <script> audio('high') </script> 
-                        <param id="frame_width" value="480" />
-                        <param id="frame_height" value="320" />
-                        <param id="frame_rate" value="1" />
-                    </quality_stop>
-                    <quality_stop title="High" bitrate="1200000">
-                        <script> audio('high') </script> 
-                        <param id="frame_width" value="640" />
-                        <param id="frame_height" value="480" />
-                        <param id="frame_rate" value="1" />
-                    </quality_stop>
-                    <quality_stop title="Go Nuts" bitrate="2400000">
-                        <script> audio('high') </script> 
-                        <param id="frame_width" value="640" />
-                        <param id="frame_height" value="480" />
-                        <param id="frame_rate" value="1" />
-                    </quality_stop>
+            	<quality>
+                    <quality_stop title="EDGE" />
+ 					<quality_stop title="3G" />
+                	<quality_stop title="WiFi" />
+               		<quality_stop title="High" />
+                 	<quality_stop title="Go Nuts" />
                 </quality>
                 <checkbox which="0" title="H.264 Video">
                     <checked_params>
-                        <param id="ffmpeg_vcodec" value="libx264" />
+                       	<param id="h264" value="true" />
                     </checked_params>
                     <unchecked_params>
-                        <param id="ffmpeg_vcodec" value="mpeg4" />
+                    	<param id="h264" value="true" />
                     </unchecked_params>
                 </checkbox>
                 <menu which="0" title="Best for:">
-                	<menu_item title="iPhone Screen">
-						<script>
-							if (params.frame_width == 640) {
-								params.frame_width = 480;
-								params.frame_height = 320;
-								adjustVideoParams();
-							}
-						</script>
+                	<menu_item title="iPod Screen">
+                       	<param id="forTV" value="false" />
                     </menu_item>
                     <menu_item title="TV Screen">
- 						<script>
-							if (params.frame_width == 320) {
-								params.frame_width = 480;
-								params.frame_height = 320;
-								adjustVideoParams();
-							}
-						</script>
-                   </menu_item>
+                       	<param id="forTV" value="true" />
+                   	</menu_item>
                 </menu>
             </device>
             
             <!-- iPod touch -->
             <device title="iPod touch" icon="iphone">
-               <quality>
-                    <quality_stop title="Tiny" bitrate="300000">
-                        <script> audio('low') </script> 
-                        <param id="frame_width" value="192" />
-                        <param id="frame_height" value="144" />
-                        <param id="frame_rate" value="0.5" />
-                    </quality_stop>
-                    <quality_stop title="Low" bitrate="600000">
-                        <script> audio('high') </script> 
-                        <param id="frame_width" value="320" />
-                        <param id="frame_height" value="240" />
-                        <param id="frame_rate" value="1" />
-                    </quality_stop>
-                    <quality_stop title="WiFi" bitrate="1000000">
-                        <script> audio('high') </script> 
-                        <param id="frame_width" value="480" />
-                        <param id="frame_height" value="320" />
-                        <param id="frame_rate" value="1" />
-                    </quality_stop>
-                    <quality_stop title="High" bitrate="1800000">
-                        <script> audio('high') </script> 
-                        <param id="frame_width" value="640" />
-                        <param id="frame_height" value="480" />
-                        <param id="frame_rate" value="1" />
-                    </quality_stop>
-                    <quality_stop title="Go Nuts" bitrate="2400000">
-                        <script> audio('high') </script> 
-                        <param id="frame_width" value="640" />
-                        <param id="frame_height" value="480" />
-                        <param id="frame_rate" value="1" />
-                    </quality_stop>
+               	<quality>
+                    <quality_stop title="Tiny" />
+               		<quality_stop title="Low" />
+                    <quality_stop title="WiFi" />
+                    <quality_stop title="High" />
+                    <quality_stop title="Go Nuts" />
                 </quality>
                 <checkbox which="0" title="H.264 Video">
                     <checked_params>
-                        <param id="ffmpeg_vcodec" value="libx264" />
+                       	<param id="h264" value="true" />
                     </checked_params>
                     <unchecked_params>
-                        <param id="ffmpeg_vcodec" value="mpeg4" />
+                    	<param id="h264" value="true" />
                     </unchecked_params>
                 </checkbox>
                 <menu which="0" title="Best for:">
                 	<menu_item title="iPod Screen">
-						<script>
-							if (params.frame_width == 640) {
-								params.frame_width = 480;
-								params.frame_height = 320;
-								adjustVideoParams();
-							}
-						</script>
+                       	<param id="forTV" value="false" />
                     </menu_item>
                     <menu_item title="TV Screen">
- 						<script>
-							if (params.frame_width == 320) {
-								params.frame_width = 480;
-								params.frame_height = 320;
-								adjustVideoParams();
-							}
-						</script>
-                   </menu_item>
+                       	<param id="forTV" value="true" />
+                   	</menu_item>
                 </menu>
              </device>
             
             <!-- Apple TV -->
             <device title="Apple TV" icon="appletv">
-               <quality>
-                    <quality_stop title="Tiny" bitrate="500000">
-                        <script> audio('high') </script> 
-                        <param id="frame_width" value="640" />
-                        <param id="frame_height" value="480" />
-                        <param id="frame_rate" value="0.5" />
-                    </quality_stop>
-                    <quality_stop title="Low" bitrate="1500000">
-                        <script> audio('high') </script> 
-                        <param id="frame_width" value="640" />
-                        <param id="frame_height" value="480" />
-                        <param id="frame_rate" value="1" />
-                    </quality_stop>
-                    <quality_stop title="Standard" bitrate="2500000">
-                        <script> audio('high') </script> 
-                        <param id="frame_width" value="1280" />
-                        <param id="frame_height" value="720" />
-                        <param id="frame_rate" value="1" />
-                    </quality_stop>
-                    <quality_stop title="High" bitrate="3750000">
-                        <script> audio('high') </script> 
-                        <param id="frame_width" value="1280" />
-                        <param id="frame_height" value="720" />
-                        <param id="frame_rate" value="1" />
-                    </quality_stop>
-                    <quality_stop title="Go Nuts" bitrate="5000000">
-                        <script> audio('high') </script> 
-                        <param id="frame_width" value="1280" />
-                        <param id="frame_height" value="720" />
-                        <param id="frame_rate" value="1" />
-                    </quality_stop>
-                </quality>
                 <checkbox which="0" title="H.264 Video">
                     <checked_params>
-                        <param id="ffmpeg_vcodec" value="libx264" />
+                       	<param id="h264" value="true" />
                     </checked_params>
                     <unchecked_params>
-                        <param id="ffmpeg_vcodec" value="mpeg4" />
-                        <param id="frame_width" value="640" />
-                        <param id="frame_height" value="480" />
-						<script>
-						    if (params.bitrate == 2500000)
-						        params.bitrate = 2000000;
-							else if (params.bitrate == 3750000)
-							    params.bitrate = 2500000;
-    						else if (params.bitrate == 5000000)
-    							params.bitrate = 3000000;
-							adjustVideoParams();
-						</script>
+                    	<param id="h264" value="true" />
                     </unchecked_params>
                 </checkbox>
 				<checkbox which="1" title="Keep Surround Track">

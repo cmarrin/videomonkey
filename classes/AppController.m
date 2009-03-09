@@ -75,7 +75,6 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
     [transcoder addInputFile: fileName];
     [transcoder addOutputFile: getOutputFileName(fileName, m_savePath, [m_deviceController fileSuffix])];
     [transcoder setVideoFormat: [m_deviceController videoFormat]];
-    [transcoder setBitrate: [m_deviceController bitrate]];
     return transcoder;
 }
 
@@ -234,9 +233,7 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
 
 -(void) uiChanged
 {
-    double bitrate = [m_deviceController bitrate];
     for (Transcoder* transcoder in m_fileList) {
-        [transcoder setBitrate: bitrate];
         [transcoder setParams];
     }
     

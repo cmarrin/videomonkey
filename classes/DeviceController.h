@@ -82,7 +82,6 @@
 
 -(NSString*) fileSuffix;
 -(NSString*) videoFormat;
--(double) bitrate;
 
 -(void) setDelegate:(id) delegate;
 -(void) setCurrentParamsWithEnvironment: (NSDictionary*) env;

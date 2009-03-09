@@ -598,24 +598,33 @@ static void setButton(NSButton* button, NSString* title)
     return [self paramWithDefault: @"ffmpeg_vcodec"];
 }
 
--(double) bitrate
+-(int) qualityStop
 {
     int count = [[self qualityStops] count];
-    double sliderValue = [m_deviceTab sliderValue] * (count-1);
+    double sliderValue = [m_deviceTab sliderValue];
     
-    // handle special case
-    if (sliderValue >= (count-1))
-        return [[[self qualityStops] objectAtIndex:count-1] bitrate];
+    if (sliderValue > 1)
+        sliderValue = 1;
+    else if (sliderValue < 0)
+        sliderValue = 0;
     
-    int firstIndex = (int) sliderValue;
-    if (firstIndex == count-1)
-        firstIndex--;
-    
-    double minBitrate = [[[self qualityStops] objectAtIndex:firstIndex] bitrate];
-    double maxBitrate = [[[self qualityStops] objectAtIndex:firstIndex+1] bitrate];
+    return (sliderValue == 1) ? (count-1) : ((int) (sliderValue * (count-1)));
+}
 
-    sliderValue = fmod(sliderValue, 1);
-    return sliderValue * (maxBitrate-minBitrate) + minBitrate;
+-(void) quality: (double*) q withStop: (int*) stop
+{
+    int count = [[self qualityStops] count];
+    double sliderValue = [m_deviceTab sliderValue];
+    
+    if (sliderValue > 1)
+        sliderValue = 1;
+    else if (sliderValue < 0)
+        sliderValue = 0;
+    
+    sliderValue *= count - 1;
+    *stop = (sliderValue == 1) ? (count-1) : ((int) sliderValue);    
+    
+    *q = fmod(sliderValue, 1);
 }
 
 -(void) setCurrentParamsInJavaScriptContext:(JavaScriptContext*) context performanceIndex:(int) perfIndex
@@ -623,9 +632,16 @@ static void setButton(NSButton* button, NSString* title)
     // Add params and commands from this device
     [self addParamsToJavaScriptContext: context performanceIndex:perfIndex];
     
-    // Add bitrate
-    [context setStringParam:[[NSNumber numberWithDouble: [self bitrate]] stringValue] forKey:@"bitrate"];
-
+    // set the quality
+    int qualityStop;
+    double quality;
+    [self quality: &quality withStop: &qualityStop];
+    [context setStringParam:[[NSNumber numberWithDouble: quality] stringValue] forKey:@"quality"];
+    [context setStringParam:[[NSNumber numberWithInt: qualityStop] stringValue] forKey:@"quality_stop"];
+    
+    // set the current device title
+    [context setStringParam:m_title forKey:@"title"];
+    
     
     // Execute script from this device
     [self evaluateScript: context performanceIndex:perfIndex];

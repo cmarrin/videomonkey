@@ -210,7 +210,7 @@
 -(NSArray*) recipes;
 -(NSString*) fileSuffix;
 -(NSString*) videoFormat;
--(double) bitrate;
+-(void) quality: (double*) q withStop: (int*) stop;
 
 -(void) setCurrentParamsInJavaScriptContext:(JavaScriptContext*) context performanceIndex:(int) perfIndex;
 -(void) populateTabView:(NSTabView*) tabview;
