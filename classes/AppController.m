@@ -111,7 +111,8 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
 {
     if (!m_isTerminated) {
         if (++m_currentEncoding < [m_fileList count]) {
-            [[m_fileList objectAtIndex: m_currentEncoding] startEncode];
+            if (![[m_fileList objectAtIndex: m_currentEncoding] startEncode])
+                [self startNextEncode];
             return;
         }
     }
@@ -128,6 +129,24 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
     [m_totalProgressBar setDoubleValue: 0];
     m_isTerminated = NO;
     
+    // reset the status for anything we're about to encode
+    BOOL anyEnabled = false;
+    
+    for (Transcoder* transcoder in m_fileList) {
+        if ([transcoder enabled]) {
+            anyEnabled = true;
+            [transcoder resetStatus];
+        }
+    }
+    
+    if (!anyEnabled) {
+        NSBeginAlertSheet(@"No Files To Encode", nil, nil, nil, [[NSApplication sharedApplication] mainWindow], 
+                          nil, nil, nil, nil, 
+                          @"None of the files in the list are selected for encoding. Either "
+                          "select the check box on some files or drag more files into the list.");
+        return;
+    }
+
     if (m_runState == RS_PAUSED) {
         [[m_fileList objectAtIndex: m_currentEncoding] resumeEncode];
         m_runState = RS_RUNNING;

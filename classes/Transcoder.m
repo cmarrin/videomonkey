@@ -222,6 +222,7 @@ static NSImage* getFileStatusImage(FileStatus status)
     if (![self _validateInputFile: file ]) {
         [file release];
         m_fileStatus = FS_INVALID;
+        m_enabled = false;
         [m_statusImageView setImage: getFileStatusImage(m_fileStatus)];
         return -1;
     }
@@ -301,6 +302,16 @@ static NSImage* getFileStatusImage(FileStatus status)
 -(void) setEnabled: (BOOL) b
 {
     m_enabled = b;
+}
+
+-(void) resetStatus
+{
+    // If we're enabled, set the status to FS_VALID, even if we were M_FAILED or M_INVALID.
+    // This gives the encoder a chance to run, just in case we were wrong about it.
+    if (m_enabled) {
+        m_fileStatus = FS_VALID;
+        [m_statusImageView setImage: getFileStatusImage(m_fileStatus)];
+    }
 }
 
 -(NSProgressIndicator*) progressIndicator
@@ -495,6 +506,8 @@ static NSImage* getFileStatusImage(FileStatus status)
         
     m_fileStatus = (status == 0) ? FS_SUCCEEDED : (status == 255) ? FS_VALID : FS_FAILED;
     [m_statusImageView setImage: getFileStatusImage(m_fileStatus)];
+    if (m_fileStatus != FS_VALID)
+        m_enabled = false;
     m_progress = (status == 0) ? 1 : 0;
     [m_progressIndicator setDoubleValue: m_progress];
     [m_appController encodeFinished:self];
