@@ -59,6 +59,7 @@
 
 @class DeviceController;
 @class JavaScriptContext;
+@class XMLElement;
 
 @interface DeviceTab : NSTabViewItem {
     IBOutlet NSButton* m_button0;
@@ -115,7 +116,7 @@
     NSString* m_script;
 }
 
-+(QualityStop*) qualityStopWithElement: (NSXMLElement*) element;
++(QualityStop*) qualityStopWithElement: (XMLElement*) element;
 
 -(NSString*) title;
 -(NSDictionary*) params;
@@ -131,7 +132,7 @@
     NSString* m_script;
 }
 
-+(PerformanceItem*) performanceItemWithElement: (NSXMLElement*) element;
++(PerformanceItem*) performanceItemWithElement: (XMLElement*) element;
 
 -(NSString*) title;
 -(NSDictionary*) params;
@@ -148,7 +149,7 @@
     NSString* m_uncheckedScript;
 }
 
-+(Checkbox*) checkboxWithElement: (NSXMLElement*) element;
++(Checkbox*) checkboxWithElement: (XMLElement*) element;
 
 -(NSString*) title;
 -(NSDictionary*) uncheckedParams;
@@ -166,7 +167,7 @@
     NSMutableArray* m_itemScripts;
 }
 
-+(Menu*) menuWithElement: (NSXMLElement*) element;
++(Menu*) menuWithElement: (XMLElement*) element;
 -(NSArray*) itemTitles;
 -(NSArray*) itemParams;
 -(NSArray*) itemScripts;
@@ -198,8 +199,8 @@
     int m_currentQualityStopIndex;
 }
 
-+(DeviceEntry*) deviceEntryWithElement: (NSXMLElement*) element inGroup: (NSString*) group withDefaults: (DeviceEntry*) defaults;
--(DeviceEntry*) initWithElement: (NSXMLElement*) element inGroup: (NSString*) group withDefaults: (DeviceEntry*) defaults;
++(DeviceEntry*) deviceEntryWithElement: (XMLElement*) element inGroup: (NSString*) group withDefaults: (DeviceEntry*) defaults;
+-(DeviceEntry*) initWithElement: (XMLElement*) element inGroup: (NSString*) group withDefaults: (DeviceEntry*) defaults;
 
 -(NSString*) group;
 -(NSString*) title;

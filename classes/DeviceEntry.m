@@ -24,78 +24,6 @@
 // Static functions used in this file
 //
 //
-static NSString* stringAttribute(NSXMLElement* element, NSString* name)
-{
-    NSXMLNode* node = [element attributeForName:name];
-    return node ? [node stringValue] : @"";
-}
-
-static double doubleAttribute(NSXMLElement* element, NSString* name)
-{
-    return [stringAttribute(element, name) doubleValue];
-}
-
-static BOOL boolAttribute(NSXMLElement* element, NSString* name, BOOL defaultValue)
-{
-    NSString* s = stringAttribute(element, name);
-    return ([s length] > 0) ? [s boolValue] : defaultValue;
-}
-
-static NSString* content(NSXMLElement* element)
-{
-    if ([element childCount] == 0)
-        return @"";
-    NSString* string = [[element childAtIndex:0] stringValue];
-    return [[string stringByTrimmingCharactersInSet: [NSCharacterSet whitespaceAndNewlineCharacterSet]] retain];
-}
-
-static NSXMLElement* findChildElement(NSXMLElement* element, NSString* name)
-{
-    // return the LAST element with the passed name (later versions override earlier ones)
-    return [[element elementsForName:name] lastObject];
-}
-
-static void addParam(NSXMLElement* paramElement, NSMutableDictionary* dictionary)
-{
-    NSString* key = stringAttribute(paramElement, @"id");
-    NSString* value = stringAttribute(paramElement, @"value");
-    if ([key length])
-        [dictionary setValue:value forKey:key];
-}
-
-static void addCommand(NSXMLElement* paramElement, NSMutableDictionary* dictionary)
-{
-    NSString* key = stringAttribute(paramElement, @"id");
-    NSString* value = content(paramElement);
-    if ([key length])
-        [dictionary setValue:value forKey:key];
-}
-
-static void parseParams(NSXMLElement* element, NSMutableDictionary* dictionary)
-{
-    // handle <param>
-    NSArray* array = [element elementsForName: @"param"];
-    for (int i = 0; i < [array count]; ++i)
-        addParam((NSXMLElement*) [array objectAtIndex:i], dictionary);
-
-    // handle <command>
-    array = [element elementsForName: @"command"];
-    for (int i = 0; i < [array count]; ++i)
-        addCommand((NSXMLElement*) [array objectAtIndex:i], dictionary);
-}
-
-static NSString* parseScripts(NSXMLElement* element)
-{
-    NSMutableString* script = [[NSMutableString alloc] init];
-    NSArray* array = [element elementsForName: @"script"];
-    for (int i = 0; i < [array count]; ++i) {
-        [script appendString:content((NSXMLElement*) [array objectAtIndex:i])];
-        [script appendString:@"\n\n"];
-    }
-    
-    return script;
-}
-
 //
 //
 // Device Tab interface
@@ -261,7 +189,7 @@ static void setButton(NSButton* button, NSString* title)
 //
 @implementation QualityStop
 
-+(QualityStop*) qualityStopWithElement: (NSXMLElement*) element
++(QualityStop*) qualityStopWithElement: (XMLElement*) element
 {
     QualityStop* obj = [[QualityStop alloc] init];
 
@@ -307,7 +235,7 @@ static void setButton(NSButton* button, NSString* title)
 //
 @implementation PerformanceItem
 
-+(PerformanceItem*) performanceItemWithElement: (NSXMLElement*) element
++(PerformanceItem*) performanceItemWithElement: (XMLElement*) element
 {
     PerformanceItem* obj = [[PerformanceItem alloc] init];
 
@@ -347,7 +275,7 @@ static void setButton(NSButton* button, NSString* title)
 //
 @implementation Checkbox
 
-+(Checkbox*) checkboxWithElement: (NSXMLElement*) element
++(Checkbox*) checkboxWithElement: (XMLElement*) element
 {
     Checkbox* obj = [[Checkbox alloc] init];
 
@@ -355,7 +283,7 @@ static void setButton(NSButton* button, NSString* title)
     obj->m_checkedParams = [[NSMutableDictionary alloc] init];
     obj->m_uncheckedParams = [[NSMutableDictionary alloc] init];
     
-    NSXMLElement* e = findChildElement(element, @"checked_params");
+    XMLElement* e = findChildElement(element, @"checked_params");
     parseParams(e, obj->m_checkedParams);
     obj->m_checkedScript = parseScripts(e);
 
@@ -400,7 +328,7 @@ static void setButton(NSButton* button, NSString* title)
 //
 @implementation Menu
 
-+(Menu*) menuWithElement: (NSXMLElement*) element
++(Menu*) menuWithElement: (XMLElement*) element
 {
     Menu* obj = [[Menu alloc] init];
 
@@ -498,12 +426,12 @@ static void setButton(NSButton* button, NSString* title)
     }
 }
 
-+(DeviceEntry*) deviceEntryWithElement: (NSXMLElement*) element inGroup: (NSString*) group withDefaults: (DeviceEntry*) defaults
++(DeviceEntry*) deviceEntryWithElement: (XMLElement*) element inGroup: (NSString*) group withDefaults: (DeviceEntry*) defaults
 {
     return [[DeviceEntry alloc] initWithElement: element inGroup: group withDefaults: defaults];
 }
 
--(DeviceEntry*) initWithElement: (NSXMLElement*) element inGroup: (NSString*) group withDefaults: (DeviceEntry*) defaults;
+-(DeviceEntry*) initWithElement: (XMLElement*) element inGroup: (NSString*) group withDefaults: (DeviceEntry*) defaults;
 {
     m_defaultDevice = [defaults retain];
     m_icon = [NSString stringWithString:stringAttribute(element, @"icon")];

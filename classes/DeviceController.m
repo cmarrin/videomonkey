@@ -9,6 +9,7 @@
 #import "DeviceController.h"
 #import "DeviceEntry.h"
 #import "JavaScriptContext.h"
+#import "XMLDocument.h"
 
 @interface NSObject (AppDelegate)
 -(void) log: (NSString*) format, ...;
@@ -19,18 +20,6 @@ static NSImage* getImage(NSString* name)
 {
     NSString* path = [[NSBundle mainBundle] pathForResource:name ofType:@"png"];
     return [[NSImage alloc] initWithContentsOfFile:path];
-}
-
-static NSString* stringAttribute(NSXMLElement* element, NSString* name)
-{
-    NSXMLNode* node = [element attributeForName:name];
-    return node ? [node stringValue] : @"";
-}
-
-static NSXMLElement* findChildElement(NSXMLElement* element, NSString* name)
-{
-    // return the LAST element with the passed name (later versions override earlier ones)
-    return [[element elementsForName:name] lastObject];
 }
 
 static void addMenuItem(NSPopUpButton* button, NSString* title, NSString* icon, int tag, BOOL enabled)
@@ -74,32 +63,20 @@ static void addMenuSeparator(NSPopUpButton* button)
 -(void) initCommands
 {
     NSURL* url = [NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"commands" ofType:@"xml"]];
-    NSError* error;
-    NSXMLDocument* doc = [[NSXMLDocument alloc] initWithContentsOfURL:url options:NSXMLDocumentValidate error:&error];
-    NSString* desc = [error localizedDescription];
-    
-    if ([desc length] != 0) {
-        NSRunAlertPanel(@"Error parsing commands.xml", desc, nil, nil, nil);
-        return;
-    }
-    
-    if (!doc || ![[[doc rootElement] name] isEqualToString:@"videomonkey"]) {
-        NSRunAlertPanel(@"Error in commands.xml", @"root element is not <videomonkey>", nil, nil, nil);
-        return;
-    }
-        
+    XMLDocument* doc = [XMLDocument xmlDocumentWithContentsOfURL:url];
+
     // extract the defaults
-    m_defaultDevice = [DeviceEntry deviceEntryWithElement: findChildElement([doc rootElement], @"default_device") inGroup: nil withDefaults: nil];
+    m_defaultDevice = [DeviceEntry deviceEntryWithElement: [[doc rootElement] findChildElement:@"default_device"] inGroup: nil withDefaults: nil];
     [m_defaultDevice retain];
     
     // Build the device list
     m_devices = [[NSMutableArray alloc] init];
     
-    NSXMLElement* devicesElement = findChildElement([doc rootElement], @"devices");
+    XMLElement* devicesElement = [[doc rootElement] findChildElement:@"devices"];
     NSArray* deviceGroups = [devicesElement elementsForName:@"device_group"];
     
     for (int i = 0; i < [deviceGroups count]; ++i) {
-        NSXMLElement* deviceGroupElement = (NSXMLElement*) [deviceGroups objectAtIndex:i];
+        XMLElement* deviceGroupElement = (XMLElement*) [deviceGroups objectAtIndex:i];
         NSString* groupTitle = stringAttribute(deviceGroupElement, @"title");
 
         DeviceEntry* commonDevice = [DeviceEntry deviceEntryWithElement: findChildElement(deviceGroupElement, @"common_device") inGroup: groupTitle withDefaults: m_defaultDevice];
@@ -107,7 +84,7 @@ static void addMenuSeparator(NSPopUpButton* button)
         NSArray* devices = [deviceGroupElement elementsForName:@"device"];
         
         for (int j = 0; j < [devices count]; ++j) {
-            NSXMLElement* deviceElement = (NSXMLElement*) [devices objectAtIndex:j];
+            XMLElement* deviceElement = (XMLElement*) [devices objectAtIndex:j];
             DeviceEntry* entry = [DeviceEntry deviceEntryWithElement: deviceElement inGroup: groupTitle withDefaults: commonDevice];
             if (entry)
                 [m_devices addObject: entry];
