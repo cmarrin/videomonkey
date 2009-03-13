@@ -15,7 +15,7 @@
     XMLElement* element = [[XMLElement alloc] init];
     
     // Set name
-    element->m_name = [NSString stringWithString:[e name]];
+    element->m_name = [[e name] retain];
     
     // Add the elements and content, in order
     NSArray* kids = [e children];
@@ -58,14 +58,17 @@
     return ([s length] > 0) ? [s boolValue] : defaultValue;
 }
 
-// For now we assume that the content is in the first child. This is the case
-// for simple elements with only text content. For interleaved text and
-// elements, it will not work
+// This gets all the content for this element, stripping out any interleaved
+// elements
 -(NSString*) content
 {
-    if ([m_children count] == 0)
-        return @"";
-    NSString* string = [[m_children objectAtIndex:0] stringValue];
+    NSMutableString* string = [[NSMutableString alloc] init];
+    
+    for (id obj in m_children) {
+        if ([obj isKindOfClass:[NSString class]])
+            [string appendString:obj];
+    }
+    
     return [[string stringByTrimmingCharactersInSet: [NSCharacterSet whitespaceAndNewlineCharacterSet]] retain];
 }
 

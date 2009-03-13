@@ -235,7 +235,7 @@ static void setButton(NSButton* button, NSString* title)
 {
     QualityStop* obj = [[QualityStop alloc] init];
 
-    obj->m_title = [NSString stringWithString:[element stringAttribute:@"title"]];
+    obj->m_title = [[element stringAttribute:@"title"] retain];
     obj->m_bitrate = [element doubleAttribute:@"bitrate"];
 
     // add params
@@ -281,7 +281,7 @@ static void setButton(NSButton* button, NSString* title)
 {
     PerformanceItem* obj = [[PerformanceItem alloc] init];
 
-    obj->m_title = [NSString stringWithString:[element stringAttribute:@"title"]];
+    obj->m_title = [[element stringAttribute:@"title"] retain];
     
     // add params
     obj->m_params = [[NSMutableDictionary alloc] init];
@@ -321,7 +321,7 @@ static void setButton(NSButton* button, NSString* title)
 {
     Checkbox* obj = [[Checkbox alloc] init];
 
-    obj->m_title = [NSString stringWithString:[element stringAttribute:@"title"]];
+    obj->m_title = [[element stringAttribute:@"title"] retain];
     obj->m_checkedParams = [[NSMutableDictionary alloc] init];
     obj->m_uncheckedParams = [[NSMutableDictionary alloc] init];
     
@@ -374,7 +374,7 @@ static void setButton(NSButton* button, NSString* title)
 {
     Menu* obj = [[Menu alloc] init];
 
-    obj->m_title = [NSString stringWithString:[element stringAttribute:@"title"]];
+    obj->m_title = [[element stringAttribute:@"title"] retain];
     
     // parse all the items
     obj->m_itemTitles = [[NSMutableArray alloc] init];
@@ -476,9 +476,9 @@ static void setButton(NSButton* button, NSString* title)
 -(DeviceEntry*) initWithElement: (XMLElement*) element inGroup: (NSString*) group withDefaults: (DeviceEntry*) defaults;
 {
     m_defaultDevice = [defaults retain];
-    m_icon = [NSString stringWithString:[element stringAttribute:@"icon"]];
-    m_title = [NSString stringWithString:[element stringAttribute:@"title"]];
-    m_groupTitle = [NSString stringWithString:group ? group : @""];
+    m_icon = [[element stringAttribute:@"icon"] retain];
+    m_title = [[element stringAttribute:@"title"] retain];
+    m_groupTitle = [group retain];
     m_enabled = [element boolAttribute:@"enabled" withDefault: true];
     
     m_qualityStops = [[NSMutableArray alloc] init];

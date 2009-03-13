@@ -18,7 +18,7 @@
         m_transcoder = transcoder;
         m_outputType = type;
         m_command = [command retain];
-        m_id = [NSString stringWithString:id];
+        m_id = [id retain];
         m_buffer = [[NSMutableString alloc] init];
         
         m_task = [[NSTask alloc] init];
