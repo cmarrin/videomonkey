@@ -10,16 +10,24 @@
 
 
 @interface XMLElement : NSObject {
-    NSXMLElement* m_element;
+    NSArray* m_children;
+    NSDictionary* m_attributes;
+    NSString* m_name;
 }
 
 -(NSString*) stringAttribute:(NSString*) name;
--(XMLElement*) findChildElement:(NSString*) name;
+-(double) doubleAttribute:(NSString*) name;
+-(BOOL) boolAttribute:(NSString*) name withDefault:(BOOL) defaultValue;
+-(NSString*) content;
+-(NSString*) name;
+
+-(NSArray*) elementsForName:(NSString*) name;
+-(XMLElement*) lastElementForName:(NSString*) name;
 
 @end
 
 @interface XMLDocument : NSObject {
-    NSXMLDocument* m_document;
+    XMLElement* m_rootElement;
 }
 
 +(XMLDocument*) xmlDocumentWithContentsOfURL: (NSURL*) url;

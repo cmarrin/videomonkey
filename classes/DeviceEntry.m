@@ -9,6 +9,7 @@
 #import "DeviceEntry.h"
 #import "DeviceController.h"
 #import "JavaScriptContext.h"
+#import "XMLDocument.h"
 
 //
 //
@@ -24,6 +25,47 @@
 // Static functions used in this file
 //
 //
+static void addParam(XMLElement* paramElement, NSMutableDictionary* dictionary)
+{
+    NSString* key = [paramElement stringAttribute:@"id"];
+    NSString* value = [paramElement stringAttribute:@"value"];
+    if ([key length])
+        [dictionary setValue:value forKey:key];
+}
+
+static void addCommand(XMLElement* paramElement, NSMutableDictionary* dictionary)
+{
+    NSString* key = [paramElement stringAttribute:@"id"];
+    NSString* value = [paramElement content];
+    if ([key length])
+        [dictionary setValue:value forKey:key];
+}
+
+static void parseParams(XMLElement* element, NSMutableDictionary* dictionary)
+{
+    // handle <param>
+    NSArray* array = [element elementsForName: @"param"];
+    for (XMLElement* element in array)
+        addParam(element, dictionary);
+
+    // handle <command>
+    array = [element elementsForName: @"command"];
+    for (XMLElement* element in array)
+        addCommand(element, dictionary);
+}
+
+static NSString* parseScripts(XMLElement* element)
+{
+    NSMutableString* script = [[NSMutableString alloc] init];
+    NSArray* array = [element elementsForName: @"script"];
+    for (XMLElement* element in array) {
+        [script appendString:[element content]];
+        [script appendString:@"\n\n"];
+    }
+    
+    return script;
+}
+
 //
 //
 // Device Tab interface
@@ -193,8 +235,8 @@ static void setButton(NSButton* button, NSString* title)
 {
     QualityStop* obj = [[QualityStop alloc] init];
 
-    obj->m_title = [NSString stringWithString:stringAttribute(element, @"title")];
-    obj->m_bitrate = doubleAttribute(element, @"bitrate");
+    obj->m_title = [NSString stringWithString:[element stringAttribute:@"title"]];
+    obj->m_bitrate = [element doubleAttribute:@"bitrate"];
 
     // add params
     obj->m_params = [[NSMutableDictionary alloc] init];
@@ -239,7 +281,7 @@ static void setButton(NSButton* button, NSString* title)
 {
     PerformanceItem* obj = [[PerformanceItem alloc] init];
 
-    obj->m_title = [NSString stringWithString:stringAttribute(element, @"title")];
+    obj->m_title = [NSString stringWithString:[element stringAttribute:@"title"]];
     
     // add params
     obj->m_params = [[NSMutableDictionary alloc] init];
@@ -279,15 +321,15 @@ static void setButton(NSButton* button, NSString* title)
 {
     Checkbox* obj = [[Checkbox alloc] init];
 
-    obj->m_title = [NSString stringWithString:stringAttribute(element, @"title")];
+    obj->m_title = [NSString stringWithString:[element stringAttribute:@"title"]];
     obj->m_checkedParams = [[NSMutableDictionary alloc] init];
     obj->m_uncheckedParams = [[NSMutableDictionary alloc] init];
     
-    XMLElement* e = findChildElement(element, @"checked_params");
+    XMLElement* e = [element lastElementForName:@"checked_params"];
     parseParams(e, obj->m_checkedParams);
     obj->m_checkedScript = parseScripts(e);
 
-    e = findChildElement(element, @"unchecked_params");
+    e = [element lastElementForName:@"unchecked_params"];
     parseParams(e, obj->m_uncheckedParams);
     obj->m_uncheckedScript = parseScripts(e);
 
@@ -332,7 +374,7 @@ static void setButton(NSButton* button, NSString* title)
 {
     Menu* obj = [[Menu alloc] init];
 
-    obj->m_title = [NSString stringWithString:stringAttribute(element, @"title")];
+    obj->m_title = [NSString stringWithString:[element stringAttribute:@"title"]];
     
     // parse all the items
     obj->m_itemTitles = [[NSMutableArray alloc] init];
@@ -341,8 +383,8 @@ static void setButton(NSButton* button, NSString* title)
 
     NSArray* menuItems = [element elementsForName:@"menu_item"];
     for (int i = 0; i < [menuItems count]; ++i) {
-        NSXMLElement* itemElement = (NSXMLElement*) [menuItems objectAtIndex:i];
-        [obj->m_itemTitles addObject: stringAttribute(itemElement, @"title")];
+        XMLElement* itemElement = (XMLElement*) [menuItems objectAtIndex:i];
+        [obj->m_itemTitles addObject: [itemElement stringAttribute:@"title"]];
         
         NSMutableDictionary* params = [[NSMutableDictionary alloc] init];
         [obj->m_itemParams addObject: params];
@@ -386,7 +428,7 @@ static void setButton(NSButton* button, NSString* title)
 -(void) parseQualityStops: (NSArray*) array
 {
     for (int i = 0; i < [array count]; ++i) {
-        NSXMLElement* element = (NSXMLElement*) [array objectAtIndex:i];
+        XMLElement* element = (XMLElement*) [array objectAtIndex:i];
         [m_qualityStops addObject:[QualityStop qualityStopWithElement: element]];
     }
     
@@ -399,7 +441,7 @@ static void setButton(NSButton* button, NSString* title)
 -(void) parsePerformanceItems: (NSArray*) array
 {
     for (int i = 0; i < [array count]; ++i) {
-        NSXMLElement* element = (NSXMLElement*) [array objectAtIndex:i];
+        XMLElement* element = (XMLElement*) [array objectAtIndex:i];
         [m_performanceItems addObject: [PerformanceItem performanceItemWithElement: element]];
     }
 }
@@ -407,8 +449,8 @@ static void setButton(NSButton* button, NSString* title)
 -(void) parseCheckboxes: (NSArray*) array
 {
     for (int i = 0; i < [array count]; ++i) {
-        NSXMLElement* element = (NSXMLElement*) [array objectAtIndex:i];
-        int which = (int) doubleAttribute(element, @"which");
+        XMLElement* element = (XMLElement*) [array objectAtIndex:i];
+        int which = (int) [element doubleAttribute:@"which"];
         if (which < 0 || which > MAX_CHECKBOXES)
             continue;
         [m_checkboxes insertObject:[Checkbox checkboxWithElement: element] atIndex:which];
@@ -418,8 +460,8 @@ static void setButton(NSButton* button, NSString* title)
 -(void) parseMenus: (NSArray*) array
 {
     for (int i = 0; i < [array count]; ++i) {
-        NSXMLElement* element = (NSXMLElement*) [array objectAtIndex:i];
-        int which = (int) doubleAttribute(element, @"which");
+        XMLElement* element = (XMLElement*) [array objectAtIndex:i];
+        int which = (int) [element doubleAttribute:@"which"];
         if (which < 0 || which > MAX_MENUS)
             continue;
         [m_menus insertObject:[Menu menuWithElement: element] atIndex:which];
@@ -434,10 +476,10 @@ static void setButton(NSButton* button, NSString* title)
 -(DeviceEntry*) initWithElement: (XMLElement*) element inGroup: (NSString*) group withDefaults: (DeviceEntry*) defaults;
 {
     m_defaultDevice = [defaults retain];
-    m_icon = [NSString stringWithString:stringAttribute(element, @"icon")];
-    m_title = [NSString stringWithString:stringAttribute(element, @"title")];
+    m_icon = [NSString stringWithString:[element stringAttribute:@"icon"]];
+    m_title = [NSString stringWithString:[element stringAttribute:@"title"]];
     m_groupTitle = [NSString stringWithString:group ? group : @""];
-    m_enabled = boolAttribute(element, @"enabled", true);
+    m_enabled = [element boolAttribute:@"enabled" withDefault: true];
     
     m_qualityStops = [[NSMutableArray alloc] init];
     m_performanceItems = [[NSMutableArray alloc] init];
@@ -447,10 +489,10 @@ static void setButton(NSButton* button, NSString* title)
     m_menus = [[NSMutableArray alloc] init];
     
     // handle quality
-    [self parseQualityStops:[findChildElement(element, @"quality") elementsForName: @"quality_stop"]];
+    [self parseQualityStops:[[element lastElementForName:@"quality"] elementsForName: @"quality_stop"]];
     
     // handle performance
-    [self parsePerformanceItems:[findChildElement(element, @"performance") elementsForName: @"performance_item"]];
+    [self parsePerformanceItems:[[element lastElementForName:@"performance"] elementsForName: @"performance_item"]];
     
     // handle params
     parseParams(element, m_params);
