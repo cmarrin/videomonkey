@@ -61,6 +61,17 @@
 {
 }
 
+-(NSSize) maintainAspectRatio:(NSSize) desiredSize
+{
+    if (![m_movieView movie])
+        return desiredSize;
+        
+    NSSize movieSize = [(NSValue*) [[m_movieView movie] attributeForKey:QTMovieNaturalSizeAttribute] sizeValue];
+    float aspectRatio = movieSize.width / movieSize.height;
+    float movieControllerHeight = [m_movieView controllerBarHeight];
+    return NSMakeSize(desiredSize.width, desiredSize.width / aspectRatio + m_controlHeight + movieControllerHeight);
+}
+
 -(void) setMovie:(NSString*) filename
 {
     if ([filename isEqualToString:m_filename] && m_movieIsSet)
@@ -81,6 +92,12 @@
             if (m_filename) {
                 QTMovie* movie = [QTMovie movieWithFile:filename error:nil];
                 [m_movieView setMovie:movie];
+                
+                // set the aspect ratio of its window
+                NSSize size = [[[m_movieView window] contentView] frame].size;
+                size = [self maintainAspectRatio: size];
+                [[m_movieView window] setContentSize:size];
+                [m_movieView setEditable:YES];
             }
             else
                 [m_movieView setMovie:nil];
@@ -126,6 +143,15 @@
     static int i = 0;
     if ([event type] == NSMouseMoved)
         printf("*** sendEvent %d\n", i++);
+}
+
+- (NSSize)windowWillResize:(NSWindow *)sender toSize:(NSSize)proposedFrameSize
+{
+    // maintain aspect ration
+    NSSize size = [self maintainAspectRatio: proposedFrameSize];
+    
+    // determine the aspect ratio
+    return size;
 }
 
 @end
