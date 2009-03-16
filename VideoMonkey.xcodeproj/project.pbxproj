@@ -112,6 +112,7 @@
 		49BC8CB00ED6892400027F1D /* Pause.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 49BC8CA70ED6892400027F1D /* Pause.tiff */; };
 		49BC8CB10ED6892400027F1D /* Play.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 49BC8CA80ED6892400027F1D /* Play.tiff */; };
 		49BC8CB20ED6892400027F1D /* Stop.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 49BC8CA90ED6892400027F1D /* Stop.tiff */; };
+		49BDB20F0F6F05C80082F122 /* FileInfoPanelController.m in Sources */ = {isa = PBXBuildFile; fileRef = 49BDB20E0F6F05C80082F122 /* FileInfoPanelController.m */; };
 		49D468220F28CFA30095A2AB /* dsa_pub.pem in Resources */ = {isa = PBXBuildFile; fileRef = 49D468210F28CFA30095A2AB /* dsa_pub.pem */; };
 		49D4694A0F0F2E52005D70FD /* commands.xml in Resources */ = {isa = PBXBuildFile; fileRef = 49D469490F0F2E52005D70FD /* commands.xml */; };
 		49E9119B0EF86C3F009D0CAF /* ffpresets in Resources */ = {isa = PBXBuildFile; fileRef = 49E911930EF86C3F009D0CAF /* ffpresets */; };
@@ -258,6 +259,8 @@
 		49BC8CA70ED6892400027F1D /* Pause.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = Pause.tiff; path = icons/Pause.tiff; sourceTree = "<group>"; };
 		49BC8CA80ED6892400027F1D /* Play.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = Play.tiff; path = icons/Play.tiff; sourceTree = "<group>"; };
 		49BC8CA90ED6892400027F1D /* Stop.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = Stop.tiff; path = icons/Stop.tiff; sourceTree = "<group>"; };
+		49BDB20D0F6F05C80082F122 /* FileInfoPanelController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FileInfoPanelController.h; path = classes/FileInfoPanelController.h; sourceTree = "<group>"; };
+		49BDB20E0F6F05C80082F122 /* FileInfoPanelController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FileInfoPanelController.m; path = classes/FileInfoPanelController.m; sourceTree = "<group>"; };
 		49D468210F28CFA30095A2AB /* dsa_pub.pem */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = dsa_pub.pem; sourceTree = "<group>"; };
 		49D469490F0F2E52005D70FD /* commands.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = commands.xml; sourceTree = "<group>"; };
 		49E911930EF86C3F009D0CAF /* ffpresets */ = {isa = PBXFileReference; lastKnownFileType = folder; path = ffpresets; sourceTree = "<group>"; };
@@ -292,6 +295,8 @@
 				49AADBE00F1E55C80098F087 /* DeviceController.m */,
 				498392580F1EB70E00C23782 /* DeviceEntry.h */,
 				498392590F1EB70E00C23782 /* DeviceEntry.m */,
+				49BDB20D0F6F05C80082F122 /* FileInfoPanelController.h */,
+				49BDB20E0F6F05C80082F122 /* FileInfoPanelController.m */,
 				498397350F278F2400C23782 /* FileListController.h */,
 				498397360F278F2400C23782 /* FileListController.m */,
 				4983960B0F269AC400C23782 /* Formatters.h */,
@@ -666,6 +671,7 @@
 				4983960D0F269AC400C23782 /* Formatters.m in Sources */,
 				498397370F278F2400C23782 /* FileListController.m in Sources */,
 				4910A5890F69CBAC00453837 /* XMLDocument.m in Sources */,
+				49BDB20F0F6F05C80082F122 /* FileInfoPanelController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

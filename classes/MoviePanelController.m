@@ -67,11 +67,6 @@
 {
 }
 
--(IBAction)toggleMetadataDrawer:(id)sender
-{
-    [m_metadataDrawer toggle:sender];
-}
-
 -(void) setMovie:(NSString*) filename
 {
     if ([filename isEqualToString:m_filename] && m_movieIsSet)

@@ -13,7 +13,6 @@
 @private
     IBOutlet QTMovieView* m_movieView;
     IBOutlet NSProgressIndicator* m_progress;
-    IBOutlet NSDrawer* m_metadataDrawer;
     
     BOOL m_isVisible;
     BOOL m_movieIsSet;
@@ -29,7 +28,6 @@
 -(IBAction)startSelection:(id)sender;
 -(IBAction)endSelection:(id)sender;
 -(IBAction)encodeSelection:(id)sender;
--(IBAction)toggleMetadataDrawer:(id)sender;
 
 -(void) setMovie:(NSString*) filename;
 
