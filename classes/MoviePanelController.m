@@ -15,7 +15,13 @@
 - (void)awakeFromNib {
     m_isVisible = NO;
     m_movieIsSet = NO;
-    m_controlHeight = [[[m_movieView window] contentView] frame].size.height - [m_movieView frame].size.height;
+    m_extraContentWidth = [[[m_movieView window] contentView] frame].size.width - [m_movieView frame].size.width;
+    m_extraContentHeight = [[[m_movieView window] contentView] frame].size.height - [m_movieView frame].size.height;
+    m_extraFrameWidth = [[m_movieView window] frame].size.width - [m_movieView frame].size.width;
+    m_extraFrameHeight = [[m_movieView window] frame].size.height - [m_movieView frame].size.height;
+
+
+
     m_selectionStart = -1;
     m_selectionEnd = -1;
     
@@ -61,15 +67,9 @@
 {
 }
 
--(NSSize) maintainAspectRatio:(NSSize) desiredSize
+-(IBAction)toggleMetadataDrawer:(id)sender
 {
-    if (![m_movieView movie])
-        return desiredSize;
-        
-    NSSize movieSize = [(NSValue*) [[m_movieView movie] attributeForKey:QTMovieNaturalSizeAttribute] sizeValue];
-    float aspectRatio = movieSize.width / movieSize.height;
-    float movieControllerHeight = [m_movieView controllerBarHeight];
-    return NSMakeSize(desiredSize.width, desiredSize.width / aspectRatio + m_controlHeight + movieControllerHeight);
+    [m_metadataDrawer toggle:sender];
 }
 
 -(void) setMovie:(NSString*) filename
@@ -95,7 +95,16 @@
                 
                 // set the aspect ratio of its window
                 NSSize size = [[[m_movieView window] contentView] frame].size;
-                size = [self maintainAspectRatio: size];
+                NSSize movieSize = [(NSValue*) [movie attributeForKey:QTMovieNaturalSizeAttribute] sizeValue];
+                float aspectRatio = movieSize.width / movieSize.height;
+                float movieControllerHeight = [m_movieView controllerBarHeight];
+                
+                // The desired width of the movie is the current width minus the extra width
+                NSSize desiredMovieSize;
+                desiredMovieSize.width = size.width - m_extraContentWidth;
+                desiredMovieSize.height = desiredMovieSize.width / aspectRatio;
+                size.height = desiredMovieSize.height + m_extraContentHeight + movieControllerHeight;
+                
                 [[m_movieView window] setContentSize:size];
                 [m_movieView setEditable:YES];
             }
@@ -148,10 +157,18 @@
 - (NSSize)windowWillResize:(NSWindow *)sender toSize:(NSSize)proposedFrameSize
 {
     // maintain aspect ration
-    NSSize size = [self maintainAspectRatio: proposedFrameSize];
+    NSSize movieSize = [(NSValue*) [[m_movieView movie] attributeForKey:QTMovieNaturalSizeAttribute] sizeValue];
+    float aspectRatio = movieSize.width / movieSize.height;
+    float movieControllerHeight = [m_movieView controllerBarHeight];
+    
+    // The desired width of the movie is the current width minus the extra width
+    NSSize desiredMovieSize;
+    desiredMovieSize.width = proposedFrameSize.width - m_extraFrameWidth;
+    desiredMovieSize.height = desiredMovieSize.width / aspectRatio;
+    proposedFrameSize.height = desiredMovieSize.height + m_extraFrameHeight + movieControllerHeight;
     
     // determine the aspect ratio
-    return size;
+    return proposedFrameSize;
 }
 
 @end
