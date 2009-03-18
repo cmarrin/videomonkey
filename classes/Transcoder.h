@@ -135,6 +135,8 @@ typedef enum FileStatus { FS_INVALID, FS_VALID, FS_ENCODING, FS_PAUSED, FS_FAILE
 -(BOOL) resumeEncode;
 -(BOOL) stopEncode;
 
+-(BOOL) addToMediaLibrary:(NSString*) filename;
+
 -(void) setProgressForCommand: (Command*) command to: (double) value;
 -(void) commandFinished: (Command*) command status: (int) status;
 

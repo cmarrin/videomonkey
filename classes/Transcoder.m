@@ -6,6 +6,9 @@
 //  Copyright 2008 Apple. All rights reserved.
 //
 
+#import <ScriptingBridge/ScriptingBridge.h>
+#import "iTunes.h"
+
 #import "Transcoder.h"
 #import "AppController.h"
 #import "Command.h"
@@ -500,12 +503,25 @@ static NSImage* getFileStatusImage(FileStatus status)
 
 -(void) finish: (int) status
 {
-    if (status == 0)
-        [m_appController log: @"Transcode succeeded!\n"];
-    else
-        [m_appController log: @"Transcode FAILED with error code: %d\n", status];
-        
+    BOOL deleteOutputFile = NO;
     m_fileStatus = (status == 0) ? FS_SUCCEEDED : (status == 255) ? FS_VALID : FS_FAILED;
+    
+    if (status == 0) {
+        [m_appController log: @"Transcode succeeded!\n"];
+        
+        if ([m_appController addToMediaLibrary]) {
+            if (![self addToMediaLibrary: [self outputFileName]]) {
+                m_fileStatus = FS_FAILED;
+            }
+            else if ([m_appController deleteFromDestination])
+                deleteOutputFile = YES;
+        }
+    }
+    else {
+        deleteOutputFile = YES;
+        [m_appController log: @"Transcode FAILED with error code: %d\n", status];
+    }
+        
     [m_statusImageView setImage: getFileStatusImage(m_fileStatus)];
     if (m_fileStatus != FS_VALID)
         m_enabled = false;
@@ -517,7 +533,7 @@ static NSImage* getFileStatusImage(FileStatus status)
     m_logFile = nil;
     
     // toss output file is not successful
-    if (m_fileStatus != FS_SUCCEEDED)
+    if (deleteOutputFile)
         [[NSFileManager defaultManager] removeFileAtPath:[self outputFileName] handler:nil];
 }
 
@@ -652,6 +668,33 @@ static NSImage* getFileStatusImage(FileStatus status)
         
     [self finish: 255];
     return YES;
+}
+
+-(BOOL) addToMediaLibrary:(NSString*) filename
+{
+    iTunesApplication* iTunes = [SBApplication applicationWithBundleIdentifier:@"com.apple.iTunes"];
+    NSURL *file = [NSURL fileURLWithPath: filename];
+    iTunesTrack* track;
+    NSString* errorString = nil;
+    
+    @try {
+        track = [iTunes add: [NSArray arrayWithObject:file] to: nil];
+        if (!track)
+            errorString = @"File could not be added to iTunes (probably an invalid type)";
+    }
+    @catch (NSException* e) {
+        NSError* error = [NSError errorWithDomain:NSCocoaErrorDomain code:[[[e userInfo] valueForKey:@"ErrorNumber"] intValue] userInfo:[e userInfo]];
+        errorString = [error localizedDescription];
+    }
+    
+    if (!errorString) {
+        [m_appController log: @"Copy to iTunes succeeded!\n"];
+        return YES;
+    }
+    
+    // Error
+    [m_appController log: @"Copy to iTunes FAILED with error: %@\n", errorString];
+    return NO;
 }
 
 -(void) setProgressForCommand: (Command*) command to: (double) value

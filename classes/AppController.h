@@ -28,11 +28,15 @@ typedef enum { RS_STOPPED, RS_RUNNING, RS_PAUSED } RunStateType;
     IBOutlet NSDrawer* m_consoleDrawer;
     IBOutlet NSTextView* m_consoleView;
     IBOutlet FileListController* m_fileListController;
+    IBOutlet NSButton* m_addToMediaLibraryButton;
+    IBOutlet NSButton* m_deleteFromDestinationButton;
     
     NSString* m_savePath;
     int m_currentEncoding;
     RunStateType m_runState;
     BOOL m_isTerminated;
+    BOOL m_addToMediaLibrary;
+    BOOL m_deleteFromDestination;
     
     NSArray* m_fileList;
 }
@@ -49,6 +53,11 @@ typedef enum { RS_STOPPED, RS_RUNNING, RS_PAUSED } RunStateType;
 
 -(IBAction)changeSaveToText:(id)sender;
 -(IBAction)selectSaveToPath:(id)sender;
+-(IBAction)changeAddToMediaLibrary:(id)sender;
+-(IBAction)changeDeleteFromDestination:(id)sender;
+
+-(BOOL) addToMediaLibrary;
+-(BOOL) deleteFromDestination;
 
 -(Transcoder*) transcoderForFileName:(NSString*) fileName;
 

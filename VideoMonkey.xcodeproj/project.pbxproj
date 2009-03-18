@@ -103,6 +103,7 @@
 		49AADAC60F1D12950098F087 /* tinyitunesfile.png in Resources */ = {isa = PBXBuildFile; fileRef = 49AADAC50F1D12950098F087 /* tinyitunesfile.png */; };
 		49AADBE10F1E55C80098F087 /* DeviceController.m in Sources */ = {isa = PBXBuildFile; fileRef = 49AADBE00F1E55C80098F087 /* DeviceController.m */; };
 		49B007A50F6FD9C700D0EFF2 /* VideoMonkeyDevel.icns in Resources */ = {isa = PBXBuildFile; fileRef = 49B007A40F6FD9C700D0EFF2 /* VideoMonkeyDevel.icns */; };
+		49B007F20F7124D200D0EFF2 /* ScriptingBridge.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 49B007F10F7124D200D0EFF2 /* ScriptingBridge.framework */; };
 		49BC89A90ECD245F00027F1D /* MoviePanelController.m in Sources */ = {isa = PBXBuildFile; fileRef = 49BC89A70ECD245F00027F1D /* MoviePanelController.m */; };
 		49BC8CAA0ED6892400027F1D /* EncodeWorking0.png in Resources */ = {isa = PBXBuildFile; fileRef = 49BC8CA10ED6892400027F1D /* EncodeWorking0.png */; };
 		49BC8CAB0ED6892400027F1D /* EncodeWorking1.png in Resources */ = {isa = PBXBuildFile; fileRef = 49BC8CA20ED6892400027F1D /* EncodeWorking1.png */; };
@@ -250,6 +251,8 @@
 		49AADBDF0F1E55C80098F087 /* DeviceController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DeviceController.h; path = classes/DeviceController.h; sourceTree = "<group>"; };
 		49AADBE00F1E55C80098F087 /* DeviceController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DeviceController.m; path = classes/DeviceController.m; sourceTree = "<group>"; };
 		49B007A40F6FD9C700D0EFF2 /* VideoMonkeyDevel.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = VideoMonkeyDevel.icns; path = icons/VideoMonkeyDevel.icns; sourceTree = "<group>"; };
+		49B007F10F7124D200D0EFF2 /* ScriptingBridge.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ScriptingBridge.framework; path = /System/Library/Frameworks/ScriptingBridge.framework; sourceTree = "<absolute>"; };
+		49B008190F712A2600D0EFF2 /* iTunes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iTunes.h; sourceTree = "<group>"; };
 		49BC89A70ECD245F00027F1D /* MoviePanelController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MoviePanelController.m; path = classes/MoviePanelController.m; sourceTree = "<group>"; };
 		49BC89A80ECD245F00027F1D /* MoviePanelController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MoviePanelController.h; path = classes/MoviePanelController.h; sourceTree = "<group>"; };
 		49BC8CA10ED6892400027F1D /* EncodeWorking0.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = EncodeWorking0.png; path = icons/EncodeWorking0.png; sourceTree = "<group>"; };
@@ -280,6 +283,7 @@
 				49FC93830ECB3CCD0058CDBB /* QTKit.framework in Frameworks */,
 				495493890F18078B0007EC0E /* JavaScriptCore.framework in Frameworks */,
 				495DBF950F616C64000E5D62 /* Sparkle.framework in Frameworks */,
+				49B007F20F7124D200D0EFF2 /* ScriptingBridge.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -320,6 +324,7 @@
 		1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				49B007F10F7124D200D0EFF2 /* ScriptingBridge.framework */,
 				495DBF940F616C64000E5D62 /* Sparkle.framework */,
 				495493880F18078B0007EC0E /* JavaScriptCore.framework */,
 				49FC93820ECB3CCD0058CDBB /* QTKit.framework */,
@@ -361,6 +366,7 @@
 		29B97315FDCFA39411CA2CEA /* Other Sources */ = {
 			isa = PBXGroup;
 			children = (
+				49B008190F712A2600D0EFF2 /* iTunes.h */,
 				492BCAD70F61F08300BCBF24 /* videomonkeycast.xml */,
 				32CA4F630368D1EE00C91783 /* VideoMonkey_Prefix.pch */,
 				29B97316FDCFA39411CA2CEA /* main.m */,

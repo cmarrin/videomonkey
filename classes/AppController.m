@@ -67,6 +67,11 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
     [m_deviceController setDelegate:self];
     
     m_runState = RS_STOPPED;
+    
+    // init the addToMediaLibrary buttons
+    m_addToMediaLibrary = [m_addToMediaLibraryButton state] != 0;
+    m_deleteFromDestination = [m_deleteFromDestinationButton state] != 0;
+    [m_deleteFromDestinationButton setEnabled:m_addToMediaLibrary];
 }
 
 -(Transcoder*) transcoderForFileName:(NSString*) fileName
@@ -204,6 +209,27 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
         [m_saveToPathTextField setStringValue:m_savePath];
         [self setOutputFileName];
     }
+}
+
+-(IBAction)changeAddToMediaLibrary:(id)sender
+{
+    m_addToMediaLibrary = [sender state] != 0;
+    [m_deleteFromDestinationButton setEnabled:m_addToMediaLibrary];
+}
+
+-(IBAction)changeDeleteFromDestination:(id)sender
+{
+    m_deleteFromDestination = [sender state] != 0;
+}
+
+-(BOOL) addToMediaLibrary
+{
+    return m_addToMediaLibrary;
+}
+
+-(BOOL) deleteFromDestination
+{
+    return m_deleteFromDestination;
 }
 
 -(void) setProgressFor: (Transcoder*) transcoder to: (double) progress

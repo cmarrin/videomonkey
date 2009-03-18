@@ -234,6 +234,13 @@ static void addMenuSeparator(NSPopUpButton* button)
     int deviceIndex = [m_deviceButton indexOfSelectedItem];
     int performanceIndex = [m_performanceButton indexOfSelectedItem];
     
+    // If deviceIndex is 0, it means we don't have any saved prefs
+    // so set it and performanceIndex to something reasonable
+    if (deviceIndex == 0) {
+        deviceIndex = 1;
+        performanceIndex = 2;
+    }
+    
     // populate the device menu
     [m_deviceButton removeAllItems];
     
