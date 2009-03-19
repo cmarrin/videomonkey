@@ -26,12 +26,14 @@
     <!ELEMENT checkbox    (checked_params|unchecked_params)*>
         <!ATTLIST checkbox which CDATA "">
         <!ATTLIST checkbox title CDATA "">
-    <!ELEMENT checked_params    (script|param|command)*>
+        <!ATTLIST checkbox enabled CDATA "">
+     <!ELEMENT checked_params    (script|param|command)*>
     <!ELEMENT unchecked_params    (script|param|command)*>
     <!ELEMENT menu    (menu_item*)>
         <!ATTLIST menu which CDATA "">
         <!ATTLIST menu title CDATA "">
-    <!ELEMENT menu_item    (script|param|command)*>
+        <!ATTLIST menu enabled CDATA "">
+     <!ELEMENT menu_item    (script|param|command)*>
         <!ATTLIST menu_item title CDATA "">
 ]>
 <videomonkey>
@@ -437,7 +439,7 @@
                     	<param id="h264" value="true" />
                     </unchecked_params>
                 </checkbox>
-				<checkbox which="1" title="Keep Surround Track">
+				<checkbox which="1" title="Keep Surround Track" enabled="false">
                     <checked_params>
                         <param id="keep_surround_track" value="true" />
                     </checked_params>

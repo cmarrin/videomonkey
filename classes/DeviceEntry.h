@@ -140,9 +140,19 @@
 
 @end
 
-@interface Checkbox : NSObject {
+@interface Button : NSObject {
     NSString* m_title;
-    
+    BOOL m_enabled;
+}
+
+-(Button*) initWithElement: (XMLElement*) element;
+
+-(NSString*) title;
+-(BOOL) enabled;
+
+@end
+
+@interface Checkbox : Button {
     NSMutableDictionary* m_checkedParams;
     NSString* m_checkedScript;
     NSMutableDictionary* m_uncheckedParams;
@@ -151,7 +161,6 @@
 
 +(Checkbox*) checkboxWithElement: (XMLElement*) element;
 
--(NSString*) title;
 -(NSDictionary*) uncheckedParams;
 -(NSString*) uncheckedScript;
 -(NSDictionary*) checkedParams;
@@ -159,9 +168,7 @@
 
 @end
 
-@interface Menu : NSObject {
-    NSString* m_title;
-    
+@interface Menu : Button {
     NSMutableArray* m_itemTitles;
     NSMutableArray* m_itemParams;
     NSMutableArray* m_itemScripts;
@@ -171,7 +178,6 @@
 -(NSArray*) itemTitles;
 -(NSArray*) itemParams;
 -(NSArray*) itemScripts;
--(NSString*) title;
 
 @end
 

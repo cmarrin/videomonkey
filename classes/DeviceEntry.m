@@ -78,12 +78,16 @@ static NSString* parseScripts(XMLElement* element)
     return [self identifier];
 }
 
-static void setButton(NSButton* button, NSString* title)
+static void setButton(NSButton* button, Button* item)
 {
+    NSString* title = [item title];
+    BOOL enabled = [item enabled];
+    
     if (title) {
         [button setHidden:NO];
         [button setTitle:title];
         [button sizeToFit];
+        [button setEnabled:enabled];
     }
     else
         [button setHidden:YES];
@@ -92,8 +96,8 @@ static void setButton(NSButton* button, NSString* title)
 -(void) setCheckboxes: (NSArray*) checkboxes
 {
     int size = [checkboxes count];
-    setButton(m_button0, (size > 0) ? [(Checkbox*) [checkboxes objectAtIndex:0] title] : nil);
-    setButton(m_button1, (size > 1) ? [(Checkbox*) [checkboxes objectAtIndex:1] title] : nil);
+    setButton(m_button0, (size > 0) ? ((Button*) [checkboxes objectAtIndex:0]) : nil);
+    setButton(m_button1, (size > 1) ? ((Button*) [checkboxes objectAtIndex:1]) : nil);
 }
 
 -(void) setMenus: (NSArray*) menus
@@ -122,8 +126,8 @@ static void setButton(NSButton* button, NSString* title)
     }
     else {
         // handle menus
-        setButton(m_button2, (size > 0) ? [(Menu*) [menus objectAtIndex:0] title] : nil);
-        setButton(m_button3, (size > 1) ? [(Menu*) [menus objectAtIndex:1] title] : nil);
+        setButton(m_button2, (size > 0) ? ((Button*) [menus objectAtIndex:0]) : nil);
+        setButton(m_button3, (size > 1) ? ((Button*) [menus objectAtIndex:1]) : nil);
         
         // FIXME: add items
     }
@@ -312,6 +316,33 @@ static void setButton(NSButton* button, NSString* title)
 
 //
 //
+// Button interface
+//
+//
+@implementation Button
+
+-(Button*) initWithElement: (XMLElement*) element
+{
+    m_title = [[element stringAttribute:@"title"] retain];
+    m_enabled = [element boolAttribute:@"enabled" withDefault: true];
+
+    return self;
+}
+
+-(NSString*) title
+{
+    return m_title;
+}
+
+-(BOOL) enabled
+{
+    return m_enabled;
+}
+
+@end
+
+//
+//
 // Checkbox interface
 //
 //
@@ -320,8 +351,8 @@ static void setButton(NSButton* button, NSString* title)
 +(Checkbox*) checkboxWithElement: (XMLElement*) element
 {
     Checkbox* obj = [[Checkbox alloc] init];
+    [obj initWithElement: element];
 
-    obj->m_title = [[element stringAttribute:@"title"] retain];
     obj->m_checkedParams = [[NSMutableDictionary alloc] init];
     obj->m_uncheckedParams = [[NSMutableDictionary alloc] init];
     
@@ -334,11 +365,6 @@ static void setButton(NSButton* button, NSString* title)
     obj->m_uncheckedScript = parseScripts(e);
 
     return obj;
-}
-
--(NSString*) title
-{
-    return m_title;
 }
 
 -(NSDictionary*) uncheckedParams
@@ -373,9 +399,8 @@ static void setButton(NSButton* button, NSString* title)
 +(Menu*) menuWithElement: (XMLElement*) element
 {
     Menu* obj = [[Menu alloc] init];
+    [obj initWithElement: element];
 
-    obj->m_title = [[element stringAttribute:@"title"] retain];
-    
     // parse all the items
     obj->m_itemTitles = [[NSMutableArray alloc] init];
     obj->m_itemParams = [[NSMutableArray alloc] init];
@@ -409,11 +434,6 @@ static void setButton(NSButton* button, NSString* title)
 -(NSArray*) itemScripts
 {
     return m_itemScripts;
-}
-
--(NSString*) title
-{
-    return m_title;
 }
 
 @end
