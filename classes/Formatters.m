@@ -13,16 +13,16 @@
 
 - (NSString *)stringForObjectValue:(id)anObject
 {
-    int size = [anObject intValue];
+    double size = [anObject intValue];
     
     if (size < 10000)
-        return [NSString stringWithFormat:@"%dB", size];
+        return [NSString stringWithFormat:@"%dB", (int) size];
     else if (size < 1000000)
-        return [NSString stringWithFormat:@"%.1fKB", (double) size/1000.0];
+        return [NSString stringWithFormat:@"%.1fKB", size/1000.0];
     else if (size < 1000000000)
-        return [NSString stringWithFormat:@"%.1fMB", (double) size/1000000.0];
+        return [NSString stringWithFormat:@"%.1fMB", size/1000000.0];
     else
-        return [NSString stringWithFormat:@"%.1fGB", (double) size/1000000000.0];
+        return [NSString stringWithFormat:@"%.1fGB", size/1000000000.0];
 }
 
 @end
