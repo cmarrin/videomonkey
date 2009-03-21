@@ -140,9 +140,6 @@ static NSDictionary* makeDictionary(NSString* s)
 
 -(void) processRead: (NSNotification*) note
 {
-    if (![m_task isRunning])
-        return;
-        
     if (![[note name] isEqualToString:NSFileHandleReadCompletionNotification])
         return;
 
