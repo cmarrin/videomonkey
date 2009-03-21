@@ -13,7 +13,7 @@
 
 - (NSString *)stringForObjectValue:(id)anObject
 {
-    double size = [anObject intValue];
+    double size = [anObject doubleValue];
     
     if (size < 10000)
         return [NSString stringWithFormat:@"%dB", (int) size];

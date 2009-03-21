@@ -418,11 +418,11 @@ static NSImage* getFileStatusImage(FileStatus status)
         return @"libx264";
 }
 
--(int) outputFileSize
+-(double) outputFileSize
 {
     double duration = [self duration];
     double bitrate = [self bitrate];
-    return (int) (duration * bitrate / 8);
+    return duration * bitrate / 8;
 }
 
 -(NSString*) tempAudioFileName

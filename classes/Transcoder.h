@@ -119,7 +119,7 @@ typedef enum FileStatus { FS_INVALID, FS_VALID, FS_ENCODING, FS_PAUSED, FS_FAILE
 -(BOOL) hasInputAudio;
 -(NSString*) inputVideoFormat;
 -(NSString*) outputFileName;
--(int) outputFileSize;
+-(double) outputFileSize;
 -(NSString*) tempAudioFileName;
 -(NSString*) passLogFileName;
 
