@@ -197,28 +197,34 @@ Command file contains an outer <videomonkey> element with one of each children:
             <performance_item title="Fastest">
                 <param id="is_2_pass" value="false" />
                 <param id="ffmpeg_vpre" value="fastest" />
+                <param id="ffmpeg_profile" value="-bf 1" />
             </performance_item>
             <performance_item title="Fast">
                 <param id="is_2_pass" value="false" />
                 <param id="ffmpeg_vpre" value="default" />
+                <param id="ffmpeg_profile" value="-bf 1" />
             </performance_item>
             <performance_item title="Normal">
                 <param id="is_2_pass" value="false" />
                 <param id="ffmpeg_vpre" value="normal" />
+                <param id="ffmpeg_profile" value="-bf 16" />
             </performance_item>
             <performance_item title="Normal (2 pass)">
               	<param id="is_2_pass" value="true" />
                	<param id="ffmpeg_vpre" value="normal" />
                	<param id="ffmpeg_vpre_pass1" value="normal-pass1" />
+                <param id="ffmpeg_profile" value="-bf 16" />
              </performance_item>
             <performance_item title="High Quality">
                 <param id="is_2_pass" value="false" />
                 <param id="ffmpeg_vpre" value="hq" />
+                <param id="ffmpeg_profile" value="-bf 16" />
             </performance_item>
             <performance_item title="High Quality (2 pass)">
                 <param id="is_2_pass" value="true" />
                 <param id="ffmpeg_vpre" value="hq" />
               	<param id="ffmpeg_vpre_pass1" value="hq-pass1" />
+                <param id="ffmpeg_profile" value="-bf 16" />
            </performance_item>
         </performance>
         <param id="ffmpeg_vcodec" value="libx264" />
@@ -236,13 +242,13 @@ Command file contains an outer <videomonkey> element with one of each children:
         <device_group title="iTunes">
 			<common_device>
 		        <command id="ffmpeg_single_pass_options">
-					-vpre $ffmpeg_vpre
+					-vpre $ffmpeg_vpre $ffmpeg_profile
 				</command>
 		        <command id="ffmpeg_pass1_options">
-					-vpre $ffmpeg_vpre_pass1 -pass 1 -passlogfile "$pass_log_file"
+					-vpre $ffmpeg_vpre_pass1 -pass 1 -passlogfile "$pass_log_file" $ffmpeg_profile
 				</command>
 		        <command id="ffmpeg_pass2_options">
-					-vpre $ffmpeg_vpre -pass 2 -passlogfile "$pass_log_file"
+					-vpre $ffmpeg_vpre -pass 2 -passlogfile "$pass_log_file" $ffmpeg_profile
 				</command>
 		        <command id="ffmpeg_options">
 		            -vcodec $ffmpeg_vcodec -b $bitrate -s $(output_video_width)x$(output_video_height) 
@@ -386,6 +392,10 @@ Command file contains an outer <videomonkey> element with one of each children:
 
 					// set endoder
 					params.ffmpeg_vcodec = h264 ? "libx264" : "mpeg4";
+
+					// adjust vpre for baseline if needed
+					if (title != "Apple TV")
+						params.ffmpeg_profile = "-bf 0 -coder 0 -flags2 -wpred-dct8x8";
 
 					// construct the recipe
 					if (	 !bool(params.special_qt) && !bool(params.has_audio) && !bool(params.is_2_pass))
