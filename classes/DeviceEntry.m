@@ -612,11 +612,11 @@ static void setButton(NSButton* button, Button* item)
         sliderValue = 0;
     
     if (sliderValue == 1) {
-        *stop = count-2;
+        *stop = count-1;
         *q = 1;
     }
     else {
-        sliderValue *= count - 1;
+        sliderValue *= count;
         *stop = (int) sliderValue;    
         *q = fmod(sliderValue, 1);
     }

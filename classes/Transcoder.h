@@ -62,6 +62,8 @@ typedef enum FileStatus { FS_INVALID, FS_VALID, FS_ENCODING, FS_PAUSED, FS_FAILE
 
 @end
 
+#define NUM_PROGRESS_TIMES 10
+
 @interface Transcoder : NSObject {
   @private
     NSMutableArray* m_inputFiles;
@@ -83,6 +85,10 @@ typedef enum FileStatus { FS_INVALID, FS_VALID, FS_ENCODING, FS_PAUSED, FS_FAILE
     NSString* m_tempAudioFileName;
     NSString* m_passLogFileName;
     NSString* m_audioQuality;
+    
+    double m_encodingStartTime;
+    int m_numLastProgressTimes;
+    double m_lastProgressTimes[NUM_PROGRESS_TIMES];
 }
 
 -(Transcoder*) initWithController: (AppController*) controller;
@@ -127,6 +133,8 @@ typedef enum FileStatus { FS_INVALID, FS_VALID, FS_ENCODING, FS_PAUSED, FS_FAILE
 -(NSString*) audioQuality;
 
 -(NSString*) ffmpeg_vcodec;
+
+-(double) timeForProgress:(double) progress;
 
 -(void) setParams;
 

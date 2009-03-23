@@ -16,9 +16,15 @@
 
 typedef enum { RS_STOPPED, RS_RUNNING, RS_PAUSED } RunStateType;
 
+#define FIRST_TIME_FOR_PROGRESS_RESPONSE 5
+#define NO_TIME_FOR_PROGRESS_YET -1
+#define UNKNOWN_TIME_FOR_PROGRESS -2
+
 @interface AppController : NSObject {
 @private
     IBOutlet NSProgressIndicator* m_totalProgressBar;
+    IBOutlet NSTextField* m_progressText;
+    IBOutlet NSTextField* m_fileNumberText;
     IBOutlet NSTextField* m_saveToPathTextField;
     IBOutlet NSToolbarItem* m_startEncodeItem;
     IBOutlet NSToolbarItem* m_pauseEncodeItem;
@@ -37,6 +43,9 @@ typedef enum { RS_STOPPED, RS_RUNNING, RS_PAUSED } RunStateType;
     BOOL m_isTerminated;
     BOOL m_addToMediaLibrary;
     BOOL m_deleteFromDestination;
+    
+    int m_numFilesToConvert;
+    int m_fileConvertingIndex;
     
     NSArray* m_fileList;
 }

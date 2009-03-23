@@ -418,6 +418,38 @@ static NSImage* getFileStatusImage(FileStatus status)
         return @"libx264";
 }
 
+-(double) timeForProgress:(double) progress
+{
+    if (progress <= 0)
+        return UNKNOWN_TIME_FOR_PROGRESS;
+    
+    double timeSoFar = ((double) [[NSDate date] timeIntervalSince1970]) - m_encodingStartTime;
+    
+    // don't even start remembering at the beginning
+    if (timeSoFar < FIRST_TIME_FOR_PROGRESS_RESPONSE)
+        return NO_TIME_FOR_PROGRESS_YET;
+    
+    double total = timeSoFar / progress;
+    double t = (total - timeSoFar) / 60;
+    
+    // remember the last values so we can average
+    m_lastProgressTimes[m_numLastProgressTimes++] = t;
+    if (m_numLastProgressTimes >= NUM_PROGRESS_TIMES)
+        m_numLastProgressTimes = 0;
+        
+    // take the average
+    total = 0;
+    int count = 0;
+    for (int i = 0; i < NUM_PROGRESS_TIMES; ++i) {
+        if (m_lastProgressTimes[i] > 0) {
+            total += m_lastProgressTimes[i];
+            ++count;
+        }
+    }
+    
+    return count ? (total / count) : UNKNOWN_TIME_FOR_PROGRESS;
+}
+
 -(double) outputFileSize
 {
     double duration = [self duration];
@@ -541,7 +573,13 @@ static NSImage* getFileStatusImage(FileStatus status)
 {
     if ([m_outputFiles count] == 0 || !m_enabled)
         return NO;
-        
+    
+    // initialize progress values
+    m_encodingStartTime = (double) [[NSDate date] timeIntervalSince1970];
+    m_numLastProgressTimes = 0;
+    for (int i =  0; i < NUM_PROGRESS_TIMES; ++i)
+        m_lastProgressTimes[i] = -1;
+    
     m_progress = 0;
     [m_progressIndicator setDoubleValue: m_progress];
     

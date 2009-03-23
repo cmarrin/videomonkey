@@ -72,6 +72,7 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
     m_addToMediaLibrary = [m_addToMediaLibraryButton state] != 0;
     m_deleteFromDestination = [m_deleteFromDestinationButton state] != 0;
     [m_deleteFromDestinationButton setEnabled:m_addToMediaLibrary];
+    [m_fileNumberText setStringValue:@""];
 }
 
 -(Transcoder*) transcoderForFileName:(NSString*) fileName
@@ -116,8 +117,10 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
 {
     if (!m_isTerminated) {
         if (++m_currentEncoding < [m_fileList count]) {
-            if (![[m_fileList objectAtIndex: m_currentEncoding] startEncode])
+            if (![[m_fileList objectAtIndex: m_currentEncoding] startEncode]) {
+                m_fileConvertingIndex++;
                 [self startNextEncode];
+            }
             return;
         }
     }
@@ -135,22 +138,26 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
     m_isTerminated = NO;
     
     // reset the status for anything we're about to encode
-    BOOL anyEnabled = false;
-    
+    m_numFilesToConvert = 0;
     for (Transcoder* transcoder in m_fileList) {
         if ([transcoder enabled]) {
-            anyEnabled = true;
+            m_numFilesToConvert++;
             [transcoder resetStatus];
         }
     }
     
-    if (!anyEnabled) {
+    if (!m_numFilesToConvert) {
         NSBeginAlertSheet(@"No Files To Encode", nil, nil, nil, [[NSApplication sharedApplication] mainWindow], 
                           nil, nil, nil, nil, 
                           @"None of the files in the list are selected for encoding. Either "
                           "select the check box on some files or drag more files into the list.");
         return;
     }
+    
+    m_fileConvertingIndex = 0;
+
+    [m_progressText setStringValue:@""];
+    [m_fileNumberText setStringValue:@""];
 
     if (m_runState == RS_PAUSED) {
         [[m_fileList objectAtIndex: m_currentEncoding] resumeEncode];
@@ -235,12 +242,25 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
 -(void) setProgressFor: (Transcoder*) transcoder to: (double) progress
 {
     [m_totalProgressBar setDoubleValue: progress];
+    int timeRemaining = (int) (floor([transcoder timeForProgress: progress] + 0.5));
+    NSString* timeRemainingString;
+    
+    if (timeRemaining == NO_TIME_FOR_PROGRESS_YET)
+        timeRemainingString = @"Starting";
+    else
+        timeRemainingString = timeRemaining ? [NSString stringWithFormat:@"About %d minute%s remaining for", timeRemaining, 
+                                            (timeRemaining > 1) ? "s" : ""] : @"Less than a minute remaining for";
+    
+    timeRemainingString = [NSString stringWithFormat:@"%@ file %d...", timeRemainingString, m_fileConvertingIndex+1];
+    [m_progressText setStringValue:timeRemainingString];
+    [m_fileNumberText setStringValue:[NSString stringWithFormat:@"File %d of %d", m_fileConvertingIndex+1, m_numFilesToConvert]];
     [m_fileListController reloadData];
 }
 
 -(void) encodeFinished: (Transcoder*) transcoder
 {
     [m_totalProgressBar setDoubleValue: m_isTerminated ? 0 : 1];
+    [m_progressText setStringValue:@""];
     [m_fileListController reloadData];
     [self startNextEncode];
 }
