@@ -1,33 +1,24 @@
 <?xml version="1.0"?>
 
 <!--
-Command file contains an outer <videomonkey> element with one of each children:
+    
+The purpose of this file is to represent the actions to be taken when the VideoMonkey GUI is manipulated. The GUI contains a list of files to be encoded. For each input file, information about it (size, bitrate, frame rate, etc.) is stored. When any change is made to the GUI (selecting a menu item, sliding a slider, checking a box, etc.) 
+
+File Syntax
+===========
+
+The Command file contains an outer <videomonkey> element with one of each children:
 
  <default_device> - parameters used by any device when not overridden, with children:
      <quality> - set of stops for quality slider, with children:
          <quality_stop> - one quality stop, with attributes:
-             which - index of this quality stop (0-5)
-                 Quality stop 0 is untitled and is used to hold lowest values for slider.
-                 Quality stop 5 is the rightmost tick mark and holds the highest slider values.
              title - the title of the tick mark
-             bitrate - highest bitrate for this tick mark (or minimum bitrate when which=0)
-             audio - audio quality: low (16k, 1ch, 11025), medium (32k, 1ch, 22050), high (128k, 2ch, 48000)
-             size - relative video size (e.g., 0.5 is half size horiz and vert)
-
      <performance> - values for performance menu, with children:
          <performance_item> - one item in menu, with attributes and children:
              title - title of this item in menu
-             <param> - a param (in runtime param dictionary) to use when this item is selected, with atributes:
-                 id - name of this param
-                 value - string value of this param (can use $ and ! as in commands)
-
-     <script>
-	
-     <param> - see above. Param to use if none of the same name is given in device spec.
-
-     <command> - command string, contained text is the string of the command, with attributes:
-             id - name of the command (referenced by other commands)
-
+             <param>, <command>, <script> - see below
+     <param>, <command>, <script> - see below
+         
  <devices> - List of devices in device menu, with children:
      <device_group> - A grouping of devices. Each groups has a title and groups are separated by a line, 
 	                  with attributes and children:
@@ -41,27 +32,102 @@ Command file contains an outer <videomonkey> element with one of each children:
                  which - which checkbox (0-n)
                  title - title on the checkbox
                  enabled - whether or not this checkbox is enabled (true | false)
-                 <checked_params> - parameters used when this checkbox is checked, with children:
-	                 <script>
-	                 <param>
-	                 <command>
-                 <unchecked_params> - parameters used when this checkbox is not checked, with children:
-	                 <script>
-	                 <param>
-	                 <command>
+                 <checked_item> - parameters used when this checkbox is checked, with children:
+	                 <param>, <command>, <script> - see below
+                 <unchecked_item> - parameters used when this checkbox is not checked, with children:
+	                 <param>, <command>, <script> - see below
              <menu> - this describes a menu, with children:
                  which - which menu (0-n)
                  title - title on the menu
                  enabled - whether or not this menu is enabled (true | false)
                  <menu_item> - one entry in the menu, with attributes and children:
 	                 title - title of this menu item
-	                 <script>
-	                 <param>
-	                 <command>
-                 <unchecked_params> - parameters used when this checkbox is not checked, with children:
-	                 <script>
-	                 <param>
-	                 <command>
+	                 <param>, <command>, <script> - see below
+                 <unchecked_item> - parameters used when this checkbox is not checked, with children:
+	                 <param>, <command>, <script> - see below
+	        <param>, <command>, <script> - see below
+
+<script> element
+================
+
+Wherever a script element is allowed, there can be 0 or more. If more than one, all scripts are concatenated and executed as one. Scripts have access to the normal JavaScript objects (Object, String, Array, etc.). In addition, there is a log() function which takes 0 or more parameters, each of which is converted to a string and output to the console. After all strings of a log() function are printed, a newline is printed. Log entries are prefixed for identification.
+
+<param> element
+===============
+
+Wherever a param element is allowed, there can be 0 or more. Each element adds a property to the 'params' property whose property name is obtained from the 'id' attribute and whose property value is obtained from the 'value' attribute.
+
+<command> element
+=================
+
+Wherever a command element is allowed, there can be 0 or more. Commands are just like params except that the property value is the contents of the element, rather than the 'value' attribute. All newline characters are stripped from the content string, as are any leading of trailing whitespace characters.
+
+Execution
+=========
+
+The workhorse elements are the <param>, <command>, <script>. These contain the instructions which ultimately lead to a recipe to use for the encoding job. In general params and commands are added to the JavaScript 'params' object in one pass. And then the scripts are executed in a separate pass. So even later defined params and commands are accessible to earlier scripts. Scripts are executed according to the elements which contain them in the following order:
+
+    1) selected <performance_item> from <default_device>
+    2) <default_device>
+    3) selected <performance_item> from <common_device> for selected <device>
+    4) <common_device> for selected <device>
+    5) selected <performance_item> from selected <device>
+    6) <checked_item> or <unchecked_item> entry from each <checkbox> in selected <device>
+    7) selected <menu_item> entry from each <menu> in selected <device>
+    8) selected <device>
+    
+The result of this script execution is a string in 'params.recipe' which is the recipe to be executed. See below for recipe syntax. These scripts are executed when any UI control is changed. This includes the slider, which executes the scripts for each move. The script is executed in turn for each file selected for encoding. This pass of script execution is to fill in the file list entries. When encoding is started, the scripts are executed again for the currently encoding file and the recipe is used to start the encoding. Once encoding is finished, the scripts are executed for the next file, and so on.
+
+Params set on entry to Javascript
+=================================
+
+Each time scripts execute, a number of parameters are preloaded into the 'params' property. These are:
+
+Param Name              Value
+==========              =====
+
+ffmpeg                  ffmpeg command path
+qt_export               qt_export command path (used to extract audio from some file types)
+movtoy4m                movtoy4m command path (used to extract video from some file types)
+yuvadjust               yuvadjust command path (used to adjust video saturation, hue, etc.)
+yuvcorrect              yuvcorrect command path (used to perform color correction on raw yuv data)
+
+input_file              Current input file path
+output_file             Current output file path
+tmp_audio_file          Path to a temp file to which audio can be saved
+pass_log_file           Path to the ffmpeg pass log file, used for 2 pass encoding
+input_video_width       Width, in pixels, of the input file
+input_video_height      Height, in pixels, of the input file
+input_frame_rate        Frame rate, in fps, of the input file
+input_video_codec       Name of the video codec of the input file
+
+is_quicktime            "true" if the input file is quicktime
+has_audio               "true" if the input file contains an audio track
+
+quality                 The current setting of the quality slider (0-1 between tick marks)
+quality_stop            Which tick mark is currently to the left of the slider (0 to #ticks-1)
+title                   Title of the currently selected device
+
+After executing all the scripts (see Execution) the system expects the following properties to be set in the 'params' property:
+
+Param Name              Value
+==========              =====
+
+recipe                  Recipe to use for the current encoding
+output_video_width      Width, in pixels, of the output file
+output_video_height     Height, in pixels, of the output file
+audio_quality           A string indicating the audio quality of the output file (usually "low", "medium" or "high")
+bitrate                 Approximate bitrate of the output file
+
+The recipe is used for the actual encoding, the others are used to update the file entries.
+
+Recipes 
+=======
+
+A recipe is essentially a shell script to be passed to /bin/sh. A param (from the global 'params' object) can be included with a '$' followed by the property name. For instance if there were a 'params.foo' property with the value "very nice", then the recipe "This is a $foo command" would translate to "This is a very nice command". To include a literal '$' simply use two consecutively ('$$'). 
+
+A property name is anything from the character after the '$' to the next whitespace character. Or you can use parantheses around the property name to concatenate with non-whitespace characters. For instance "This is the $(foo)st command" would translate to "This is the very nicest command".
+
 -->
 
 <!DOCTYPE videomonkey [
@@ -71,14 +137,13 @@ Command file contains an outer <videomonkey> element with one of each children:
         <!ATTLIST param id CDATA "">
         <!ATTLIST param value CDATA "">
 	<!ELEMENT default_device    (quality|performance|script|param|command)*>
-	<!ELEMENT common_device    (quality|performance|script|param|command)*>
+	<!ELEMENT common_device     (quality|performance|script|param|command)*>
     <!ELEMENT devices    (device_group*)>
     <!ELEMENT command    (#PCDATA)>
         <!ATTLIST command id CDATA "">
     <!ELEMENT quality    (quality_stop*)>
-    <!ELEMENT quality_stop    (script|param|command)*>
+    <!ELEMENT quality_stop  EMPTY>
         <!ATTLIST quality_stop title CDATA "">
-        <!ATTLIST quality_stop bitrate CDATA "">
     <!ELEMENT performance    (performance_item*)>
     <!ELEMENT performance_item    (script|param|command)*>
         <!ATTLIST performance_item title CDATA "">
@@ -88,12 +153,12 @@ Command file contains an outer <videomonkey> element with one of each children:
         <!ATTLIST device title CDATA "">
         <!ATTLIST device icon CDATA "">
         <!ATTLIST device enabled CDATA "">
-    <!ELEMENT checkbox    (checked_params|unchecked_params)*>
+    <!ELEMENT checkbox    (checked_item|unchecked_item)*>
         <!ATTLIST checkbox which CDATA "">
         <!ATTLIST checkbox title CDATA "">
         <!ATTLIST checkbox enabled CDATA "">
-     <!ELEMENT checked_params    (script|param|command)*>
-    <!ELEMENT unchecked_params    (script|param|command)*>
+     <!ELEMENT checked_item    (script|param|command)*>
+    <!ELEMENT unchecked_item    (script|param|command)*>
     <!ELEMENT menu    (menu_item*)>
         <!ATTLIST menu which CDATA "">
         <!ATTLIST menu title CDATA "">
@@ -106,7 +171,7 @@ Command file contains an outer <videomonkey> element with one of each children:
         <script>
             <![CDATA[
             
-            function caseInsensitiveCompare(a,b) { return a.toLowerCase() == b.toLowerCase() }
+             function caseInsensitiveCompare(a,b) { return a.toLowerCase() == b.toLowerCase() }
             
             function audio(type)
             {
@@ -187,7 +252,7 @@ Command file contains an outer <videomonkey> element with one of each children:
             ]]>
         </script>
        	<quality>
-             <quality_stop title="Tiny" />
+            <quality_stop title="Tiny" />
             <quality_stop title="Low" />
             <quality_stop title="Standard" />
             <quality_stop title="High" />
@@ -421,24 +486,24 @@ Command file contains an outer <videomonkey> element with one of each children:
            	<!-- All Apple Devices -->
             <device title="All Apple Devices" icon="itunesfile">
                  <checkbox which="0" title="H.264 Video">
-                    <checked_params>
-                       	<param id="h264" value="true" />
-                    </checked_params>
-                    <unchecked_params>
+                    <checked_item>
+                        	<param id="h264" value="true" />
+                    </checked_item>
+                    <unchecked_item>
                     	<param id="h264" value="true" />
-                    </unchecked_params>
+                    </unchecked_item>
                 </checkbox>
 			</device>
             
             <!-- iPod -->
             <device title="iPod" icon="ipod">
             	<checkbox which="0" title="H.264 Video">
-                    <checked_params>
+                    <checked_item>
                        	<param id="h264" value="true" />
-                    </checked_params>
-                    <unchecked_params>
+                    </checked_item>
+                    <unchecked_item>
                     	<param id="h264" value="true" />
-                    </unchecked_params>
+                    </unchecked_item>
                 </checkbox>
                 <menu which="0" title="Best for:">
                 	<menu_item title="iPod Screen">
@@ -460,12 +525,12 @@ Command file contains an outer <videomonkey> element with one of each children:
                  	<quality_stop title="Go Nuts" />
                 </quality>
                 <checkbox which="0" title="H.264 Video">
-                    <checked_params>
+                    <checked_item>
                        	<param id="h264" value="true" />
-                    </checked_params>
-                    <unchecked_params>
+                    </checked_item>
+                    <unchecked_item>
                     	<param id="h264" value="true" />
-                    </unchecked_params>
+                    </unchecked_item>
                 </checkbox>
                 <menu which="0" title="Best for:">
                 	<menu_item title="iPod Screen">
@@ -487,12 +552,12 @@ Command file contains an outer <videomonkey> element with one of each children:
                     <quality_stop title="Go Nuts" />
                 </quality>
                 <checkbox which="0" title="H.264 Video">
-                    <checked_params>
+                    <checked_item>
                        	<param id="h264" value="true" />
-                    </checked_params>
-                    <unchecked_params>
+                    </checked_item>
+                    <unchecked_item>
                     	<param id="h264" value="true" />
-                    </unchecked_params>
+                    </unchecked_item>
                 </checkbox>
                 <menu which="0" title="Best for:">
                 	<menu_item title="iPod Screen">
@@ -507,20 +572,20 @@ Command file contains an outer <videomonkey> element with one of each children:
             <!-- Apple TV -->
             <device title="Apple TV" icon="appletv">
                 <checkbox which="0" title="H.264 Video">
-                    <checked_params>
+                    <checked_item>
                        	<param id="h264" value="true" />
-                    </checked_params>
-                    <unchecked_params>
+                    </checked_item>
+                    <unchecked_item>
                     	<param id="h264" value="true" />
-                    </unchecked_params>
+                    </unchecked_item>
                 </checkbox>
 				<checkbox which="1" title="Keep Surround Track" enabled="false">
-                    <checked_params>
+                    <checked_item>
                         <param id="keep_surround_track" value="true" />
-                    </checked_params>
-                    <unchecked_params>
+                    </checked_item>
+                    <unchecked_item>
                         <param id="keep_surround_track" value="false" />
-                    </unchecked_params>
+                    </unchecked_item>
                 </checkbox>
  			</device>
          </device_group>
@@ -535,51 +600,24 @@ Command file contains an outer <videomonkey> element with one of each children:
             <!-- DV -->
             <device title="DV" icon="dv" enabled="false">
                 <checkbox which="0" title="H.264 Video">
-                    <checked_params>
+                    <checked_item>
                         <param id="ffmpeg_vcodec" value="libx264" />
-                    </checked_params>
-                    <unchecked_params>
+                    </checked_item>
+                    <unchecked_item>
                         <param id="ffmpeg_vcodec" value="mpeg4" />
-                    </unchecked_params>
+                    </unchecked_item>
                 </checkbox>
             </device>
             
             <!-- DVD -->
             <device title="DVD" icon="cd" enabled="false">
-                <quality>
-                    <quality_stop title="EDGE" bitrate="50000">
-                        <script> audio('low') </script> 
-                        <param id="size" value="192x144" />
-                        <param id="frame_rate" value="0.5" />
-                    </quality_stop>
-                    <quality_stop title="3G" bitrate="100000">
-                        <script> audio('medium') </script> 
-                        <param id="size" value="480x320" />
-                        <param id="frame_rate" value="1" />
-                    </quality_stop>
-                    <quality_stop title="WiFi" bitrate="1100000">
-                        <script> audio('high') </script> 
-                        <param id="size" value="480x320" />
-                        <param id="frame_rate" value="1" />
-                    </quality_stop>
-                    <quality_stop title="High" bitrate="1800000">
-                        <script> audio('high') </script> 
-                        <param id="size" value="640x480" />
-                        <param id="frame_rate" value="1" />
-                    </quality_stop>
-                    <quality_stop title="Go Nuts" bitrate="3000000">
-                        <script> audio('high') </script> 
-                        <param id="size" value="640x480" />
-                        <param id="frame_rate" value="1" />
-                    </quality_stop>
-                </quality>
                 <checkbox which="0" title="H.264 Video">
-                    <checked_params>
+                    <checked_item>
                         <param id="ffmpeg_vcodec" value="libx264" />
-                    </checked_params>
-                    <unchecked_params>
+                    </checked_item>
+                    <unchecked_item>
                         <param id="ffmpeg_vcodec" value="mpeg4" />
-                    </unchecked_params>
+                    </unchecked_item>
                 </checkbox>
                 <menu which="0" title="Best for:">
                     <menu_item title="iPhone Screen">
@@ -593,40 +631,13 @@ Command file contains an outer <videomonkey> element with one of each children:
             
             <!-- Tivo Series 2 -->
             <device title="Tivo Series 2" icon="tivo" enabled="false">
-                <quality>
-                    <quality_stop title="EDGE" bitrate="50000">
-                        <script> audio('low') </script> 
-                        <param id="size" value="192x144" />
-                        <param id="frame_rate" value="0.5" />
-                    </quality_stop>
-                    <quality_stop title="3G" bitrate="100000">
-                        <script> audio('medium') </script> 
-                        <param id="size" value="480x320" />
-                        <param id="frame_rate" value="1" />
-                    </quality_stop>
-                    <quality_stop title="WiFi" bitrate="1100000">
-                        <script> audio('high') </script> 
-                        <param id="size" value="480x320" />
-                        <param id="frame_rate" value="1" />
-                    </quality_stop>
-                    <quality_stop title="High" bitrate="1800000">
-                        <script> audio('high') </script> 
-                        <param id="size" value="640x480" />
-                        <param id="frame_rate" value="1" />
-                    </quality_stop>
-                    <quality_stop title="Go Nuts" bitrate="3000000">
-                        <script> audio('high') </script> 
-                        <param id="size" value="640x480" />
-                        <param id="frame_rate" value="1" />
-                    </quality_stop>
-                </quality>
                 <checkbox which="0" title="H.264 Video">
-                    <checked_params>
+                    <checked_item>
                         <param id="ffmpeg_vcodec" value="libx264" />
-                    </checked_params>
-                    <unchecked_params>
+                    </checked_item>
+                    <unchecked_item>
                         <param id="ffmpeg_vcodec" value="mpeg4" />
-                    </unchecked_params>
+                    </unchecked_item>
                 </checkbox>
                 <menu which="0" title="Best for:">
                     <menu_item title="iPhone Screen">
@@ -640,40 +651,13 @@ Command file contains an outer <videomonkey> element with one of each children:
             
             <!-- Tivo Series 3 -->
             <device title="Tivo Series 3" icon="tivo" enabled="false">
-                <quality>
-                    <quality_stop title="EDGE" bitrate="50000">
-                        <script> audio('low') </script> 
-                        <param id="size" value="192x144" />
-                        <param id="frame_rate" value="0.5" />
-                    </quality_stop>
-                    <quality_stop title="3G" bitrate="100000">
-                        <script> audio('medium') </script> 
-                        <param id="size" value="480x320" />
-                        <param id="frame_rate" value="1" />
-                    </quality_stop>
-                    <quality_stop title="WiFi" bitrate="1100000">
-                        <script> audio('high') </script> 
-                        <param id="size" value="480x320" />
-                        <param id="frame_rate" value="1" />
-                    </quality_stop>
-                    <quality_stop title="High" bitrate="1800000">
-                        <script> audio('high') </script> 
-                        <param id="size" value="640x480" />
-                        <param id="frame_rate" value="1" />
-                    </quality_stop>
-                    <quality_stop title="Go Nuts" bitrate="3000000">
-                        <script> audio('high') </script> 
-                        <param id="size" value="640x480" />
-                        <param id="frame_rate" value="1" />
-                    </quality_stop>
-                </quality>
                 <checkbox which="0" title="H.264 Video">
-                    <checked_params>
+                    <checked_item>
                         <param id="ffmpeg_vcodec" value="libx264" />
-                    </checked_params>
-                    <unchecked_params>
+                    </checked_item>
+                    <unchecked_item>
                         <param id="ffmpeg_vcodec" value="mpeg4" />
-                    </unchecked_params>
+                    </unchecked_item>
                 </checkbox>
                 <menu which="0" title="Best for:">
                     <menu_item title="iPhone Screen">
@@ -687,40 +671,13 @@ Command file contains an outer <videomonkey> element with one of each children:
 
             <!-- 3g Cell Phones -->
             <device title="3g Cell Phones" icon="3g" enabled="false">
-                <quality>
-                    <quality_stop title="EDGE" bitrate="50000">
-                        <script> audio('low') </script> 
-                        <param id="size" value="192x144" />
-                        <param id="frame_rate" value="0.5" />
-                    </quality_stop>
-                    <quality_stop title="3G" bitrate="100000">
-                        <script> audio('medium') </script> 
-                        <param id="size" value="480x320" />
-                        <param id="frame_rate" value="1" />
-                    </quality_stop>
-                    <quality_stop title="WiFi" bitrate="1100000">
-                        <script> audio('high') </script> 
-                        <param id="size" value="480x320" />
-                        <param id="frame_rate" value="1" />
-                    </quality_stop>
-                    <quality_stop title="High" bitrate="1800000">
-                        <script> audio('high') </script> 
-                        <param id="size" value="640x480" />
-                        <param id="frame_rate" value="1" />
-                    </quality_stop>
-                    <quality_stop title="Go Nuts" bitrate="3000000">
-                        <script> audio('high') </script> 
-                        <param id="size" value="640x480" />
-                        <param id="frame_rate" value="1" />
-                    </quality_stop>
-                </quality>
                 <checkbox which="0" title="H.264 Video">
-                    <checked_params>
+                    <checked_item>
                         <param id="ffmpeg_vcodec" value="libx264" />
-                    </checked_params>
-                    <unchecked_params>
+                    </checked_item>
+                    <unchecked_item>
                         <param id="ffmpeg_vcodec" value="mpeg4" />
-                    </unchecked_params>
+                    </unchecked_item>
                 </checkbox>
                 <menu which="0" title="Best for:">
                     <menu_item title="iPhone Screen">
@@ -743,51 +700,24 @@ Command file contains an outer <videomonkey> element with one of each children:
             <!-- XBox 360 -->
             <device title="XBox 360" icon="xbox360" enabled="false">
                 <checkbox which="0" title="H.264 Video">
-                    <checked_params>
+                    <checked_item>
                         <param id="ffmpeg_vcodec" value="libx264" />
-                    </checked_params>
-                    <unchecked_params>
+                    </checked_item>
+                    <unchecked_item>
                         <param id="ffmpeg_vcodec" value="mpeg4" />
-                    </unchecked_params>
+                    </unchecked_item>
                 </checkbox>
             </device>
             
             <!-- PSP -->
             <device title="PSP" icon="psp" enabled="false">
-                <quality>
-                    <quality_stop title="EDGE" bitrate="50000">
-                        <script> audio('low') </script> 
-                        <param id="size" value="192x144" />
-                        <param id="frame_rate" value="0.5" />
-                    </quality_stop>
-                    <quality_stop title="3G" bitrate="100000">
-                        <script> audio('medium') </script> 
-                        <param id="size" value="480x320" />
-                        <param id="frame_rate" value="1" />
-                    </quality_stop>
-                    <quality_stop title="WiFi" bitrate="1100000">
-                        <script> audio('high') </script> 
-                        <param id="size" value="480x320" />
-                        <param id="frame_rate" value="1" />
-                    </quality_stop>
-                    <quality_stop title="High" bitrate="1800000">
-                        <script> audio('high') </script> 
-                        <param id="size" value="640x480" />
-                        <param id="frame_rate" value="1" />
-                    </quality_stop>
-                    <quality_stop title="Go Nuts" bitrate="3000000">
-                        <script> audio('high') </script> 
-                        <param id="size" value="640x480" />
-                        <param id="frame_rate" value="1" />
-                    </quality_stop>
-                </quality>
                 <checkbox which="0" title="H.264 Video">
-                    <checked_params>
+                    <checked_item>
                         <param id="ffmpeg_vcodec" value="libx264" />
-                    </checked_params>
-                    <unchecked_params>
+                    </checked_item>
+                    <unchecked_item>
                         <param id="ffmpeg_vcodec" value="mpeg4" />
-                    </unchecked_params>
+                    </unchecked_item>
                 </checkbox>
                 <menu which="0" title="Best for:">
                     <menu_item title="iPhone Screen">
@@ -801,40 +731,13 @@ Command file contains an outer <videomonkey> element with one of each children:
             
             <!-- Playstation 3 -->
             <device title="Playstation 3" icon="ps3" enabled="false">
-                <quality>
-                    <quality_stop title="EDGE" bitrate="50000">
-                        <script> audio('low') </script> 
-                        <param id="size" value="192x144" />
-                        <param id="frame_rate" value="0.5" />
-                    </quality_stop>
-                    <quality_stop title="3G" bitrate="100000">
-                        <script> audio('medium') </script> 
-                        <param id="size" value="480x320" />
-                        <param id="frame_rate" value="1" />
-                    </quality_stop>
-                    <quality_stop title="WiFi" bitrate="1100000">
-                        <script> audio('high') </script> 
-                        <param id="size" value="480x320" />
-                        <param id="frame_rate" value="1" />
-                    </quality_stop>
-                    <quality_stop title="High" bitrate="1800000">
-                        <script> audio('high') </script> 
-                        <param id="size" value="640x480" />
-                        <param id="frame_rate" value="1" />
-                    </quality_stop>
-                    <quality_stop title="Go Nuts" bitrate="3000000">
-                        <script> audio('high') </script> 
-                        <param id="size" value="640x480" />
-                        <param id="frame_rate" value="1" />
-                    </quality_stop>
-                </quality>
-                <checkbox which="0" title="H.264 Video">
-                    <checked_params>
+                 <checkbox which="0" title="H.264 Video">
+                    <checked_item>
                         <param id="ffmpeg_vcodec" value="libx264" />
-                    </checked_params>
-                    <unchecked_params>
+                    </checked_item>
+                    <unchecked_item>
                         <param id="ffmpeg_vcodec" value="mpeg4" />
-                    </unchecked_params>
+                    </unchecked_item>
                 </checkbox>
                 <menu which="0" title="Best for:">
                     <menu_item title="iPhone Screen">
@@ -848,40 +751,13 @@ Command file contains an outer <videomonkey> element with one of each children:
             
             <!-- Nintendo Wii -->
             <device title="Nintendo Wii" icon="wii" enabled="false">
-                <quality>
-                    <quality_stop title="EDGE" bitrate="50000">
-                        <script> audio('low') </script> 
-                        <param id="size" value="192x144" />
-                        <param id="frame_rate" value="0.5" />
-                    </quality_stop>
-                    <quality_stop title="3G" bitrate="100000">
-                        <script> audio('medium') </script> 
-                        <param id="size" value="480x320" />
-                        <param id="frame_rate" value="1" />
-                    </quality_stop>
-                    <quality_stop title="WiFi" bitrate="1100000">
-                        <script> audio('high') </script> 
-                        <param id="size" value="480x320" />
-                        <param id="frame_rate" value="1" />
-                    </quality_stop>
-                    <quality_stop title="High" bitrate="1800000">
-                        <script> audio('high') </script> 
-                        <param id="size" value="640x480" />
-                        <param id="frame_rate" value="1" />
-                    </quality_stop>
-                    <quality_stop title="Go Nuts" bitrate="3000000">
-                        <script> audio('high') </script> 
-                        <param id="size" value="640x480" />
-                        <param id="frame_rate" value="1" />
-                    </quality_stop>
-                </quality>
-                <checkbox which="0" title="H.264 Video">
-                    <checked_params>
+                 <checkbox which="0" title="H.264 Video">
+                    <checked_item>
                         <param id="ffmpeg_vcodec" value="libx264" />
-                    </checked_params>
-                    <unchecked_params>
+                    </checked_item>
+                    <unchecked_item>
                         <param id="ffmpeg_vcodec" value="mpeg4" />
-                    </unchecked_params>
+                    </unchecked_item>
                 </checkbox>
                 <menu which="0" title="Best for:">
                     <menu_item title="iPhone Screen">
@@ -904,51 +780,24 @@ Command file contains an outer <videomonkey> element with one of each children:
             <!-- AVI -->
             <device title="AVI" icon="file" enabled="false">
                 <checkbox which="0" title="H.264 Video">
-                    <checked_params>
+                    <checked_item>
                         <param id="ffmpeg_vcodec" value="libx264" />
-                    </checked_params>
-                    <unchecked_params>
+                    </checked_item>
+                    <unchecked_item>
                         <param id="ffmpeg_vcodec" value="mpeg4" />
-                    </unchecked_params>
+                    </unchecked_item>
                 </checkbox>
             </device>
             
             <!-- MP4 -->
             <device title="MP4" icon="file" enabled="false">
-                <quality>
-                    <quality_stop title="EDGE" bitrate="50000">
-                        <script> audio('low') </script> 
-                        <param id="size" value="192x144" />
-                        <param id="frame_rate" value="0.5" />
-                    </quality_stop>
-                    <quality_stop title="3G" bitrate="100000">
-                        <script> audio('medium') </script> 
-                        <param id="size" value="480x320" />
-                        <param id="frame_rate" value="1" />
-                    </quality_stop>
-                    <quality_stop title="WiFi" bitrate="1100000">
-                        <script> audio('high') </script> 
-                        <param id="size" value="480x320" />
-                        <param id="frame_rate" value="1" />
-                    </quality_stop>
-                    <quality_stop title="High" bitrate="1800000">
-                        <script> audio('high') </script> 
-                        <param id="size" value="640x480" />
-                        <param id="frame_rate" value="1" />
-                    </quality_stop>
-                    <quality_stop title="Go Nuts" bitrate="3000000">
-                        <script> audio('high') </script> 
-                        <param id="size" value="640x480" />
-                        <param id="frame_rate" value="1" />
-                    </quality_stop>
-                </quality>
                 <checkbox which="0" title="H.264 Video">
-                    <checked_params>
+                    <checked_item>
                         <param id="ffmpeg_vcodec" value="libx264" />
-                    </checked_params>
-                    <unchecked_params>
+                    </checked_item>
+                    <unchecked_item>
                         <param id="ffmpeg_vcodec" value="mpeg4" />
-                    </unchecked_params>
+                    </unchecked_item>
                 </checkbox>
                 <menu which="0" title="Best for:">
                     <menu_item title="iPhone Screen">
@@ -962,40 +811,13 @@ Command file contains an outer <videomonkey> element with one of each children:
             
             <!-- QuickTime -->
             <device title="QuickTime" icon="file" enabled="false">
-                <quality>
-                    <quality_stop title="EDGE" bitrate="50000">
-                        <script> audio('low') </script> 
-                        <param id="size" value="192x144" />
-                        <param id="frame_rate" value="0.5" />
-                    </quality_stop>
-                    <quality_stop title="3G" bitrate="100000">
-                        <script> audio('medium') </script> 
-                        <param id="size" value="480x320" />
-                        <param id="frame_rate" value="1" />
-                    </quality_stop>
-                    <quality_stop title="WiFi" bitrate="1100000">
-                        <script> audio('high') </script> 
-                        <param id="size" value="480x320" />
-                        <param id="frame_rate" value="1" />
-                    </quality_stop>
-                    <quality_stop title="High" bitrate="1800000">
-                        <script> audio('high') </script> 
-                        <param id="size" value="640x480" />
-                        <param id="frame_rate" value="1" />
-                    </quality_stop>
-                    <quality_stop title="Go Nuts" bitrate="3000000">
-                        <script> audio('high') </script> 
-                        <param id="size" value="640x480" />
-                        <param id="frame_rate" value="1" />
-                    </quality_stop>
-                </quality>
                 <checkbox which="0" title="H.264 Video">
-                    <checked_params>
+                    <checked_item>
                         <param id="ffmpeg_vcodec" value="libx264" />
-                    </checked_params>
-                    <unchecked_params>
+                    </checked_item>
+                    <unchecked_item>
                         <param id="ffmpeg_vcodec" value="mpeg4" />
-                    </unchecked_params>
+                    </unchecked_item>
                 </checkbox>
                 <menu which="0" title="Best for:">
                     <menu_item title="iPhone Screen">
@@ -1009,40 +831,13 @@ Command file contains an outer <videomonkey> element with one of each children:
             
             <!-- WMV -->
             <device title="WMV" icon="wma" enabled="false">
-                <quality>
-                    <quality_stop title="EDGE" bitrate="50000">
-                        <script> audio('low') </script> 
-                        <param id="size" value="192x144" />
-                        <param id="frame_rate" value="0.5" />
-                    </quality_stop>
-                    <quality_stop title="3G" bitrate="100000">
-                        <script> audio('medium') </script> 
-                        <param id="size" value="480x320" />
-                        <param id="frame_rate" value="1" />
-                    </quality_stop>
-                    <quality_stop title="WiFi" bitrate="1100000">
-                        <script> audio('high') </script> 
-                        <param id="size" value="480x320" />
-                        <param id="frame_rate" value="1" />
-                    </quality_stop>
-                    <quality_stop title="High" bitrate="1800000">
-                        <script> audio('high') </script> 
-                        <param id="size" value="640x480" />
-                        <param id="frame_rate" value="1" />
-                    </quality_stop>
-                    <quality_stop title="Go Nuts" bitrate="3000000">
-                        <script> audio('high') </script> 
-                        <param id="size" value="640x480" />
-                        <param id="frame_rate" value="1" />
-                    </quality_stop>
-                </quality>
                 <checkbox which="0" title="H.264 Video">
-                    <checked_params>
+                    <checked_item>
                         <param id="ffmpeg_vcodec" value="libx264" />
-                    </checked_params>
-                    <unchecked_params>
+                    </checked_item>
+                    <unchecked_item>
                         <param id="ffmpeg_vcodec" value="mpeg4" />
-                    </unchecked_params>
+                    </unchecked_item>
                 </checkbox>
                 <menu which="0" title="Best for:">
                     <menu_item title="iPhone Screen">
@@ -1056,40 +851,13 @@ Command file contains an outer <videomonkey> element with one of each children:
 
             <!-- Flash -->
             <device title="Flash" icon="flash" enabled="false">
-                <quality>
-                    <quality_stop title="EDGE" bitrate="50000">
-                        <script> audio('low') </script> 
-                        <param id="size" value="192x144" />
-                        <param id="frame_rate" value="0.5" />
-                    </quality_stop>
-                    <quality_stop title="3G" bitrate="100000">
-                        <script> audio('medium') </script> 
-                        <param id="size" value="480x320" />
-                        <param id="frame_rate" value="1" />
-                    </quality_stop>
-                    <quality_stop title="WiFi" bitrate="1100000">
-                        <script> audio('high') </script> 
-                        <param id="size" value="480x320" />
-                        <param id="frame_rate" value="1" />
-                    </quality_stop>
-                    <quality_stop title="High" bitrate="1800000">
-                        <script> audio('high') </script> 
-                        <param id="size" value="640x480" />
-                        <param id="frame_rate" value="1" />
-                    </quality_stop>
-                    <quality_stop title="Go Nuts" bitrate="3000000">
-                        <script> audio('high') </script> 
-                        <param id="size" value="640x480" />
-                        <param id="frame_rate" value="1" />
-                    </quality_stop>
-                </quality>
                 <checkbox which="0" title="H.264 Video">
-                    <checked_params>
+                    <checked_item>
                         <param id="ffmpeg_vcodec" value="libx264" />
-                    </checked_params>
-                    <unchecked_params>
+                    </checked_item>
+                    <unchecked_item>
                         <param id="ffmpeg_vcodec" value="mpeg4" />
-                    </unchecked_params>
+                    </unchecked_item>
                 </checkbox>
                 <menu which="0" title="Best for:">
                     <menu_item title="iPhone Screen">
@@ -1103,40 +871,13 @@ Command file contains an outer <videomonkey> element with one of each children:
             
             <!-- MPEG -->
             <device title="MPEG" icon="file" enabled="false">
-                <quality>
-                    <quality_stop title="EDGE" bitrate="50000">
-                        <script> audio('low') </script> 
-                        <param id="size" value="192x144" />
-                        <param id="frame_rate" value="0.5" />
-                    </quality_stop>
-                    <quality_stop title="3G" bitrate="100000">
-                        <script> audio('medium') </script> 
-                        <param id="size" value="480x320" />
-                        <param id="frame_rate" value="1" />
-                    </quality_stop>
-                    <quality_stop title="WiFi" bitrate="1100000">
-                        <script> audio('high') </script> 
-                        <param id="size" value="480x320" />
-                        <param id="frame_rate" value="1" />
-                    </quality_stop>
-                    <quality_stop title="High" bitrate="1800000">
-                        <script> audio('high') </script> 
-                        <param id="size" value="640x480" />
-                        <param id="frame_rate" value="1" />
-                    </quality_stop>
-                    <quality_stop title="Go Nuts" bitrate="3000000">
-                        <script> audio('high') </script> 
-                        <param id="size" value="640x480" />
-                        <param id="frame_rate" value="1" />
-                    </quality_stop>
-                </quality>
-                <checkbox which="0" title="H.264 Video">
-                    <checked_params>
+                 <checkbox which="0" title="H.264 Video">
+                    <checked_item>
                         <param id="ffmpeg_vcodec" value="libx264" />
-                    </checked_params>
-                    <unchecked_params>
+                    </checked_item>
+                    <unchecked_item>
                         <param id="ffmpeg_vcodec" value="mpeg4" />
-                    </unchecked_params>
+                    </unchecked_item>
                 </checkbox>
                 <menu which="0" title="Best for:">
                     <menu_item title="iPhone Screen">

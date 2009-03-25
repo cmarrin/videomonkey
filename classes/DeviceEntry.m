@@ -192,21 +192,6 @@ static void setButton(NSButton* button, Button* item)
     return button ? ([button isHidden] ? -1 : [button indexOfSelectedItem]) : -1;
 }
 
--(int) qualityState
-{
-    if (!m_slider)
-        return -1;
-    
-    double ticks = [m_slider numberOfTickMarks] - 1;
-    double value = [m_slider doubleValue];
-    if (value < 0)
-        value = 0;
-    else if (value > 1)
-        value = 1;
-        
-    return (int) (value * ticks + 0.5);
-}
-
 - (IBAction)sliderChanged:(id)sender {
     double value = [sender doubleValue];
     if (value != m_sliderValue) {
@@ -240,36 +225,12 @@ static void setButton(NSButton* button, Button* item)
     QualityStop* obj = [[QualityStop alloc] init];
 
     obj->m_title = [[element stringAttribute:@"title"] retain];
-    obj->m_bitrate = [element doubleAttribute:@"bitrate"];
-
-    // add params
-    obj->m_params = [[NSMutableDictionary alloc] init];
-    parseParams(element, obj->m_params);
-
-    // add scripts
-    obj->m_script = parseScripts(element);
-
     return obj;
 }
 
 -(NSString*) title
 {
     return m_title;
-}
-
--(NSDictionary*) params
-{
-    return m_params;
-}
-
--(NSString*) script
-{
-    return m_script;
-}
-
--(double) bitrate
-{
-    return m_bitrate;
 }
 
 @end
@@ -356,11 +317,11 @@ static void setButton(NSButton* button, Button* item)
     obj->m_checkedParams = [[NSMutableDictionary alloc] init];
     obj->m_uncheckedParams = [[NSMutableDictionary alloc] init];
     
-    XMLElement* e = [element lastElementForName:@"checked_params"];
+    XMLElement* e = [element lastElementForName:@"checked_item"];
     parseParams(e, obj->m_checkedParams);
     obj->m_checkedScript = parseScripts(e);
 
-    e = [element lastElementForName:@"unchecked_params"];
+    e = [element lastElementForName:@"unchecked_item"];
     parseParams(e, obj->m_uncheckedParams);
     obj->m_uncheckedScript = parseScripts(e);
 
@@ -636,8 +597,7 @@ static void setButton(NSButton* button, Button* item)
     
     // set the current device title
     [context setStringParam:m_title forKey:@"title"];
-    
-    
+
     // Execute script from this device
     [self evaluateScript: context performanceIndex:perfIndex];
 }
@@ -678,11 +638,6 @@ static void setButton(NSButton* button, Button* item)
     // Add global params and commands
     [context addParams: m_params];
 
-    // Add params and commands from currently selected quality stop
-    int state = [m_deviceTab qualityState];
-    if (state >= 0 && [[self qualityStops] count] > state)
-        [context addParams: [(QualityStop*) [[self qualityStops] objectAtIndex:state] params]];
-    
     // Add params and commands from currently selected performance item
     if (perfIndex >= 0 && [m_performanceItems count] > perfIndex)
         [context addParams: [(PerformanceItem*) [m_performanceItems objectAtIndex:perfIndex] params]];
@@ -714,8 +669,9 @@ static void setButton(NSButton* button, Button* item)
     if (m_defaultDevice)
         [m_defaultDevice evaluateScript: context performanceIndex:perfIndex];
     
-    // Evaluate global script
-    [context evaluateJavaScript:m_script];
+    // Evaluate scripts from currently selected performance item
+    if (perfIndex >= 0 && [m_performanceItems count] > perfIndex)
+        [context evaluateJavaScript: [(PerformanceItem*) [m_performanceItems objectAtIndex:perfIndex] script]];
 
     // Evaluate scripts from currently selected checkboxes
     int i = 0;
@@ -736,15 +692,9 @@ static void setButton(NSButton* button, Button* item)
             [context evaluateJavaScript: (NSString*)[[menu itemScripts] objectAtIndex:state]];
         i++;
     }
-    
-    // Evaluate scripts from currently selected quality stop
-    int state = [m_deviceTab qualityState];
-    if (state >= 0 && [[self qualityStops] count] > state)
-        [context evaluateJavaScript: [(QualityStop*) [[self qualityStops] objectAtIndex:state] script]];
-    
-    // Evaluate scripts from currently selected performance item
-    if (perfIndex >= 0 && [m_performanceItems count] > perfIndex)
-        [context evaluateJavaScript: [(PerformanceItem*) [m_performanceItems objectAtIndex:perfIndex] script]];
+
+    // Evaluate global script
+    [context evaluateJavaScript:m_script];
 }
 
 @end

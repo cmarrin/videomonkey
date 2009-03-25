@@ -52,7 +52,6 @@
 
 -(int) checkboxState:(int) index;
 -(int) menuState:(int) index;
--(int) qualityState;
 -(double) sliderValue;
 
 @end
@@ -64,19 +63,11 @@
 
 @interface QualityStop : NSObject {
     NSString* m_title;
-
-    double m_bitrate;
-
-    NSMutableDictionary* m_params;
-    NSString* m_script;
 }
 
 +(QualityStop*) qualityStopWithElement: (XMLElement*) element;
 
 -(NSString*) title;
--(NSDictionary*) params;
--(NSString*) script;
--(double) bitrate;
 
 @end
 

@@ -480,8 +480,6 @@ static NSImage* getFileStatusImage(FileStatus status)
 
     [env setValue: [self inputVideoFormat] forKey: @"input_video_codec"];
 
-    [env setValue: [self ffmpeg_vcodec] forKey: @"ffmpeg_vcodec"];
-    
     // set the params
     [[m_appController deviceController] setCurrentParamsWithEnvironment:env];
     
