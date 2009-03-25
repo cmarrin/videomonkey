@@ -16,9 +16,13 @@
 
 typedef enum { RS_STOPPED, RS_RUNNING, RS_PAUSED } RunStateType;
 
-#define FIRST_TIME_FOR_PROGRESS_RESPONSE 5
-#define NO_TIME_FOR_PROGRESS_YET -1
-#define UNKNOWN_TIME_FOR_PROGRESS -2
+// Progress Special Values
+#define DELAY_FOR_PROGRESS_RESPONSE 5   // in seconds
+#define PROGRESS_STARTING -1
+#define PROGRESS_FINISHING -2
+#define PROGRESS_NONE -3
+#define PROGRESS_UNKNOWN -4
+#define NUM_PROGRESS_TIMES 10
 
 @interface AppController : NSObject {
 @private
@@ -48,6 +52,14 @@ typedef enum { RS_STOPPED, RS_RUNNING, RS_PAUSED } RunStateType;
     int m_fileConvertingIndex;
     
     NSArray* m_fileList;
+
+    // encoding progress displays
+    double m_currentEncodingStartTime;
+    int m_numLastProgressTimes;
+    double m_lastProgressTimes[NUM_PROGRESS_TIMES];
+    double m_totalEncodedFileSize;
+    double m_currentEncodedFileSize;
+    double m_finishedEncodedFileSize;
 }
 
 @property (retain) NSArray* fileList;

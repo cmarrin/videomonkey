@@ -44,6 +44,11 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
     return filename;
 }
 
+-(double) currentTime
+{
+    return (double) [[NSDate date] timeIntervalSince1970];
+}
+
 - (id)init
 {
     self = [super init];
@@ -72,7 +77,8 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
     m_addToMediaLibrary = [m_addToMediaLibraryButton state] != 0;
     m_deleteFromDestination = [m_deleteFromDestinationButton state] != 0;
     [m_deleteFromDestinationButton setEnabled:m_addToMediaLibrary];
-    [m_fileNumberText setStringValue:@""];
+    
+    [self setProgressFor:nil to:PROGRESS_NONE];
 }
 
 -(Transcoder*) transcoderForFileName:(NSString*) fileName
@@ -115,33 +121,43 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
 
 -(void) startNextEncode
 {
+    m_currentEncodingStartTime = [self currentTime];
+    m_numLastProgressTimes = 0;
+    for (int i =  0; i < NUM_PROGRESS_TIMES; ++i)
+        m_lastProgressTimes[i] = -1;
+    
     if (!m_isTerminated) {
         if (++m_currentEncoding < [m_fileList count]) {
-            if (![[m_fileList objectAtIndex: m_currentEncoding] startEncode]) {
-                m_fileConvertingIndex++;
+            if (![[m_fileList objectAtIndex: m_currentEncoding] startEncode])
                 [self startNextEncode];
+            else {
+                m_fileConvertingIndex++;
+                m_finishedEncodedFileSize += m_currentEncodedFileSize;
+                m_currentEncodedFileSize = [[m_fileList objectAtIndex: m_currentEncoding] outputFileSize];
+                
             }
             return;
         }
     }
-    else {
-        [m_totalProgressBar setDoubleValue: 0];
-        [m_fileListController reloadData];
-    }
     
     m_runState =  RS_STOPPED;
+    [self setProgressFor:nil to:0];
 }
 
 - (IBAction)startEncode:(id)sender
 {
-    [m_totalProgressBar setDoubleValue: 0];
+    [self setProgressFor:nil to:0];
     m_isTerminated = NO;
     
     // reset the status for anything we're about to encode
     m_numFilesToConvert = 0;
+    m_totalEncodedFileSize = 0;
+    m_finishedEncodedFileSize = 0;
+    
     for (Transcoder* transcoder in m_fileList) {
         if ([transcoder enabled]) {
             m_numFilesToConvert++;
+            m_totalEncodedFileSize += [transcoder outputFileSize];
             [transcoder resetStatus];
         }
     }
@@ -154,7 +170,7 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
         return;
     }
     
-    m_fileConvertingIndex = 0;
+    m_fileConvertingIndex = -1;
 
     [m_progressText setStringValue:@""];
     [m_fileNumberText setStringValue:@""];
@@ -184,7 +200,7 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
     m_isTerminated = YES;
     [[m_fileList objectAtIndex: m_currentEncoding] stopEncode];
     m_runState = RS_STOPPED;
-    [m_fileListController reloadData];
+    [self setProgressFor:nil to:0];
 }
 
 -(IBAction)toggleConsoleDrawer:(id)sender
@@ -241,15 +257,57 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
 
 -(void) setProgressFor: (Transcoder*) transcoder to: (double) progress
 {
-    [m_totalProgressBar setDoubleValue: progress];
-    int timeRemaining = (int) (floor([transcoder timeForProgress: progress] + 0.5));
-    NSString* timeRemainingString;
+    if (!transcoder) {
+        [m_totalProgressBar setIndeterminate:NO];
+        [m_totalProgressBar setDoubleValue: 0];
+        [m_totalProgressBar startAnimation:self];
+        [m_progressText setStringValue:@"Press start to encode"];
+        [m_fileNumberText setStringValue:@""];
+        return;
+    }
     
-    if (timeRemaining == NO_TIME_FOR_PROGRESS_YET)
+    // compute the time remaining for this file
+    double timeSoFar = [self currentTime] - m_currentEncodingStartTime;
+    
+    NSString* timeRemainingString = nil;
+    
+    // progress of 0 means we're starting and don't know our progress yet
+    // progress of 1 means we're just finishing
+    if (progress == 0 || timeSoFar < DELAY_FOR_PROGRESS_RESPONSE)
         timeRemainingString = @"Starting";
-    else
-        timeRemainingString = timeRemaining ? [NSString stringWithFormat:@"About %d minute%s remaining for", timeRemaining, 
-                                            (timeRemaining > 1) ? "s" : ""] : @"Less than a minute remaining for";
+    else if (progress == 1)
+        timeRemainingString = @"Finishing";
+        
+    if (progress == 0 || progress == 1) {
+        [m_totalProgressBar setIndeterminate:YES];
+        [m_totalProgressBar startAnimation:self];
+    }
+    else {
+        [m_totalProgressBar stopAnimation:self];
+        [m_totalProgressBar setIndeterminate:NO];
+
+        // To determine progress of this file we multiply current progress
+        // by what percentage of total file size this file is. Then we add
+        // to that the percentage of the file size already completed
+        progress *= m_currentEncodedFileSize / m_totalEncodedFileSize;
+        progress += m_finishedEncodedFileSize / m_totalEncodedFileSize;
+        [m_totalProgressBar setDoubleValue: progress];
+        
+        if (!timeRemainingString) {
+            // compute time remaining
+            double estimatedTotalTime = timeSoFar / progress;
+            int minutesRemaining = (int) floor((estimatedTotalTime - timeSoFar) / 60 + 0.5);
+            
+            if (minutesRemaining > 0) {
+                if (minutesRemaining == 1)
+                    timeRemainingString = @"About a minute remaining for";
+                else
+                    timeRemainingString = [NSString stringWithFormat:@"About %d minutes remaining for", minutesRemaining];
+            }
+            else
+                timeRemainingString = @"Less than a minute remaining for";
+        }
+    }
     
     timeRemainingString = [NSString stringWithFormat:@"%@ file %d...", timeRemainingString, m_fileConvertingIndex+1];
     [m_progressText setStringValue:timeRemainingString];
@@ -259,7 +317,6 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
 
 -(void) encodeFinished: (Transcoder*) transcoder
 {
-    [m_totalProgressBar setDoubleValue: m_isTerminated ? 0 : 1];
     [m_progressText setStringValue:@""];
     [m_fileListController reloadData];
     [self startNextEncode];
