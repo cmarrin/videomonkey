@@ -14,60 +14,140 @@
 #import "Command.h"
 #import "DeviceController.h"
 
+FrameSize makeFrameSize(int width, int height) { return ((uint32_t) width << 16) | ((uint32_t) height & 0xffff); }
+int widthFromFrameSize(FrameSize f) { return f >> 16; }
+int heightFromFrameSize(FrameSize f) { return f & 0xffff; }
+
 @implementation TranscoderFileInfo
 
--(void) setFormat: (NSString*) format
-{
-    [format retain];
-    [m_format release];
-    m_format = format;
-}
+@synthesize format;
+@synthesize duration;
+@synthesize bitrate;
+@synthesize isQuicktime;
+@synthesize fileSize;
 
--(void) setVideoLanguage: (NSString*) lang
-{
-    [lang retain];
-    [m_videoLanguage release];
-    m_videoLanguage = lang;
-}
+// Video
+@synthesize videaStreamKind;
+@synthesize videoTrack;
+@synthesize videoLanguage;
+@synthesize videoCodec;
+@synthesize videoProfile;
+@synthesize videoInterlaced;
+@synthesize videoFrameSize;
+@synthesize pixelAspectRatio;
+@synthesize displayAspectRatio;
+@synthesize videoFrameRate;
 
--(void) setVideoCodec: (NSString*) codec
-{
-    [codec retain];
-    [m_videoCodec release];
-    m_videoCodec = codec;
-}
+// Audio
+@synthesize audioStreamKind;
+@synthesize audioTrack;
+@synthesize audioLanguage;
+@synthesize audioCodec;
+@synthesize audioSampleRate;
+@synthesize audioChannels;
+@synthesize audioBitrate;
 
--(void) setVideoProfile: (NSString*) profile
-{
-    [profile retain];
-    [m_videoProfile release];
-    m_videoProfile = profile;
-}
-
--(void) setAudioLanguage: (NSString*) lang
-{
-    [lang retain];
-    [m_audioLanguage release];
-    m_audioLanguage = lang;
-}
-
--(void) setAudioCodec: (NSString*) codec
-{
-    [codec retain];
-    [m_audioCodec release];
-    m_audioCodec = codec;
-}
-
--(void) setFilename: (NSString*) filename
-{
-    [filename retain];
-    [m_filename release];
-    m_filename = filename;
-}
+@synthesize filename;
 
 @end
 
 @implementation Transcoder
+
+-(TranscoderFileInfo*) inputFileInfo
+{
+    return ([m_inputFiles count] > 0) ? ((TranscoderFileInfo*) [m_inputFiles objectAtIndex: 0]) : nil;
+}
+
+-(TranscoderFileInfo*) outputFileInfo
+{
+    return ([m_outputFiles count] > 0) ? ((TranscoderFileInfo*) [m_outputFiles objectAtIndex: 0]) : nil;
+}
+
+// Properties
+@synthesize progress = m_progress;
+@synthesize enabled = m_enabled;
+
+// Input properties
+-(NSString*) inputFormat { return [[self inputFileInfo] format]; }
+-(double) inputDuration { return [[self inputFileInfo] duration]; }
+-(double) inputFileSize { return [[self inputFileInfo] fileSize]; }
+-(double) inputBitrate { return [[self inputFileInfo] bitrate]; }
+
+-(NSString*) inputVideoCodec { return [[self inputFileInfo] videoCodec]; }
+-(NSString*) inputVideoProfile { return [[self inputFileInfo] videoProfile]; }
+-(BOOL) inputVideoInterlaced { return [[self inputFileInfo] videoInterlaced]; }
+-(FrameSize) inputVideoFrameSize { return [[self inputFileInfo] videoFrameSize]; }
+-(double) inputVideoAspectRatio { return [[self inputFileInfo] displayAspectRatio]; }
+-(double) inputVideoFramerate { return [[self inputFileInfo] videoFrameRate]; }
+
+-(NSString*) inputAudioCodec { return [[self inputFileInfo] audioCodec]; }
+-(double) inputAudioSampleRate { return [[self inputFileInfo] audioSampleRate]; }
+-(int) inputAudioChannels { return [[self inputFileInfo] audioChannels]; }
+-(double) inputAudioBitrate { return [[self inputFileInfo] audioBitrate]; }
+
+// Output properties (reading)
+-(NSString*) outputFormat { return [self outputFileInfo].format; }
+-(void) setOutputFormat:(NSString*) format { [self outputFileInfo].format = format; }
+-(double) outputDuration { return [self outputFileInfo].duration; }
+-(void) setOutputDuration:(double) duration { [self outputFileInfo].duration = duration; }
+
+// outputFileSize is computed and is therefore readonly
+-(double) outputFileSize
+{
+    double duration = [self outputDuration];
+    double bitrate = [self outputBitrate];
+    return duration * bitrate / 8;
+}
+
+-(double) outputBitrate { return [self outputFileInfo].bitrate; }
+-(void) setOutputBitrate:(double) bitrate { [self outputFileInfo].bitrate = bitrate; }
+-(NSString*) outputVideoCodec { return [self outputFileInfo].videoCodec; }
+-(void) setOutputVideoCodec:(NSString*) codec { [self outputFileInfo].videoCodec = codec; }
+-(NSString*) outputVideoProfile { return [self outputFileInfo].videoProfile; }
+-(void) setOutputVideoProfile:(NSString*) profile { [self outputFileInfo].videoProfile = profile; }
+-(BOOL) outputVideoInterlaced { return [self outputFileInfo].videoInterlaced; }
+-(void) setOutputVideoInterlaced:(BOOL) interlaced { [self outputFileInfo].videoInterlaced = interlaced; }
+-(FrameSize) outputVideoFrameSize { return [self outputFileInfo].videoFrameSize; }
+-(void) setOutputVideoFrameSize:(FrameSize) frameSize { [self outputFileInfo].videoFrameSize = frameSize; }
+-(double) outputVideoAspectRatio { return [self outputFileInfo].displayAspectRatio; }
+-(void) setOutputVideoAspectRatio:(double) aspectRatio { [self outputFileInfo].displayAspectRatio = aspectRatio; }
+-(double) outputVideoFramerate { return [self outputFileInfo].videoFrameRate; }
+-(void) setOutputVideoFramerate:(double) framerate { [self outputFileInfo].videoFrameRate = framerate; }
+
+-(NSString*) outputAudioCodec { return [self outputFileInfo].audioCodec; }
+-(void) setOutputAudioCodec:(NSString*) codec { [self outputFileInfo].audioCodec = codec; }
+-(double) outputAudioSampleRate { return [self outputFileInfo].audioSampleRate; }
+-(void) setOutputAudioSampleRate:(double) sampleRate { [self outputFileInfo].audioSampleRate = sampleRate; }
+-(int) outputAudioChannels { return [self outputFileInfo].audioChannels; }
+-(void) setOutputAudioChannels:(int) channels { [self outputFileInfo].audioChannels = channels; }
+-(double) outputAudioBitrate { return [self outputFileInfo].audioBitrate; }
+-(void) setOutputAudioBitrate:(double) bitrate { [self outputFileInfo].audioBitrate = bitrate; }
+
+// Output properties (writing)
+
+
+
+
+/*
+- (void) setBitrate: (float) rate
+{
+    if ([m_outputFiles count] == 0)
+        return;
+    
+    ((TranscoderFileInfo*) [m_outputFiles objectAtIndex: 0])->m_bitrate = rate;
+}
+
+- (double) bitrate;
+{
+    double inputRate =  ([m_inputFiles count] > 0) ? ((TranscoderFileInfo*) [m_inputFiles objectAtIndex: 0])->m_bitrate : 100000;
+    double outputRate =  ([m_outputFiles count] > 0) ? ((TranscoderFileInfo*) [m_outputFiles objectAtIndex: 0])->m_bitrate : 0;
+    return (outputRate > 0) ? outputRate : inputRate;
+}
+*/
+
+
+
+
 
 -(BOOL) _validateInputFile: (TranscoderFileInfo*) info
 {
@@ -79,7 +159,7 @@
     [mediainfoInformPath appendString:@"/mediainfo-inform.csv"];
     
     NSTask* task = [[NSTask alloc] init];
-    NSMutableArray* args = [NSMutableArray arrayWithObjects: mediainfoInformPath, info->m_filename, nil];
+    NSMutableArray* args = [NSMutableArray arrayWithObjects: mediainfoInformPath, [info filename], nil];
     [task setArguments: args];
     [task setLaunchPath: mediainfoPath];
     
@@ -100,15 +180,16 @@
     
     // We always have a General line.
     NSArray* general = [[components objectAtIndex:0] componentsSeparatedByString:@","];
-    if ([general count] != 5)
+    if ([general count] != 6)
         return NO;
         
     [info setFormat: [general objectAtIndex:1]];
-    info->m_isQuicktime = [[general objectAtIndex:2] isEqualToString:@"QuickTime"];
-    info->m_duration = [[general objectAtIndex:3] doubleValue] / 1000;
-    info->m_bitrate = [[general objectAtIndex:4] doubleValue];
+    info.isQuicktime = [[general objectAtIndex:2] isEqualToString:@"QuickTime"];
+    info.duration = [[general objectAtIndex:3] doubleValue] / 1000;
+    info.bitrate = [[general objectAtIndex:4] doubleValue];
+    info.fileSize = [[general objectAtIndex:5] doubleValue];
 
-    if ([info->m_format length] == 0)
+    if ([info.format length] == 0)
         return NO;
         
     // Do video if it's there
@@ -121,26 +202,27 @@
 
         if ([video count] != 13)
             return NO;
-        info->m_videaStreamKind = [[video objectAtIndex:1] intValue];
-        info->m_videoTrack = [[video objectAtIndex:2] intValue];
-        info->m_videoLanguage = [[video objectAtIndex:3] retain];
-        info->m_videoCodec = [[video objectAtIndex:4] retain];
-        info->m_videoProfile = [[video objectAtIndex:5] retain];
-        info->m_videoInterlaced = [[video objectAtIndex:6] isEqualToString:@"Interlace"];
-        info->m_width = [[video objectAtIndex:8] intValue];
-        info->m_height = [[video objectAtIndex:9] intValue];
-        info->m_pixelAspectRatio = [[video objectAtIndex:10] doubleValue];
-        info->m_displayAspectRatio = [[video objectAtIndex:11] doubleValue];
-        info->m_frameRate = [[video objectAtIndex:12] doubleValue];
+            
+        info.videaStreamKind = [[video objectAtIndex:1] intValue];
+        info.videoTrack = [[video objectAtIndex:2] intValue];
+        info.videoLanguage = [[video objectAtIndex:3] retain];
+        info.videoCodec = [[video objectAtIndex:4] retain];
+        info.videoProfile = [[video objectAtIndex:5] retain];
+        info.videoInterlaced = [[video objectAtIndex:6] isEqualToString:@"Interlace"];
+        FrameSize frameSize = makeFrameSize([[video objectAtIndex:8] intValue], [[video objectAtIndex:9] intValue]);
+        info.videoFrameSize = frameSize;
+        info.pixelAspectRatio = [[video objectAtIndex:10] doubleValue];
+        info.displayAspectRatio = [[video objectAtIndex:11] doubleValue];
+        info.videoFrameRate = [[video objectAtIndex:12] doubleValue];
         
         // standardize video codec name
         NSString* f = VC_H264;
-        if ([info->m_videoCodec caseInsensitiveCompare:@"vc-1"] == NSOrderedSame || [info->m_videoCodec caseInsensitiveCompare:@"wmv3"] == NSOrderedSame)
+        if ([info.videoCodec caseInsensitiveCompare:@"vc-1"] == NSOrderedSame || [info.videoCodec caseInsensitiveCompare:@"wmv3"] == NSOrderedSame)
             f = VC_WMV3;
-        else if ([info->m_videoCodec caseInsensitiveCompare:@"avc"] == NSOrderedSame || [info->m_videoCodec caseInsensitiveCompare:@"avc1"] == NSOrderedSame)
+        else if ([info.videoCodec caseInsensitiveCompare:@"avc"] == NSOrderedSame || [info.videoCodec caseInsensitiveCompare:@"avc1"] == NSOrderedSame)
             f = VC_H264;
     
-        info->m_videoCodec = f;
+        info.videoCodec = f;
     }
     
     // Do audio if it's there
@@ -151,13 +233,13 @@
         if ([audio count] != 8)
             return NO;
             
-        info->m_audioStreamKind = [[audio objectAtIndex:1] intValue];
-        info->m_audioTrack = [[audio objectAtIndex:2] intValue];
-        info->m_audioLanguage = [[audio objectAtIndex:3] retain];
-        info->m_audioCodec = [[audio objectAtIndex:4] retain];
-        info->m_audioSamplingRate = [[audio objectAtIndex:5] doubleValue];
-        info->m_channels = [[audio objectAtIndex:6] intValue];
-        info->m_audioBitrate = [[audio objectAtIndex:7] doubleValue];
+        info.audioStreamKind = [[audio objectAtIndex:1] intValue];
+        info.audioTrack = [[audio objectAtIndex:2] intValue];
+        info.audioLanguage = [[audio objectAtIndex:3] retain];
+        info.audioCodec = [[audio objectAtIndex:4] retain];
+        info.audioSampleRate = [[audio objectAtIndex:5] doubleValue];
+        info.audioChannels = [[audio objectAtIndex:6] intValue];
+        info.audioBitrate = [[audio objectAtIndex:7] doubleValue];
     }
 
     return YES;
@@ -252,59 +334,9 @@ static NSImage* getFileStatusImage(FileStatus status)
         [[m_outputFiles objectAtIndex: 0] setFilename: filename];
 }
 
-- (void) setBitrate: (float) rate
-{
-    if ([m_outputFiles count] == 0)
-        return;
-    
-    ((TranscoderFileInfo*) [m_outputFiles objectAtIndex: 0])->m_bitrate = rate;
-}
-
-- (double) bitrate;
-{
-    double inputRate =  ([m_inputFiles count] > 0) ? ((TranscoderFileInfo*) [m_inputFiles objectAtIndex: 0])->m_bitrate : 100000;
-    double outputRate =  ([m_outputFiles count] > 0) ? ((TranscoderFileInfo*) [m_outputFiles objectAtIndex: 0])->m_bitrate : 0;
-    return (outputRate > 0) ? outputRate : inputRate;
-}
-
--(void) setVideoFormat: (NSString*) format
-{
-    if ([m_outputFiles count] == 0)
-        return;
-        
-    ((TranscoderFileInfo*) [m_outputFiles objectAtIndex: 0])->m_videoCodec = format;
-}
-
--(NSString*) videoFormat
-{
-    return ([m_outputFiles count] == 0) ? VC_H264 : ((TranscoderFileInfo*) [m_outputFiles objectAtIndex: 0])->m_videoCodec;
-}
-
--(double) duration
-{
-    if ([m_inputFiles count] > 0)
-        return ((TranscoderFileInfo*) [m_inputFiles objectAtIndex: 0])->m_duration;
-    return -1;
-}
-
--(double) progress
-{
-    return m_progress;
-}
-
 -(NSValue*) progressCell
 {
     return [NSValue valueWithPointer:self];
-}
-
--(BOOL) enabled
-{
-    return m_enabled;
-}
-
--(void) setEnabled: (BOOL) b
-{
-    m_enabled = b;
 }
 
 -(void) resetStatus
@@ -334,95 +366,27 @@ static NSImage* getFileStatusImage(FileStatus status)
 
 -(NSString*) inputFileName
 {
-    return ([m_inputFiles count] > 0) ? ((TranscoderFileInfo*) [m_inputFiles objectAtIndex: 0])->m_filename : nil;
+    return [[self inputFileInfo] filename];
 }
 
 -(BOOL) isInputQuicktime
 {
-    return ([m_inputFiles count] > 0) ? ((TranscoderFileInfo*) [m_inputFiles objectAtIndex: 0])->m_isQuicktime : NO;
+    return [[self inputFileInfo] isQuicktime];
 }
 
 -(BOOL) hasInputAudio
 {
-    return ([m_inputFiles count] > 0) ? (((TranscoderFileInfo*) [m_inputFiles objectAtIndex: 0])->m_audioSamplingRate != 0) : NO;
+    return [[self inputFileInfo] audioSampleRate] != 0;
 }
 
 -(NSString*) inputVideoFormat
 {
-    return ([m_inputFiles count] > 0) ? ((TranscoderFileInfo*) [m_inputFiles objectAtIndex: 0])->m_videoCodec : nil;
+    return [[self inputFileInfo] videoCodec];
 }
 
 -(NSString*) outputFileName
 {
-    return ([m_outputFiles count] > 0) ? ((TranscoderFileInfo*) [m_outputFiles objectAtIndex: 0])->m_filename : nil;
-}
-
--(int) inputVideoWidth
-{
-    return ([m_inputFiles count] > 0) ? ((TranscoderFileInfo*) [m_inputFiles objectAtIndex: 0])->m_width : 0;
-}
-
--(int) inputVideoHeight
-{
-    return ([m_inputFiles count] > 0) ? ((TranscoderFileInfo*) [m_inputFiles objectAtIndex: 0])->m_height : 0;
-}
-
--(int) inputVideoWidthDiv2
-{
-    if ([m_inputFiles count] == 0)
-        return 100;
-        
-    int w = ((TranscoderFileInfo*) [m_inputFiles objectAtIndex: 0])->m_width;
-    return (w & 1) ? w+1 : w;
-}
-
--(int) inputVideoHeightDiv2
-{
-    if ([m_inputFiles count] == 0)
-        return 100;
-        
-    int h = ((TranscoderFileInfo*) [m_inputFiles objectAtIndex: 0])->m_height;
-    return (h & 1) ? h+1 : h;
-}
-
--(int) inputVideoWidthDiv16
-{
-    if ([m_inputFiles count] == 0)
-        return 100;
-        
-    int w = ((TranscoderFileInfo*) [m_inputFiles objectAtIndex: 0])->m_width;
-    return (w+15) & (~(16-1));
-}
-
--(int) inputVideoHeightDiv16
-{
-    if ([m_inputFiles count] == 0)
-        return 100;
-        
-    int h = ((TranscoderFileInfo*) [m_inputFiles objectAtIndex: 0])->m_height;
-    return (h+15) & (~(16-1));
-}
-
--(double) inputVideoFrameRate
-{
-    return ([m_inputFiles count] > 0) ? ((TranscoderFileInfo*) [m_inputFiles objectAtIndex: 0])->m_frameRate : 30;
-}
-
--(NSString*) ffmpeg_vcodec
-{
-    if ([[self videoFormat] isEqualToString:VC_H264])
-        return @"libx264";
-    else if ([[self videoFormat] isEqualToString:VC_WMV3])
-        return @"wmv3";
-    else 
-        return @"libx264";
-}
-
--(double) outputFileSize
-{
-    double duration = [self duration];
-    double bitrate = [self bitrate];
-    return duration * bitrate / 8;
+    return [[self inputFileInfo] filename];
 }
 
 -(NSString*) tempAudioFileName
@@ -433,14 +397,6 @@ static NSImage* getFileStatusImage(FileStatus status)
 -(NSString*) passLogFileName
 {
     return m_passLogFileName;
-}
-
--(int) frameSize
-{
-    // This is a composite (upper 16 bits width, lower 16 bits height)
-    int width = ((TranscoderFileInfo*) [m_outputFiles objectAtIndex: 0])->m_width;
-    int height = ((TranscoderFileInfo*) [m_outputFiles objectAtIndex: 0])->m_height;
-    return (width << 16) | height;
 }
 
 -(NSString*) audioQuality
@@ -471,9 +427,10 @@ static NSImage* getFileStatusImage(FileStatus status)
     [env setValue: [self passLogFileName] forKey: @"pass_log_file"];
     
     // fill in params
-    [env setValue: [[NSNumber numberWithInt: [self inputVideoWidth]] stringValue] forKey: @"input_video_width"];
-    [env setValue: [[NSNumber numberWithInt: [self inputVideoHeight]] stringValue] forKey: @"input_video_height"];
-    [env setValue: [[NSNumber numberWithInt: [self inputVideoFrameRate]] stringValue] forKey: @"input_frame_rate"];
+    FrameSize frameSize = [self inputVideoFrameSize];
+    [env setValue: [[NSNumber numberWithInt: widthFromFrameSize(frameSize)] stringValue] forKey: @"input_video_width"];
+    [env setValue: [[NSNumber numberWithInt: heightFromFrameSize(frameSize)] stringValue] forKey: @"input_video_height"];
+    [env setValue: [[NSNumber numberWithInt: [self inputVideoFramerate]] stringValue] forKey: @"input_frame_rate"];
     
     [env setValue: ([self isInputQuicktime] ? @"true" : @"false") forKey: @"is_quicktime"];
     [env setValue: ([self hasInputAudio] ? @"true" : @"false") forKey: @"has_audio"];
@@ -491,12 +448,13 @@ static NSImage* getFileStatusImage(FileStatus status)
             width = 32767;
         if (height > 32767)
             height = 32767;
-        ((TranscoderFileInfo*) [m_outputFiles objectAtIndex: 0])->m_width = width;
-        ((TranscoderFileInfo*) [m_outputFiles objectAtIndex: 0])->m_height = height;
+            
+        FrameSize frameSize = makeFrameSize(width, height);
+        [self outputFileInfo].videoFrameSize = frameSize;
     }
     
     m_audioQuality = [[m_appController deviceController] paramForKey:@"audio_quality"];
-    [self setBitrate: [[[m_appController deviceController] paramForKey:@"bitrate"] floatValue]];
+    self.outputBitrate = [[[m_appController deviceController] paramForKey:@"bitrate"] floatValue];
 }
 
 -(void) finish: (int) status

@@ -178,7 +178,19 @@
 -(id) selection
 {
     NSArray* sel = [self selectedObjects];
-    return ([sel count] == 1) ? [sel objectAtIndex:0] : nil;
+    
+    // I don't know why, but the first time through the selectedObjects
+    // array contains one object, which is the AppController. Return
+    // nil if you see that.
+    
+    return ([sel count] == 1 && [[sel objectAtIndex:0] isKindOfClass:[Transcoder class]]) ? [sel objectAtIndex:0] : nil;
 }
+
+- (id)valueForUndefinedKey:(NSString *)key
+{
+    printf("***\n");
+}
+
+
 
 @end

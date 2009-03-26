@@ -13,52 +13,74 @@
 
 #define LOG_FILE_PATH @"~/Library/Application Support/VideoMonkey/Logs"
 
-
 @class AppController;
 @class Command;
+
+// FrameSize is a 32 bit integer with upper 16 bits width and lower 16 bits height
+typedef uint32_t FrameSize;
 
 typedef enum FileStatus { FS_INVALID, FS_VALID, FS_ENCODING, FS_PAUSED, FS_FAILED, FS_SUCCEEDED } FileStatus;
 
 @interface TranscoderFileInfo : NSObject {
-  @public
     // General
-    NSString* m_format;
-    double m_duration;
-    double m_bitrate;
-    BOOL m_isQuicktime;
+    NSString* format;
+    double duration;
+    double bitrate;
+    BOOL isQuicktime;
+    double fileSize;
     
     // Video
-    int m_videaStreamKind;
-    int m_videoTrack;
-    NSString* m_videoLanguage;
-    NSString* m_videoCodec;
-    NSString* m_videoProfile;
-    BOOL m_videoInterlaced;
-    int m_width;
-    int m_height;
-    double m_pixelAspectRatio;
-    double m_displayAspectRatio;
-    double m_frameRate;
+    int videaStreamKind;
+    int videoTrack;
+    NSString* videoLanguage;
+    NSString* videoCodec;
+    NSString* videoProfile;
+    BOOL videoInterlaced;
+    FrameSize videoFrameSize;
+    double pixelAspectRatio;
+    double displayAspectRatio;
+    double videoFrameRate;
     
     // Audio
-    int m_audioStreamKind;
-    int m_audioTrack;
-    NSString* m_audioLanguage;
-    NSString* m_audioCodec;
-    double m_audioSamplingRate;
-    int m_channels;
-    double m_audioBitrate;
+    int audioStreamKind;
+    int audioTrack;
+    NSString* audioLanguage;
+    NSString* audioCodec;
+    double audioSampleRate;
+    int audioChannels;
+    double audioBitrate;
 
-    NSString* m_filename;
+    NSString* filename;
 }
 
--(void) setFormat: (NSString*) format;
--(void) setVideoLanguage: (NSString*) lang;
--(void) setVideoCodec: (NSString*) codec;
--(void) setVideoProfile: (NSString*) profile;
--(void) setAudioLanguage: (NSString*) lang;
--(void) setAudioCodec: (NSString*) codec;
--(void) setFilename: (NSString*) filename;
+@property(retain) NSString* format;
+@property(assign) double duration;
+@property(assign) double bitrate;
+@property(assign) BOOL isQuicktime;
+@property(assign) double fileSize;
+
+// Video
+@property(assign) int videaStreamKind;
+@property(assign) int videoTrack;
+@property(retain) NSString* videoLanguage;
+@property(retain) NSString* videoCodec;
+@property(retain) NSString* videoProfile;
+@property(assign) BOOL videoInterlaced;
+@property(assign) FrameSize videoFrameSize;
+@property(assign) double pixelAspectRatio;
+@property(assign) double displayAspectRatio;
+@property(assign) double videoFrameRate;
+
+// Audio
+@property(assign) int audioStreamKind;
+@property(assign) int audioTrack;
+@property(retain) NSString* audioLanguage;
+@property(retain) NSString* audioCodec;
+@property(assign) double audioSampleRate;
+@property(assign) int audioChannels;
+@property(assign) double audioBitrate;
+
+@property(retain) NSString* filename;
 
 @end
 
@@ -66,7 +88,6 @@ typedef enum FileStatus { FS_INVALID, FS_VALID, FS_ENCODING, FS_PAUSED, FS_FAILE
   @private
     NSMutableArray* m_inputFiles;
     NSMutableArray* m_outputFiles;
-    double m_totalDuration;
     double m_progress;
     BOOL m_enabled;
     FileStatus m_fileStatus;
@@ -85,48 +106,69 @@ typedef enum FileStatus { FS_INVALID, FS_VALID, FS_ENCODING, FS_PAUSED, FS_FAILE
     NSString* m_audioQuality;
 }
 
+@property (readwrite) BOOL enabled;
+@property (readonly) double progress;
+
+// Input properties
+@property (retain,readonly) NSString* inputFormat;
+@property (readonly) double inputDuration;
+@property (readonly) double inputFileSize;
+@property (readonly) double inputBitrate;
+
+@property (retain,readonly) NSString* inputVideoCodec;
+@property (retain,readonly) NSString* inputVideoProfile;
+@property (readonly) BOOL inputVideoInterlaced;
+@property (readonly) FrameSize inputVideoFrameSize;
+@property (readonly) double inputVideoAspectRatio;
+@property (readonly) double inputVideoFramerate;
+
+@property (retain,readonly) NSString* inputAudioCodec;
+@property (readonly) double inputAudioSampleRate;
+@property (readonly) int inputAudioChannels;
+@property (readonly) double inputAudioBitrate;
+
+// Output properties
+@property (retain,readwrite) NSString* outputFormat;
+@property (readwrite) double outputDuration;
+@property (readonly) double outputFileSize;
+@property (readwrite) double outputBitrate;
+
+@property (retain,readwrite) NSString* outputVideoCodec;
+@property (retain,readwrite) NSString* outputVideoProfile;
+@property (readwrite) BOOL outputVideoInterlaced;
+@property (readwrite) FrameSize outputVideoFrameSize;
+@property (readwrite) double outputVideoAspectRatio;
+@property (readwrite) double outputVideoFramerate;
+
+@property (retain,readwrite) NSString* outputAudioCodec;
+@property (readwrite) double outputAudioSampleRate;
+@property (readwrite) int outputAudioChannels;
+@property (readwrite) double outputAudioBitrate;
+
 -(Transcoder*) initWithController: (AppController*) controller;
 
 -(int) addInputFile: (NSString*) filename;
 -(int) addOutputFile: (NSString*) filename;
 -(void) changeOutputFileName: (NSString*) filename;
 
--(void) setBitrate: (float) rate;
--(double) bitrate;
--(void) setVideoFormat: (NSString*) format;
-
--(double) duration;
 -(NSValue*) progressCell;
 
 -(double) progress;
--(BOOL) enabled;
--(void) setEnabled: (BOOL) b;
 -(void) resetStatus;
 -(NSProgressIndicator*) progressIndicator;
 -(NSImageView*) statusImageView;
 
 -(FileStatus) inputFileStatus;
 -(NSString*) inputFileName;
--(int) inputVideoWidth;
--(int) inputVideoHeight;
--(int) inputVideoWidthDiv2;
--(int) inputVideoHeightDiv2;
--(int) inputVideoWidthDiv16;
--(int) inputVideoHeightDiv16;
--(double) inputVideoFrameRate;
+-(FrameSize) inputVideoFrameSize;
 
 -(BOOL) isInputQuicktime;
 -(BOOL) hasInputAudio;
--(NSString*) inputVideoFormat;
 -(NSString*) outputFileName;
--(double) outputFileSize;
 -(NSString*) tempAudioFileName;
 -(NSString*) passLogFileName;
 
--(int) frameSize; // This is a composite (upper 16 bits width, lower 16 bits height)
 -(NSString*) audioQuality;
-
--(NSString*) ffmpeg_vcodec;
 
 -(void) setParams;
 

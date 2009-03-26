@@ -58,7 +58,7 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
     
     while ((transcoder = (Transcoder*) [e nextObject])) {
         [transcoder changeOutputFileName: getOutputFileName([transcoder inputFileName], m_savePath, suffix)];
-        [transcoder setVideoFormat: format];
+        [transcoder setOutputFormat: format];
     }
 }
 
@@ -268,7 +268,8 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
     Transcoder* transcoder = [[Transcoder alloc] initWithController:self];
     [transcoder addInputFile: fileName];
     [transcoder addOutputFile: getOutputFileName(fileName, m_savePath, [m_deviceController fileSuffix])];
-    [transcoder setVideoFormat: [m_deviceController videoFormat]];
+    [transcoder setOutputFormat: [m_deviceController videoFormat]];
+    [transcoder setOutputDuration:[transcoder inputDuration]];
     return transcoder;
 }
 

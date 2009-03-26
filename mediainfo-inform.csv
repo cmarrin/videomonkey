@@ -1,4 +1,4 @@
-General;-General-,%Format%,%Format_Profile%,%PlayTime%,%OveralBitRate%
+General;-General-,%Format%,%Format_Profile%,%PlayTime%,%OveralBitRate%,%FileSize%
 Video;\r\n-Video-,%StreamKindID%,%ID%,%Language%,%Format%,%Codec_Profile%,%ScanType%,%ScanOrder%,%Width%,%Height%,%PixelAspectRatio%,%DisplayAspectRatio%,%FrameRate%
 Audio;\r\n-Audio-,%StreamKindID%,%ID%,%Language%,%Format%,%SamplingRate%,%Channels%,%BitRate%
 Text;\r\n-Text-,%StreamKindID%,%ID%,%Language%,%Format%
