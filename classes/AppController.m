@@ -18,6 +18,11 @@
 @synthesize fileList = m_fileList;
 @synthesize deviceController = m_deviceController;
 
+-(double) currentTime
+{
+    return (double) [[NSDate date] timeIntervalSince1970];
+}
+
 static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, NSString* suffix)
 {
     // extract filename
@@ -44,9 +49,17 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
     return filename;
 }
 
--(double) currentTime
+-(void) setOutputFileName
 {
-    return (double) [[NSDate date] timeIntervalSince1970];
+    NSEnumerator* e = [m_fileList objectEnumerator];
+    Transcoder* transcoder;
+    NSString* suffix = [m_deviceController fileSuffix];
+    NSString* format = [m_deviceController videoFormat];
+    
+    while ((transcoder = (Transcoder*) [e nextObject])) {
+        [transcoder changeOutputFileName: getOutputFileName([transcoder inputFileName], m_savePath, suffix)];
+        [transcoder setVideoFormat: format];
+    }
 }
 
 - (id)init
@@ -81,44 +94,7 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
     [self setProgressFor:nil to:PROGRESS_NONE];
 }
 
--(Transcoder*) transcoderForFileName:(NSString*) fileName
-{
-    Transcoder* transcoder = [[Transcoder alloc] initWithController:self];
-    [transcoder addInputFile: fileName];
-    [transcoder addOutputFile: getOutputFileName(fileName, m_savePath, [m_deviceController fileSuffix])];
-    [transcoder setVideoFormat: [m_deviceController videoFormat]];
-    return transcoder;
-}
-
--(void) setOutputFileName
-{
-    NSEnumerator* e = [m_fileList objectEnumerator];
-    Transcoder* transcoder;
-    NSString* suffix = [m_deviceController fileSuffix];
-    NSString* format = [m_deviceController videoFormat];
-    
-    while ((transcoder = (Transcoder*) [e nextObject])) {
-        [transcoder changeOutputFileName: getOutputFileName([transcoder inputFileName], m_savePath, suffix)];
-        [transcoder setVideoFormat: format];
-    }
-}
-
-- (BOOL)validateToolbarItem:(NSToolbarItem *)theItem
-{
-    if (theItem == m_startEncodeItem) {
-        [m_startEncodeItem setLabel:(m_runState == RS_PAUSED) ? @"Resume" : @"Start"];
-        return [m_fileList count] > 0 && m_runState != RS_RUNNING;
-    }
-        
-    if (theItem == m_stopEncodeItem)
-        return [m_fileList count] > 0 && m_runState != RS_STOPPED;
-        
-    if (theItem == m_pauseEncodeItem)
-        return [m_fileList count] > 0 && m_runState == RS_RUNNING;
-        
-    return [theItem isEnabled];
-}
-
+// Main Encoding Functions
 -(void) startNextEncode
 {
     m_currentEncodingStartTime = [self currentTime];
@@ -203,58 +179,6 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
     [self setProgressFor:nil to:0];
 }
 
--(IBAction)toggleConsoleDrawer:(id)sender
-{
-    [m_consoleDrawer toggle:sender];
-}
-
- -(IBAction)changeSaveToText:(id)sender
-{
-    [m_savePath release];
-    m_savePath = [m_saveToPathTextField stringValue];
-    [m_savePath retain];
-    [m_saveToPathTextField abortEditing];
-    [m_saveToPathTextField setStringValue:m_savePath];
-    [self setOutputFileName];
-}
-
--(IBAction)selectSaveToPath:(id)sender
-{
-    NSOpenPanel* panel = [NSOpenPanel openPanel];
-    [panel setCanChooseFiles:NO];
-    [panel setCanChooseDirectories:YES];
-    [panel setCanCreateDirectories:YES];
-    [panel setTitle:@"Choose a Folder"];
-    [panel setPrompt:@"Choose"];
-    if ([panel runModalForTypes: nil] == NSOKButton) {
-        m_savePath = [[panel filenames] objectAtIndex:0];
-        [m_savePath retain];
-        [m_saveToPathTextField setStringValue:m_savePath];
-        [self setOutputFileName];
-    }
-}
-
--(IBAction)changeAddToMediaLibrary:(id)sender
-{
-    m_addToMediaLibrary = [sender state] != 0;
-    [m_deleteFromDestinationButton setEnabled:m_addToMediaLibrary];
-}
-
--(IBAction)changeDeleteFromDestination:(id)sender
-{
-    m_deleteFromDestination = [sender state] != 0;
-}
-
--(BOOL) addToMediaLibrary
-{
-    return m_addToMediaLibrary;
-}
-
--(BOOL) deleteFromDestination
-{
-    return m_deleteFromDestination;
-}
-
 -(void) setProgressFor: (Transcoder*) transcoder to: (double) progress
 {
     if (!transcoder) {
@@ -322,9 +246,118 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
     [self startNextEncode];
 }
 
+// Toolbar delegate method
+- (BOOL) validateToolbarItem:(NSToolbarItem *)theItem
+{
+    if (theItem == m_startEncodeItem) {
+        [m_startEncodeItem setLabel:(m_runState == RS_PAUSED) ? @"Resume" : @"Start"];
+        return [m_fileList count] > 0 && m_runState != RS_RUNNING;
+    }
+        
+    if (theItem == m_stopEncodeItem)
+        return [m_fileList count] > 0 && m_runState != RS_STOPPED;
+        
+    if (theItem == m_pauseEncodeItem)
+        return [m_fileList count] > 0 && m_runState == RS_RUNNING;
+        
+    return [theItem isEnabled];
+}
+
+-(Transcoder*) transcoderForFileName:(NSString*) fileName
+{
+    Transcoder* transcoder = [[Transcoder alloc] initWithController:self];
+    [transcoder addInputFile: fileName];
+    [transcoder addOutputFile: getOutputFileName(fileName, m_savePath, [m_deviceController fileSuffix])];
+    [transcoder setVideoFormat: [m_deviceController videoFormat]];
+    return transcoder;
+}
+
+-(IBAction)toggleConsoleDrawer:(id)sender
+{
+    [m_consoleDrawer toggle:sender];
+}
+
+ -(IBAction)changeSaveToText:(id)sender
+{
+    [m_savePath release];
+    m_savePath = [m_saveToPathTextField stringValue];
+    [m_savePath retain];
+    [m_saveToPathTextField abortEditing];
+    [m_saveToPathTextField setStringValue:m_savePath];
+    [self setOutputFileName];
+}
+
+-(IBAction)selectSaveToPath:(id)sender
+{
+    NSOpenPanel* panel = [NSOpenPanel openPanel];
+    [panel setCanChooseFiles:NO];
+    [panel setCanChooseDirectories:YES];
+    [panel setCanCreateDirectories:YES];
+    [panel setTitle:@"Choose a Folder"];
+    [panel setPrompt:@"Choose"];
+    if ([panel runModalForTypes: nil] == NSOKButton) {
+        m_savePath = [[panel filenames] objectAtIndex:0];
+        [m_savePath retain];
+        [m_saveToPathTextField setStringValue:m_savePath];
+        [self setOutputFileName];
+    }
+}
+
+-(IBAction)changeAddToMediaLibrary:(id)sender
+{
+    m_addToMediaLibrary = [sender state] != 0;
+    [m_deleteFromDestinationButton setEnabled:m_addToMediaLibrary];
+}
+
+-(IBAction)changeDeleteFromDestination:(id)sender
+{
+    m_deleteFromDestination = [sender state] != 0;
+}
+
+-(BOOL) addToMediaLibrary
+{
+    return m_addToMediaLibrary;
+}
+
+-(BOOL) deleteFromDestination
+{
+    return m_deleteFromDestination;
+}
+
 -(DeviceController*) deviceController
 {
     return m_deviceController;
+}
+
+- (BOOL)application:(NSApplication *)theApplication openFile:(NSString *)filename
+{
+    [m_fileListController addFile:filename];
+    return YES;
+}
+
+-(void) terminateApp:(id) sender
+{
+    [[NSApplication sharedApplication] terminate:sender];
+}
+
+-(void) sheetDidDismiss:(NSWindow *) sheet returnCode:(int) returnCode contextInfo:(void  *) contextInfo
+{
+    if (returnCode == NSAlertAlternateReturn)
+        [self terminateApp:self];
+}
+
+- (BOOL)windowShouldClose:(id)window
+{
+    if (m_runState != RS_STOPPED) {
+        NSBeginAlertSheet(@"Are you sure you want to quit?", @"Continue", @"Quit", nil, 
+                            [[NSApplication sharedApplication] mainWindow], 
+                            self, nil, @selector(sheetDidDismiss:returnCode:contextInfo:), nil, 
+                            @"Encoding is in progress. Any unfinished encoding will be cancelled.");
+        return NO;
+    }
+    
+    [self terminateApp:self];
+    return YES;
 }
 
 -(void) log: (NSString*) format, ...
@@ -361,37 +394,5 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
     
     [m_fileListController reloadData];
 }
-
-- (BOOL)application:(NSApplication *)theApplication openFile:(NSString *)filename
-{
-    [m_fileListController addFile:filename];
-    return YES;
-}
-
--(void) terminateApp:(id) sender
-{
-    [[NSApplication sharedApplication] terminate:sender];
-}
-
--(void) sheetDidDismiss:(NSWindow *) sheet returnCode:(int) returnCode contextInfo:(void  *) contextInfo
-{
-    if (returnCode == NSAlertAlternateReturn)
-        [self terminateApp:self];
-}
-
-- (BOOL)windowShouldClose:(id)window
-{
-    if (m_runState != RS_STOPPED) {
-        NSBeginAlertSheet(@"Are you sure you want to quit?", @"Continue", @"Quit", nil, 
-                            [[NSApplication sharedApplication] mainWindow], 
-                            self, nil, @selector(sheetDidDismiss:returnCode:contextInfo:), nil, 
-                            @"Encoding is in progress. Any unfinished encoding will be cancelled.");
-        return NO;
-    }
-    
-    [self terminateApp:self];
-    return YES;
-}
-
 
 @end

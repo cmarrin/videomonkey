@@ -175,4 +175,10 @@
     [self setSelectedObjects:[self arrangedObjects]];
 }
 
+-(id) selection
+{
+    NSArray* sel = [self selectedObjects];
+    return ([sel count] == 1) ? [sel objectAtIndex:0] : nil;
+}
+
 @end
