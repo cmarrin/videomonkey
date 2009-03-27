@@ -23,6 +23,7 @@ typedef enum FileStatus { FS_INVALID, FS_VALID, FS_ENCODING, FS_PAUSED, FS_FAILE
 
 @interface TranscoderFileInfo : NSObject {
     // General
+    NSString* filename;
     NSString* format;
     double duration;
     double bitrate;
@@ -37,6 +38,7 @@ typedef enum FileStatus { FS_INVALID, FS_VALID, FS_ENCODING, FS_PAUSED, FS_FAILE
     NSString* videoProfile;
     BOOL videoInterlaced;
     FrameSize videoFrameSize;
+    double videoBitrate;
     double pixelAspectRatio;
     double displayAspectRatio;
     double videoFrameRate;
@@ -49,10 +51,10 @@ typedef enum FileStatus { FS_INVALID, FS_VALID, FS_ENCODING, FS_PAUSED, FS_FAILE
     double audioSampleRate;
     int audioChannels;
     double audioBitrate;
-
-    NSString* filename;
 }
 
+// General
+@property(retain) NSString* filename;
 @property(retain) NSString* format;
 @property(assign) double duration;
 @property(assign) double bitrate;
@@ -70,6 +72,7 @@ typedef enum FileStatus { FS_INVALID, FS_VALID, FS_ENCODING, FS_PAUSED, FS_FAILE
 @property(assign) double pixelAspectRatio;
 @property(assign) double displayAspectRatio;
 @property(assign) double videoFrameRate;
+@property(assign) double videoBitrate;
 
 // Audio
 @property(assign) int audioStreamKind;
@@ -79,8 +82,6 @@ typedef enum FileStatus { FS_INVALID, FS_VALID, FS_ENCODING, FS_PAUSED, FS_FAILE
 @property(assign) double audioSampleRate;
 @property(assign) int audioChannels;
 @property(assign) double audioBitrate;
-
-@property(retain) NSString* filename;
 
 @end
 
@@ -110,6 +111,7 @@ typedef enum FileStatus { FS_INVALID, FS_VALID, FS_ENCODING, FS_PAUSED, FS_FAILE
 @property (readonly) double progress;
 
 // Input properties
+@property (retain,readonly) NSString* inputFileName;
 @property (retain,readonly) NSString* inputFormat;
 @property (readonly) double inputDuration;
 @property (readonly) double inputFileSize;
@@ -121,6 +123,7 @@ typedef enum FileStatus { FS_INVALID, FS_VALID, FS_ENCODING, FS_PAUSED, FS_FAILE
 @property (readonly) FrameSize inputVideoFrameSize;
 @property (readonly) double inputVideoAspectRatio;
 @property (readonly) double inputVideoFramerate;
+@property (readonly) double inputVideoBitrate;
 
 @property (retain,readonly) NSString* inputAudioCodec;
 @property (readonly) double inputAudioSampleRate;
@@ -128,6 +131,7 @@ typedef enum FileStatus { FS_INVALID, FS_VALID, FS_ENCODING, FS_PAUSED, FS_FAILE
 @property (readonly) double inputAudioBitrate;
 
 // Output properties
+@property (retain,readwrite) NSString* outputFileName;
 @property (retain,readwrite) NSString* outputFormat;
 @property (readwrite) double outputDuration;
 @property (readonly) double outputFileSize;
@@ -159,12 +163,9 @@ typedef enum FileStatus { FS_INVALID, FS_VALID, FS_ENCODING, FS_PAUSED, FS_FAILE
 -(NSImageView*) statusImageView;
 
 -(FileStatus) inputFileStatus;
--(NSString*) inputFileName;
--(FrameSize) inputVideoFrameSize;
 
 -(BOOL) isInputQuicktime;
 -(BOOL) hasInputAudio;
--(NSString*) outputFileName;
 -(NSString*) tempAudioFileName;
 -(NSString*) passLogFileName;
 

@@ -8,24 +8,17 @@
 
 #import "Formatters.h"
 
-
-@implementation FileSizeFormatter
-
-- (NSString *)stringForObjectValue:(id)anObject
+static NSString* stringForSizeValue(double size, NSString* units)
 {
-    double size = [anObject doubleValue];
-    
     if (size < 10000)
-        return [NSString stringWithFormat:@"%dB", (int) size];
+        return [NSString stringWithFormat:@"%d%@", (int) size, units];
     else if (size < 1000000)
-        return [NSString stringWithFormat:@"%.1fKB", size/1000.0];
+        return [NSString stringWithFormat:@"%.1fK%@", size/1000.0, units];
     else if (size < 1000000000)
-        return [NSString stringWithFormat:@"%.1fMB", size/1000000.0];
+        return [NSString stringWithFormat:@"%.1fM%@", size/1000000.0, units];
     else
-        return [NSString stringWithFormat:@"%.1fGB", size/1000000000.0];
+        return [NSString stringWithFormat:@"%.1fG%@", size/1000000000.0, units];
 }
-
-@end
 
 @implementation DurationFormatter
 
@@ -62,6 +55,16 @@
 
 @end
 
+@implementation FileSizeFormatter
+
+- (NSString *)stringForObjectValue:(id)anObject
+{
+    double size = [anObject doubleValue];
+    return stringForSizeValue(size, @"B");
+}
+
+@end
+
 @implementation BitrateFormatter
 
 - (NSString *)stringForObjectValue:(id)anObject
@@ -70,16 +73,62 @@
     
     if (bitrate < 0 || bitrate > 4000000000)
         return @"unknown";
-    
-    if (bitrate < 10000)
-        return [NSString stringWithFormat:@"%dbps", (int) bitrate];
-    else if (bitrate < 10000000)
-        return [NSString stringWithFormat:@"%dKbps", (int) (bitrate/1000.0)];
-    else if (bitrate < 10000000000)
-        return [NSString stringWithFormat:@"%dMbps", (int) (bitrate/1000000.0)];
-    else
-        return [NSString stringWithFormat:@"%dGbps", (int) (bitrate/1000000000.0)];
+
+    return stringForSizeValue(bitrate, @"bps");
 }
 
 @end
 
+@implementation SampleRateFormatter
+
+- (NSString *)stringForObjectValue:(id)anObject
+{
+    double sampleRate = [anObject doubleValue];
+    
+    if (sampleRate < 0 || sampleRate > 4000000000)
+        return @"unknown";
+    
+    return stringForSizeValue(sampleRate, @"Hz");
+}
+
+@end
+
+@implementation BooleanFormatter
+
+- (NSString *)stringForObjectValue:(id)anObject
+{
+    return [anObject boolValue] ? @"true" : @"false";
+}
+
+@end
+
+@implementation FramerateFormatter
+
+- (NSString *)stringForObjectValue:(id)anObject
+{
+    double framerate = [anObject doubleValue];
+    return [NSString stringWithFormat:@"%.2ffps", framerate];
+}
+
+@end
+
+@implementation AspectRatioFormatter
+
+- (NSString *)stringForObjectValue:(id)anObject
+{
+    double aspectRatio = [anObject doubleValue];
+    
+    // handle some standard ones
+    if (16.0/9.0 - 0.05 <= aspectRatio && aspectRatio <= 16.0/9.0 + 0.05)
+        return @"16:9";
+        
+    if (4.0/3.0 - 0.05 <= aspectRatio && aspectRatio <= 4.0/3.0 + 0.05)
+        return @"4:3";
+        
+    if (3.0/2.0 - 0.05 <= aspectRatio && aspectRatio <= 3.0/2.0 + 0.05)
+        return @"3:2";
+        
+    return [NSString stringWithFormat:@"%.2f:1", aspectRatio];
+}
+
+@end

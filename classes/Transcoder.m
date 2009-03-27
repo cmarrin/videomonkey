@@ -20,6 +20,8 @@ int heightFromFrameSize(FrameSize f) { return f & 0xffff; }
 
 @implementation TranscoderFileInfo
 
+// General
+@synthesize filename;
 @synthesize format;
 @synthesize duration;
 @synthesize bitrate;
@@ -37,6 +39,7 @@ int heightFromFrameSize(FrameSize f) { return f & 0xffff; }
 @synthesize pixelAspectRatio;
 @synthesize displayAspectRatio;
 @synthesize videoFrameRate;
+@synthesize videoBitrate;
 
 // Audio
 @synthesize audioStreamKind;
@@ -46,8 +49,6 @@ int heightFromFrameSize(FrameSize f) { return f & 0xffff; }
 @synthesize audioSampleRate;
 @synthesize audioChannels;
 @synthesize audioBitrate;
-
-@synthesize filename;
 
 @end
 
@@ -68,6 +69,7 @@ int heightFromFrameSize(FrameSize f) { return f & 0xffff; }
 @synthesize enabled = m_enabled;
 
 // Input properties
+-(NSString*) inputFileName { return [[self inputFileInfo] filename]; }
 -(NSString*) inputFormat { return [[self inputFileInfo] format]; }
 -(double) inputDuration { return [[self inputFileInfo] duration]; }
 -(double) inputFileSize { return [[self inputFileInfo] fileSize]; }
@@ -79,13 +81,16 @@ int heightFromFrameSize(FrameSize f) { return f & 0xffff; }
 -(FrameSize) inputVideoFrameSize { return [[self inputFileInfo] videoFrameSize]; }
 -(double) inputVideoAspectRatio { return [[self inputFileInfo] displayAspectRatio]; }
 -(double) inputVideoFramerate { return [[self inputFileInfo] videoFrameRate]; }
+-(double) inputVideoBitrate { return [[self inputFileInfo] videoBitrate]; }
 
 -(NSString*) inputAudioCodec { return [[self inputFileInfo] audioCodec]; }
 -(double) inputAudioSampleRate { return [[self inputFileInfo] audioSampleRate]; }
 -(int) inputAudioChannels { return [[self inputFileInfo] audioChannels]; }
 -(double) inputAudioBitrate { return [[self inputFileInfo] audioBitrate]; }
 
-// Output properties (reading)
+// Output properties
+-(NSString*) outputFileName { return [[self outputFileInfo] filename]; }
+-(void) setOutputFileName:(NSString*) filename { [self outputFileInfo].filename = filename; }
 -(NSString*) outputFormat { return [self outputFileInfo].format; }
 -(void) setOutputFormat:(NSString*) format { [self outputFileInfo].format = format; }
 -(double) outputDuration { return [self outputFileInfo].duration; }
@@ -113,6 +118,8 @@ int heightFromFrameSize(FrameSize f) { return f & 0xffff; }
 -(void) setOutputVideoAspectRatio:(double) aspectRatio { [self outputFileInfo].displayAspectRatio = aspectRatio; }
 -(double) outputVideoFramerate { return [self outputFileInfo].videoFrameRate; }
 -(void) setOutputVideoFramerate:(double) framerate { [self outputFileInfo].videoFrameRate = framerate; }
+-(double) outputVideoBitrate { return [self outputFileInfo].videoBitrate; }
+-(void) setOutputVideoBitrate:(double) bitrate { [self outputFileInfo].videoBitrate = bitrate; }
 
 -(NSString*) outputAudioCodec { return [self outputFileInfo].audioCodec; }
 -(void) setOutputAudioCodec:(NSString*) codec { [self outputFileInfo].audioCodec = codec; }
@@ -122,8 +129,6 @@ int heightFromFrameSize(FrameSize f) { return f & 0xffff; }
 -(void) setOutputAudioChannels:(int) channels { [self outputFileInfo].audioChannels = channels; }
 -(double) outputAudioBitrate { return [self outputFileInfo].audioBitrate; }
 -(void) setOutputAudioBitrate:(double) bitrate { [self outputFileInfo].audioBitrate = bitrate; }
-
-// Output properties (writing)
 
 
 
@@ -198,9 +203,9 @@ int heightFromFrameSize(FrameSize f) { return f & 0xffff; }
         NSArray* video = [[components objectAtIndex:offset] componentsSeparatedByString:@","];
         offset = 2;
         
-        // -Video-,%StreamKindID%,%ID%,%Language%,%Format%,%Codec_Profile%,%ScanType%,%ScanOrder%,%Width%,%Height%,%PixelAspectRatio%,%DisplayAspectRatio%,%FrameRate%
+        // -Video-,%StreamKindID%,%ID%,%Language%,%Format%,%Codec_Profile%,%ScanType%,%ScanOrder%,%Width%,%Height%,%PixelAspectRatio%,%DisplayAspectRatio%,%FrameRate%.%Bitrate%
 
-        if ([video count] != 13)
+        if ([video count] != 14)
             return NO;
             
         info.videaStreamKind = [[video objectAtIndex:1] intValue];
@@ -214,6 +219,7 @@ int heightFromFrameSize(FrameSize f) { return f & 0xffff; }
         info.pixelAspectRatio = [[video objectAtIndex:10] doubleValue];
         info.displayAspectRatio = [[video objectAtIndex:11] doubleValue];
         info.videoFrameRate = [[video objectAtIndex:12] doubleValue];
+        info.videoBitrate = [[video objectAtIndex:13] doubleValue];
         
         // standardize video codec name
         NSString* f = VC_H264;
@@ -364,11 +370,6 @@ static NSImage* getFileStatusImage(FileStatus status)
     return m_fileStatus;
 }
 
--(NSString*) inputFileName
-{
-    return [[self inputFileInfo] filename];
-}
-
 -(BOOL) isInputQuicktime
 {
     return [[self inputFileInfo] isQuicktime];
@@ -377,16 +378,6 @@ static NSImage* getFileStatusImage(FileStatus status)
 -(BOOL) hasInputAudio
 {
     return [[self inputFileInfo] audioSampleRate] != 0;
-}
-
--(NSString*) inputVideoFormat
-{
-    return [[self inputFileInfo] videoCodec];
-}
-
--(NSString*) outputFileName
-{
-    return [[self inputFileInfo] filename];
 }
 
 -(NSString*) tempAudioFileName
@@ -435,7 +426,7 @@ static NSImage* getFileStatusImage(FileStatus status)
     [env setValue: ([self isInputQuicktime] ? @"true" : @"false") forKey: @"is_quicktime"];
     [env setValue: ([self hasInputAudio] ? @"true" : @"false") forKey: @"has_audio"];
 
-    [env setValue: [self inputVideoFormat] forKey: @"input_video_codec"];
+    [env setValue: [self inputVideoCodec] forKey: @"input_video_codec"];
 
     // set the params
     [[m_appController deviceController] setCurrentParamsWithEnvironment:env];
@@ -498,6 +489,14 @@ static NSImage* getFileStatusImage(FileStatus status)
     if ([m_outputFiles count] == 0 || !m_enabled)
         return NO;
     
+    // Make sure the output file doesn't exist
+    if ([[NSFileManager defaultManager] fileExistsAtPath: [self outputFileName]]) {
+        NSRunAlertPanel(@"Internal Error", 
+                        [NSString stringWithFormat:@"The output file '%@' exists. Video Monkey should never write to an existing file.", [self outputFileName]], 
+                        nil, nil, nil);
+        return NO;
+    }
+
     // initialize progress values
     m_progress = 0;
     [m_progressIndicator setDoubleValue: m_progress];

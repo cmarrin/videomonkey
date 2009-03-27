@@ -37,3 +37,31 @@
 
 @end
 
+@interface SampleRateFormatter : NSNumberFormatter {
+}
+
+- (NSString *)stringForObjectValue:(id)anObject;
+
+@end
+
+@interface BooleanFormatter : NSNumberFormatter {
+}
+
+- (NSString *)stringForObjectValue:(id)anObject;
+
+@end
+
+@interface FramerateFormatter : NSNumberFormatter {
+}
+
+- (NSString *)stringForObjectValue:(id)anObject;
+
+@end
+
+@interface AspectRatioFormatter : NSNumberFormatter {
+}
+
+- (NSString *)stringForObjectValue:(id)anObject;
+
+@end
+

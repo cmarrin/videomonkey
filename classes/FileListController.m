@@ -186,11 +186,4 @@
     return ([sel count] == 1 && [[sel objectAtIndex:0] isKindOfClass:[Transcoder class]]) ? [sel objectAtIndex:0] : nil;
 }
 
-- (id)valueForUndefinedKey:(NSString *)key
-{
-    printf("***\n");
-}
-
-
-
 @end
