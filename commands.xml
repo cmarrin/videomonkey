@@ -78,8 +78,8 @@ The workhorse elements are the <param>, <command>, <script>. These contain the i
     
 The result of this script execution is a string in 'params.recipe' which is the recipe to be executed. See below for recipe syntax. These scripts are executed when any UI control is changed. This includes the slider, which executes the scripts for each move. The script is executed in turn for each file selected for encoding. This pass of script execution is to fill in the file list entries. When encoding is started, the scripts are executed again for the currently encoding file and the recipe is used to start the encoding. Once encoding is finished, the scripts are executed for the next file, and so on.
 
-Params set on entry to Javascript
-=================================
+Javascript Params
+=================
 
 Each time scripts execute, a number of parameters are preloaded into the 'params' property. These are:
 
@@ -117,7 +117,16 @@ recipe                  Recipe to use for the current encoding
 output_video_width      Width, in pixels, of the output file
 output_video_height     Height, in pixels, of the output file
 audio_quality           A string indicating the audio quality of the output file (usually "low", "medium" or "high")
-bitrate                 Approximate bitrate of the output file
+output_video_bitrate    Approximate bitrate of the output video
+output_format           Format of the container
+output_video_codec      Video codec
+output_video_profile    Profile of the video
+output_video_frame_rate Framerate of the output file (actual frame rate in fps * 1000)
+
+output_audio_codec      Audio codec
+output_audio_bitrate
+output_audio_sample_rate
+output_audio_channels
 
 The recipe is used for the actual encoding, the others are used to update the file entries.
 
@@ -177,9 +186,21 @@ A property name is anything from the character after the '$' to the next whitesp
             {
                 params.audio_quality = type;
                 switch(type) {
-                    case "low":    params.audio_bitrate =  "16k"; params.audio_sample_rate = 11025; params.audio_channels = 1; break;
-                    case "medium": params.audio_bitrate =  "32k"; params.audio_sample_rate = 22050; params.audio_channels = 1; break;
-                    case "high":   params.audio_bitrate = "128k"; params.audio_sample_rate = 48000; params.audio_channels = 2; break;
+                    case "low":
+                        params.output_audio_bitrate =  16000;
+                        params.output_audio_sample_rate = 11025;
+                        params.output_audio_channels = 1;
+                        break;
+                    case "medium":
+                        params.output_audio_bitrate =  32000;
+                        params.output_audio_sample_rate = 22050;
+                        params.output_audio_channels = 1;
+                        break;
+                    case "high":
+                        params.output_audio_bitrate = 128000;
+                        params.output_audio_sample_rate = 48000;
+                        params.output_audio_channels = 2;
+                        break;
                 }
             }
             
@@ -242,7 +263,7 @@ A property name is anything from the character after the '$' to the next whitesp
 				params.output_video_height = Math.round(params.output_video_height / 16) * 16;
 				
 				// set frame rate
-				params.output_frame_rate = params.input_frame_rate * params.frame_rate * 1000;
+				params.output_video_frame_rate = params.input_frame_rate * params.frame_rate * 1000;
 			}
 			
 			audio("high");
@@ -316,9 +337,9 @@ A property name is anything from the character after the '$' to the next whitesp
 					-vpre $ffmpeg_vpre -pass 2 -passlogfile "$pass_log_file" $ffmpeg_profile
 				</command>
 		        <command id="ffmpeg_options">
-		            -vcodec $ffmpeg_vcodec -b $bitrate -s $(output_video_width)x$(output_video_height) 
-						-aspect $(output_video_width):$(output_video_height) -r $(output_frame_rate):1000
-					-acodec $ffmpeg_acodec -ab $audio_bitrate -ar $audio_sample_rate -ac $audio_channels
+		            -vcodec $ffmpeg_vcodec -b $output_video_bitrate -s $(output_video_width)x$(output_video_height) 
+						-aspect $(output_video_width):$(output_video_height) -r $(output_video_frame_rate):1000
+					-acodec $ffmpeg_acodec -ab $output_audio_bitrate -ar $output_audio_sample_rate -ac $output_audio_channels
 				</command>
 		        <command id="quicktime_to_audio_file">
 					$qt_export "$input_file" --video=0 "$tmp_audio_file"
@@ -327,7 +348,7 @@ A property name is anything from the character after the '$' to the next whitesp
 					$yuvcorrect -v 0 -Y LUMINANCE_1.20_0_255_0_255 -Y CHROMINANCE_0_1.04_128_1.04_128_0_255
 				</command>
 		        <command id="quicktime_to_yuv">
-					$movtoy4m -f -w $input_video_width -h $input_video_height -F $(output_frame_rate):1000 
+					$movtoy4m -f -w $input_video_width -h $input_video_height -F $(output_video_frame_rate):1000 
 						-a $(output_video_width):$(output_video_height) "$input_file" | $correct_yuv 
 				</command>
 		        <command id="yuv_to_ffmpeg_av"> $ffmpeg -y -i - -i "$tmp_audio_file" </command>
@@ -367,11 +388,13 @@ A property name is anything from the character after the '$' to the next whitesp
 					// and we know what percentage of the way between the two we are (params.quality). We also which device we have 
 					// selected (params.title), whether we are doing h.264 or mpeg4 (params.h264), and whether we want to optimize 
 					// for TV or iPod (params.for_tv). From this we need to compute params.frame_width, params.frame_height,
-					// params.audio_quality and params.bitrate.
+					// params.audio_quality and params.output_video_bitrate.
 					
 					// We support a number of standard frame sizes. After adjusting these sizes according to the flags
 					// (h264, forTV), we determine the actual frame size using these as maximum values, taking
 					// into account aspect ratio.
+					
+					params.output_format = "MPEG-4";
 					
 					var frameSizes = {
 						"tiny":  [  192,  144 ],
@@ -440,15 +463,10 @@ A property name is anything from the character after the '$' to the next whitesp
 					// set bitrate
 					var bitrateMin = bitrateQualityMap[title][h264 ? 1 : 0][qualityStop] * 1000;
 					var bitrateMax = bitrateQualityMap[title][h264 ? 1 : 0][qualityStop+1] * 1000;
-					params.bitrate = (bitrateMax - bitrateMin) * quality + bitrateMin;
+					params.output_video_bitrate = (bitrateMax - bitrateMin) * quality + bitrateMin;
 					
 					// set audio quality
-               		params.audio_quality = audioQualityMap[title][qualityStop];
-               		switch(params.audio_quality) {
-                   		case "low":    params.audio_bitrate =  "16k"; params.audio_sample_rate = 11025; params.audio_channels = 1; break;
-                   		case "medium": params.audio_bitrate =  "32k"; params.audio_sample_rate = 22050; params.audio_channels = 1; break;
-                   		case "high":   params.audio_bitrate = "128k"; params.audio_sample_rate = 48000; params.audio_channels = 2; break;
-               		}
+               		audio(audioQualityMap[title][qualityStop]);
                		
                		// set the frame rate
                		params.frame_rate = 1;
@@ -457,10 +475,15 @@ A property name is anything from the character after the '$' to the next whitesp
 
 					// set endoder
 					params.ffmpeg_vcodec = h264 ? "libx264" : "mpeg4";
-
+					params.output_video_codec = h264 ? "H.264" : "mpeg4"
+					params.output_audio_codec = "AAC";
+					
 					// adjust vpre for baseline if needed
 					if (title != "Apple TV")
 						params.ffmpeg_profile = "-bf 0 -coder 0 -flags2 -wpred-dct8x8";
+						
+					// We need to compute the level. For now, we will be vague
+					params.output_video_profile = (title != "Apple TV") ? "baseline@???" : "main@???";
 
 					// construct the recipe
 					if (	 !bool(params.special_qt) && !bool(params.has_audio) && !bool(params.is_2_pass))

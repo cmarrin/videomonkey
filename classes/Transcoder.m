@@ -24,7 +24,6 @@ int heightFromFrameSize(FrameSize f) { return f & 0xffff; }
 @synthesize filename;
 @synthesize format;
 @synthesize duration;
-@synthesize bitrate;
 @synthesize isQuicktime;
 @synthesize fileSize;
 
@@ -49,6 +48,9 @@ int heightFromFrameSize(FrameSize f) { return f & 0xffff; }
 @synthesize audioSampleRate;
 @synthesize audioChannels;
 @synthesize audioBitrate;
+
+// final bitrate is computed
+-(double) bitrate { return videoBitrate + audioBitrate; }
 
 @end
 
@@ -94,7 +96,14 @@ int heightFromFrameSize(FrameSize f) { return f & 0xffff; }
 -(NSString*) outputFormat { return [self outputFileInfo].format; }
 -(void) setOutputFormat:(NSString*) format { [self outputFileInfo].format = format; }
 -(double) outputDuration { return [self outputFileInfo].duration; }
--(void) setOutputDuration:(double) duration { [self outputFileInfo].duration = duration; }
+
+// since duration is used to compute outputFileSize, we need to notify about this
+-(void) setOutputDuration:(double) duration
+{
+    [self willChangeValueForKey:@"outputFileSize"];
+    [self outputFileInfo].duration = duration;
+    [self didChangeValueForKey:@"outputFileSize"];
+}
 
 // outputFileSize is computed and is therefore readonly
 -(double) outputFileSize
@@ -105,7 +114,6 @@ int heightFromFrameSize(FrameSize f) { return f & 0xffff; }
 }
 
 -(double) outputBitrate { return [self outputFileInfo].bitrate; }
--(void) setOutputBitrate:(double) bitrate { [self outputFileInfo].bitrate = bitrate; }
 -(NSString*) outputVideoCodec { return [self outputFileInfo].videoCodec; }
 -(void) setOutputVideoCodec:(NSString*) codec { [self outputFileInfo].videoCodec = codec; }
 -(NSString*) outputVideoProfile { return [self outputFileInfo].videoProfile; }
@@ -119,7 +127,16 @@ int heightFromFrameSize(FrameSize f) { return f & 0xffff; }
 -(double) outputVideoFramerate { return [self outputFileInfo].videoFrameRate; }
 -(void) setOutputVideoFramerate:(double) framerate { [self outputFileInfo].videoFrameRate = framerate; }
 -(double) outputVideoBitrate { return [self outputFileInfo].videoBitrate; }
--(void) setOutputVideoBitrate:(double) bitrate { [self outputFileInfo].videoBitrate = bitrate; }
+
+// since video bitrate is used to compute outputBitrate and outputFileSize, we need to notify about this
+-(void) setOutputVideoBitrate:(double) bitrate
+{
+    [self willChangeValueForKey:@"outputBitrate"];
+    [self willChangeValueForKey:@"outputFileSize"];
+    [self outputFileInfo].videoBitrate = bitrate;
+    [self didChangeValueForKey:@"outputFileSize"];
+    [self didChangeValueForKey:@"outputBitrate"];
+}
 
 -(NSString*) outputAudioCodec { return [self outputFileInfo].audioCodec; }
 -(void) setOutputAudioCodec:(NSString*) codec { [self outputFileInfo].audioCodec = codec; }
@@ -128,7 +145,16 @@ int heightFromFrameSize(FrameSize f) { return f & 0xffff; }
 -(int) outputAudioChannels { return [self outputFileInfo].audioChannels; }
 -(void) setOutputAudioChannels:(int) channels { [self outputFileInfo].audioChannels = channels; }
 -(double) outputAudioBitrate { return [self outputFileInfo].audioBitrate; }
--(void) setOutputAudioBitrate:(double) bitrate { [self outputFileInfo].audioBitrate = bitrate; }
+
+// since audio bitrate is used to compute outputBitrate and outputFileSize, we need to notify about this
+-(void) setOutputAudioBitrate:(double) bitrate
+{
+    [self willChangeValueForKey:@"outputBitrate"];
+    [self willChangeValueForKey:@"outputFileSize"];
+    [self outputFileInfo].audioBitrate = bitrate;
+    [self didChangeValueForKey:@"outputFileSize"];
+    [self didChangeValueForKey:@"outputBitrate"];
+}
 
 
 
@@ -191,7 +217,7 @@ int heightFromFrameSize(FrameSize f) { return f & 0xffff; }
     [info setFormat: [general objectAtIndex:1]];
     info.isQuicktime = [[general objectAtIndex:2] isEqualToString:@"QuickTime"];
     info.duration = [[general objectAtIndex:3] doubleValue] / 1000;
-    info.bitrate = [[general objectAtIndex:4] doubleValue];
+    //info.bitrate = [[general objectAtIndex:4] doubleValue];
     info.fileSize = [[general objectAtIndex:5] doubleValue];
 
     if ([info.format length] == 0)
@@ -432,20 +458,30 @@ static NSImage* getFileStatusImage(FileStatus status)
     [[m_appController deviceController] setCurrentParamsWithEnvironment:env];
     
     // save some of the values
-    if ([m_outputFiles count] > 0) {
-        int width = [[[m_appController deviceController] paramForKey:@"output_video_width"] intValue];
-        int height = [[[m_appController deviceController] paramForKey:@"output_video_height"] intValue];
-        if (width > 32767)
-            width = 32767;
-        if (height > 32767)
-            height = 32767;
-            
-        FrameSize frameSize = makeFrameSize(width, height);
-        [self outputFileInfo].videoFrameSize = frameSize;
-    }
+    int width = [[[m_appController deviceController] paramForKey:@"output_video_width"] intValue];
+    int height = [[[m_appController deviceController] paramForKey:@"output_video_height"] intValue];
+    if (width > 32767)
+        width = 32767;
+    if (height > 32767)
+        height = 32767;
+        
+    frameSize = makeFrameSize(width, height);
+    self.outputVideoFrameSize = frameSize;
+    self.outputVideoAspectRatio = (double) width / (double) height;
+    
+    self.outputFormat = [[m_appController deviceController] paramForKey:@"output_format"];
+    
+    self.outputVideoCodec = [[m_appController deviceController] paramForKey:@"output_video_codec"];
+    self.outputVideoProfile = [[m_appController deviceController] paramForKey:@"output_video_profile"];
+    self.outputVideoFramerate = [[[m_appController deviceController] paramForKey:@"output_video_frame_rate"] floatValue] / 1000;
+    self.outputVideoBitrate = [[[m_appController deviceController] paramForKey:@"output_video_bitrate"] floatValue];
     
     m_audioQuality = [[m_appController deviceController] paramForKey:@"audio_quality"];
-    self.outputBitrate = [[[m_appController deviceController] paramForKey:@"bitrate"] floatValue];
+
+    self.outputAudioCodec = [[m_appController deviceController] paramForKey:@"output_audio_codec"];
+    self.outputAudioBitrate = [[[m_appController deviceController] paramForKey:@"output_audio_bitrate"] floatValue];
+    self.outputAudioSampleRate = [[[m_appController deviceController] paramForKey:@"output_audio_sample_rate"] floatValue];
+    self.outputAudioChannels = [[[m_appController deviceController] paramForKey:@"output_audio_channels"] intValue];
 }
 
 -(void) finish: (int) status

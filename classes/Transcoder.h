@@ -26,7 +26,6 @@ typedef enum FileStatus { FS_INVALID, FS_VALID, FS_ENCODING, FS_PAUSED, FS_FAILE
     NSString* filename;
     NSString* format;
     double duration;
-    double bitrate;
     BOOL isQuicktime;
     double fileSize;
     
@@ -57,7 +56,7 @@ typedef enum FileStatus { FS_INVALID, FS_VALID, FS_ENCODING, FS_PAUSED, FS_FAILE
 @property(retain) NSString* filename;
 @property(retain) NSString* format;
 @property(assign) double duration;
-@property(assign) double bitrate;
+@property(readonly) double bitrate;
 @property(assign) BOOL isQuicktime;
 @property(assign) double fileSize;
 
@@ -135,7 +134,7 @@ typedef enum FileStatus { FS_INVALID, FS_VALID, FS_ENCODING, FS_PAUSED, FS_FAILE
 @property (retain,readwrite) NSString* outputFormat;
 @property (readwrite) double outputDuration;
 @property (readonly) double outputFileSize;
-@property (readwrite) double outputBitrate;
+@property (readonly) double outputBitrate;
 
 @property (retain,readwrite) NSString* outputVideoCodec;
 @property (retain,readwrite) NSString* outputVideoProfile;
