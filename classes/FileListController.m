@@ -186,4 +186,24 @@
     return ([sel count] == 1 && [[sel objectAtIndex:0] isKindOfClass:[Transcoder class]]) ? [sel objectAtIndex:0] : nil;
 }
 
+- (void)selectNext:(id)sender
+{
+    if ([[self selectionIndexes] count] == 0)
+        [self setSelectionIndex:0];
+    else if ([[self selectionIndexes] count] > 1)
+        [self setSelectionIndex:[self selectionIndex]];
+    else
+        [super selectNext:sender];
+}
+
+- (void)selectPrevious:(id)sender
+{
+    if ([[self selectionIndexes] count] == 0)
+        [self setSelectionIndex:[[self arrangedObjects] count] - 1];
+    else if ([[self selectionIndexes] count] > 1)
+        [self setSelectionIndex:[[self selectionIndexes] lastIndex]];
+    else
+        [super selectPrevious:sender];
+}
+
 @end
