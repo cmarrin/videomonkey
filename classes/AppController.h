@@ -15,14 +15,14 @@
 @class Transcoder;
 
 typedef enum { RS_STOPPED, RS_RUNNING, RS_PAUSED } RunStateType;
+typedef enum { PL_NONE, PL_LIMIT, PL_MATCH } ParamLimitType;
 
 // Progress Special Values
 #define DELAY_FOR_PROGRESS_RESPONSE 5   // in seconds
-#define PROGRESS_STARTING -1
-#define PROGRESS_FINISHING -2
-#define PROGRESS_NONE -3
-#define PROGRESS_UNKNOWN -4
 #define NUM_PROGRESS_TIMES 10
+
+// Workaround to get an event when a file is selected from NSPathCell
+@interface MyPathCell : NSPathCell { } - (void)setURL:(NSURL *)url; @end
 
 @interface AppController : NSObject {
 @private
@@ -40,10 +40,12 @@ typedef enum { RS_STOPPED, RS_RUNNING, RS_PAUSED } RunStateType;
     IBOutlet FileListController* m_fileListController;
     IBOutlet NSButton* m_addToMediaLibraryButton;
     IBOutlet NSButton* m_deleteFromDestinationButton;
+    IBOutlet NSPathControl* m_savePathControl;
     
     NSString* m_savePath;
     int m_currentEncoding;
     RunStateType m_runState;
+    ParamLimitType m_paramLimit;
     BOOL m_isTerminated;
     BOOL m_addToMediaLibrary;
     BOOL m_deleteFromDestination;
@@ -72,10 +74,12 @@ typedef enum { RS_STOPPED, RS_RUNNING, RS_PAUSED } RunStateType;
 
 - (BOOL)windowShouldClose:(id)window;
 
--(IBAction)changeSaveToText:(id)sender;
--(IBAction)selectSaveToPath:(id)sender;
+-(IBAction)changeSaveToPath:(id)sender;
 -(IBAction)changeAddToMediaLibrary:(id)sender;
 -(IBAction)changeDeleteFromDestination:(id)sender;
+-(IBAction)paramLimitNone:(id)sender;
+-(IBAction)paramLimitLimit:(id)sender;
+-(IBAction)paramLimitMatch:(id)sender;
 
 -(BOOL) addToMediaLibrary;
 -(BOOL) deleteFromDestination;

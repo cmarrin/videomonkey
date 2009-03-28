@@ -13,6 +13,17 @@
 #import "MoviePanelController.h"
 #import "Transcoder.h"
 
+@implementation MyPathCell
+-(void)setURL:(NSURL *)url
+{
+    [super setURL:url];
+
+    // Workround for <rdar://5415437> on Mac OS X 10.5.x.
+    NSPathControl* pathControl = (NSPathControl*)[self controlView];
+    (void)[pathControl sendAction:[self action] to:[self target]];
+}
+@end
+
 @implementation AppController
 
 @synthesize fileList = m_fileList;
@@ -89,7 +100,10 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
     m_deleteFromDestination = [m_deleteFromDestinationButton state] != 0;
     [m_deleteFromDestinationButton setEnabled:m_addToMediaLibrary];
     
-    [self setProgressFor:nil to:PROGRESS_NONE];
+    [self setProgressFor:nil to:0];
+    
+    m_savePath = [[[NSUserDefaultsController sharedUserDefaultsController] values] valueForKey:@"saveToLocation"];
+    [m_savePathControl setURL: [NSURL fileURLWithPath:m_savePath ? m_savePath : @""]];
 }
 
 // Main Encoding Functions
@@ -275,30 +289,35 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
     [m_consoleDrawer toggle:sender];
 }
 
- -(IBAction)changeSaveToText:(id)sender
+-(IBAction)changeSaveToPath:(id)sender
 {
     [m_savePath release];
-    m_savePath = [m_saveToPathTextField stringValue];
-    [m_savePath retain];
-    [m_saveToPathTextField abortEditing];
-    [m_saveToPathTextField setStringValue:m_savePath];
-    [self setOutputFileName];
+    
+    // see if we clicked a cell
+    NSPathComponentCell* cell = [sender clickedPathComponentCell];
+    NSURL* url = cell ? [cell URL] : [(NSPathControl*) sender URL];
+    m_savePath = [[url path] retain];
+    if (cell)
+        [m_savePathControl setURL: [NSURL fileURLWithPath:m_savePath ? m_savePath : @""]];
+    [[[NSUserDefaultsController sharedUserDefaultsController] values] setValue:m_savePath forKey:@"saveToLocation"];
 }
 
--(IBAction)selectSaveToPath:(id)sender
+-(IBAction) setDefaultSavePath:(id) sender
 {
-    NSOpenPanel* panel = [NSOpenPanel openPanel];
-    [panel setCanChooseFiles:NO];
-    [panel setCanChooseDirectories:YES];
-    [panel setCanCreateDirectories:YES];
-    [panel setTitle:@"Choose a Folder"];
-    [panel setPrompt:@"Choose"];
-    if ([panel runModalForTypes: nil] == NSOKButton) {
-        m_savePath = [[panel filenames] objectAtIndex:0];
-        [m_savePath retain];
-        [m_saveToPathTextField setStringValue:m_savePath];
-        [self setOutputFileName];
-    }
+    [m_savePath release];
+    m_savePath = nil;
+    [m_savePathControl setURL: [NSURL fileURLWithPath:m_savePath ? m_savePath : @""]];
+    [[[NSUserDefaultsController sharedUserDefaultsController] values] setValue:m_savePath forKey:@"saveToLocation"];
+}
+
+// This is a delegate for NSPathControl to add the 'Same folder as input file' menu item
+- (void)pathControl:(NSPathControl *)pathControl willPopUpMenu:(NSMenu *)menu
+{
+    NSMenuItem* sameFolderItem = [[NSMenuItem alloc] init];
+    [sameFolderItem setTitle: @"Same folder as input file"];
+    [sameFolderItem setTarget: self];
+    [sameFolderItem setAction: @selector(setDefaultSavePath:)];
+    [menu insertItem:sameFolderItem atIndex:1];
 }
 
 -(IBAction)changeAddToMediaLibrary:(id)sender
@@ -310,6 +329,24 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
 -(IBAction)changeDeleteFromDestination:(id)sender
 {
     m_deleteFromDestination = [sender state] != 0;
+}
+
+-(IBAction)paramLimitNone:(id)sender
+{
+    m_paramLimit = PL_NONE;
+    [self uiChanged];
+}
+
+-(IBAction)paramLimitLimit:(id)sender
+{
+    m_paramLimit = PL_LIMIT;
+    [self uiChanged];
+}
+
+-(IBAction)paramLimitMatch:(id)sender
+{
+    m_paramLimit = PL_MATCH;
+    [self uiChanged];
 }
 
 -(BOOL) addToMediaLibrary
