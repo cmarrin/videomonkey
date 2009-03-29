@@ -131,11 +131,14 @@ static NSDictionary* makeDictionary(NSString* s)
         return;
     }
     
-    // parse out the time
-    NSRange range = [response rangeOfString: @"time="];
-    NSString* timeString = [response substringFromIndex:(range.location + range.length)];
-    double time = [timeString doubleValue];
-    [m_transcoder setProgressForCommand: self to: time / [m_transcoder outputDuration]];
+    // parse out the frame
+    NSRange range = [response rangeOfString: @"frame="];
+    NSString* s = [response substringFromIndex:(range.location + range.length)];
+    double frame = [s doubleValue];
+    double totalFrames = [m_transcoder outputDuration] * [m_transcoder outputVideoFramerate];
+    double percentage = frame / totalFrames;
+    
+    [m_transcoder setProgressForCommand: self to: percentage];
 }
 
 -(void) processRead: (NSNotification*) note

@@ -19,7 +19,8 @@ typedef enum { PL_NONE, PL_LIMIT, PL_MATCH } ParamLimitType;
 
 // Progress Special Values
 #define DELAY_FOR_PROGRESS_RESPONSE 5   // in seconds
-#define NUM_PROGRESS_TIMES 10
+#define NUM_INITIAL_TOTAL_TIME_ESTIMATES 10
+#define NUM_SAVED_TOTAL_TIME_ESTIMATES 10
 
 // Workaround to get an event when a file is selected from NSPathCell
 @interface MyPathCell : NSPathCell { } - (void)setURL:(NSURL *)url; @end
@@ -52,13 +53,16 @@ typedef enum { PL_NONE, PL_LIMIT, PL_MATCH } ParamLimitType;
     
     int m_numFilesToConvert;
     int m_fileConvertingIndex;
+    BOOL m_someFilesFailed;
     
     NSArray* m_fileList;
 
     // encoding progress displays
     double m_currentEncodingStartTime;
-    int m_numLastProgressTimes;
-    double m_lastProgressTimes[NUM_PROGRESS_TIMES];
+    int m_numInitialTotalTimeEstimates;
+    double m_initialTotalTimeEstimaes;
+    int m_savedTotalTimeEstimatesIndex;
+    double m_savedTotalTimeEstimates[NUM_SAVED_TOTAL_TIME_ESTIMATES];
     double m_totalEncodedFileSize;
     double m_currentEncodedFileSize;
     double m_finishedEncodedFileSize;
@@ -66,6 +70,7 @@ typedef enum { PL_NONE, PL_LIMIT, PL_MATCH } ParamLimitType;
 
 @property (retain) NSArray* fileList;
 @property (readonly) DeviceController* deviceController;
+@property (readonly) ParamLimitType paramLimit;
 
 -(IBAction)startEncode:(id)sender;
 -(IBAction)pauseEncode:(id)sender;
@@ -87,7 +92,7 @@ typedef enum { PL_NONE, PL_LIMIT, PL_MATCH } ParamLimitType;
 -(Transcoder*) transcoderForFileName:(NSString*) fileName;
 
 -(void) setProgressFor: (Transcoder*) transcoder to: (double) progress;
--(void) encodeFinished: (Transcoder*) transcoder;
+-(void) encodeFinished: (Transcoder*) transcoder withStatus:(int) status;
 
 -(void) log: (NSString*) format, ...;
 

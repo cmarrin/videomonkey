@@ -414,9 +414,11 @@ static NSImage* getFileStatusImage(FileStatus status)
     [env setValue: [[NSNumber numberWithInt: widthFromFrameSize(frameSize)] stringValue] forKey: @"input_video_width"];
     [env setValue: [[NSNumber numberWithInt: heightFromFrameSize(frameSize)] stringValue] forKey: @"input_video_height"];
     [env setValue: [[NSNumber numberWithInt: [self inputVideoFramerate]] stringValue] forKey: @"input_frame_rate"];
+    [env setValue: [[NSNumber numberWithInt: [self inputVideoBitrate]] stringValue] forKey: @"input_video_bitrate"];
     
     [env setValue: ([self isInputQuicktime] ? @"true" : @"false") forKey: @"is_quicktime"];
     [env setValue: ([self hasInputAudio] ? @"true" : @"false") forKey: @"has_audio"];
+    [env setValue: (([m_appController paramLimit] == PL_LIMIT) ? @"true" : @"false") forKey: @"limit_output_params"];
 
     [env setValue: [self inputVideoCodec] forKey: @"input_video_codec"];
 
@@ -480,7 +482,7 @@ static NSImage* getFileStatusImage(FileStatus status)
         m_enabled = false;
     m_progress = (status == 0) ? 1 : 0;
     [m_progressIndicator setDoubleValue: m_progress];
-    [m_appController encodeFinished:self];
+    [m_appController encodeFinished:self withStatus:status];
     [m_logFile closeFile];
     [m_logFile release];
     m_logFile = nil;

@@ -99,6 +99,7 @@ pass_log_file           Path to the ffmpeg pass log file, used for 2 pass encodi
 input_video_width       Width, in pixels, of the input file
 input_video_height      Height, in pixels, of the input file
 input_frame_rate        Frame rate, in fps, of the input file
+input_video_bitrate     Bitrate of the video in the input file
 input_video_codec       Name of the video codec of the input file
 
 is_quicktime            "true" if the input file is quicktime
@@ -107,6 +108,8 @@ has_audio               "true" if the input file contains an audio track
 quality                 The current setting of the quality slider (0-1 between tick marks)
 quality_stop            Which tick mark is currently to the left of the slider (0 to #ticks-1)
 title                   Title of the currently selected device
+
+limit_output_params		"true" if output params should be limited to be no larger than input
 
 After executing all the scripts (see Execution) the system expects the following properties to be set in the 'params' property:
 
@@ -453,17 +456,30 @@ A property name is anything from the character after the '$' to the next whitesp
 					var h264 = bool(params.h264);
 					var forTV = bool(params.forTV);
 					
+					// set bitrate
+					var bitrateMin = bitrateQualityMap[title][h264 ? 1 : 0][qualityStop] * 1000;
+					var bitrateMax = bitrateQualityMap[title][h264 ? 1 : 0][qualityStop+1] * 1000;
+					params.output_video_bitrate = (bitrateMax - bitrateMin) * quality + bitrateMin;
+					
 					// set frame size
 					var index = (h264 ? 2 : 0) + (forTV ? 1 : 0);
 					var sizeString = deviceFrameSizeMap[title][index][qualityStop];
 					params.frame_width = frameSizes[sizeString][0];
 					params.frame_height = frameSizes[sizeString][1];
-					adjustVideoParams();
 					
-					// set bitrate
-					var bitrateMin = bitrateQualityMap[title][h264 ? 1 : 0][qualityStop] * 1000;
-					var bitrateMax = bitrateQualityMap[title][h264 ? 1 : 0][qualityStop+1] * 1000;
-					params.output_video_bitrate = (bitrateMax - bitrateMin) * quality + bitrateMin;
+					// adjust for limit_output_params
+					if (bool(params.limit_output_params)) {
+						if (params.frame_width > params.input_video_width || params.frame_height > params.input_video_height) {
+							params.frame_width = params.input_video_width;
+							params.frame_height = params.input_video_height;
+						}
+						
+						// allow a little more bitrate, even if limited
+						if (params.output_video_bitrate > params.input_video_bitrate * 1.2)
+							params.output_video_bitrate = params.input_video_bitrate * 1.2;
+					}
+						
+					adjustVideoParams();
 					
 					// set audio quality
                		audio(audioQualityMap[title][qualityStop]);

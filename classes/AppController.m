@@ -28,6 +28,7 @@
 
 @synthesize fileList = m_fileList;
 @synthesize deviceController = m_deviceController;
+@synthesize paramLimit = m_paramLimit;
 
 -(double) currentTime
 {
@@ -110,9 +111,8 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
 -(void) startNextEncode
 {
     m_currentEncodingStartTime = [self currentTime];
-    m_numLastProgressTimes = 0;
-    for (int i =  0; i < NUM_PROGRESS_TIMES; ++i)
-        m_lastProgressTimes[i] = -1;
+    m_numInitialTotalTimeEstimates = 0;
+    m_initialTotalTimeEstimaes = 0;
     
     if (!m_isTerminated) {
         if (++m_currentEncoding < [m_fileList count]) {
@@ -126,7 +126,15 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
             }
             return;
         }
-    }
+        if (!m_someFilesFailed)
+            NSBeginAlertSheet(@"Encoding Successful", nil, nil, nil, [[NSApplication sharedApplication] mainWindow], 
+                            nil, nil, nil, nil, 
+                            @"All files finished encoding without errors");
+        else 
+            NSBeginAlertSheet(@"Encoding FAILED", nil, nil, nil, [[NSApplication sharedApplication] mainWindow], 
+                            nil, nil, nil, nil, 
+                            @"Some files had errors during encoding. See Console for details");
+        }
     
     m_runState =  RS_STOPPED;
     [self setProgressFor:nil to:0];
@@ -141,6 +149,7 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
     m_numFilesToConvert = 0;
     m_totalEncodedFileSize = 0;
     m_finishedEncodedFileSize = 0;
+    m_currentEncodedFileSize = 0;
     
     for (Transcoder* transcoder in m_fileList) {
         if ([transcoder enabled]) {
@@ -159,6 +168,7 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
     }
     
     m_fileConvertingIndex = -1;
+    m_someFilesFailed = NO;
 
     [m_progressText setStringValue:@""];
     [m_fileNumberText setStringValue:@""];
@@ -202,6 +212,9 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
         return;
     }
     
+    if (m_runState != RS_RUNNING)
+        return;
+    
     // compute the time remaining for this file
     double timeSoFar = [self currentTime] - m_currentEncodingStartTime;
     
@@ -225,23 +238,62 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
         // To determine progress of this file we multiply current progress
         // by what percentage of total file size this file is. Then we add
         // to that the percentage of the file size already completed
-        progress *= m_currentEncodedFileSize / m_totalEncodedFileSize;
-        progress += m_finishedEncodedFileSize / m_totalEncodedFileSize;
-        [m_totalProgressBar setDoubleValue: progress];
+        double overallProgress = progress;
+        overallProgress *= m_currentEncodedFileSize / m_totalEncodedFileSize;
+        overallProgress += m_finishedEncodedFileSize / m_totalEncodedFileSize;
+        [m_totalProgressBar setDoubleValue: overallProgress];
         
         if (!timeRemainingString) {
             // compute time remaining
             double estimatedTotalTime = timeSoFar / progress;
-            int minutesRemaining = (int) floor((estimatedTotalTime - timeSoFar) / 60 + 0.5);
             
-            if (minutesRemaining > 0) {
-                if (minutesRemaining == 1)
-                    timeRemainingString = @"About a minute remaining for";
+            // if we are just starting, get an initial total time estimate
+            if (m_numInitialTotalTimeEstimates <= NUM_INITIAL_TOTAL_TIME_ESTIMATES) {
+                if (m_numInitialTotalTimeEstimates++ < NUM_INITIAL_TOTAL_TIME_ESTIMATES) {
+                    m_initialTotalTimeEstimaes += estimatedTotalTime;
+                    estimatedTotalTime = -1;
+                }
+                else {
+                    // we have our first estimate, save it
+                    m_savedTotalTimeEstimatesIndex = 0;
+                    for (int i = 0; i < NUM_SAVED_TOTAL_TIME_ESTIMATES; ++i)
+                        m_savedTotalTimeEstimates[i] = -1;
+                    estimatedTotalTime = m_initialTotalTimeEstimaes / NUM_INITIAL_TOTAL_TIME_ESTIMATES;
+                    
+                    printf("*** Got first estimate: %f\n", estimatedTotalTime / 60);
+                }
+            }
+                
+            if (estimatedTotalTime > 0) {
+                printf("*** Got new estimate: %f\n", estimatedTotalTime / 60);
+                // compute average estimated time
+                m_savedTotalTimeEstimates[m_savedTotalTimeEstimatesIndex++] = estimatedTotalTime;
+                if (m_savedTotalTimeEstimatesIndex >= NUM_SAVED_TOTAL_TIME_ESTIMATES)
+                    m_savedTotalTimeEstimatesIndex = 0;
+                
+                double total = 0;
+                int num = 0;
+                for (int i = 0; i < NUM_SAVED_TOTAL_TIME_ESTIMATES; ++i) {
+                    if (m_savedTotalTimeEstimates[i] > 0) {
+                        total += m_savedTotalTimeEstimates[i];
+                        num++;
+                    }
+                }
+                
+                estimatedTotalTime = total / num;
+                int minutesRemaining = (int) floor((estimatedTotalTime - timeSoFar) / 60 + 0.5);
+                
+                if (minutesRemaining > 0) {
+                    if (minutesRemaining == 1)
+                        timeRemainingString = @"About a minute remaining for";
+                    else
+                        timeRemainingString = [NSString stringWithFormat:@"About %d minutes remaining for", minutesRemaining];
+                }
                 else
-                    timeRemainingString = [NSString stringWithFormat:@"About %d minutes remaining for", minutesRemaining];
+                    timeRemainingString = @"Less than a minute remaining for";
             }
             else
-                timeRemainingString = @"Less than a minute remaining for";
+                timeRemainingString = @"Estimating time remaining for";
         }
     }
     
@@ -251,8 +303,10 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
     [m_fileListController reloadData];
 }
 
--(void) encodeFinished: (Transcoder*) transcoder
+-(void) encodeFinished: (Transcoder*) transcoder withStatus:(int) status
 {
+    if (status != 0 && status != 255)
+        m_someFilesFailed = YES;
     [m_progressText setStringValue:@""];
     [m_fileListController reloadData];
     [self startNextEncode];
