@@ -382,21 +382,9 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
     m_deleteFromDestination = [sender state] != 0;
 }
 
--(IBAction)paramLimitNone:(id)sender
+-(IBAction)limitParams:(id)sender
 {
-    m_paramLimit = PL_NONE;
-    [self uiChanged];
-}
-
--(IBAction)paramLimitLimit:(id)sender
-{
-    m_paramLimit = PL_LIMIT;
-    [self uiChanged];
-}
-
--(IBAction)paramLimitMatch:(id)sender
-{
-    m_paramLimit = PL_MATCH;
+    m_paramLimit = [sender state];
     [self uiChanged];
 }
 

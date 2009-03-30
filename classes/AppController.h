@@ -15,7 +15,6 @@
 @class Transcoder;
 
 typedef enum { RS_STOPPED, RS_RUNNING, RS_PAUSED } RunStateType;
-typedef enum { PL_NONE, PL_LIMIT, PL_MATCH } ParamLimitType;
 
 // Progress Special Values
 #define DELAY_FOR_PROGRESS_RESPONSE 5   // in seconds
@@ -46,7 +45,7 @@ typedef enum { PL_NONE, PL_LIMIT, PL_MATCH } ParamLimitType;
     NSString* m_savePath;
     int m_currentEncoding;
     RunStateType m_runState;
-    ParamLimitType m_paramLimit;
+    BOOL m_paramLimit;
     BOOL m_isTerminated;
     BOOL m_addToMediaLibrary;
     BOOL m_deleteFromDestination;
@@ -70,7 +69,7 @@ typedef enum { PL_NONE, PL_LIMIT, PL_MATCH } ParamLimitType;
 
 @property (retain) NSArray* fileList;
 @property (readonly) DeviceController* deviceController;
-@property (readonly) ParamLimitType paramLimit;
+@property (readonly) BOOL paramLimit;
 
 -(IBAction)startEncode:(id)sender;
 -(IBAction)pauseEncode:(id)sender;
@@ -82,9 +81,7 @@ typedef enum { PL_NONE, PL_LIMIT, PL_MATCH } ParamLimitType;
 -(IBAction)changeSaveToPath:(id)sender;
 -(IBAction)changeAddToMediaLibrary:(id)sender;
 -(IBAction)changeDeleteFromDestination:(id)sender;
--(IBAction)paramLimitNone:(id)sender;
--(IBAction)paramLimitLimit:(id)sender;
--(IBAction)paramLimitMatch:(id)sender;
+-(IBAction)limitParams:(id)sender;
 
 -(BOOL) addToMediaLibrary;
 -(BOOL) deleteFromDestination;
