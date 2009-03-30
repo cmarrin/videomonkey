@@ -413,7 +413,7 @@ static NSImage* getFileStatusImage(FileStatus status)
     FrameSize frameSize = [self inputVideoFrameSize];
     [env setValue: [[NSNumber numberWithInt: widthFromFrameSize(frameSize)] stringValue] forKey: @"input_video_width"];
     [env setValue: [[NSNumber numberWithInt: heightFromFrameSize(frameSize)] stringValue] forKey: @"input_video_height"];
-    [env setValue: [[NSNumber numberWithInt: [self inputVideoFramerate]] stringValue] forKey: @"input_frame_rate"];
+    [env setValue: [[NSNumber numberWithDouble: [self inputVideoFramerate]] stringValue] forKey: @"input_frame_rate"];
     [env setValue: [[NSNumber numberWithInt: [self inputVideoBitrate]] stringValue] forKey: @"input_video_bitrate"];
     
     [env setValue: ([self isInputQuicktime] ? @"true" : @"false") forKey: @"is_quicktime"];
@@ -441,8 +441,10 @@ static NSImage* getFileStatusImage(FileStatus status)
 
     
     self.outputVideoCodec = [[m_appController deviceController] paramForKey:@"output_video_codec"];
-    self.outputVideoProfile = [[m_appController deviceController] paramForKey:@"output_video_profile"];
-    self.outputVideoFramerate = [[[m_appController deviceController] paramForKey:@"output_video_frame_rate"] floatValue] / 1000;
+    NSString* profile = [[m_appController deviceController] paramForKey:@"output_video_profile"];
+    int level = [[[m_appController deviceController] paramForKey:@"output_video_level"] intValue];
+    self.outputVideoProfile = [NSString stringWithFormat:@"%@@%d.%d", profile, level/10, level%10];
+    self.outputVideoFramerate = [[[m_appController deviceController] paramForKey:@"output_video_frame_rate"] floatValue];
     self.outputVideoBitrate = [[[m_appController deviceController] paramForKey:@"output_video_bitrate"] floatValue];
     
     m_audioQuality = [[m_appController deviceController] paramForKey:@"audio_quality"];

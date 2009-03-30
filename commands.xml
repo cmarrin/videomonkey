@@ -124,6 +124,7 @@ output_video_bitrate    Approximate bitrate of the output video
 output_format           Format of the container
 output_video_codec      Video codec
 output_video_profile    Profile of the video
+output_video_level		Level of this video
 output_video_frame_rate Framerate of the output file (actual frame rate in fps * 1000)
 
 output_audio_codec      Audio codec
@@ -266,7 +267,7 @@ A property name is anything from the character after the '$' to the next whitesp
 				params.output_video_height = Math.round(params.output_video_height / 16) * 16;
 				
 				// set frame rate
-				params.output_video_frame_rate = params.input_frame_rate * params.frame_rate * 1000;
+				params.output_video_frame_rate = params.input_frame_rate * params.frame_rate;
 			}
 			
 			audio("high");
@@ -296,13 +297,13 @@ A property name is anything from the character after the '$' to the next whitesp
             <performance_item title="Normal">
                 <param id="is_2_pass" value="false" />
                 <param id="ffmpeg_vpre" value="normal" />
-                <param id="ffmpeg_profile" value="-bf 16" />
+                <param id="ffmpeg_profile" value="-bf 4" />
             </performance_item>
             <performance_item title="Normal (2 pass)">
               	<param id="is_2_pass" value="true" />
                	<param id="ffmpeg_vpre" value="normal" />
                	<param id="ffmpeg_vpre_pass1" value="normal-pass1" />
-                <param id="ffmpeg_profile" value="-bf 16" />
+                <param id="ffmpeg_profile" value="-bf 4" />
              </performance_item>
             <performance_item title="High Quality">
                 <param id="is_2_pass" value="false" />
@@ -341,7 +342,7 @@ A property name is anything from the character after the '$' to the next whitesp
 				</command>
 		        <command id="ffmpeg_options">
 		            -vcodec $ffmpeg_vcodec -b $output_video_bitrate -s $(output_video_width)x$(output_video_height) 
-						-aspect $(output_video_width):$(output_video_height) -r $(output_video_frame_rate):1000
+						-aspect $(output_video_width):$(output_video_height) -r $(output_video_frame_rate)
 					-acodec $ffmpeg_acodec -ab $output_audio_bitrate -ar $output_audio_sample_rate -ac $output_audio_channels
 				</command>
 		        <command id="quicktime_to_audio_file">
@@ -351,7 +352,7 @@ A property name is anything from the character after the '$' to the next whitesp
 					$yuvcorrect -v 0 -Y LUMINANCE_1.20_0_255_0_255 -Y CHROMINANCE_0_1.04_128_1.04_128_0_255
 				</command>
 		        <command id="quicktime_to_yuv">
-					$movtoy4m -f -w $input_video_width -h $input_video_height -F $(output_video_frame_rate):1000 
+					$movtoy4m -f -w $input_video_width -h $input_video_height -F $(output_video_frame_rate) 
 						-a $(output_video_width):$(output_video_height) "$input_file" | $correct_yuv 
 				</command>
 		        <command id="yuv_to_ffmpeg_av"> $ffmpeg -y -i - -i "$tmp_audio_file" </command>
@@ -450,6 +451,16 @@ A property name is anything from the character after the '$' to the next whitesp
 						"Apple TV": 			[ 	"high", 	"high", 	"high", 	"high", 	"high" ]
 					};
 					
+					var levelMap = {
+						//							0	1	2	3	4
+						"All Apple Devices": 	[ 	20, 30, 30, 30, 30 ],
+						"iPod": 				[ 	20, 30, 30, 30, 30 ],
+						"iPhone": 				[ 	20, 30, 30, 30, 30 ],
+						"iPod touch": 			[ 	20, 30, 30, 30, 30 ],
+						"Apple TV": 			[ 	31, 31, 31, 31, 31 ]
+					};
+					
+					
 					var title = params.title;
 					var qualityStop = number(params.quality_stop);
 					var quality = number(params.quality);
@@ -495,11 +506,15 @@ A property name is anything from the character after the '$' to the next whitesp
 					params.output_audio_codec = "AAC";
 					
 					// adjust vpre for baseline if needed
-					if (title != "Apple TV")
+					// FIXME: For some reason, creating anything other than baseline does not work
+					// on Apple TV. This seems to have something to do with VFR of the input source?
+					// For now always use baseline
+					//if (title != "Apple TV")
 						params.ffmpeg_profile = "-bf 0 -coder 0 -flags2 -wpred-dct8x8";
 						
 					// We need to compute the level. For now, we will be vague
-					params.output_video_profile = (title != "Apple TV") ? "baseline@???" : "main@???";
+					params.output_video_profile = (title != "Apple TV") ? "baseline" : "main";
+					params.output_video_level = levelMap[title][qualityStop];
 
 					// construct the recipe
 					if (	 !bool(params.special_qt) && !bool(params.has_audio) && !bool(params.is_2_pass))

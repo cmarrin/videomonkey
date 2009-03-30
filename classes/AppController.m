@@ -259,13 +259,10 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
                     for (int i = 0; i < NUM_SAVED_TOTAL_TIME_ESTIMATES; ++i)
                         m_savedTotalTimeEstimates[i] = -1;
                     estimatedTotalTime = m_initialTotalTimeEstimaes / NUM_INITIAL_TOTAL_TIME_ESTIMATES;
-                    
-                    printf("*** Got first estimate: %f\n", estimatedTotalTime / 60);
                 }
             }
                 
             if (estimatedTotalTime > 0) {
-                printf("*** Got new estimate: %f\n", estimatedTotalTime / 60);
                 // compute average estimated time
                 m_savedTotalTimeEstimates[m_savedTotalTimeEstimatesIndex++] = estimatedTotalTime;
                 if (m_savedTotalTimeEstimatesIndex >= NUM_SAVED_TOTAL_TIME_ESTIMATES)
