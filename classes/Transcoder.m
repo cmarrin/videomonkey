@@ -418,7 +418,7 @@ static NSImage* getFileStatusImage(FileStatus status)
     
     [env setValue: ([self isInputQuicktime] ? @"true" : @"false") forKey: @"is_quicktime"];
     [env setValue: ([self hasInputAudio] ? @"true" : @"false") forKey: @"has_audio"];
-    [env setValue: ([m_appController paramLimit] ? @"true" : @"false") forKey: @"limit_output_params"];
+    [env setValue: ([m_appController limitParams] ? @"true" : @"false") forKey: @"limit_output_params"];
 
     [env setValue: [self inputVideoCodec] forKey: @"input_video_codec"];
 

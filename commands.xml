@@ -485,9 +485,8 @@ A property name is anything from the character after the '$' to the next whitesp
 							params.frame_height = params.input_video_height;
 						}
 						
-						// allow a little more bitrate, even if limited
-						if (params.output_video_bitrate > params.input_video_bitrate * 1.2)
-							params.output_video_bitrate = params.input_video_bitrate * 1.2;
+						if (params.output_video_bitrate > params.input_video_bitrate)
+							params.output_video_bitrate = params.input_video_bitrate;
 					}
 						
 					adjustVideoParams();
@@ -512,7 +511,7 @@ A property name is anything from the character after the '$' to the next whitesp
 					//if (title != "Apple TV")
 						params.ffmpeg_profile = "-bf 0 -coder 0 -flags2 -wpred-dct8x8";
 						
-					// We need to compute the level. For now, we will be vague
+					// The level is not necessarily accurate
 					params.output_video_profile = (title != "Apple TV") ? "baseline" : "main";
 					params.output_video_level = levelMap[title][qualityStop];
 

@@ -45,7 +45,7 @@ typedef enum { RS_STOPPED, RS_RUNNING, RS_PAUSED } RunStateType;
     NSString* m_savePath;
     int m_currentEncoding;
     RunStateType m_runState;
-    BOOL m_paramLimit;
+    BOOL m_limitParams;
     BOOL m_isTerminated;
     BOOL m_addToMediaLibrary;
     BOOL m_deleteFromDestination;
@@ -69,7 +69,7 @@ typedef enum { RS_STOPPED, RS_RUNNING, RS_PAUSED } RunStateType;
 
 @property (retain) NSArray* fileList;
 @property (readonly) DeviceController* deviceController;
-@property (readonly) BOOL paramLimit;
+@property (readonly) BOOL limitParams;
 
 -(IBAction)startEncode:(id)sender;
 -(IBAction)pauseEncode:(id)sender;

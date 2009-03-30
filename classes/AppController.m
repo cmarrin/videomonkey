@@ -28,7 +28,7 @@
 
 @synthesize fileList = m_fileList;
 @synthesize deviceController = m_deviceController;
-@synthesize paramLimit = m_paramLimit;
+@synthesize limitParams = m_limitParams;
 
 -(double) currentTime
 {
@@ -105,6 +105,9 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
     
     m_savePath = [[[NSUserDefaultsController sharedUserDefaultsController] values] valueForKey:@"saveToLocation"];
     [m_savePathControl setURL: [NSURL fileURLWithPath:m_savePath ? m_savePath : @""]];
+
+
+    m_limitParams = [[[[NSUserDefaultsController sharedUserDefaultsController] values] valueForKey:@"limitOutputParams"] boolValue];
 }
 
 // Main Encoding Functions
@@ -384,7 +387,7 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
 
 -(IBAction)limitParams:(id)sender
 {
-    m_paramLimit = [sender state];
+    m_limitParams = [sender state];
     [self uiChanged];
 }
 

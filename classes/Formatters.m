@@ -97,7 +97,7 @@ static NSString* stringForSizeValue(double size, NSString* units)
 
 - (NSString *)stringForObjectValue:(id)anObject
 {
-    return [anObject boolValue] ? @"true" : @"false";
+    return [anObject boolValue] ? @"yes" : @"no";
 }
 
 @end
