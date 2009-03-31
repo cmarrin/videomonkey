@@ -17,36 +17,164 @@
   </style>
 </head>
 <body>
-<h1 style="margin: 0.0px 0.0px 16.0px 0.0px; font: 24.0px Times"><b>Release Notes For Video Monkey</b></h1>
-<h2 style="margin: 0.0px 0.0px 14.0px 0.0px; font: 18.0px Times"><b>Version 0.1</b></h2>
-<p class="p3">This is the first public release of VideoMonkey. It has a lot of functionality, but is not nearly complete.</p>
-<h3 style="margin: 0.0px 0.0px 14.0px 0.0px; font: 16.0px Times"><b>New in this release:</b></h3>
+<h1
+ style="margin: 0px 0px 16px; font-family: Times; font-style: normal; font-variant: normal; font-weight: normal; font-size: 24px; line-height: normal; font-size-adjust: none; font-stretch: normal;"><b>Release
+Notes For Video Monkey</b></h1>
+<h2
+ style="margin: 0px 0px 14px; font-family: Times; font-style: normal; font-variant: normal; font-weight: normal; font-size: 18px; line-height: normal; font-size-adjust: none; font-stretch: normal;"><b>Version
+0.2</b></h2>
+<p class="p3">This release focuses on fixing bugs found in the first
+release and features to complete the basic functionality of Video
+Monkey.</p>
+<h3
+ style="margin: 0px 0px 14px; font-family: Times; font-style: normal; font-variant: normal; font-weight: normal; font-size: 16px; line-height: normal; font-size-adjust: none; font-stretch: normal;"><b>New
+in this release:</b></h3>
 <ul class="ul1">
-  <li style="margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Times">Conversion for all popular Apple devices</li>
-  <li style="margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Times">Quality settings, which adjusts bitrate, frame size, frame rate and audio quality</li>
-  <li style="margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Times">Performance settings which tradeoff speed of encoding for quality</li>
-  <li style="margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Times">Drag and drop file list</li>
-  <li style="margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Times">Enable or disable encoding of each file</li>
-  <li style="margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Times">Display of output file size (approximate)</li>
-  <li style="margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Times">Preview window of the currently selected file</li>
-  <li style="margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Times">Console log</li>
-  <li style="margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Times">Progress bars in both the main window and file list</li>
-  <li style="margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Times">Pause and Stop encoding</li>
-  <li style="margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Times">Auto-update</li>
-  <li style="margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Times">Saving last user settings</li>
+  <li
+ style="margin: 0px; font-family: Times; font-style: normal; font-variant: normal; font-weight: normal; font-size: 14px; line-height: normal; font-size-adjust: none; font-stretch: normal;">Added
+a new XMLDocument class for commands.xml and for use in parsing
+metadata files<br>
+  </li>
+  <li
+ style="margin: 0px; font-family: Times; font-style: normal; font-variant: normal; font-weight: normal; font-size: 14px; line-height: normal; font-size-adjust: none; font-stretch: normal;">Better
+aspect ratio control of Movie Preview Window</li>
+  <li
+ style="margin: 0px; font-family: Times; font-style: normal; font-variant: normal; font-weight: normal; font-size: 14px; line-height: normal; font-size-adjust: none; font-stretch: normal;">New
+Info Panel. Shows properties of input and output files and will
+eventually allow metadata to be displayed and set</li>
+  <li
+ style="margin: 0px; font-family: Times; font-style: normal; font-variant: normal; font-weight: normal; font-size: 14px; line-height: normal; font-size-adjust: none; font-stretch: normal;">Checkboxes
+to add encoded files to iTunes, and to optionally delete the original</li>
+  <li
+ style="margin: 0px; font-family: Times; font-style: normal; font-variant: normal; font-weight: normal; font-size: 14px; line-height: normal; font-size-adjust: none; font-stretch: normal;">Disabled
+not-yet-implemented checkboxes and menu items</li>
+  <li
+ style="margin: 0px; font-family: Times; font-style: normal; font-variant: normal; font-weight: normal; font-size: 14px; line-height: normal; font-size-adjust: none; font-stretch: normal;">Added
+much better documentation to commands.xml.</li>
+  <li
+ style="margin: 0px; font-family: Times; font-style: normal; font-variant: normal; font-weight: normal; font-size: 14px; line-height: normal; font-size-adjust: none; font-stretch: normal;">Updated
+to v0.5 of ffmpeg</li>
+  <li
+ style="margin: 0px; font-family: Times; font-style: normal; font-variant: normal; font-weight: normal; font-size: 14px; line-height: normal; font-size-adjust: none; font-stretch: normal;">Tweaked
+bitrate settings to be more appropriate for various devices</li>
+  <li
+ style="margin: 0px; font-family: Times; font-style: normal; font-variant: normal; font-weight: normal; font-size: 14px; line-height: normal; font-size-adjust: none; font-stretch: normal;">Added
+time remaining to progress, and made overall progress bar show progress
+for all files together</li>
+  <li
+ style="margin: 0px; font-family: Times; font-style: normal; font-variant: normal; font-weight: normal; font-size: 14px; line-height: normal; font-size-adjust: none; font-stretch: normal;">Changed
+save path to use NSPathControl</li>
+  <li
+ style="margin: 0px; font-family: Times; font-style: normal; font-variant: normal; font-weight: normal; font-size: 14px; line-height: normal; font-size-adjust: none; font-stretch: normal;">Added
+a "limit" checkbox. Allows output params (frame size, bitrate, etc.) to
+be limited by input properties. Avoids oversampled videos</li>
+  <li
+ style="margin: 0px; font-family: Times; font-style: normal; font-variant: normal; font-weight: normal; font-size: 14px; line-height: normal; font-size-adjust: none; font-stretch: normal;">Fixed
+encoding params to always produce legal h.264 files for each device</li>
 </ul>
-<h3 style="margin: 0.0px 0.0px 14.0px 0.0px; font: 16.0px Times"><b>To do:</b></h3>
+<h3
+ style="margin: 0px 0px 14px; font-family: Times; font-style: normal; font-variant: normal; font-weight: normal; font-size: 16px; line-height: normal; font-size-adjust: none; font-stretch: normal;"><br>
+</h3>
+<h3
+ style="margin: 0px 0px 14px; font-family: Times; font-style: normal; font-variant: normal; font-weight: normal; font-size: 16px; line-height: normal; font-size-adjust: none; font-stretch: normal;"><b><b>Bugs
+fixed:</b></b></h3>
+<ul class="ul1">
+  <li
+ style="margin: 0px; font-family: Times; font-style: normal; font-variant: normal; font-weight: normal; font-size: 14px; line-height: normal; font-size-adjust: none; font-stretch: normal;">2722694
+- Dragging in files with wrong device set causes exception</li>
+  <li
+ style="margin: 0px; font-family: Times; font-style: normal; font-variant: normal; font-weight: normal; font-size: 14px; line-height: normal; font-size-adjust: none; font-stretch: normal;">2694849
+- Files converted for iPhone/iPod are not legal</li>
+  <li
+ style="margin: 0px; font-family: Times; font-style: normal; font-variant: normal; font-weight: normal; font-size: 14px; line-height: normal; font-size-adjust: none; font-stretch: normal;">2695089
+- File Size overflowed<br>
+  </li>
+</ul>
+<br>
+<br>
+<h2
+ style="margin: 0px 0px 14px; font-family: Times; font-style: normal; font-variant: normal; font-weight: normal; font-size: 18px; line-height: normal; font-size-adjust: none; font-stretch: normal;"><b>Version
+0.1</b></h2>
+<p class="p3">This is the first public release of VideoMonkey. It has a
+lot of functionality, but is not nearly complete.</p>
+<h3
+ style="margin: 0px 0px 14px; font-family: Times; font-style: normal; font-variant: normal; font-weight: normal; font-size: 16px; line-height: normal; font-size-adjust: none; font-stretch: normal;"><b>New
+in this release:</b></h3>
+<ul class="ul1">
+  <li
+ style="margin: 0px; font-family: Times; font-style: normal; font-variant: normal; font-weight: normal; font-size: 14px; line-height: normal; font-size-adjust: none; font-stretch: normal;">Conversion
+for all popular Apple devices</li>
+  <li
+ style="margin: 0px; font-family: Times; font-style: normal; font-variant: normal; font-weight: normal; font-size: 14px; line-height: normal; font-size-adjust: none; font-stretch: normal;">Quality
+settings, which adjusts bitrate, frame size, frame rate and audio
+quality</li>
+  <li
+ style="margin: 0px; font-family: Times; font-style: normal; font-variant: normal; font-weight: normal; font-size: 14px; line-height: normal; font-size-adjust: none; font-stretch: normal;">Performance
+settings which tradeoff speed of encoding for quality</li>
+  <li
+ style="margin: 0px; font-family: Times; font-style: normal; font-variant: normal; font-weight: normal; font-size: 14px; line-height: normal; font-size-adjust: none; font-stretch: normal;">Drag
+and drop file list</li>
+  <li
+ style="margin: 0px; font-family: Times; font-style: normal; font-variant: normal; font-weight: normal; font-size: 14px; line-height: normal; font-size-adjust: none; font-stretch: normal;">Enable
+or disable encoding of each file</li>
+  <li
+ style="margin: 0px; font-family: Times; font-style: normal; font-variant: normal; font-weight: normal; font-size: 14px; line-height: normal; font-size-adjust: none; font-stretch: normal;">Display
+of output file size (approximate)</li>
+  <li
+ style="margin: 0px; font-family: Times; font-style: normal; font-variant: normal; font-weight: normal; font-size: 14px; line-height: normal; font-size-adjust: none; font-stretch: normal;">Preview
+window of the currently selected file</li>
+  <li
+ style="margin: 0px; font-family: Times; font-style: normal; font-variant: normal; font-weight: normal; font-size: 14px; line-height: normal; font-size-adjust: none; font-stretch: normal;">Console
+log</li>
+  <li
+ style="margin: 0px; font-family: Times; font-style: normal; font-variant: normal; font-weight: normal; font-size: 14px; line-height: normal; font-size-adjust: none; font-stretch: normal;">Progress
+bars in both the main window and file list</li>
+  <li
+ style="margin: 0px; font-family: Times; font-style: normal; font-variant: normal; font-weight: normal; font-size: 14px; line-height: normal; font-size-adjust: none; font-stretch: normal;">Pause
+and Stop encoding</li>
+  <li
+ style="margin: 0px; font-family: Times; font-style: normal; font-variant: normal; font-weight: normal; font-size: 14px; line-height: normal; font-size-adjust: none; font-stretch: normal;">Auto-update</li>
+  <li
+ style="margin: 0px; font-family: Times; font-style: normal; font-variant: normal; font-weight: normal; font-size: 14px; line-height: normal; font-size-adjust: none; font-stretch: normal;">Saving
+last user settings</li>
+</ul>
+<h3
+ style="margin: 0px 0px 14px; font-family: Times; font-style: normal; font-variant: normal; font-weight: normal; font-size: 16px; line-height: normal; font-size-adjust: none; font-stretch: normal;"><br>
+</h3>
+<h3
+ style="margin: 0px 0px 14px; font-family: Times; font-style: normal; font-variant: normal; font-weight: normal; font-size: 16px; line-height: normal; font-size-adjust: none; font-stretch: normal;"><b>To
+do:</b></h3>
 <ul class="ul2">
-  <li style="margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Times">Preferences Panel</li>
-  <li style="margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Times">More supported devices</li>
-  <li style="margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Times">Detail pane for both input and output settings</li>
-  <li style="margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Times">Overall progress in main window</li>
-  <li style="margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Times">Time remaining display</li>
-  <li style="margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Times">Advanced pane (crop, pad, filters, etc.)</li>
-  <li style="margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Times">Trim movie using preview window</li>
-  <li style="margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Times">Metadata writing</li>
-  <li style="margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Times">iTunes interface</li>
-  <li style="margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Times">Watch folder(s) for automatic encoding</li>
+  <li
+ style="margin: 0px; font-family: Times; font-style: normal; font-variant: normal; font-weight: normal; font-size: 14px; line-height: normal; font-size-adjust: none; font-stretch: normal;">Preferences
+Panel</li>
+  <li
+ style="margin: 0px; font-family: Times; font-style: normal; font-variant: normal; font-weight: normal; font-size: 14px; line-height: normal; font-size-adjust: none; font-stretch: normal;">More
+supported devices</li>
+  <li
+ style="margin: 0px; font-family: Times; font-style: normal; font-variant: normal; font-weight: normal; font-size: 14px; line-height: normal; font-size-adjust: none; font-stretch: normal;">Detail
+pane for both input and output settings</li>
+  <li
+ style="margin: 0px; font-family: Times; font-style: normal; font-variant: normal; font-weight: normal; font-size: 14px; line-height: normal; font-size-adjust: none; font-stretch: normal;">Overall
+progress in main window</li>
+  <li
+ style="margin: 0px; font-family: Times; font-style: normal; font-variant: normal; font-weight: normal; font-size: 14px; line-height: normal; font-size-adjust: none; font-stretch: normal;">Time
+remaining display</li>
+  <li
+ style="margin: 0px; font-family: Times; font-style: normal; font-variant: normal; font-weight: normal; font-size: 14px; line-height: normal; font-size-adjust: none; font-stretch: normal;">Advanced
+pane (crop, pad, filters, etc.)</li>
+  <li
+ style="margin: 0px; font-family: Times; font-style: normal; font-variant: normal; font-weight: normal; font-size: 14px; line-height: normal; font-size-adjust: none; font-stretch: normal;">Trim
+movie using preview window</li>
+  <li
+ style="margin: 0px; font-family: Times; font-style: normal; font-variant: normal; font-weight: normal; font-size: 14px; line-height: normal; font-size-adjust: none; font-stretch: normal;">Metadata
+writing</li>
+  <li
+ style="margin: 0px; font-family: Times; font-style: normal; font-variant: normal; font-weight: normal; font-size: 14px; line-height: normal; font-size-adjust: none; font-stretch: normal;">iTunes
+interface</li>
+  <li
+ style="margin: 0px; font-family: Times; font-style: normal; font-variant: normal; font-weight: normal; font-size: 14px; line-height: normal; font-size-adjust: none; font-stretch: normal;">Watch
+folder(s) for automatic encoding</li>
 </ul>
 </body>
 </html>
