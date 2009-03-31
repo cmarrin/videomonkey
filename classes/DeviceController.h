@@ -36,7 +36,6 @@
 -(IBAction)selectPerformance:(id)sender;
 
 -(NSString*) fileSuffix;
--(NSString*) videoFormat;
 
 -(void) setDelegate:(id) delegate;
 -(void) setCurrentParamsWithEnvironment: (NSDictionary*) env;

@@ -541,12 +541,8 @@ static void setButton(NSButton* button, Button* item)
 
 -(NSString*) fileSuffix
 {
-    return [self paramWithDefault: @"video_suffix"];
-}
-
--(NSString*) videoFormat
-{
-    return [self paramWithDefault: @"ffmpeg_vcodec"];
+    NSString* suffix = [self paramWithDefault: @"video_suffix"];
+    return (suffix && [suffix length]) ? suffix : @"mp4"; 
 }
 
 -(int) qualityStop
