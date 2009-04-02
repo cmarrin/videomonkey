@@ -1,0 +1,104 @@
+Metadata Notes
+==============
+
+mediainfo can show file info and metadata tags. But it can't write metadata. Atomic Parsley can show and write metadata, but can't show file info. So I'll continue to use mediainfo for file info, and use Atomic Parsley for all metadata reading and writing.
+
+Format of a line of Atomic Parsley, using '-t':
+
+    Atom "©alb" contains: Monk, Season 7
+
+This is not too hard to parse:
+
+1) Split on ':' --> array
+2) Split array[0] on ' ' --> atomArray
+3) remove first and last char from atomArray[1] --> atom
+4) remove leading and trailing whitespace from array[1] --> value
+
+'atom' and 'value' are then used. There is a special format used for iTunes specific atoms:
+
+    Atom "----" [com.apple.iTunes;iTunEXTC] contains: us-tv|TV-PG|400|
+
+Parse the same way, but add:
+
+5) if atomArray[2] starts with '[' then
+	a) atomArray[2] --> atom
+	
+Format of value is usually string. But if atom is '[com.apple.iTunes;iTunEXTC]' then we parse further:
+
+6) if atom == '[com.apple.iTunes;iTunEXTC]' then
+    a) split value on '|' --> valueArray
+    b) valueArray[1] --> value
+
+Most values are strings. Some are numbers (e.g., 'tvsn', tvep') and others are dates in UTC format:
+
+    Atom "©day" contains: 2008-07-18T07:00:00Z
+
+and the artwork tells you how many images there are:
+
+    Atom "covr" contains: 1 piece of artwork
+
+Artwork can then be extracted with:
+
+    AtomicParsley <file> -e <path/basename>
+
+then the tmp dir will have <basename>_artwork_<n>.jpg for each image
+
+Atomic Parsley can deal with these tags:
+
+  --artist           ,  -a   (str)    Set the artist tag: "moov.udta.meta.ilst.©ART.data"
+  --title            ,  -s   (str)    Set the title tag: "moov.udta.meta.ilst.©nam.data"
+  --album            ,  -b   (str)    Set the album tag: "moov.udta.meta.ilst.©alb.data"
+  --genre            ,  -g   (str)    Set the genre tag: "©gen" (custom) or "gnre" (standard).
+                                          see the standard list with "AtomicParsley --genre-list"
+  --tracknum         ,  -k   (num)[/tot]  Set the track number (or track number & total tracks).
+  --disk             ,  -d   (num)[/tot]  Set the disk number (or disk number & total disks).
+  --comment          ,  -c   (str)    Set the comment tag: "moov.udta.meta.ilst.©cmt.data"
+  --year             ,  -y   (num|UTC)    Set the year tag: "moov.udta.meta.ilst.©day.data"
+                                          set with UTC "2006-09-11T09:00:00Z" for Release Date
+  --lyrics           ,  -l   (str)    Set the lyrics tag: "moov.udta.meta.ilst.©lyr.data"
+  --composer         ,  -w   (str)    Set the composer tag: "moov.udta.meta.ilst.©wrt.data"
+  --copyright        ,  -x   (str)    Set the copyright tag: "moov.udta.meta.ilst.cprt.data"
+  --grouping         ,  -G   (str)    Set the grouping tag: "moov.udta.meta.ilst.©grp.data"
+  --artwork          ,  -A   (/path)  Set a piece of artwork (jpeg or png) on "covr.data"
+                                          Note: multiple pieces are allowed with more --artwork args
+  --bpm              ,  -B   (num)    Set the tempo/bpm tag: "moov.udta.meta.ilst.tmpo.data"
+  --albumArtist      ,  -A   (str)    Set the album artist tag: "moov.udta.meta.ilst.aART.data"
+  --compilation      ,  -C   (bool)   Sets the "cpil" atom (true or false to delete the atom)
+  --advisory         ,  -y   (1of3)   Sets the iTunes lyrics advisory ('remove', 'clean', 'explicit') 
+  --stik             ,  -S   (1of7)   Sets the iTunes "stik" atom (--stik "remove" to delete) 
+                                           "Movie", "Normal", "TV Show" .... others: 
+                                           see the full list with "AtomicParsley --stik-list"
+                                           or set in an integer value with --stik value=(num)
+                                      Note: --stik Audiobook will change file extension to '.m4b'
+  --description      ,  -p   (str)    Sets the description on the "desc" atom
+  --TVNetwork        ,  -n   (str)    Sets the TV Network name on the "tvnn" atom
+  --TVShowName       ,  -H   (str)    Sets the TV Show name on the "tvsh" atom
+  --TVEpisode        ,  -I   (str)    Sets the TV Episode on "tven":"209", but its a string: "209 Part 1"
+  --TVSeasonNum      ,  -U   (num)    Sets the TV Season number on the "tvsn" atom
+  --TVEpisodeNum     ,  -N   (num)    Sets the TV Episode number on the "tves" atom
+  --podcastFlag      ,  -f   (bool)   Sets the podcast flag (values are "true" or "false")
+  --category         ,  -q   (str)    Sets the podcast category; typically a duplicate of its genre
+  --keyword          ,  -K   (str)    Sets the podcast keyword; invisible to MacOSX Spotlight
+  --podcastURL       ,  -L   (URL)    Set the podcast feed URL on the "purl" atom
+  --podcastGUID      ,  -J   (URL)    Set the episode's URL tag on the "egid" atom
+  --purchaseDate     ,  -D   (UTC)    Set Universal Coordinated Time of purchase on a "purd" atom
+                                       (use "timestamp" to set UTC to now; can be akin to id3v2 TDTG tag)
+  --encodingTool     ,       (str)    Set the name of the encoder on the "©too" atom
+  --gapless          ,       (bool)   Sets the gapless playback flag for a track in a gapless album
+  --contentRating    ,       (str)    Sets the content rating (adds the region info, etc. automatically)
+
+Info we are currently showing in Metadata panel:
+
+	Name
+	Production #
+	Episode
+	Season
+	Track # of #
+	Disc # of #
+	Description
+	Release date Y M D
+	Media Kind (Movie, TV Show, etc.)
+	Show (Series Title)
+	Content Rating
+	Artwork
+	Comments
