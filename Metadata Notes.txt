@@ -102,3 +102,11 @@ Info we are currently showing in Metadata panel:
 	Content Rating
 	Artwork
 	Comments
+
+Accessing Metadata Services
+===========================
+
+API Keys
+--------
+TheMovieDB.org: ae6c3dcf41e60014a3d0508e7f650884
+TheTVDB.com: 75D1299AD9C7876E
