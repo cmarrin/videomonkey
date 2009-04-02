@@ -84,6 +84,7 @@
 		492BCAD80F61F08300BCBF24 /* videomonkeycast.xml in Resources */ = {isa = PBXBuildFile; fileRef = 492BCAD70F61F08300BCBF24 /* videomonkeycast.xml */; };
 		492D327E0EF18D8000AEB740 /* bin in Resources */ = {isa = PBXBuildFile; fileRef = 492D327D0EF18D8000AEB740 /* bin */; };
 		494917A90EDE07AF0083743F /* VideoMonkey.icns in Resources */ = {isa = PBXBuildFile; fileRef = 494917A80EDE07AF0083743F /* VideoMonkey.icns */; };
+		495444D60F853B9800B046F4 /* Metadata.m in Sources */ = {isa = PBXBuildFile; fileRef = 495444D50F853B9800B046F4 /* Metadata.m */; };
 		495493830F17C8620007EC0E /* JavaScriptContext.m in Sources */ = {isa = PBXBuildFile; fileRef = 495493820F17C8620007EC0E /* JavaScriptContext.m */; };
 		495493890F18078B0007EC0E /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 495493880F18078B0007EC0E /* JavaScriptCore.framework */; };
 		495DBF950F616C64000E5D62 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 495DBF940F616C64000E5D62 /* Sparkle.framework */; };
@@ -224,6 +225,8 @@
 		492BCAD70F61F08300BCBF24 /* videomonkeycast.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = videomonkeycast.xml; path = sparkle/videomonkeycast.xml; sourceTree = "<group>"; };
 		492D327D0EF18D8000AEB740 /* bin */ = {isa = PBXFileReference; lastKnownFileType = folder; path = bin; sourceTree = "<group>"; };
 		494917A80EDE07AF0083743F /* VideoMonkey.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = VideoMonkey.icns; path = icons/VideoMonkey.icns; sourceTree = "<group>"; };
+		495444D40F853B9800B046F4 /* Metadata.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Metadata.h; path = classes/Metadata.h; sourceTree = "<group>"; };
+		495444D50F853B9800B046F4 /* Metadata.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Metadata.m; path = classes/Metadata.m; sourceTree = "<group>"; };
 		495493810F17C8620007EC0E /* JavaScriptContext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JavaScriptContext.h; path = classes/JavaScriptContext.h; sourceTree = "<group>"; };
 		495493820F17C8620007EC0E /* JavaScriptContext.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JavaScriptContext.m; path = classes/JavaScriptContext.m; sourceTree = "<group>"; };
 		495493880F18078B0007EC0E /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = /System/Library/Frameworks/JavaScriptCore.framework; sourceTree = "<absolute>"; };
@@ -309,6 +312,8 @@
 				4983960C0F269AC400C23782 /* Formatters.m */,
 				495493810F17C8620007EC0E /* JavaScriptContext.h */,
 				495493820F17C8620007EC0E /* JavaScriptContext.m */,
+				495444D40F853B9800B046F4 /* Metadata.h */,
+				495444D50F853B9800B046F4 /* Metadata.m */,
 				49BC89A80ECD245F00027F1D /* MoviePanelController.h */,
 				49BC89A70ECD245F00027F1D /* MoviePanelController.m */,
 				497E65A80EE4F284000372EC /* ProgressCell.h */,
@@ -682,6 +687,7 @@
 				498397370F278F2400C23782 /* FileListController.m in Sources */,
 				4910A5890F69CBAC00453837 /* XMLDocument.m in Sources */,
 				49BDB20F0F6F05C80082F122 /* FileInfoPanelController.m in Sources */,
+				495444D60F853B9800B046F4 /* Metadata.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
