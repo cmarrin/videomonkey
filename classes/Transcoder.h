@@ -151,6 +151,8 @@ typedef enum FileStatus { FS_INVALID, FS_VALID, FS_ENCODING, FS_PAUSED, FS_FAILE
 @property (readwrite) int outputAudioChannels;
 @property (readwrite) double outputAudioBitrate;
 
+@property (retain,readonly) NSString* inputMetaName;
+
 +(Transcoder*) transcoderWithController: (AppController*) controller;
 
 -(int) addInputFile: (NSString*) filename;

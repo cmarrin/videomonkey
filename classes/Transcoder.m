@@ -124,6 +124,9 @@ int heightFromFrameSize(FrameSize f) { return f & 0xffff; }
 -(double) outputAudioBitrate { return [self outputFileInfo].audioBitrate; }
 -(void) setOutputAudioBitrate:(double) bitrate { [self outputFileInfo].audioBitrate = bitrate; }
 
+-(NSString*) inputMetaName { return [m_metadata inputValueForTag:@"©nam"]; }
+
+
 -(BOOL) _validateInputFile: (TranscoderFileInfo*) info
 {
     NSMutableString* mediainfoPath = [NSMutableString stringWithString: [[NSBundle mainBundle] resourcePath]];

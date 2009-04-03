@@ -20,15 +20,31 @@
 
 -(void) processResponse: (NSString*) response
 {
-    // parse out the frame
-    //NSRange range = [response rangeOfString: @"frame="];
-    //NSString* s = [response substringFromIndex:(range.location + range.length)];
-    //double frame = [s doubleValue];
-    //double totalFrames = [m_transcoder outputDuration] * [m_transcoder outputVideoFramerate];
-    //double percentage = frame / totalFrames;
+    // Ignore lines not starting with 'Atom'
+    if (![response hasPrefix:@"Atom "])
+        return;
+        
+    // parse out the atom and value
+    NSArray* array = [response componentsSeparatedByString:@":"];
+    NSArray* atomArray = [[array objectAtIndex:0] componentsSeparatedByString:@" "];
+    NSString* atom = [[atomArray objectAtIndex:1] stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"\""]];
+    NSString* value = [[array objectAtIndex:1] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
     
-    //[m_transcoder setProgressForCommand: self to: percentage];
-    NSLog(@"*** metadata: %@\n", response);
+    // if this is an iTunes reverseDNS tag, parse that out
+    if ([atom isEqualToString:@"----"])
+        atom = [[atomArray objectAtIndex:2] stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"[]"]];
+        
+    // extract the content rating if this is iTunEXTC
+    if ([atom isEqualToString:@"com.apple.iTunes;iTunEXTC"]) {
+        NSArray* valueArray = [value componentsSeparatedByString:@"|"];
+        value = [valueArray objectAtIndex:1];
+    }
+    
+    // handle artwork
+    if ([atom isEqualToString:@"covr"])
+        m_numArtwork = [[[value componentsSeparatedByString:@" "] objectAtIndex:0] intValue];
+    else
+        [m_inputDictionary setValue:value forKey:atom];
 }
 
 -(void) processRead: (NSNotification*) note
@@ -72,6 +88,8 @@
 
 -(void) readMetadata:(NSString*) filename
 {
+    m_inputDictionary = [[NSMutableDictionary alloc] init];
+    
     // setup command
     NSString* cmdPath = [NSString stringWithString: [[NSBundle mainBundle] resourcePath]];
     NSString* command = [cmdPath stringByAppendingPathComponent: @"bin/AtomicParsley"];
@@ -85,7 +103,7 @@
     // execute the command
     [m_task setArguments: args];
     [m_task setLaunchPath: command];
-    [m_task setStandardError: [m_messagePipe fileHandleForWriting]];
+    [m_task setStandardOutput: [m_messagePipe fileHandleForWriting]];
         
     // add notifications
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(processFinishEncode:) name:NSTaskDidTerminateNotification object:m_task];
@@ -109,5 +127,11 @@
     
     return metadata;
 }
+
+-(NSString*) inputValueForTag:(NSString*) tag
+{
+    return [m_inputDictionary valueForKey:tag];
+}
+
 
 @end

@@ -16,8 +16,13 @@
     NSTask* m_task;
     NSPipe* m_messagePipe;
     NSMutableString* m_buffer;
+    NSMutableDictionary* m_inputDictionary;
+    NSMutableDictionary* m_outputDictionary;
+    int m_numArtwork;
 }
 
 +(Metadata*) metadataWithTranscoder: (Transcoder*) transcoder;
+
+-(NSString*) inputValueForTag:(NSString*) tag;
 
 @end
