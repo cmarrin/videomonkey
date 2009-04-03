@@ -12,6 +12,10 @@
 
 @interface Metadata : NSObject {
 @private
+    Transcoder* m_transcoder;
+    NSTask* m_task;
+    NSPipe* m_messagePipe;
+    NSMutableString* m_buffer;
 }
 
 +(Metadata*) metadataWithTranscoder: (Transcoder*) transcoder;

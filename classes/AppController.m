@@ -331,7 +331,7 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
 
 -(Transcoder*) transcoderForFileName:(NSString*) fileName
 {
-    Transcoder* transcoder = [[Transcoder alloc] initWithController:self];
+    Transcoder* transcoder = [Transcoder transcoderWithController:self];
     [transcoder addInputFile: fileName];
     [transcoder addOutputFile: getOutputFileName(fileName, m_savePath, [m_deviceController fileSuffix])];
     [transcoder setOutputDuration:[transcoder inputDuration]];

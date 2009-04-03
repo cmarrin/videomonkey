@@ -13,6 +13,7 @@
 #import "AppController.h"
 #import "Command.h"
 #import "DeviceController.h"
+#import "Metadata.h"
 
 FrameSize makeFrameSize(int width, int height) { return ((uint32_t) width << 16) | ((uint32_t) height & 0xffff); }
 int widthFromFrameSize(FrameSize f) { return f >> 16; }
@@ -122,29 +123,6 @@ int heightFromFrameSize(FrameSize f) { return f & 0xffff; }
 -(void) setOutputAudioChannels:(int) channels { [self outputFileInfo].audioChannels = channels; }
 -(double) outputAudioBitrate { return [self outputFileInfo].audioBitrate; }
 -(void) setOutputAudioBitrate:(double) bitrate { [self outputFileInfo].audioBitrate = bitrate; }
-
-
-
-/*
-- (void) setBitrate: (float) rate
-{
-    if ([m_outputFiles count] == 0)
-        return;
-    
-    ((TranscoderFileInfo*) [m_outputFiles objectAtIndex: 0])->m_bitrate = rate;
-}
-
-- (double) bitrate;
-{
-    double inputRate =  ([m_inputFiles count] > 0) ? ((TranscoderFileInfo*) [m_inputFiles objectAtIndex: 0])->m_bitrate : 100000;
-    double outputRate =  ([m_outputFiles count] > 0) ? ((TranscoderFileInfo*) [m_outputFiles objectAtIndex: 0])->m_bitrate : 0;
-    return (outputRate > 0) ? outputRate : inputRate;
-}
-*/
-
-
-
-
 
 -(BOOL) _validateInputFile: (TranscoderFileInfo*) info
 {
@@ -262,29 +240,29 @@ static NSImage* getFileStatusImage(FileStatus status)
     return [[NSImage alloc] initWithContentsOfFile:path]; 
 }
 
-- (Transcoder*) initWithController: (AppController*) controller
++(Transcoder*) transcoderWithController: (AppController*) controller;
 {
-    self = [super init];
-    m_appController = controller;
-    m_inputFiles = [[NSMutableArray alloc] init];
-    m_outputFiles = [[NSMutableArray alloc] init];
-    m_fileStatus = FS_INVALID;
-    m_enabled = YES;
-    m_tempAudioFileName = [[NSString stringWithFormat:@"/tmp/%p-tmpaudio.wav", self] retain];
-    m_passLogFileName = [[NSString stringWithFormat:@"/tmp/%p-tmppass.log", self] retain];
+    Transcoder* transcoder = [[Transcoder alloc] init];
+    transcoder->m_appController = controller;
+    transcoder->m_inputFiles = [[NSMutableArray alloc] init];
+    transcoder->m_outputFiles = [[NSMutableArray alloc] init];
+    transcoder->m_fileStatus = FS_INVALID;
+    transcoder->m_enabled = YES;
+    transcoder->m_tempAudioFileName = [[NSString stringWithFormat:@"/tmp/%p-tmpaudio.wav", transcoder] retain];
+    transcoder->m_passLogFileName = [[NSString stringWithFormat:@"/tmp/%p-tmppass.log", transcoder] retain];
     
     // init the progress indicator
-    m_progressIndicator = [[NSProgressIndicator alloc] init];
-    [m_progressIndicator setMinValue:0];
-    [m_progressIndicator setMaxValue:1];
-    [m_progressIndicator setIndeterminate: NO];
-    [m_progressIndicator setBezeled: NO];
+    transcoder->m_progressIndicator = [[NSProgressIndicator alloc] init];
+    [transcoder->m_progressIndicator setMinValue:0];
+    [transcoder->m_progressIndicator setMaxValue:1];
+    [transcoder->m_progressIndicator setIndeterminate: NO];
+    [transcoder->m_progressIndicator setBezeled: NO];
     
     // init the status image view
-    m_statusImageView = [[NSImageView alloc] init];
-    [m_statusImageView setImage: getFileStatusImage(m_fileStatus)];
+    transcoder->m_statusImageView = [[NSImageView alloc] init];
+    [transcoder->m_statusImageView setImage: getFileStatusImage(transcoder->m_fileStatus)];
 
-    return self;
+    return transcoder;
 }
 
 -(void) dealloc
@@ -314,6 +292,11 @@ static NSImage* getFileStatusImage(FileStatus status)
     [file release];
     m_fileStatus = FS_VALID;
     [m_statusImageView setImage: getFileStatusImage(m_fileStatus)];
+    
+    // read the metadata
+    [m_metadata release];
+    m_metadata = [Metadata metadataWithTranscoder:self];
+    
     return [m_inputFiles count] - 1;    
 }
 
@@ -690,6 +673,14 @@ static NSImage* getFileStatusImage(FileStatus status)
     va_start(args, format);
     NSString* string = [[NSString alloc] initWithFormat:format arguments:args];
     [m_appController log: @"    [Command %@] %@\n", commandId, string];
+}
+
+-(void) log: (NSString*) format, ...
+{
+    va_list args;
+    va_start(args, format);
+    NSString* s = [[NSString alloc] initWithFormat:format arguments: args];
+    [m_appController log: s];
 }
 
 @end

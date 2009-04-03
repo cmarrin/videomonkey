@@ -15,6 +15,7 @@
 
 @class AppController;
 @class Command;
+@class Metadata;
 
 // FrameSize is a 32 bit integer with upper 16 bits width and lower 16 bits height
 typedef uint32_t FrameSize;
@@ -89,6 +90,7 @@ typedef enum FileStatus { FS_INVALID, FS_VALID, FS_ENCODING, FS_PAUSED, FS_FAILE
   @private
     NSMutableArray* m_inputFiles;
     NSMutableArray* m_outputFiles;
+    Metadata* m_metadata;
     double m_progress;
     BOOL m_enabled;
     FileStatus m_fileStatus;
@@ -149,7 +151,7 @@ typedef enum FileStatus { FS_INVALID, FS_VALID, FS_ENCODING, FS_PAUSED, FS_FAILE
 @property (readwrite) int outputAudioChannels;
 @property (readwrite) double outputAudioBitrate;
 
--(Transcoder*) initWithController: (AppController*) controller;
++(Transcoder*) transcoderWithController: (AppController*) controller;
 
 -(int) addInputFile: (NSString*) filename;
 -(int) addOutputFile: (NSString*) filename;
@@ -185,5 +187,6 @@ typedef enum FileStatus { FS_INVALID, FS_VALID, FS_ENCODING, FS_PAUSED, FS_FAILE
 
 -(void) logToFile: (NSString*) string;
 -(void) logCommand: (NSString*) commandId withFormat: (NSString*) format, ...;
+-(void) log: (NSString*) format, ...;
 
 @end
