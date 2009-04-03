@@ -89,19 +89,19 @@ Atomic Parsley can deal with these tags:
 
 Info we are currently showing in Metadata panel:
 
-	Name
-	Production #
-	Episode
-	Season
-	Track # of #
-	Disc # of #
-	Description
-	Release date Y M D
-	Media Kind (Movie, TV Show, etc.)
-	Show (Series Title)
-	Content Rating
+	Name [©nam]
+	Show (Series Title) [tvsh]
+	Production # [tven]
+	Episode [tves]
+	Season [tvsn]
+	Track # of # [trkn]
+	Disc # of # [?]
+	Description [ldes]
+	Release date Y M D [©day]
+	Media Kind (Movie, TV Show, etc.) [stik]
+	Content Rating [com.apple.iTunes;iTunEXTC]
 	Artwork
-	Comments
+	Comments [©cmt]
 
 Accessing Metadata Services
 ===========================
