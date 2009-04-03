@@ -11,6 +11,7 @@
 @implementation FileInfoPanelController
 
 - (void)awakeFromNib {
+    [m_searchField setRecentSearches:[NSArray arrayWithObjects:@"Foo", @"Bar", @"Baz", nil]];
 }
 
 -(void) setVisible: (BOOL) b
