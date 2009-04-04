@@ -68,7 +68,7 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
     NSString* suffix = [m_deviceController fileSuffix];
     
     while ((transcoder = (Transcoder*) [e nextObject])) {
-        [transcoder changeOutputFileName: getOutputFileName([transcoder inputFileName], m_savePath, suffix)];
+        [transcoder changeOutputFileName: getOutputFileName(transcoder.inputFileInfo.filename, m_savePath, suffix)];
     }
 }
 
@@ -124,7 +124,7 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
             else {
                 m_fileConvertingIndex++;
                 m_finishedEncodedFileSize += m_currentEncodedFileSize;
-                m_currentEncodedFileSize = [[m_fileList objectAtIndex: m_currentEncoding] outputFileSize];
+                m_currentEncodedFileSize = [[m_fileList objectAtIndex: m_currentEncoding] outputFileInfo].fileSize;
                 
             }
             return;
@@ -157,7 +157,7 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
     for (Transcoder* transcoder in m_fileList) {
         if ([transcoder enabled]) {
             m_numFilesToConvert++;
-            m_totalEncodedFileSize += [transcoder outputFileSize];
+            m_totalEncodedFileSize += transcoder.outputFileInfo.fileSize;
             [transcoder resetStatus];
         }
     }
@@ -334,7 +334,7 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
     Transcoder* transcoder = [Transcoder transcoderWithController:self];
     [transcoder addInputFile: fileName];
     [transcoder addOutputFile: getOutputFileName(fileName, m_savePath, [m_deviceController fileSuffix])];
-    [transcoder setOutputDuration:[transcoder inputDuration]];
+    transcoder.outputFileInfo.duration = transcoder.inputFileInfo.duration;
     return transcoder;
 }
 
@@ -460,7 +460,7 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
 
 -(void) setSelectedFile: (int) index
 {
-    [m_moviePanel setMovie: (index < 0) ? nil : [((Transcoder*) [m_fileList objectAtIndex:index]) inputFileName]];
+    [m_moviePanel setMovie: (index < 0) ? nil : [[m_fileList objectAtIndex:index] inputFileInfo].filename];
 }
 
 -(void) uiChanged
@@ -470,6 +470,12 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
     }
     
     [m_fileListController reloadData];
+}
+
+- (id)valueForUndefinedKey:(NSString *)key
+{
+    NSLog(@"*** AppController::valueForUndefinedKey:%@\n", key);
+    return nil;
 }
 
 @end

@@ -15,7 +15,11 @@
 {
     int status = [m_task terminationStatus];
     if (status)
-        [m_transcoder log: @"ERROR reading metadata for %@:%d", [m_transcoder inputFileName], status];
+        [m_transcoder log: @"ERROR reading metadata for %@:%d", m_transcoder.inputFileInfo.filename, status];
+        
+    // we always need a 'stik' value - defaults to Movie
+    if (![m_inputDictionary valueForKey:@"stik"])
+        [m_inputDictionary setValue:@"Movie" forKey:@"stik"];
 }
 
 -(void) processResponse: (NSString*) response
@@ -25,19 +29,37 @@
         return;
         
     // parse out the atom and value
-    NSArray* array = [response componentsSeparatedByString:@":"];
+    NSMutableArray* array = [NSMutableArray arrayWithArray:[response componentsSeparatedByString:@":"]];
     NSArray* atomArray = [[array objectAtIndex:0] componentsSeparatedByString:@" "];
     NSString* atom = [[atomArray objectAtIndex:1] stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"\""]];
-    NSString* value = [[array objectAtIndex:1] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+    [array removeObjectAtIndex:0];
+    NSString* value = [[array componentsJoinedByString:@":"] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
     
     // if this is an iTunes reverseDNS tag, parse that out
     if ([atom isEqualToString:@"----"])
         atom = [[atomArray objectAtIndex:2] stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"[]"]];
         
-    // extract the content rating if this is iTunEXTC
+    // extract the content rating if this is iTunEXTC (and simplify atom name)
     if ([atom isEqualToString:@"com.apple.iTunes;iTunEXTC"]) {
         NSArray* valueArray = [value componentsSeparatedByString:@"|"];
         value = [valueArray objectAtIndex:1];
+        atom = @"iTunEXTC";
+    }
+    
+    // keypaths can't have special characters, so change things like '©' to '__'
+    NSArray* legalArray = [atom componentsSeparatedByCharactersInSet:[[NSCharacterSet alphanumericCharacterSet] invertedSet]];
+    atom = [legalArray componentsJoinedByString:@"__"];
+    
+    // Handle special values
+    if ([atom isEqualToString:@"__day"]) {
+        // split out year, month, day
+        NSArray* dayArray = [value componentsSeparatedByString:@"-"];
+        if ([dayArray count] > 0)
+            [m_inputDictionary setValue:[[NSNumber numberWithInt:[[dayArray objectAtIndex:0] intValue]] stringValue] forKey:@"__day_year"];
+        if ([dayArray count] > 1)
+            [m_inputDictionary setValue:[[NSNumber numberWithInt:[[dayArray objectAtIndex:1] intValue]] stringValue] forKey:@"__day_month"];
+        if ([dayArray count] > 2)
+            [m_inputDictionary setValue:[[NSNumber numberWithInt:[[dayArray objectAtIndex:2] intValue]] stringValue] forKey:@"__day_day"];
     }
     
     // handle artwork
@@ -123,14 +145,14 @@
     metadata->m_task = [[NSTask alloc] init];
     metadata->m_messagePipe = [NSPipe pipe];
     
-    [metadata readMetadata: [transcoder inputFileName]];
+    [metadata readMetadata: transcoder.inputFileInfo.filename];
     
     return metadata;
 }
 
--(NSString*) inputValueForTag:(NSString*) tag
+-(NSString*) valueForKey:(NSString*) key;
 {
-    return [m_inputDictionary valueForKey:tag];
+    return [m_inputDictionary valueForKey:key];
 }
 
 

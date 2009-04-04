@@ -135,7 +135,7 @@ static NSDictionary* makeDictionary(NSString* s)
     NSRange range = [response rangeOfString: @"frame="];
     NSString* s = [response substringFromIndex:(range.location + range.length)];
     double frame = [s doubleValue];
-    double totalFrames = [m_transcoder outputDuration] * [m_transcoder outputVideoFramerate];
+    double totalFrames = m_transcoder.outputFileInfo.duration * m_transcoder.outputFileInfo.videoFrameRate;
     double percentage = frame / totalFrames;
     
     [m_transcoder setProgressForCommand: self to: percentage];

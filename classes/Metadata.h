@@ -23,6 +23,6 @@
 
 +(Metadata*) metadataWithTranscoder: (Transcoder*) transcoder;
 
--(NSString*) inputValueForTag:(NSString*) tag;
+-(NSString*) valueForKey:(NSString*) key;
 
 @end

@@ -52,7 +52,7 @@
     [pboard declareTypes: [NSArray arrayWithObjects: NSFilenamesPboardType, FileListItemType, nil] owner: self];
     
     // put the string value into the paste board
-    [pboard setString: [[[m_appController fileList] objectAtIndex: m_draggedRow] inputFileName] forType: FileListItemType];
+    [pboard setString: [[[m_appController fileList] objectAtIndex: m_draggedRow] inputFileInfo].filename forType: FileListItemType];
     
     return YES;
 }
@@ -204,6 +204,12 @@
         [self setSelectionIndex:[[self selectionIndexes] lastIndex]];
     else
         [super selectPrevious:sender];
+}
+
+- (id)valueForUndefinedKey:(NSString *)key
+{
+    NSLog(@"*** FileListController::valueForUndefinedKey:%@\n", key);
+    return nil;
 }
 
 @end

@@ -41,7 +41,7 @@ typedef enum FileStatus { FS_INVALID, FS_VALID, FS_ENCODING, FS_PAUSED, FS_FAILE
     FrameSize videoFrameSize;
     double videoBitrate;
     double pixelAspectRatio;
-    double displayAspectRatio;
+    double videoAspectRatio;
     double videoFrameRate;
     
     // Audio
@@ -71,7 +71,7 @@ typedef enum FileStatus { FS_INVALID, FS_VALID, FS_ENCODING, FS_PAUSED, FS_FAILE
 @property(assign) BOOL videoInterlaced;
 @property(assign) FrameSize videoFrameSize;
 @property(assign) double pixelAspectRatio;
-@property(assign) double displayAspectRatio;
+@property(assign) double videoAspectRatio;
 @property(assign) double videoFrameRate;
 @property(assign) double videoBitrate;
 
@@ -112,46 +112,26 @@ typedef enum FileStatus { FS_INVALID, FS_VALID, FS_ENCODING, FS_PAUSED, FS_FAILE
 @property (readwrite) BOOL enabled;
 @property (readonly) double progress;
 
-// Input properties
-@property (retain,readonly) NSString* inputFileName;
-@property (retain,readonly) NSString* inputFormat;
-@property (readonly) double inputDuration;
-@property (readonly) double inputFileSize;
-@property (readonly) double inputBitrate;
+@property (readonly) TranscoderFileInfo* inputFileInfo;
+@property (readonly) TranscoderFileInfo* outputFileInfo;
+@property (readonly) Metadata* metadata;
 
-@property (retain,readonly) NSString* inputVideoCodec;
-@property (retain,readonly) NSString* inputVideoProfile;
-@property (readonly) BOOL inputVideoInterlaced;
-@property (readonly) FrameSize inputVideoFrameSize;
-@property (readonly) double inputVideoAspectRatio;
-@property (readonly) double inputVideoFramerate;
-@property (readonly) double inputVideoBitrate;
-
-@property (retain,readonly) NSString* inputAudioCodec;
-@property (readonly) double inputAudioSampleRate;
-@property (readonly) int inputAudioChannels;
-@property (readonly) double inputAudioBitrate;
-
-// Output properties
-@property (retain,readwrite) NSString* outputFileName;
-@property (retain,readwrite) NSString* outputFormat;
-@property (readwrite) double outputDuration;
-@property (readwrite) double outputFileSize;
-@property (readwrite) double outputBitrate;
-
-@property (retain,readwrite) NSString* outputVideoCodec;
-@property (retain,readwrite) NSString* outputVideoProfile;
-@property (readwrite) BOOL outputVideoInterlaced;
-@property (readwrite) FrameSize outputVideoFrameSize;
-@property (readwrite) double outputVideoAspectRatio;
-@property (readwrite) double outputVideoFramerate;
-
-@property (retain,readwrite) NSString* outputAudioCodec;
-@property (readwrite) double outputAudioSampleRate;
-@property (readwrite) int outputAudioChannels;
-@property (readwrite) double outputAudioBitrate;
-
-@property (retain,readonly) NSString* inputMetaName;
+/*
+// Metadata
+@property (retain,readonly) NSString* metaName;
+@property (retain,readonly) NSString* metaShow;
+@property (retain,readonly) NSString* metaProduction;
+@property (retain,readonly) NSString* metaEpisode;
+@property (retain,readonly) NSString* metaSeason;
+@property (retain,readonly) NSString* metaTrack;
+@property (retain,readonly) NSString* metaDisc;
+@property (retain,readonly) NSString* metaDescription;
+@property (retain,readonly) NSString* metaReleaseDate;
+@property (retain,readonly) NSString* metaMediaKind;
+@property (retain,readonly) NSString* metaContentRating;
+@property (retain,readonly) NSString* metaComments;
+@property (retain,readonly) NSString* metaName;
+*/
 
 +(Transcoder*) transcoderWithController: (AppController*) controller;
 

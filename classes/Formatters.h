@@ -64,4 +64,3 @@
 - (NSString *)stringForObjectValue:(id)anObject;
 
 @end
-
