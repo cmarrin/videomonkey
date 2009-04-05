@@ -100,6 +100,7 @@
 		498397370F278F2400C23782 /* FileListController.m in Sources */ = {isa = PBXBuildFile; fileRef = 498397360F278F2400C23782 /* FileListController.m */; };
 		499A31770EDD97EB000C0AAF /* Transcoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 499A31760EDD97EB000C0AAF /* Transcoder.m */; };
 		499A31D30EDEE3E4000C0AAF /* mediainfo-inform.csv in Resources */ = {isa = PBXBuildFile; fileRef = 499A31D20EDEE3E4000C0AAF /* mediainfo-inform.csv */; };
+		49A9DD3F0F8907A000CCDDEB /* Quartz.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 49A9DD3E0F8907A000CCDDEB /* Quartz.framework */; };
 		49AAD9A70F1C232B0098F087 /* Console.png in Resources */ = {isa = PBXBuildFile; fileRef = 49AAD9A60F1C232B0098F087 /* Console.png */; };
 		49AADAC60F1D12950098F087 /* tinyitunesfile.png in Resources */ = {isa = PBXBuildFile; fileRef = 49AADAC50F1D12950098F087 /* tinyitunesfile.png */; };
 		49AADBE10F1E55C80098F087 /* DeviceController.m in Sources */ = {isa = PBXBuildFile; fileRef = 49AADBE00F1E55C80098F087 /* DeviceController.m */; };
@@ -249,6 +250,7 @@
 		499A31750EDD97EB000C0AAF /* Transcoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Transcoder.h; path = classes/Transcoder.h; sourceTree = "<group>"; };
 		499A31760EDD97EB000C0AAF /* Transcoder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Transcoder.m; path = classes/Transcoder.m; sourceTree = "<group>"; };
 		499A31D20EDEE3E4000C0AAF /* mediainfo-inform.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; lineEnding = 2; path = "mediainfo-inform.csv"; sourceTree = "<group>"; };
+		49A9DD3E0F8907A000CCDDEB /* Quartz.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Quartz.framework; path = /System/Library/Frameworks/Quartz.framework; sourceTree = "<absolute>"; };
 		49AAD9A60F1C232B0098F087 /* Console.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Console.png; path = icons/Console.png; sourceTree = "<group>"; };
 		49AADAC50F1D12950098F087 /* tinyitunesfile.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = tinyitunesfile.png; path = images/tinyitunesfile.png; sourceTree = "<group>"; };
 		49AADBDF0F1E55C80098F087 /* DeviceController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DeviceController.h; path = classes/DeviceController.h; sourceTree = "<group>"; };
@@ -287,6 +289,7 @@
 				495493890F18078B0007EC0E /* JavaScriptCore.framework in Frameworks */,
 				495DBF950F616C64000E5D62 /* Sparkle.framework in Frameworks */,
 				49B007F20F7124D200D0EFF2 /* ScriptingBridge.framework in Frameworks */,
+				49A9DD3F0F8907A000CCDDEB /* Quartz.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -329,6 +332,7 @@
 		1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				49A9DD3E0F8907A000CCDDEB /* Quartz.framework */,
 				49B007F10F7124D200D0EFF2 /* ScriptingBridge.framework */,
 				495DBF940F616C64000E5D62 /* Sparkle.framework */,
 				495493880F18078B0007EC0E /* JavaScriptCore.framework */,

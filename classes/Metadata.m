@@ -6,8 +6,45 @@
 //  Copyright 2008 Apple. All rights reserved.
 //
 
+#import <Quartz/Quartz.h>
+
 #import "Metadata.h"
 #import "Transcoder.h"
+
+// Implementation of the IKImageBrowserItem protocol
+@interface ImageBrowserItem : NSObject {
+    NSString* m_path;
+}
+
++(ImageBrowserItem*) imageBrowserItemWithPath:(NSString*) path;
+
+@end
+
+@implementation ImageBrowserItem
+
++(ImageBrowserItem*) imageBrowserItemWithPath:(NSString*) path
+{
+    ImageBrowserItem* item = [[ImageBrowserItem alloc] init];
+    item->m_path = [path retain];
+    return item;
+}
+
+-(NSString *) imageRepresentationType
+{
+    return IKImageBrowserPathRepresentationType;
+}
+ 
+-(id) imageRepresentation
+{
+    return m_path;
+}
+ 
+-(NSString *) imageUID
+{
+    return m_path;
+}
+
+@end
 
 @implementation Metadata
 
@@ -152,8 +189,16 @@
 
 -(NSString*) valueForKey:(NSString*) key;
 {
+    if ([key isEqualToString:@"artworkList"]) {
+        // for now return a dummy list
+        NSString* path1 = [[NSBundle mainBundle] pathForResource:@"itunesfile" ofType:@"png"];
+        ImageBrowserItem* item1 = [ImageBrowserItem imageBrowserItemWithPath:path1];
+        NSString* path2 = [[NSBundle mainBundle] pathForResource:@"dvd" ofType:@"png"];
+        ImageBrowserItem* item2 = [ImageBrowserItem imageBrowserItemWithPath:path2];
+        return [NSArray arrayWithObjects:item1, item2, nil];
+    }
+        
     return [m_inputDictionary valueForKey:key];
 }
-
 
 @end

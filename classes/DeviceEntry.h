@@ -14,7 +14,7 @@
 
 @class DeviceController;
 @class JavaScriptContext;
-@class XMLElement;
+@class MyXMLElement;
 
 @interface DeviceTab : NSTabViewItem {
     IBOutlet NSButton* m_button0;
@@ -65,7 +65,7 @@
     NSString* m_title;
 }
 
-+(QualityStop*) qualityStopWithElement: (XMLElement*) element;
++(QualityStop*) qualityStopWithElement: (MyXMLElement*) element;
 
 -(NSString*) title;
 
@@ -78,7 +78,7 @@
     NSString* m_script;
 }
 
-+(PerformanceItem*) performanceItemWithElement: (XMLElement*) element;
++(PerformanceItem*) performanceItemWithElement: (MyXMLElement*) element;
 
 -(NSString*) title;
 -(NSDictionary*) params;
@@ -86,26 +86,26 @@
 
 @end
 
-@interface Button : NSObject {
+@interface MyButton : NSObject {
     NSString* m_title;
     BOOL m_enabled;
 }
 
--(Button*) initWithElement: (XMLElement*) element;
+-(MyButton*) initWithElement: (MyXMLElement*) element;
 
 -(NSString*) title;
 -(BOOL) enabled;
 
 @end
 
-@interface Checkbox : Button {
+@interface Checkbox : MyButton {
     NSMutableDictionary* m_checkedParams;
     NSString* m_checkedScript;
     NSMutableDictionary* m_uncheckedParams;
     NSString* m_uncheckedScript;
 }
 
-+(Checkbox*) checkboxWithElement: (XMLElement*) element;
++(Checkbox*) checkboxWithElement: (MyXMLElement*) element;
 
 -(NSDictionary*) uncheckedParams;
 -(NSString*) uncheckedScript;
@@ -114,13 +114,13 @@
 
 @end
 
-@interface Menu : Button {
+@interface Menu : MyButton {
     NSMutableArray* m_itemTitles;
     NSMutableArray* m_itemParams;
     NSMutableArray* m_itemScripts;
 }
 
-+(Menu*) menuWithElement: (XMLElement*) element;
++(Menu*) menuWithElement: (MyXMLElement*) element;
 -(NSArray*) itemTitles;
 -(NSArray*) itemParams;
 -(NSArray*) itemScripts;
@@ -151,8 +151,8 @@
     int m_currentQualityStopIndex;
 }
 
-+(DeviceEntry*) deviceEntryWithElement: (XMLElement*) element inGroup: (NSString*) group withDefaults: (DeviceEntry*) defaults;
--(DeviceEntry*) initWithElement: (XMLElement*) element inGroup: (NSString*) group withDefaults: (DeviceEntry*) defaults;
++(DeviceEntry*) deviceEntryWithElement: (MyXMLElement*) element inGroup: (NSString*) group withDefaults: (DeviceEntry*) defaults;
+-(DeviceEntry*) initWithElement: (MyXMLElement*) element inGroup: (NSString*) group withDefaults: (DeviceEntry*) defaults;
 
 -(NSString*) group;
 -(NSString*) title;

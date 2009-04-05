@@ -8,11 +8,11 @@
 
 #import "XMLDocument.h"
 
-@implementation XMLElement
+@implementation MyXMLElement
 
-+(XMLElement*) elementWithNSXMLElement:(NSXMLElement*) e
++(MyXMLElement*) elementWithNSXMLElement:(NSXMLElement*) e
 {
-    XMLElement* element = [[XMLElement alloc] init];
+    MyXMLElement* element = [[MyXMLElement alloc] init];
     
     // Set name
     element->m_name = [[e name] retain];
@@ -25,7 +25,7 @@
         if ([node kind] == NSXMLTextKind)
             [children addObject:[node stringValue]];
         else if ([node kind] == NSXMLElementKind)
-            [children addObject:[XMLElement elementWithNSXMLElement:(NSXMLElement*) node]];
+            [children addObject:[MyXMLElement elementWithNSXMLElement:(NSXMLElement*) node]];
     }
     
     element->m_children = children;
@@ -82,20 +82,20 @@
     NSMutableArray* array = [[NSMutableArray alloc] init];
     
     for (id child in m_children) {
-        if ([child isKindOfClass:[XMLElement class]] && [[child name] isEqualToString:name])
+        if ([child isKindOfClass:[MyXMLElement class]] && [[child name] isEqualToString:name])
             [array addObject:child];
     }
     
     return array;
 }
 
--(XMLElement*) lastElementForName:(NSString*) name;
+-(MyXMLElement*) lastElementForName:(NSString*) name;
 {
-    XMLElement* foundChild = nil;
+    MyXMLElement* foundChild = nil;
     
     for (id child in m_children) {
-        if ([child isKindOfClass:[XMLElement class]] && [[child name] isEqualToString:name])
-            foundChild = (XMLElement*) child;
+        if ([child isKindOfClass:[MyXMLElement class]] && [[child name] isEqualToString:name])
+            foundChild = (MyXMLElement*) child;
     }
     
     return foundChild;
@@ -103,11 +103,11 @@
 
 @end
 
-@implementation XMLDocument
+@implementation MyXMLDocument
 
-+(XMLDocument*) xmlDocumentWithContentsOfURL: (NSURL*) url
++(MyXMLDocument*) xmlDocumentWithContentsOfURL: (NSURL*) url
 {
-    XMLDocument* doc = [[XMLDocument alloc] init];
+    MyXMLDocument* doc = [[MyXMLDocument alloc] init];
     NSError* error;
     NSXMLDocument* document = [[NSXMLDocument alloc] initWithContentsOfURL:url options:NSXMLDocumentValidate error:&error];
 
@@ -118,11 +118,11 @@
         return nil;
     }
     
-    doc->m_rootElement = [XMLElement elementWithNSXMLElement: [document rootElement]];
+    doc->m_rootElement = [MyXMLElement elementWithNSXMLElement: [document rootElement]];
     return doc;
 }
 
--(XMLElement*) rootElement
+-(MyXMLElement*) rootElement
 {
     return m_rootElement;
 }

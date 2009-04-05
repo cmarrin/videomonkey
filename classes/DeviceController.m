@@ -63,7 +63,7 @@ static void addMenuSeparator(NSPopUpButton* button)
 -(void) initCommands
 {
     NSURL* url = [NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"commands" ofType:@"xml"]];
-    XMLDocument* doc = [XMLDocument xmlDocumentWithContentsOfURL:url];
+    MyXMLDocument* doc = [MyXMLDocument xmlDocumentWithContentsOfURL:url];
 
     // extract the defaults
     m_defaultDevice = [DeviceEntry deviceEntryWithElement: [[doc rootElement] lastElementForName:@"default_device"] inGroup: nil withDefaults: nil];
@@ -72,11 +72,11 @@ static void addMenuSeparator(NSPopUpButton* button)
     // Build the device list
     m_devices = [[NSMutableArray alloc] init];
     
-    XMLElement* devicesElement = [[doc rootElement] lastElementForName:@"devices"];
+    MyXMLElement* devicesElement = [[doc rootElement] lastElementForName:@"devices"];
     NSArray* deviceGroups = [devicesElement elementsForName:@"device_group"];
     
     for (int i = 0; i < [deviceGroups count]; ++i) {
-        XMLElement* deviceGroupElement = (XMLElement*) [deviceGroups objectAtIndex:i];
+        MyXMLElement* deviceGroupElement = (MyXMLElement*) [deviceGroups objectAtIndex:i];
         NSString* groupTitle = [deviceGroupElement stringAttribute:@"title"];
 
         DeviceEntry* commonDevice = [DeviceEntry deviceEntryWithElement: [deviceGroupElement lastElementForName:@"common_device"] inGroup: groupTitle withDefaults: m_defaultDevice];
@@ -84,7 +84,7 @@ static void addMenuSeparator(NSPopUpButton* button)
         NSArray* devices = [deviceGroupElement elementsForName:@"device"];
         
         for (int j = 0; j < [devices count]; ++j) {
-            XMLElement* deviceElement = (XMLElement*) [devices objectAtIndex:j];
+            MyXMLElement* deviceElement = (MyXMLElement*) [devices objectAtIndex:j];
             DeviceEntry* entry = [DeviceEntry deviceEntryWithElement: deviceElement inGroup: groupTitle withDefaults: commonDevice];
             if (entry)
                 [m_devices addObject: entry];
