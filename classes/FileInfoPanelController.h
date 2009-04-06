@@ -12,8 +12,12 @@
 @private
     IBOutlet NSTabView* m_fileInfoTabView;
     IBOutlet NSSearchField* m_searchField;
+    IBOutlet IKImageBrowserView* m_imageBrowser;
+    IBOutlet NSTableView* m_imageTable;
 
     BOOL m_isVisible;
 }
+
+- (IBAction) zoomSliderDidChange:(id)sender;
 
 @end

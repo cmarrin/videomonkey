@@ -14,6 +14,8 @@
 // Implementation of the IKImageBrowserItem protocol
 @interface ImageBrowserItem : NSObject {
     NSString* m_path;
+    NSImage* m_image;
+    NSSize m_originalSize;
 }
 
 +(ImageBrowserItem*) imageBrowserItemWithPath:(NSString*) path;
@@ -26,6 +28,9 @@
 {
     ImageBrowserItem* item = [[ImageBrowserItem alloc] init];
     item->m_path = [path retain];
+    item->m_image = [[NSImage alloc] initWithContentsOfFile:item->m_path];
+    item->m_originalSize = [item->m_image size];
+    [item->m_image setSize: NSMakeSize(100,100)];
     return item;
 }
 
@@ -42,6 +47,22 @@
 -(NSString *) imageUID
 {
     return m_path;
+}
+
+-(NSNumber*) checked
+{
+    return [NSNumber numberWithBool:YES];
+}
+
+-(NSImage*) sourceIcon
+{
+    NSString* path = [[NSBundle mainBundle] pathForResource:@"itunesfile" ofType:@"png"];
+    return [[NSImage alloc] initWithContentsOfFile:path];
+}
+
+-(NSImage*) image
+{
+    return [[NSImage alloc] initWithContentsOfFile:m_path];
 }
 
 @end
