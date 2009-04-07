@@ -11,63 +11,132 @@
 #import "Metadata.h"
 #import "Transcoder.h"
 
-// Implementation of the IKImageBrowserItem protocol
-@interface ImageBrowserItem : NSObject {
-    NSString* m_path;
+// Artwork Item
+@interface ArtworkItem : NSObject {
     NSImage* m_image;
-    NSSize m_originalSize;
+    NSImage* m_sourceIcon;
+    BOOL m_checked;
+    
 }
 
-+(ImageBrowserItem*) imageBrowserItemWithPath:(NSString*) path;
++(ArtworkItem*) artworkItemWithPath:(NSString*) path sourceIcon:(NSImage*) icon checked:(BOOL) checked;
 
 @end
 
-@implementation ImageBrowserItem
+@implementation ArtworkItem
 
-+(ImageBrowserItem*) imageBrowserItemWithPath:(NSString*) path
++(ArtworkItem*) artworkItemWithPath:(NSString*) path sourceIcon:(NSImage*) icon checked:(BOOL) checked;
 {
-    ImageBrowserItem* item = [[ImageBrowserItem alloc] init];
-    item->m_path = [path retain];
-    item->m_image = [[NSImage alloc] initWithContentsOfFile:item->m_path];
-    item->m_originalSize = [item->m_image size];
-    [item->m_image setSize: NSMakeSize(100,100)];
+    ArtworkItem* item = [[ArtworkItem alloc] init];
+    item->m_image = [[NSImage alloc] initWithContentsOfFile:path];
+    item->m_sourceIcon = [icon retain];
+    item->m_checked = checked;
     return item;
-}
-
--(NSString *) imageRepresentationType
-{
-    return IKImageBrowserPathRepresentationType;
-}
- 
--(id) imageRepresentation
-{
-    return m_path;
-}
- 
--(NSString *) imageUID
-{
-    return m_path;
 }
 
 -(NSNumber*) checked
 {
-    return [NSNumber numberWithBool:YES];
+    return [NSNumber numberWithBool:m_checked];
 }
 
 -(NSImage*) sourceIcon
 {
-    NSString* path = [[NSBundle mainBundle] pathForResource:@"itunesfile" ofType:@"png"];
-    return [[NSImage alloc] initWithContentsOfFile:path];
+    return m_sourceIcon;
 }
 
 -(NSImage*) image
 {
-    return [[NSImage alloc] initWithContentsOfFile:m_path];
+    return m_image;
+}
+
+@end
+
+typedef enum { INPUT_TAG, SEARCH_TAG, USER_TAG, OUTPUT_TAG } TagType;
+
+// Tag Item
+@interface TagItem : NSObject {
+    NSString* m_inputValue;
+    NSString* m_searchValue;
+    NSString* m_userValue;
+    NSString* m_outputValue;
+    NSString* m_tag;
+    TagType m_tagToShow;
+}
+
++(TagItem*) tagItem;
+
+-(void) setValue:(NSString*) value tag:(NSString*) tag type:(TagType) type;
+
+@end
+
+@implementation TagItem
+
++(TagItem*) tagItem;
+{
+    TagItem* item = [[TagItem alloc] init];
+    item->m_tagToShow = OUTPUT_TAG;
+    return item;
+}
+
+-(void) setValue:(NSString*) value tag:(NSString*) tag type:(TagType) type;
+{
+    switch (type) {
+        case INPUT_TAG:
+            [m_inputValue release];
+            m_inputValue = [value retain];
+            break;
+        case SEARCH_TAG:
+            [m_searchValue release];
+            m_searchValue = [value retain];
+            break;
+        case USER_TAG:
+            [m_userValue release];
+            m_userValue = [value retain];
+            break;
+    }
+    
+    [m_tag release];
+    m_tag = [tag retain];
+    
+    if (!m_outputValue)
+        m_outputValue = [value retain];
+}
+
+-(NSString*) displayValue
+{
+    switch(m_tagToShow) {
+        case INPUT_TAG: return m_inputValue;
+        case SEARCH_TAG: return m_searchValue;
+        case USER_TAG: return m_userValue;
+        default: return m_outputValue;
+    }
+}
+
+-(BOOL) hasMultipleValues
+{
+    int count = m_inputValue ? 1 : 0;
+    count += m_searchValue ? 1 : 0;
+    count += m_userValue ? 1 : 0;
+    return count > 1;
 }
 
 @end
 
 @implementation Metadata
+
+@synthesize artworkList = m_artworkList;
+@synthesize tags = m_tagDictionary;
+
+-(void) setTagValue:(NSString*) value forKey:(NSString*) key tag:(NSString*) tag type:(TagType) type
+{
+    TagItem* item = (TagItem*) [m_tagDictionary valueForKey:key];
+    if (!item) {
+        item = [TagItem tagItem];
+        [m_tagDictionary setValue:item forKey:key];
+    }
+    
+    [item setValue:value tag:tag type:type];
+}
 
 -(void) processFinishEncode: (NSNotification*) note
 {
@@ -76,8 +145,8 @@
         [m_transcoder log: @"ERROR reading metadata for %@:%d", m_transcoder.inputFileInfo.filename, status];
         
     // we always need a 'stik' value - defaults to Movie
-    if (![m_inputDictionary valueForKey:@"stik"])
-        [m_inputDictionary setValue:@"Movie" forKey:@"stik"];
+    if (![m_tagDictionary valueForKey:@"stik"])
+        [self setTagValue:@"Movie" forKey:@"stik" tag:@"stik" type:USER_TAG];
 }
 
 -(void) processResponse: (NSString*) response
@@ -90,6 +159,7 @@
     NSMutableArray* array = [NSMutableArray arrayWithArray:[response componentsSeparatedByString:@":"]];
     NSArray* atomArray = [[array objectAtIndex:0] componentsSeparatedByString:@" "];
     NSString* atom = [[atomArray objectAtIndex:1] stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"\""]];
+    NSString* key = atom;
     [array removeObjectAtIndex:0];
     NSString* value = [[array componentsJoinedByString:@":"] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
     
@@ -101,30 +171,30 @@
     if ([atom isEqualToString:@"com.apple.iTunes;iTunEXTC"]) {
         NSArray* valueArray = [value componentsSeparatedByString:@"|"];
         value = [valueArray objectAtIndex:1];
-        atom = @"iTunEXTC";
+        key = @"iTunEXTC";
     }
     
     // keypaths can't have special characters, so change things like '©' to '__'
-    NSArray* legalArray = [atom componentsSeparatedByCharactersInSet:[[NSCharacterSet alphanumericCharacterSet] invertedSet]];
-    atom = [legalArray componentsJoinedByString:@"__"];
+    NSArray* legalArray = [key componentsSeparatedByCharactersInSet:[[NSCharacterSet alphanumericCharacterSet] invertedSet]];
+    key = [legalArray componentsJoinedByString:@"__"];
     
     // Handle special values
-    if ([atom isEqualToString:@"__day"]) {
+    if ([key isEqualToString:@"__day"]) {
         // split out year, month, day
         NSArray* dayArray = [value componentsSeparatedByString:@"-"];
         if ([dayArray count] > 0)
-            [m_inputDictionary setValue:[[NSNumber numberWithInt:[[dayArray objectAtIndex:0] intValue]] stringValue] forKey:@"__day_year"];
+            [self setTagValue:[[NSNumber numberWithInt:[[dayArray objectAtIndex:0] intValue]] stringValue] forKey:@"__day_year" tag:@"©day" type:INPUT_TAG];
         if ([dayArray count] > 1)
-            [m_inputDictionary setValue:[[NSNumber numberWithInt:[[dayArray objectAtIndex:1] intValue]] stringValue] forKey:@"__day_month"];
+            [self setTagValue:[[NSNumber numberWithInt:[[dayArray objectAtIndex:1] intValue]] stringValue] forKey:@"__day_month" tag:@"©day" type:INPUT_TAG];
         if ([dayArray count] > 2)
-            [m_inputDictionary setValue:[[NSNumber numberWithInt:[[dayArray objectAtIndex:2] intValue]] stringValue] forKey:@"__day_day"];
+            [self setTagValue:[[NSNumber numberWithInt:[[dayArray objectAtIndex:2] intValue]] stringValue] forKey:@"__day_day" tag:@"©day" type:INPUT_TAG];
     }
     
     // handle artwork
-    if ([atom isEqualToString:@"covr"])
+    if ([key isEqualToString:@"covr"])
         m_numArtwork = [[[value componentsSeparatedByString:@" "] objectAtIndex:0] intValue];
     else
-        [m_inputDictionary setValue:value forKey:atom];
+        [self setTagValue:value forKey:key tag:atom type:INPUT_TAG];
 }
 
 -(void) processRead: (NSNotification*) note
@@ -168,8 +238,6 @@
 
 -(void) readMetadata:(NSString*) filename
 {
-    m_inputDictionary = [[NSMutableDictionary alloc] init];
-    
     // setup command
     NSString* cmdPath = [NSString stringWithString: [[NSBundle mainBundle] resourcePath]];
     NSString* command = [cmdPath stringByAppendingPathComponent: @"bin/AtomicParsley"];
@@ -202,24 +270,18 @@
     metadata->m_buffer = [[NSMutableString alloc] init];
     metadata->m_task = [[NSTask alloc] init];
     metadata->m_messagePipe = [NSPipe pipe];
+    metadata->m_tagDictionary = [[NSMutableDictionary alloc] init];
+    metadata->m_artworkList = [[NSMutableArray alloc] init];
     
     [metadata readMetadata: transcoder.inputFileInfo.filename];
     
     return metadata;
 }
 
--(NSString*) valueForKey:(NSString*) key;
+- (id)valueForUndefinedKey:(NSString *)key
 {
-    if ([key isEqualToString:@"artworkList"]) {
-        // for now return a dummy list
-        NSString* path1 = [[NSBundle mainBundle] pathForResource:@"itunesfile" ofType:@"png"];
-        ImageBrowserItem* item1 = [ImageBrowserItem imageBrowserItemWithPath:path1];
-        NSString* path2 = [[NSBundle mainBundle] pathForResource:@"dvd" ofType:@"png"];
-        ImageBrowserItem* item2 = [ImageBrowserItem imageBrowserItemWithPath:path2];
-        return [NSArray arrayWithObjects:item1, item2, nil];
-    }
-        
-    return [m_inputDictionary valueForKey:key];
+    NSLog(@"*** Metadata::valueForUndefinedKey:%@\n", key);
+    return nil;
 }
 
 @end

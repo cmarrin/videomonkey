@@ -16,13 +16,14 @@
     NSTask* m_task;
     NSPipe* m_messagePipe;
     NSMutableString* m_buffer;
-    NSMutableDictionary* m_inputDictionary;
-    NSMutableDictionary* m_outputDictionary;
+    NSMutableDictionary* m_tagDictionary;
+    NSMutableArray* m_artworkList;
     int m_numArtwork;
 }
 
-+(Metadata*) metadataWithTranscoder: (Transcoder*) transcoder;
+@property(readonly) NSMutableArray* artworkList;
+@property(readonly) NSMutableDictionary* tags;
 
--(NSString*) valueForKey:(NSString*) key;
++(Metadata*) metadataWithTranscoder: (Transcoder*) transcoder;
 
 @end

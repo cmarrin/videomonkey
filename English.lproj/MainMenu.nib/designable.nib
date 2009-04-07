@@ -8,9 +8,9 @@
 		<string key="IBDocument.HIToolboxVersion">353.00</string>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
+			<integer value="475"/>
 			<integer value="3773"/>
 			<integer value="2662"/>
-			<integer value="475"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -148,6 +148,70 @@
 					<string>metadata.__day_month</string>
 					<string>metadata.__day_year</string>
 					<string>metadata.artworkList</string>
+					<string>metadata.tags.__nam</string>
+					<string>metadata.tags.tvsh</string>
+					<string>metadata.tags.tvsn</string>
+					<string>metadata.tags.tven</string>
+					<string>metadata.tags.tves</string>
+					<string>metadata.tags.trkn</string>
+					<string>metadata.tags.dscn</string>
+					<string>metadata.tags.__day_year</string>
+					<string>metadata.tags.__day_month</string>
+					<string>metadata.tags.__day_day</string>
+					<string>metadata.tags.stik</string>
+					<string>metadata.tags.__alb</string>
+					<string>metadata.tags.__ART</string>
+					<string>metadata.tags.aART</string>
+					<string>metadata.tags.cprt</string>
+					<string>metadata.tags.tvnn</string>
+					<string>metadata.tags.__too</string>
+					<string>metadata.tags.desc</string>
+					<string>metadata.tags.__cmt</string>
+					<object class="NSMutableString">
+						<characters key="NS.bytes">imageRepresentation</characters>
+					</object>
+					<string>metadata.primaryArtwork</string>
+					<string>metadata.__nam.hasMultipleValues</string>
+					<string>metadata.tags.__nam.displayValue</string>
+					<string>metadata.tags.tvsh.displayValue</string>
+					<string>metadata.tags.tvsn.displayValue</string>
+					<string>metadata.tags.tven.displayValue</string>
+					<string>metadata.tags.tves.displayValue</string>
+					<string>metadata.tags.trkn.displayValue</string>
+					<string>metadata.tags.dscn.displayValue</string>
+					<string>metadata.tags.desc.displayValue</string>
+					<string>metadata.tags.__day_year.displayValue</string>
+					<string>metadata.tags.__day_month.displayValue</string>
+					<string>metadata.tags.__day_day.displayValue</string>
+					<string>metadata.tags.stik.displayValue</string>
+					<string>metadata.tags.__cmt.displayValue</string>
+					<string>metadata.tags.__alb.displayValue</string>
+					<string>metadata.tags.__ART.displayValue</string>
+					<string>metadata.tags.aART.displayValue</string>
+					<string>metadata.tags.cprt.displayValue</string>
+					<string>metadata.tags.tvnn.displayValue</string>
+					<string>metadata.tags.__too.displayValue</string>
+					<string>metadata.gnre.displayValue</string>
+					<string>metadata.iTunEXTC.displayValue</string>
+					<string>metadata.tags.iTunEXTC.displayValue</string>
+					<string>metadata.tags.__nam.hasMultipleValues</string>
+					<string>metadata.tags.tvsh.hasMultipleValues</string>
+					<string>metadata.tags.tvsn.hasMultipleValues</string>
+					<string>metadata.tags.tven.hasMultipleValues</string>
+					<string>metadata.tags.tves.hasMultipleValues</string>
+					<string>metadata.tags.trkn.hasMultipleValues</string>
+					<string>metadata.tags.dscn.hasMultipleValues</string>
+					<string>metadata.tags.desc.hasMultipleValues</string>
+					<string>metadata.tags.stik.hasMultipleValues</string>
+					<string>metadata.tags.iTunEXTC.hasMultipleValues</string>
+					<string>metadata.tags.__cmt.hasMultipleValues</string>
+					<string>metadata.tags.__alb.hasMultipleValues</string>
+					<string>metadata.tags.__ART.hasMultipleValues</string>
+					<string>metadata.tags.aART.hasMultipleValues</string>
+					<string>metadata.tags.cprt.hasMultipleValues</string>
+					<string>metadata.tags.tvnn.hasMultipleValues</string>
+					<string>metadata.tags.__too.hasMultipleValues</string>
+					<string>metadata.gnre.hasMultipleValues</string>
 				</object>
 				<string key="NSObjectClassName">Transcoder</string>
 				<bool key="NSEditable">YES</bool>
@@ -7791,10 +7855,10 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 																											<string key="NSKeyEquivalent"/>
 																											<int key="NSPeriodicDelay">400</int>
 																											<int key="NSPeriodicInterval">75</int>
-																											<object class="NSMenuItem" key="NSMenuItem" id="554443192">
+																											<object class="NSMenuItem" key="NSMenuItem" id="870007826">
 																												<reference key="NSMenu" ref="794955811"/>
 																												<int key="NSIndent">1</int>
-																												<string key="NSTitle"/>
+																												<string key="NSTitle">G</string>
 																												<string key="NSKeyEquiv"/>
 																												<int key="NSKeyEquivModMask">1048576</int>
 																												<int key="NSMnemonicLoc">2147483647</int>
@@ -7809,7 +7873,18 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 																												<string key="NSTitle">OtherViews</string>
 																												<object class="NSMutableArray" key="NSMenuItems">
 																													<bool key="EncodedWithXMLCoder">YES</bool>
-																													<reference ref="554443192"/>
+																													<object class="NSMenuItem" id="554443192">
+																														<reference key="NSMenu" ref="794955811"/>
+																														<int key="NSIndent">1</int>
+																														<string key="NSTitle"/>
+																														<string key="NSKeyEquiv"/>
+																														<int key="NSKeyEquivModMask">1048576</int>
+																														<int key="NSMnemonicLoc">2147483647</int>
+																														<reference key="NSOnImage" ref="35465992"/>
+																														<reference key="NSMixedImage" ref="502551668"/>
+																														<string key="NSAction">_popUpItemAction:</string>
+																														<reference key="NSTarget" ref="776810701"/>
+																													</object>
 																													<object class="NSMenuItem" id="191639495">
 																														<reference key="NSMenu" ref="794955811"/>
 																														<bool key="NSIsDisabled">YES</bool>
@@ -7852,18 +7927,7 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 																															</object>
 																														</object>
 																													</object>
-																													<object class="NSMenuItem" id="870007826">
-																														<reference key="NSMenu" ref="794955811"/>
-																														<int key="NSIndent">1</int>
-																														<string key="NSTitle">G</string>
-																														<string key="NSKeyEquiv"/>
-																														<int key="NSKeyEquivModMask">1048576</int>
-																														<int key="NSMnemonicLoc">2147483647</int>
-																														<reference key="NSOnImage" ref="35465992"/>
-																														<reference key="NSMixedImage" ref="502551668"/>
-																														<string key="NSAction">_popUpItemAction:</string>
-																														<reference key="NSTarget" ref="776810701"/>
-																													</object>
+																													<reference ref="870007826"/>
 																													<object class="NSMenuItem" id="94504444">
 																														<reference key="NSMenu" ref="794955811"/>
 																														<int key="NSIndent">1</int>
@@ -8049,6 +8113,7 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 																												</object>
 																												<bool key="NSNoAutoenable">YES</bool>
 																											</object>
+																											<int key="NSSelectedIndex">2</int>
 																											<int key="NSPreferredEdge">1</int>
 																											<bool key="NSUsesItemFromMenu">YES</bool>
 																											<bool key="NSAltersState">YES</bool>
@@ -8522,7 +8587,7 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 																									</object>
 																									<object class="NSPopUpButton" id="62826810">
 																										<reference key="NSNextResponder" ref="183894700"/>
-																										<int key="NSvFlags">-2147483380</int>
+																										<int key="NSvFlags">268</int>
 																										<string key="NSFrame">{{47, 142}, {37, 18}}</string>
 																										<reference key="NSSuperview" ref="183894700"/>
 																										<bool key="NSEnabled">YES</bool>
@@ -8612,7 +8677,7 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 																									</object>
 																									<object class="NSPopUpButton" id="833318035">
 																										<reference key="NSNextResponder" ref="183894700"/>
-																										<int key="NSvFlags">-2147483383</int>
+																										<int key="NSvFlags">265</int>
 																										<string key="NSFrame">{{331, 142}, {37, 18}}</string>
 																										<reference key="NSSuperview" ref="183894700"/>
 																										<bool key="NSEnabled">YES</bool>
@@ -8692,7 +8757,7 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 																									</object>
 																									<object class="NSPopUpButton" id="518015806">
 																										<reference key="NSNextResponder" ref="183894700"/>
-																										<int key="NSvFlags">-2147483380</int>
+																										<int key="NSvFlags">268</int>
 																										<string key="NSFrame">{{53, 191}, {37, 18}}</string>
 																										<reference key="NSSuperview" ref="183894700"/>
 																										<bool key="NSEnabled">YES</bool>
@@ -8772,7 +8837,7 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 																									</object>
 																									<object class="NSPopUpButton" id="829059935">
 																										<reference key="NSNextResponder" ref="183894700"/>
-																										<int key="NSvFlags">-2147483380</int>
+																										<int key="NSvFlags">268</int>
 																										<string key="NSFrame">{{75, 305}, {37, 18}}</string>
 																										<reference key="NSSuperview" ref="183894700"/>
 																										<bool key="NSEnabled">YES</bool>
@@ -9012,7 +9077,7 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 																									</object>
 																									<object class="NSPopUpButton" id="44516219">
 																										<reference key="NSNextResponder" ref="183894700"/>
-																										<int key="NSvFlags">-2147483380</int>
+																										<int key="NSvFlags">268</int>
 																										<string key="NSFrame">{{54, 457}, {37, 18}}</string>
 																										<reference key="NSSuperview" ref="183894700"/>
 																										<bool key="NSEnabled">YES</bool>
@@ -9163,7 +9228,6 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 																													</object>
 																												</object>
 																											</object>
-																											<int key="NSSelectedIndex">3</int>
 																											<bool key="NSPullDown">YES</bool>
 																											<int key="NSPreferredEdge">1</int>
 																											<bool key="NSUsesItemFromMenu">YES</bool>
@@ -9173,7 +9237,7 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 																									</object>
 																									<object class="NSPopUpButton" id="4330">
 																										<reference key="NSNextResponder" ref="183894700"/>
-																										<int key="NSvFlags">-2147483383</int>
+																										<int key="NSvFlags">265</int>
 																										<string key="NSFrame">{{361, 506}, {37, 18}}</string>
 																										<reference key="NSSuperview" ref="183894700"/>
 																										<bool key="NSEnabled">YES</bool>
@@ -9333,7 +9397,7 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 																									</object>
 																									<object class="NSPopUpButton" id="687397696">
 																										<reference key="NSNextResponder" ref="183894700"/>
-																										<int key="NSvFlags">-2147483380</int>
+																										<int key="NSvFlags">268</int>
 																										<string key="NSFrame">{{81, 620}, {37, 18}}</string>
 																										<reference key="NSSuperview" ref="183894700"/>
 																										<bool key="NSEnabled">YES</bool>
@@ -9413,7 +9477,7 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 																									</object>
 																									<object class="NSPopUpButton" id="488576322">
 																										<reference key="NSNextResponder" ref="183894700"/>
-																										<int key="NSvFlags">-2147483380</int>
+																										<int key="NSvFlags">268</int>
 																										<string key="NSFrame">{{88, 669}, {37, 18}}</string>
 																										<reference key="NSSuperview" ref="183894700"/>
 																										<bool key="NSEnabled">YES</bool>
@@ -9493,7 +9557,7 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 																									</object>
 																									<object class="NSPopUpButton" id="704790889">
 																										<reference key="NSNextResponder" ref="183894700"/>
-																										<int key="NSvFlags">-2147483383</int>
+																										<int key="NSvFlags">265</int>
 																										<string key="NSFrame">{{169, 669}, {37, 18}}</string>
 																										<reference key="NSSuperview" ref="183894700"/>
 																										<bool key="NSEnabled">YES</bool>
@@ -9573,7 +9637,7 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 																									</object>
 																									<object class="NSPopUpButton" id="842514941">
 																										<reference key="NSNextResponder" ref="183894700"/>
-																										<int key="NSvFlags">-2147483383</int>
+																										<int key="NSvFlags">265</int>
 																										<string key="NSFrame">{{286, 669}, {37, 18}}</string>
 																										<reference key="NSSuperview" ref="183894700"/>
 																										<bool key="NSEnabled">YES</bool>
@@ -9653,7 +9717,7 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 																									</object>
 																									<object class="NSPopUpButton" id="1036876233">
 																										<reference key="NSNextResponder" ref="183894700"/>
-																										<int key="NSvFlags">-2147483383</int>
+																										<int key="NSvFlags">265</int>
 																										<string key="NSFrame">{{396, 669}, {37, 18}}</string>
 																										<reference key="NSSuperview" ref="183894700"/>
 																										<bool key="NSEnabled">YES</bool>
@@ -9733,7 +9797,7 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 																									</object>
 																									<object class="NSPopUpButton" id="1044373205">
 																										<reference key="NSNextResponder" ref="183894700"/>
-																										<int key="NSvFlags">-2147483383</int>
+																										<int key="NSvFlags">265</int>
 																										<string key="NSFrame">{{343, 718}, {37, 18}}</string>
 																										<reference key="NSSuperview" ref="183894700"/>
 																										<bool key="NSEnabled">YES</bool>
@@ -9813,7 +9877,7 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 																									</object>
 																									<object class="NSPopUpButton" id="501132671">
 																										<reference key="NSNextResponder" ref="183894700"/>
-																										<int key="NSvFlags">-2147483380</int>
+																										<int key="NSvFlags">268</int>
 																										<string key="NSFrame">{{116, 718}, {37, 18}}</string>
 																										<reference key="NSSuperview" ref="183894700"/>
 																										<bool key="NSEnabled">YES</bool>
@@ -9893,7 +9957,7 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 																									</object>
 																									<object class="NSPopUpButton" id="1008239839">
 																										<reference key="NSNextResponder" ref="183894700"/>
-																										<int key="NSvFlags">-2147483380</int>
+																										<int key="NSvFlags">268</int>
 																										<string key="NSFrame">{{129, 767}, {37, 18}}</string>
 																										<reference key="NSSuperview" ref="183894700"/>
 																										<bool key="NSEnabled">YES</bool>
@@ -9973,7 +10037,7 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 																									</object>
 																									<object class="NSPopUpButton" id="52887119">
 																										<reference key="NSNextResponder" ref="183894700"/>
-																										<int key="NSvFlags">-2147483380</int>
+																										<int key="NSvFlags">268</int>
 																										<string key="NSFrame">{{108, 93}, {37, 18}}</string>
 																										<reference key="NSSuperview" ref="183894700"/>
 																										<bool key="NSEnabled">YES</bool>
@@ -10053,7 +10117,7 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 																									</object>
 																									<object class="NSPopUpButton" id="973068162">
 																										<reference key="NSNextResponder" ref="183894700"/>
-																										<int key="NSvFlags">-2147483383</int>
+																										<int key="NSvFlags">265</int>
 																										<string key="NSFrame">{{307, 93}, {37, 18}}</string>
 																										<reference key="NSSuperview" ref="183894700"/>
 																										<bool key="NSEnabled">YES</bool>
@@ -10133,7 +10197,7 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 																									</object>
 																									<object class="NSPopUpButton" id="720571985">
 																										<reference key="NSNextResponder" ref="183894700"/>
-																										<int key="NSvFlags">-2147483380</int>
+																										<int key="NSvFlags">268</int>
 																										<string key="NSFrame">{{94, 44}, {37, 18}}</string>
 																										<reference key="NSSuperview" ref="183894700"/>
 																										<bool key="NSEnabled">YES</bool>
@@ -10213,7 +10277,7 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 																									</object>
 																									<object class="NSPopUpButton" id="952682828">
 																										<reference key="NSNextResponder" ref="183894700"/>
-																										<int key="NSvFlags">-2147483383</int>
+																										<int key="NSvFlags">265</int>
 																										<string key="NSFrame">{{294, 44}, {37, 18}}</string>
 																										<reference key="NSSuperview" ref="183894700"/>
 																										<bool key="NSEnabled">YES</bool>
@@ -10353,7 +10417,6 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 																			</object>
 																		</object>
 																		<string key="NSFrame">{{1, 1}, {449, 418}}</string>
-																		<string key="NSBounds">{{0, 277}, {449, 418}}</string>
 																		<reference key="NSSuperview" ref="228491495"/>
 																		<reference key="NSNextKeyView" ref="827023795"/>
 																		<reference key="NSDocView" ref="827023795"/>
@@ -10368,7 +10431,7 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 																		<bool key="NSEnabled">YES</bool>
 																		<reference key="NSTarget" ref="228491495"/>
 																		<string key="NSAction">_doScroller:</string>
-																		<double key="NSCurValue">2.748691e-01</double>
+																		<double key="NSCurValue">1.000000e+00</double>
 																		<double key="NSPercent">5.225000e-01</double>
 																	</object>
 																	<object class="NSScroller" id="90840183">
@@ -10901,7 +10964,7 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 										<object class="_NSCornerView" key="NSCornerView" id="465546309">
 											<reference key="NSNextResponder" ref="225693932"/>
 											<int key="NSvFlags">-2147483392</int>
-											<string key="NSFrame">{{237, 0}, {16, 17}}</string>
+											<string key="NSFrame">{{-26, 0}, {16, 17}}</string>
 											<reference key="NSSuperview" ref="225693932"/>
 										</object>
 										<object class="NSMutableArray" key="NSTableColumns">
@@ -12871,342 +12934,6 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 					<int key="connectionID">3488</int>
 				</object>
 				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">value: selection.metadata.__nam</string>
-						<reference key="source" ref="339594989"/>
-						<reference key="destination" ref="2824"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="339594989"/>
-							<reference key="NSDestination" ref="2824"/>
-							<string key="NSLabel">value: selection.metadata.__nam</string>
-							<string key="NSBinding">value</string>
-							<string key="NSKeyPath">selection.metadata.__nam</string>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">3491</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">value: selection.metadata.tvsh</string>
-						<reference key="source" ref="385021991"/>
-						<reference key="destination" ref="2824"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="385021991"/>
-							<reference key="NSDestination" ref="2824"/>
-							<string key="NSLabel">value: selection.metadata.tvsh</string>
-							<string key="NSBinding">value</string>
-							<string key="NSKeyPath">selection.metadata.tvsh</string>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">3492</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">value: selection.metadata.tvsn</string>
-						<reference key="source" ref="1024164281"/>
-						<reference key="destination" ref="2824"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="1024164281"/>
-							<reference key="NSDestination" ref="2824"/>
-							<string key="NSLabel">value: selection.metadata.tvsn</string>
-							<string key="NSBinding">value</string>
-							<string key="NSKeyPath">selection.metadata.tvsn</string>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">3493</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">value: selection.metadata.tven</string>
-						<reference key="source" ref="717221611"/>
-						<reference key="destination" ref="2824"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="717221611"/>
-							<reference key="NSDestination" ref="2824"/>
-							<string key="NSLabel">value: selection.metadata.tven</string>
-							<string key="NSBinding">value</string>
-							<string key="NSKeyPath">selection.metadata.tven</string>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">3494</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">value: selection.metadata.tves</string>
-						<reference key="source" ref="356966365"/>
-						<reference key="destination" ref="2824"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="356966365"/>
-							<reference key="NSDestination" ref="2824"/>
-							<string key="NSLabel">value: selection.metadata.tves</string>
-							<string key="NSBinding">value</string>
-							<string key="NSKeyPath">selection.metadata.tves</string>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">3495</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">value: selection.metadata.trkn</string>
-						<reference key="source" ref="688470592"/>
-						<reference key="destination" ref="2824"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="688470592"/>
-							<reference key="NSDestination" ref="2824"/>
-							<string key="NSLabel">value: selection.metadata.trkn</string>
-							<string key="NSBinding">value</string>
-							<string key="NSKeyPath">selection.metadata.trkn</string>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">3496</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">value: selection.metadata.dscn</string>
-						<reference key="source" ref="118105475"/>
-						<reference key="destination" ref="2824"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="118105475"/>
-							<reference key="NSDestination" ref="2824"/>
-							<string key="NSLabel">value: selection.metadata.dscn</string>
-							<string key="NSBinding">value</string>
-							<string key="NSKeyPath">selection.metadata.dscn</string>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">3497</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">attributedString: selection.metadata.__cmt</string>
-						<reference key="source" ref="438916276"/>
-						<reference key="destination" ref="2824"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="438916276"/>
-							<reference key="NSDestination" ref="2824"/>
-							<string key="NSLabel">attributedString: selection.metadata.__cmt</string>
-							<string key="NSBinding">attributedString</string>
-							<string key="NSKeyPath">selection.metadata.__cmt</string>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">3506</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">value: selection.metadata.__alb</string>
-						<reference key="source" ref="477190354"/>
-						<reference key="destination" ref="2824"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="477190354"/>
-							<reference key="NSDestination" ref="2824"/>
-							<string key="NSLabel">value: selection.metadata.__alb</string>
-							<string key="NSBinding">value</string>
-							<string key="NSKeyPath">selection.metadata.__alb</string>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">3507</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">value: selection.metadata.__ART</string>
-						<reference key="source" ref="876721940"/>
-						<reference key="destination" ref="2824"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="876721940"/>
-							<reference key="NSDestination" ref="2824"/>
-							<string key="NSLabel">value: selection.metadata.__ART</string>
-							<string key="NSBinding">value</string>
-							<string key="NSKeyPath">selection.metadata.__ART</string>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">3508</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">value: selection.metadata.aART</string>
-						<reference key="source" ref="931848820"/>
-						<reference key="destination" ref="2824"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="931848820"/>
-							<reference key="NSDestination" ref="2824"/>
-							<string key="NSLabel">value: selection.metadata.aART</string>
-							<string key="NSBinding">value</string>
-							<string key="NSKeyPath">selection.metadata.aART</string>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">3509</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">value: selection.metadata.cprt</string>
-						<reference key="source" ref="741207284"/>
-						<reference key="destination" ref="2824"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="741207284"/>
-							<reference key="NSDestination" ref="2824"/>
-							<string key="NSLabel">value: selection.metadata.cprt</string>
-							<string key="NSBinding">value</string>
-							<string key="NSKeyPath">selection.metadata.cprt</string>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">3510</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">value: selection.metadata.tvnn</string>
-						<reference key="source" ref="886346492"/>
-						<reference key="destination" ref="2824"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="886346492"/>
-							<reference key="NSDestination" ref="2824"/>
-							<string key="NSLabel">value: selection.metadata.tvnn</string>
-							<string key="NSBinding">value</string>
-							<string key="NSKeyPath">selection.metadata.tvnn</string>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">3511</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">value: selection.metadata.__too</string>
-						<reference key="source" ref="762044138"/>
-						<reference key="destination" ref="2824"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="762044138"/>
-							<reference key="NSDestination" ref="2824"/>
-							<string key="NSLabel">value: selection.metadata.__too</string>
-							<string key="NSBinding">value</string>
-							<string key="NSKeyPath">selection.metadata.__too</string>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">3512</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">value: selection.metadata.gnre</string>
-						<reference key="source" ref="65317980"/>
-						<reference key="destination" ref="2824"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="65317980"/>
-							<reference key="NSDestination" ref="2824"/>
-							<string key="NSLabel">value: selection.metadata.gnre</string>
-							<string key="NSBinding">value</string>
-							<string key="NSKeyPath">selection.metadata.gnre</string>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">3513</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">attributedString: selection.metadata.desc</string>
-						<reference key="source" ref="166982199"/>
-						<reference key="destination" ref="2824"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="166982199"/>
-							<reference key="NSDestination" ref="2824"/>
-							<string key="NSLabel">attributedString: selection.metadata.desc</string>
-							<string key="NSBinding">attributedString</string>
-							<string key="NSKeyPath">selection.metadata.desc</string>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">3681</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">selectedValue: selection.metadata.iTunEXTC</string>
-						<reference key="source" ref="612462110"/>
-						<reference key="destination" ref="2824"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="612462110"/>
-							<reference key="NSDestination" ref="2824"/>
-							<string key="NSLabel">selectedValue: selection.metadata.iTunEXTC</string>
-							<string key="NSBinding">selectedValue</string>
-							<string key="NSKeyPath">selection.metadata.iTunEXTC</string>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">3684</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">selectedValue: selection.metadata.stik</string>
-						<reference key="source" ref="823463971"/>
-						<reference key="destination" ref="2824"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="823463971"/>
-							<reference key="NSDestination" ref="2824"/>
-							<string key="NSLabel">selectedValue: selection.metadata.stik</string>
-							<string key="NSBinding">selectedValue</string>
-							<string key="NSKeyPath">selection.metadata.stik</string>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">3688</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">value: selection.metadata.__day_day</string>
-						<reference key="source" ref="235912747"/>
-						<reference key="destination" ref="2824"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="235912747"/>
-							<reference key="NSDestination" ref="2824"/>
-							<string key="NSLabel">value: selection.metadata.__day_day</string>
-							<string key="NSBinding">value</string>
-							<string key="NSKeyPath">selection.metadata.__day_day</string>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">3692</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">value: selection.metadata.__day_month</string>
-						<reference key="source" ref="360949807"/>
-						<reference key="destination" ref="2824"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="360949807"/>
-							<reference key="NSDestination" ref="2824"/>
-							<string key="NSLabel">value: selection.metadata.__day_month</string>
-							<string key="NSBinding">value</string>
-							<string key="NSKeyPath">selection.metadata.__day_month</string>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">3693</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">value: selection.metadata.__day_year</string>
-						<reference key="source" ref="949456198"/>
-						<reference key="destination" ref="2824"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="949456198"/>
-							<reference key="NSDestination" ref="2824"/>
-							<string key="NSLabel">value: selection.metadata.__day_year</string>
-							<string key="NSBinding">value</string>
-							<string key="NSKeyPath">selection.metadata.__day_year</string>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">3694</int>
-				</object>
-				<object class="IBConnectionRecord">
 					<object class="IBOutletConnection" key="connection">
 						<string key="label">contentView</string>
 						<reference key="source" ref="689281257"/>
@@ -13253,22 +12980,6 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 						</object>
 					</object>
 					<int key="connectionID">3746</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">valuePath: selection.imageRepresentation</string>
-						<reference key="source" ref="134321184"/>
-						<reference key="destination" ref="745083967"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="134321184"/>
-							<reference key="NSDestination" ref="745083967"/>
-							<string key="NSLabel">valuePath: selection.imageRepresentation</string>
-							<string key="NSBinding">valuePath</string>
-							<string key="NSKeyPath">selection.imageRepresentation</string>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">3749</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBActionConnection" key="connection">
@@ -13357,6 +13068,718 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 						<reference key="destination" ref="744558613"/>
 					</object>
 					<int key="connectionID">3792</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">valuePath: selection.metadata.primaryArtwork</string>
+						<reference key="source" ref="134321184"/>
+						<reference key="destination" ref="2824"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="134321184"/>
+							<reference key="NSDestination" ref="2824"/>
+							<string key="NSLabel">valuePath: selection.metadata.primaryArtwork</string>
+							<string key="NSBinding">valuePath</string>
+							<string key="NSKeyPath">selection.metadata.primaryArtwork</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">3815</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">value: selection.metadata.tags.__nam.displayValue</string>
+						<reference key="source" ref="339594989"/>
+						<reference key="destination" ref="2824"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="339594989"/>
+							<reference key="NSDestination" ref="2824"/>
+							<string key="NSLabel">value: selection.metadata.tags.__nam.displayValue</string>
+							<string key="NSBinding">value</string>
+							<string key="NSKeyPath">selection.metadata.tags.__nam.displayValue</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">3819</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">value: selection.metadata.tags.tvsh.displayValue</string>
+						<reference key="source" ref="385021991"/>
+						<reference key="destination" ref="2824"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="385021991"/>
+							<reference key="NSDestination" ref="2824"/>
+							<string key="NSLabel">value: selection.metadata.tags.tvsh.displayValue</string>
+							<string key="NSBinding">value</string>
+							<string key="NSKeyPath">selection.metadata.tags.tvsh.displayValue</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">3820</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">value: selection.metadata.tags.tvsn.displayValue</string>
+						<reference key="source" ref="1024164281"/>
+						<reference key="destination" ref="2824"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="1024164281"/>
+							<reference key="NSDestination" ref="2824"/>
+							<string key="NSLabel">value: selection.metadata.tags.tvsn.displayValue</string>
+							<string key="NSBinding">value</string>
+							<string key="NSKeyPath">selection.metadata.tags.tvsn.displayValue</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">3821</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">value: selection.metadata.tags.tven.displayValue</string>
+						<reference key="source" ref="717221611"/>
+						<reference key="destination" ref="2824"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="717221611"/>
+							<reference key="NSDestination" ref="2824"/>
+							<string key="NSLabel">value: selection.metadata.tags.tven.displayValue</string>
+							<string key="NSBinding">value</string>
+							<string key="NSKeyPath">selection.metadata.tags.tven.displayValue</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">3822</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">value: selection.metadata.tags.tves.displayValue</string>
+						<reference key="source" ref="356966365"/>
+						<reference key="destination" ref="2824"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="356966365"/>
+							<reference key="NSDestination" ref="2824"/>
+							<string key="NSLabel">value: selection.metadata.tags.tves.displayValue</string>
+							<string key="NSBinding">value</string>
+							<string key="NSKeyPath">selection.metadata.tags.tves.displayValue</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">3823</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">value: selection.metadata.tags.trkn.displayValue</string>
+						<reference key="source" ref="688470592"/>
+						<reference key="destination" ref="2824"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="688470592"/>
+							<reference key="NSDestination" ref="2824"/>
+							<string key="NSLabel">value: selection.metadata.tags.trkn.displayValue</string>
+							<string key="NSBinding">value</string>
+							<string key="NSKeyPath">selection.metadata.tags.trkn.displayValue</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">3824</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">value: selection.metadata.tags.dscn.displayValue</string>
+						<reference key="source" ref="118105475"/>
+						<reference key="destination" ref="2824"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="118105475"/>
+							<reference key="NSDestination" ref="2824"/>
+							<string key="NSLabel">value: selection.metadata.tags.dscn.displayValue</string>
+							<string key="NSBinding">value</string>
+							<string key="NSKeyPath">selection.metadata.tags.dscn.displayValue</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">3825</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">attributedString: selection.metadata.tags.desc.displayValue</string>
+						<reference key="source" ref="166982199"/>
+						<reference key="destination" ref="2824"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="166982199"/>
+							<reference key="NSDestination" ref="2824"/>
+							<string key="NSLabel">attributedString: selection.metadata.tags.desc.displayValue</string>
+							<string key="NSBinding">attributedString</string>
+							<string key="NSKeyPath">selection.metadata.tags.desc.displayValue</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">3826</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">value: selection.metadata.tags.__day_year.displayValue</string>
+						<reference key="source" ref="949456198"/>
+						<reference key="destination" ref="2824"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="949456198"/>
+							<reference key="NSDestination" ref="2824"/>
+							<string key="NSLabel">value: selection.metadata.tags.__day_year.displayValue</string>
+							<string key="NSBinding">value</string>
+							<string key="NSKeyPath">selection.metadata.tags.__day_year.displayValue</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">3827</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">value: selection.metadata.tags.__day_month.displayValue</string>
+						<reference key="source" ref="360949807"/>
+						<reference key="destination" ref="2824"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="360949807"/>
+							<reference key="NSDestination" ref="2824"/>
+							<string key="NSLabel">value: selection.metadata.tags.__day_month.displayValue</string>
+							<string key="NSBinding">value</string>
+							<string key="NSKeyPath">selection.metadata.tags.__day_month.displayValue</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">3828</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">value: selection.metadata.tags.__day_day.displayValue</string>
+						<reference key="source" ref="235912747"/>
+						<reference key="destination" ref="2824"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="235912747"/>
+							<reference key="NSDestination" ref="2824"/>
+							<string key="NSLabel">value: selection.metadata.tags.__day_day.displayValue</string>
+							<string key="NSBinding">value</string>
+							<string key="NSKeyPath">selection.metadata.tags.__day_day.displayValue</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">3829</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">selectedValue: selection.metadata.tags.stik.displayValue</string>
+						<reference key="source" ref="823463971"/>
+						<reference key="destination" ref="2824"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="823463971"/>
+							<reference key="NSDestination" ref="2824"/>
+							<string key="NSLabel">selectedValue: selection.metadata.tags.stik.displayValue</string>
+							<string key="NSBinding">selectedValue</string>
+							<string key="NSKeyPath">selection.metadata.tags.stik.displayValue</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">3830</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">attributedString: selection.metadata.tags.__cmt.displayValue</string>
+						<reference key="source" ref="438916276"/>
+						<reference key="destination" ref="2824"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="438916276"/>
+							<reference key="NSDestination" ref="2824"/>
+							<string key="NSLabel">attributedString: selection.metadata.tags.__cmt.displayValue</string>
+							<string key="NSBinding">attributedString</string>
+							<string key="NSKeyPath">selection.metadata.tags.__cmt.displayValue</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">3831</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">value: selection.metadata.tags.__alb.displayValue</string>
+						<reference key="source" ref="477190354"/>
+						<reference key="destination" ref="2824"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="477190354"/>
+							<reference key="NSDestination" ref="2824"/>
+							<string key="NSLabel">value: selection.metadata.tags.__alb.displayValue</string>
+							<string key="NSBinding">value</string>
+							<string key="NSKeyPath">selection.metadata.tags.__alb.displayValue</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">3832</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">value: selection.metadata.tags.__ART.displayValue</string>
+						<reference key="source" ref="876721940"/>
+						<reference key="destination" ref="2824"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="876721940"/>
+							<reference key="NSDestination" ref="2824"/>
+							<string key="NSLabel">value: selection.metadata.tags.__ART.displayValue</string>
+							<string key="NSBinding">value</string>
+							<string key="NSKeyPath">selection.metadata.tags.__ART.displayValue</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">3833</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">value: selection.metadata.tags.aART.displayValue</string>
+						<reference key="source" ref="931848820"/>
+						<reference key="destination" ref="2824"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="931848820"/>
+							<reference key="NSDestination" ref="2824"/>
+							<string key="NSLabel">value: selection.metadata.tags.aART.displayValue</string>
+							<string key="NSBinding">value</string>
+							<string key="NSKeyPath">selection.metadata.tags.aART.displayValue</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">3834</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">value: selection.metadata.tags.cprt.displayValue</string>
+						<reference key="source" ref="741207284"/>
+						<reference key="destination" ref="2824"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="741207284"/>
+							<reference key="NSDestination" ref="2824"/>
+							<string key="NSLabel">value: selection.metadata.tags.cprt.displayValue</string>
+							<string key="NSBinding">value</string>
+							<string key="NSKeyPath">selection.metadata.tags.cprt.displayValue</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">3835</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">value: selection.metadata.tags.tvnn.displayValue</string>
+						<reference key="source" ref="886346492"/>
+						<reference key="destination" ref="2824"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="886346492"/>
+							<reference key="NSDestination" ref="2824"/>
+							<string key="NSLabel">value: selection.metadata.tags.tvnn.displayValue</string>
+							<string key="NSBinding">value</string>
+							<string key="NSKeyPath">selection.metadata.tags.tvnn.displayValue</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">3836</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">value: selection.metadata.tags.__too.displayValue</string>
+						<reference key="source" ref="762044138"/>
+						<reference key="destination" ref="2824"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="762044138"/>
+							<reference key="NSDestination" ref="2824"/>
+							<string key="NSLabel">value: selection.metadata.tags.__too.displayValue</string>
+							<string key="NSBinding">value</string>
+							<string key="NSKeyPath">selection.metadata.tags.__too.displayValue</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">3837</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">value: selection.metadata.gnre.displayValue</string>
+						<reference key="source" ref="65317980"/>
+						<reference key="destination" ref="2824"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="65317980"/>
+							<reference key="NSDestination" ref="2824"/>
+							<string key="NSLabel">value: selection.metadata.gnre.displayValue</string>
+							<string key="NSBinding">value</string>
+							<string key="NSKeyPath">selection.metadata.gnre.displayValue</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">3838</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">selectedValue: selection.metadata.tags.iTunEXTC.displayValue</string>
+						<reference key="source" ref="612462110"/>
+						<reference key="destination" ref="2824"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="612462110"/>
+							<reference key="NSDestination" ref="2824"/>
+							<string key="NSLabel">selectedValue: selection.metadata.tags.iTunEXTC.displayValue</string>
+							<string key="NSBinding">selectedValue</string>
+							<string key="NSKeyPath">selection.metadata.tags.iTunEXTC.displayValue</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">3842</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">hidden: selection.metadata.tags.__nam.hasMultipleValues</string>
+						<reference key="source" ref="1008239839"/>
+						<reference key="destination" ref="2824"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="1008239839"/>
+							<reference key="NSDestination" ref="2824"/>
+							<string key="NSLabel">hidden: selection.metadata.tags.__nam.hasMultipleValues</string>
+							<string key="NSBinding">hidden</string>
+							<string key="NSKeyPath">selection.metadata.tags.__nam.hasMultipleValues</string>
+							<object class="NSDictionary" key="NSOptions">
+								<string key="NS.key.0">NSValueTransformerName</string>
+								<string key="NS.object.0">NSNegateBoolean</string>
+							</object>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">3843</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">hidden: selection.metadata.tags.tvsh.hasMultipleValues</string>
+						<reference key="source" ref="501132671"/>
+						<reference key="destination" ref="2824"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="501132671"/>
+							<reference key="NSDestination" ref="2824"/>
+							<string key="NSLabel">hidden: selection.metadata.tags.tvsh.hasMultipleValues</string>
+							<string key="NSBinding">hidden</string>
+							<string key="NSKeyPath">selection.metadata.tags.tvsh.hasMultipleValues</string>
+							<object class="NSDictionary" key="NSOptions">
+								<string key="NS.key.0">NSValueTransformerName</string>
+								<string key="NS.object.0">NSNegateBoolean</string>
+							</object>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">3864</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">hidden: selection.metadata.tags.tvsn.hasMultipleValues</string>
+						<reference key="source" ref="1044373205"/>
+						<reference key="destination" ref="2824"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="1044373205"/>
+							<reference key="NSDestination" ref="2824"/>
+							<string key="NSLabel">hidden: selection.metadata.tags.tvsn.hasMultipleValues</string>
+							<string key="NSBinding">hidden</string>
+							<string key="NSKeyPath">selection.metadata.tags.tvsn.hasMultipleValues</string>
+							<object class="NSDictionary" key="NSOptions">
+								<string key="NS.key.0">NSValueTransformerName</string>
+								<string key="NS.object.0">NSNegateBoolean</string>
+							</object>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">3866</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">hidden: selection.metadata.tags.tven.hasMultipleValues</string>
+						<reference key="source" ref="488576322"/>
+						<reference key="destination" ref="2824"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="488576322"/>
+							<reference key="NSDestination" ref="2824"/>
+							<string key="NSLabel">hidden: selection.metadata.tags.tven.hasMultipleValues</string>
+							<string key="NSBinding">hidden</string>
+							<string key="NSKeyPath">selection.metadata.tags.tven.hasMultipleValues</string>
+							<object class="NSDictionary" key="NSOptions">
+								<string key="NS.key.0">NSValueTransformerName</string>
+								<string key="NS.object.0">NSNegateBoolean</string>
+							</object>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">3868</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">hidden: selection.metadata.tags.tves.hasMultipleValues</string>
+						<reference key="source" ref="704790889"/>
+						<reference key="destination" ref="2824"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="704790889"/>
+							<reference key="NSDestination" ref="2824"/>
+							<string key="NSLabel">hidden: selection.metadata.tags.tves.hasMultipleValues</string>
+							<string key="NSBinding">hidden</string>
+							<string key="NSKeyPath">selection.metadata.tags.tves.hasMultipleValues</string>
+							<object class="NSDictionary" key="NSOptions">
+								<string key="NS.key.0">NSValueTransformerName</string>
+								<string key="NS.object.0">NSNegateBoolean</string>
+							</object>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">3870</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">hidden: selection.metadata.tags.trkn.hasMultipleValues</string>
+						<reference key="source" ref="842514941"/>
+						<reference key="destination" ref="2824"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="842514941"/>
+							<reference key="NSDestination" ref="2824"/>
+							<string key="NSLabel">hidden: selection.metadata.tags.trkn.hasMultipleValues</string>
+							<string key="NSBinding">hidden</string>
+							<string key="NSKeyPath">selection.metadata.tags.trkn.hasMultipleValues</string>
+							<object class="NSDictionary" key="NSOptions">
+								<string key="NS.key.0">NSValueTransformerName</string>
+								<string key="NS.object.0">NSNegateBoolean</string>
+							</object>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">3872</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">hidden: selection.metadata.tags.dscn.hasMultipleValues</string>
+						<reference key="source" ref="1036876233"/>
+						<reference key="destination" ref="2824"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="1036876233"/>
+							<reference key="NSDestination" ref="2824"/>
+							<string key="NSLabel">hidden: selection.metadata.tags.dscn.hasMultipleValues</string>
+							<string key="NSBinding">hidden</string>
+							<string key="NSKeyPath">selection.metadata.tags.dscn.hasMultipleValues</string>
+							<object class="NSDictionary" key="NSOptions">
+								<string key="NS.key.0">NSValueTransformerName</string>
+								<string key="NS.object.0">NSNegateBoolean</string>
+							</object>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">3874</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">hidden: selection.metadata.tags.desc.hasMultipleValues</string>
+						<reference key="source" ref="687397696"/>
+						<reference key="destination" ref="2824"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="687397696"/>
+							<reference key="NSDestination" ref="2824"/>
+							<string key="NSLabel">hidden: selection.metadata.tags.desc.hasMultipleValues</string>
+							<string key="NSBinding">hidden</string>
+							<string key="NSKeyPath">selection.metadata.tags.desc.hasMultipleValues</string>
+							<object class="NSDictionary" key="NSOptions">
+								<string key="NS.key.0">NSValueTransformerName</string>
+								<string key="NS.object.0">NSNegateBoolean</string>
+							</object>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">3876</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">hidden: selection.metadata.tags.stik.hasMultipleValues</string>
+						<reference key="source" ref="4330"/>
+						<reference key="destination" ref="2824"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="4330"/>
+							<reference key="NSDestination" ref="2824"/>
+							<string key="NSLabel">hidden: selection.metadata.tags.stik.hasMultipleValues</string>
+							<string key="NSBinding">hidden</string>
+							<string key="NSKeyPath">selection.metadata.tags.stik.hasMultipleValues</string>
+							<object class="NSDictionary" key="NSOptions">
+								<string key="NS.key.0">NSValueTransformerName</string>
+								<string key="NS.object.0">NSNegateBoolean</string>
+							</object>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">3878</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">hidden: selection.metadata.tags.iTunEXTC.hasMultipleValues</string>
+						<reference key="source" ref="44516219"/>
+						<reference key="destination" ref="2824"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="44516219"/>
+							<reference key="NSDestination" ref="2824"/>
+							<string key="NSLabel">hidden: selection.metadata.tags.iTunEXTC.hasMultipleValues</string>
+							<string key="NSBinding">hidden</string>
+							<string key="NSKeyPath">selection.metadata.tags.iTunEXTC.hasMultipleValues</string>
+							<object class="NSDictionary" key="NSOptions">
+								<string key="NS.key.0">NSValueTransformerName</string>
+								<string key="NS.object.0">NSNegateBoolean</string>
+							</object>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">3880</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">hidden: selection.metadata.tags.__cmt.hasMultipleValues</string>
+						<reference key="source" ref="829059935"/>
+						<reference key="destination" ref="2824"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="829059935"/>
+							<reference key="NSDestination" ref="2824"/>
+							<string key="NSLabel">hidden: selection.metadata.tags.__cmt.hasMultipleValues</string>
+							<string key="NSBinding">hidden</string>
+							<string key="NSKeyPath">selection.metadata.tags.__cmt.hasMultipleValues</string>
+							<object class="NSDictionary" key="NSOptions">
+								<string key="NS.key.0">NSValueTransformerName</string>
+								<string key="NS.object.0">NSNegateBoolean</string>
+							</object>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">3882</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">hidden: selection.metadata.tags.__alb.hasMultipleValues</string>
+						<reference key="source" ref="518015806"/>
+						<reference key="destination" ref="2824"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="518015806"/>
+							<reference key="NSDestination" ref="2824"/>
+							<string key="NSLabel">hidden: selection.metadata.tags.__alb.hasMultipleValues</string>
+							<string key="NSBinding">hidden</string>
+							<string key="NSKeyPath">selection.metadata.tags.__alb.hasMultipleValues</string>
+							<object class="NSDictionary" key="NSOptions">
+								<string key="NS.key.0">NSValueTransformerName</string>
+								<string key="NS.object.0">NSNegateBoolean</string>
+							</object>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">3884</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">hidden: selection.metadata.tags.__ART.hasMultipleValues</string>
+						<reference key="source" ref="62826810"/>
+						<reference key="destination" ref="2824"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="62826810"/>
+							<reference key="NSDestination" ref="2824"/>
+							<string key="NSLabel">hidden: selection.metadata.tags.__ART.hasMultipleValues</string>
+							<string key="NSBinding">hidden</string>
+							<string key="NSKeyPath">selection.metadata.tags.__ART.hasMultipleValues</string>
+							<object class="NSDictionary" key="NSOptions">
+								<string key="NS.key.0">NSValueTransformerName</string>
+								<string key="NS.object.0">NSNegateBoolean</string>
+							</object>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">3886</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">hidden: selection.metadata.tags.aART.hasMultipleValues</string>
+						<reference key="source" ref="833318035"/>
+						<reference key="destination" ref="2824"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="833318035"/>
+							<reference key="NSDestination" ref="2824"/>
+							<string key="NSLabel">hidden: selection.metadata.tags.aART.hasMultipleValues</string>
+							<string key="NSBinding">hidden</string>
+							<string key="NSKeyPath">selection.metadata.tags.aART.hasMultipleValues</string>
+							<object class="NSDictionary" key="NSOptions">
+								<string key="NS.key.0">NSValueTransformerName</string>
+								<string key="NS.object.0">NSNegateBoolean</string>
+							</object>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">3888</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">hidden: selection.metadata.tags.cprt.hasMultipleValues</string>
+						<reference key="source" ref="52887119"/>
+						<reference key="destination" ref="2824"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="52887119"/>
+							<reference key="NSDestination" ref="2824"/>
+							<string key="NSLabel">hidden: selection.metadata.tags.cprt.hasMultipleValues</string>
+							<string key="NSBinding">hidden</string>
+							<string key="NSKeyPath">selection.metadata.tags.cprt.hasMultipleValues</string>
+							<object class="NSDictionary" key="NSOptions">
+								<string key="NS.key.0">NSValueTransformerName</string>
+								<string key="NS.object.0">NSNegateBoolean</string>
+							</object>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">3890</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">hidden: selection.metadata.tags.tvnn.hasMultipleValues</string>
+						<reference key="source" ref="973068162"/>
+						<reference key="destination" ref="2824"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="973068162"/>
+							<reference key="NSDestination" ref="2824"/>
+							<string key="NSLabel">hidden: selection.metadata.tags.tvnn.hasMultipleValues</string>
+							<string key="NSBinding">hidden</string>
+							<string key="NSKeyPath">selection.metadata.tags.tvnn.hasMultipleValues</string>
+							<object class="NSDictionary" key="NSOptions">
+								<string key="NS.key.0">NSValueTransformerName</string>
+								<string key="NS.object.0">NSNegateBoolean</string>
+							</object>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">3892</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">hidden: selection.metadata.tags.__too.hasMultipleValues</string>
+						<reference key="source" ref="720571985"/>
+						<reference key="destination" ref="2824"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="720571985"/>
+							<reference key="NSDestination" ref="2824"/>
+							<string key="NSLabel">hidden: selection.metadata.tags.__too.hasMultipleValues</string>
+							<string key="NSBinding">hidden</string>
+							<string key="NSKeyPath">selection.metadata.tags.__too.hasMultipleValues</string>
+							<object class="NSDictionary" key="NSOptions">
+								<string key="NS.key.0">NSValueTransformerName</string>
+								<string key="NS.object.0">NSNegateBoolean</string>
+							</object>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">3894</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">hidden: selection.metadata.gnre.hasMultipleValues</string>
+						<reference key="source" ref="952682828"/>
+						<reference key="destination" ref="2824"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="952682828"/>
+							<reference key="NSDestination" ref="2824"/>
+							<string key="NSLabel">hidden: selection.metadata.gnre.hasMultipleValues</string>
+							<string key="NSBinding">hidden</string>
+							<string key="NSKeyPath">selection.metadata.gnre.hasMultipleValues</string>
+							<object class="NSDictionary" key="NSOptions">
+								<string key="NS.key.0">NSValueTransformerName</string>
+								<string key="NS.object.0">NSNegateBoolean</string>
+							</object>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">3896</int>
 				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -16486,7 +16909,6 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 							<reference ref="197321292"/>
 							<reference ref="800985423"/>
 							<reference ref="771157862"/>
-							<reference ref="118105475"/>
 							<reference ref="202699273"/>
 							<reference ref="173546834"/>
 							<reference ref="898636320"/>
@@ -16551,6 +16973,7 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 							<reference ref="52887119"/>
 							<reference ref="973068162"/>
 							<reference ref="134321184"/>
+							<reference ref="118105475"/>
 						</object>
 						<reference key="parent" ref="827023795"/>
 						<string key="objectName">Metadata Box</string>
@@ -20540,7 +20963,9 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 					<string>3774.IBPluginDependency</string>
 					<string>3777.IBPluginDependency</string>
 					<string>3778.IBPluginDependency</string>
+					<string>3779.IBPluginDependency</string>
 					<string>3781.IBPluginDependency</string>
+					<string>3789.IBPluginDependency</string>
 					<string>450.IBPluginDependency</string>
 					<string>455.IBPluginDependency</string>
 					<string>456.IBPluginDependency</string>
@@ -21379,7 +21804,7 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>{{-518, 447}, {115, 268}}</string>
+					<string>{{-556, 356}, {115, 268}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -21911,6 +22336,8 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>{{138, 739}, {616, 0}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -22027,7 +22454,7 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">3792</int>
+			<int key="maxID">3896</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
