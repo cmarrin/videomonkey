@@ -23,6 +23,7 @@
 
 @property(readonly) NSMutableArray* artworkList;
 @property(readonly) NSMutableDictionary* tags;
+@property(readonly) NSImage* primaryArtwork;
 
 +(Metadata*) metadataWithTranscoder: (Transcoder*) transcoder;
 

@@ -151,6 +151,15 @@ typedef enum { INPUT_TAG, SEARCH_TAG, USER_TAG, OUTPUT_TAG } TagType;
 @synthesize artworkList = m_artworkList;
 @synthesize tags = m_tagDictionary;
 
+-(NSImage*) primaryArtwork
+{
+    // primary is the first checked image
+    for (ArtworkItem* item in m_artworkList)
+        if ([[item checked] boolValue])
+            return [item image];
+    return nil;
+}
+
 -(void) setTagValue:(NSString*) value forKey:(NSString*) key tag:(NSString*) tag type:(TagType) type
 {
     TagItem* item = (TagItem*) [m_tagDictionary valueForKey:key];

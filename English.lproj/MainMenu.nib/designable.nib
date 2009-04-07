@@ -8,9 +8,9 @@
 		<string key="IBDocument.HIToolboxVersion">353.00</string>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
-			<integer value="3718"/>
 			<integer value="475"/>
-			<integer value="2658"/>
+			<integer value="3718"/>
+			<integer value="2662"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -232,11 +232,6 @@
 				<string key="NSClassName">SUUpdater</string>
 			</object>
 			<object class="NSUserDefaultsController" id="468363876">
-				<object class="NSMutableArray" key="NSDeclaredKeys">
-					<bool key="EncodedWithXMLCoder">YES</bool>
-					<string>MetadataScrollPosition</string>
-					<string>metadataScrollPosition</string>
-				</object>
 				<bool key="NSSharedInstance">YES</bool>
 			</object>
 			<object class="NSMenu" id="649796088">
@@ -934,7 +929,7 @@
 								<string key="NSToolbarItemPaletteLabel">Add</string>
 								<string key="NSToolbarItemToolTip"/>
 								<nil key="NSToolbarItemView"/>
-								<object class="NSCustomResource" key="NSToolbarItemImage">
+								<object class="NSCustomResource" key="NSToolbarItemImage" id="267099477">
 									<string key="NSClassName">NSImage</string>
 									<string key="NSResourceName">add</string>
 								</object>
@@ -4440,6 +4435,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 								</object>
 								<string key="NSFrame">{{1, 1}, {362, 273}}</string>
 								<reference key="NSSuperview" ref="546498873"/>
+								<reference key="NSNextKeyView" ref="897181040"/>
 								<reference key="NSDocView" ref="897181040"/>
 								<reference key="NSBGColor" ref="750519141"/>
 								<object class="NSCursor" key="NSCursor" id="1153">
@@ -4471,6 +4467,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 						</object>
 						<string key="NSFrameSize">{379, 275}</string>
 						<reference key="NSSuperview" ref="255340955"/>
+						<reference key="NSNextKeyView" ref="693118750"/>
 						<int key="NSsFlags">18</int>
 						<reference key="NSVScroller" ref="811027863"/>
 						<reference key="NSHScroller" ref="173135271"/>
@@ -7849,10 +7846,7 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 																											<reference key="NSControlView" ref="612462110"/>
 																											<int key="NSButtonFlags">112345343</int>
 																											<int key="NSButtonFlags2">129</int>
-																											<object class="NSCustomResource" key="NSNormalImage" id="707738049">
-																												<string key="NSClassName">NSImage</string>
-																												<string key="NSResourceName">add</string>
-																											</object>
+																											<reference key="NSNormalImage" ref="267099477"/>
 																											<object class="NSFont" key="NSAlternateImage" id="265108240">
 																												<string key="NSName">LucidaGrande</string>
 																												<double key="NSSize">1.100000e+01</double>
@@ -8518,7 +8512,7 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 																											<reference key="NSControlView" ref="54048698"/>
 																											<int key="NSButtonFlags">112345343</int>
 																											<int key="NSButtonFlags2">129</int>
-																											<reference key="NSNormalImage" ref="707738049"/>
+																											<reference key="NSNormalImage" ref="267099477"/>
 																											<reference key="NSAlternateImage" ref="265108240"/>
 																											<string key="NSAlternateContents"/>
 																											<string key="NSKeyEquivalent"/>
@@ -12884,14 +12878,6 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 					<int key="connectionID">3723</int>
 				</object>
 				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">toggle:</string>
-						<reference key="source" ref="689281257"/>
-						<reference key="destination" ref="134321184"/>
-					</object>
-					<int key="connectionID">3724</int>
-				</object>
-				<object class="IBConnectionRecord">
 					<object class="IBBindingConnection" key="connection">
 						<string key="label">contentArray: selection.metadata.artworkList</string>
 						<reference key="source" ref="745083967"/>
@@ -12986,22 +12972,6 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 						<reference key="destination" ref="744558613"/>
 					</object>
 					<int key="connectionID">3792</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">valuePath: selection.metadata.primaryArtwork</string>
-						<reference key="source" ref="134321184"/>
-						<reference key="destination" ref="2824"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="134321184"/>
-							<reference key="NSDestination" ref="2824"/>
-							<string key="NSLabel">valuePath: selection.metadata.primaryArtwork</string>
-							<string key="NSBinding">valuePath</string>
-							<string key="NSKeyPath">selection.metadata.primaryArtwork</string>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">3815</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBBindingConnection" key="connection">
@@ -13802,6 +13772,22 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 						</object>
 					</object>
 					<int key="connectionID">3923</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">value: selection.metadata.primaryArtwork</string>
+						<reference key="source" ref="134321184"/>
+						<reference key="destination" ref="2824"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="134321184"/>
+							<reference key="NSDestination" ref="2824"/>
+							<string key="NSLabel">value: selection.metadata.primaryArtwork</string>
+							<string key="NSBinding">value</string>
+							<string key="NSKeyPath">selection.metadata.primaryArtwork</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">3925</int>
 				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -22409,7 +22395,7 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">3923</int>
+			<int key="maxID">3925</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
