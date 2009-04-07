@@ -11,6 +11,9 @@
 #import "Metadata.h"
 #import "Transcoder.h"
 
+// Artwork source icons
+NSImage* g_sourceInputIcon;
+
 // Artwork Item
 @interface ArtworkItem : NSObject {
     NSImage* m_image;
@@ -28,9 +31,30 @@
 +(ArtworkItem*) artworkItemWithPath:(NSString*) path sourceIcon:(NSImage*) icon checked:(BOOL) checked;
 {
     ArtworkItem* item = [[ArtworkItem alloc] init];
-    item->m_image = [[NSImage alloc] initWithContentsOfFile:path];
+    
+    NSString* realPath;
+    
+    // path is passed in without a suffix, try different ones
+    realPath = [NSString stringWithFormat:@"%@.png", path];
+    NSImage* image = [[NSImage alloc] initWithContentsOfFile:realPath];
+    if (!image) {
+        realPath = [NSString stringWithFormat:@"%@.jpg", path];
+        image = [[NSImage alloc] initWithContentsOfFile:realPath];
+    }
+    if (!image) {
+        realPath = [NSString stringWithFormat:@"%@.tiff", path];
+        image = [[NSImage alloc] initWithContentsOfFile:realPath];
+    }
+    if (!image)
+        return nil;
+    
+    item->m_image = image;
     item->m_sourceIcon = [icon retain];
     item->m_checked = checked;
+    
+    // toss image file
+    [[NSFileManager defaultManager] removeFileAtPath:realPath handler:nil];
+
     return item;
 }
 
@@ -241,9 +265,12 @@ typedef enum { INPUT_TAG, SEARCH_TAG, USER_TAG, OUTPUT_TAG } TagType;
     // setup command
     NSString* cmdPath = [NSString stringWithString: [[NSBundle mainBundle] resourcePath]];
     NSString* command = [cmdPath stringByAppendingPathComponent: @"bin/AtomicParsley"];
+    
+    // generate tmp file name for Artwork
+    NSString* tmpArtworkPath = [NSString stringWithFormat:@"/tmp/%p-VideoMonkey", self];
 
     // setup args
-    NSArray* args = [NSArray arrayWithObjects: filename, @"-t", nil];
+    NSArray* args = [NSArray arrayWithObjects: filename, @"-t", @"-e", tmpArtworkPath, nil];
     
     m_task = [[NSTask alloc] init];
     m_messagePipe = [NSPipe pipe];
@@ -261,10 +288,23 @@ typedef enum { INPUT_TAG, SEARCH_TAG, USER_TAG, OUTPUT_TAG } TagType;
     
     [m_task launch];
     [m_task waitUntilExit];
+    
+    // get artwork
+    for (int i = 0; i < m_numArtwork; ++i) {
+        ArtworkItem* item = [ArtworkItem artworkItemWithPath:[NSString stringWithFormat:@"%@_artwork_%d", tmpArtworkPath, i+1] sourceIcon:g_sourceInputIcon checked:YES];
+        if (item)
+            [m_artworkList addObject:item];
+    }
 }
 
 +(Metadata*) metadataWithTranscoder: (Transcoder*) transcoder
 {
+    // read in the icons, if needed
+    if (!g_sourceInputIcon) {
+        NSString* path = [[NSBundle mainBundle] pathForResource:@"tinyitunesfile" ofType:@"png"];
+        g_sourceInputIcon = [[NSImage alloc] initWithContentsOfFile:path];
+    }
+    
     Metadata* metadata = [[Metadata alloc] init];
     metadata->m_transcoder = transcoder;
     metadata->m_buffer = [[NSMutableString alloc] init];
