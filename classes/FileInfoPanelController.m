@@ -73,4 +73,10 @@
     return contentSize;
 }
 
+// keep the disclosure button updated correctly
+- (void)drawerDidClose:(NSNotification *)notification
+{
+    [m_artworkDrawerDisclosureButton setState:NSOffState];
+}
+
 @end

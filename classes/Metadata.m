@@ -191,11 +191,16 @@ typedef enum { INPUT_TAG, SEARCH_TAG, USER_TAG, OUTPUT_TAG } TagType;
     if ([atom isEqualToString:@"----"])
         atom = [[atomArray objectAtIndex:2] stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"[]"]];
         
-    // extract the content rating if this is iTunEXTC (and simplify atom name)
+    // extract the content rating and annotation if this is iTunEXTC (and simplify atom name)
     if ([atom isEqualToString:@"com.apple.iTunes;iTunEXTC"]) {
         NSArray* valueArray = [value componentsSeparatedByString:@"|"];
+        value = [valueArray objectAtIndex:3];
+        key = @"rating_annotation";
+        [self setTagValue:value forKey:key tag:@"rating_annotation" type:INPUT_TAG];
+        
         value = [valueArray objectAtIndex:1];
-        key = @"iTunEXTC";
+        key = @"rating";
+        
     }
     
     // keypaths can't have special characters, so change things like '©' to '__'

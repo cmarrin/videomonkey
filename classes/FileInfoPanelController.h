@@ -14,6 +14,7 @@
     IBOutlet NSSearchField* m_searchField;
     IBOutlet IKImageBrowserView* m_imageBrowser;
     IBOutlet NSTableView* m_imageTable;
+    IBOutlet NSButton* m_artworkDrawerDisclosureButton;
 
     BOOL m_isVisible;
 }
