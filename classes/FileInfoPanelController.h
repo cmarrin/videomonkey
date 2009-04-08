@@ -19,6 +19,6 @@
     BOOL m_isVisible;
 }
 
-- (IBAction) zoomSliderDidChange:(id)sender;
+-(IBAction) droppedInImage:(id)sender;
 
 @end

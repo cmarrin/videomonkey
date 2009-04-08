@@ -27,4 +27,6 @@
 
 +(Metadata*) metadataWithTranscoder: (Transcoder*) transcoder;
 
+-(void) addArtwork:(NSImage*) image;
+
 @end

@@ -15,10 +15,14 @@
     [m_imageTable setRowHeight:[[[m_imageTable tableColumns] objectAtIndex:2] width]];
 }
 
--(IBAction) zoomSliderDidChange:(id)sender
+-(IBAction)droppedInImage:(id)sender
 {
-    [m_imageBrowser setZoomValue:[sender floatValue]];
-    [m_imageBrowser setNeedsDisplay:YES];
+    // user dropped in a new image. Deal with it
+    //ArtworkItem* item = [ArtworkItem artworkItemWithPath:[NSString stringWithFormat:@"%@_artwork_%d", tmpArtworkPath, i+1] sourceIcon:g_sourceInputIcon checked:YES];
+    //if (item)
+    //    [m_artworkList addObject:item];
+    printf("***\n");
+    
 }
 
 -(void) setVisible: (BOOL) b
@@ -50,21 +54,6 @@
 {
     [self setVisible:YES];
 }
-
-// IKImageBrowserDelegate methods
-- (void) imageBrowserSelectionDidChange:(IKImageBrowserView *) browser
-{
-    NSLog(@"***************** imageBrowserSelectionDidChange: selection=%@\n", [browser selectionIndexes]);
-}
-
-/*
-// NSTableView delegate methods
-- (CGFloat)tableView:(NSTableView *)tableView heightOfRow:(NSInteger)row
-{
-    NSSize spacing = [tableView intercellSpacing];
-    return [[[tableView tableColumns] objectAtIndex:2] width];
-}
-*/
 
 // NSDrawer delegate methods
 - (NSSize)drawerWillResizeContents:(NSDrawer *)sender toSize:(NSSize)contentSize

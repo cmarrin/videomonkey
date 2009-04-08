@@ -13,6 +13,8 @@
 
 // Artwork source icons
 NSImage* g_sourceInputIcon;
+NSImage* g_sourceSearchIcon;
+NSImage* g_sourceUserIcon;
 
 // Artwork Item
 @interface ArtworkItem : NSObject {
@@ -23,6 +25,7 @@ NSImage* g_sourceInputIcon;
 }
 
 +(ArtworkItem*) artworkItemWithPath:(NSString*) path sourceIcon:(NSImage*) icon checked:(BOOL) checked;
++(ArtworkItem*) artworkItemWithImage:(NSImage*) image sourceIcon:(NSImage*) icon checked:(BOOL) checked;
 
 @end
 
@@ -30,8 +33,6 @@ NSImage* g_sourceInputIcon;
 
 +(ArtworkItem*) artworkItemWithPath:(NSString*) path sourceIcon:(NSImage*) icon checked:(BOOL) checked;
 {
-    ArtworkItem* item = [[ArtworkItem alloc] init];
-    
     NSString* realPath;
     
     // path is passed in without a suffix, try different ones
@@ -47,14 +48,20 @@ NSImage* g_sourceInputIcon;
     }
     if (!image)
         return nil;
-    
-    item->m_image = image;
-    item->m_sourceIcon = [icon retain];
-    item->m_checked = checked;
-    
+        
     // toss image file
     [[NSFileManager defaultManager] removeFileAtPath:realPath handler:nil];
 
+    return [ArtworkItem artworkItemWithImage:image sourceIcon:icon checked:checked];
+}
+
++(ArtworkItem*) artworkItemWithImage:(NSImage*) image sourceIcon:(NSImage*) icon checked:(BOOL) checked
+{
+    ArtworkItem* item = [[ArtworkItem alloc] init];
+    
+    item->m_image = [image retain];
+    item->m_sourceIcon = [icon retain];
+    item->m_checked = checked;
     return item;
 }
 
@@ -317,6 +324,10 @@ typedef enum { INPUT_TAG, SEARCH_TAG, USER_TAG, OUTPUT_TAG } TagType;
     if (!g_sourceInputIcon) {
         NSString* path = [[NSBundle mainBundle] pathForResource:@"tinyitunesfile" ofType:@"png"];
         g_sourceInputIcon = [[NSImage alloc] initWithContentsOfFile:path];
+        path = [[NSBundle mainBundle] pathForResource:@"tinyitunesfile" ofType:@"png"];
+        g_sourceSearchIcon = [[NSImage alloc] initWithContentsOfFile:path];
+        path = [[NSBundle mainBundle] pathForResource:@"tinyitunesfile" ofType:@"png"];
+        g_sourceUserIcon = [[NSImage alloc] initWithContentsOfFile:path];
     }
     
     Metadata* metadata = [[Metadata alloc] init];
@@ -330,6 +341,13 @@ typedef enum { INPUT_TAG, SEARCH_TAG, USER_TAG, OUTPUT_TAG } TagType;
     [metadata readMetadata: transcoder.inputFileInfo.filename];
     
     return metadata;
+}
+
+-(void) addArtwork:(NSImage*) image
+{
+    ArtworkItem* item = [ArtworkItem artworkItemWithImage:image sourceIcon:g_sourceUserIcon checked:YES];
+    if (item)
+        [m_artworkList addObject:item];
 }
 
 - (id)valueForUndefinedKey:(NSString *)key
