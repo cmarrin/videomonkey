@@ -328,9 +328,9 @@ typedef enum { INPUT_TAG, SEARCH_TAG, USER_TAG, OUTPUT_TAG } TagType;
     if (!g_sourceInputIcon) {
         NSString* path = [[NSBundle mainBundle] pathForResource:@"tinyitunesfile" ofType:@"png"];
         g_sourceInputIcon = [[NSImage alloc] initWithContentsOfFile:path];
-        path = [[NSBundle mainBundle] pathForResource:@"tinyitunesfile" ofType:@"png"];
+        path = [[NSBundle mainBundle] pathForResource:@"tinyspotlight" ofType:@"png"];
         g_sourceSearchIcon = [[NSImage alloc] initWithContentsOfFile:path];
-        path = [[NSBundle mainBundle] pathForResource:@"tinyitunesfile" ofType:@"png"];
+        path = [[NSBundle mainBundle] pathForResource:@"tinypencil" ofType:@"png"];
         g_sourceUserIcon = [[NSImage alloc] initWithContentsOfFile:path];
     }
     

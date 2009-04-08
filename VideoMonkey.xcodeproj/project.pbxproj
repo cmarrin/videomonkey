@@ -120,6 +120,8 @@
 		49BDB20F0F6F05C80082F122 /* FileInfoPanelController.m in Sources */ = {isa = PBXBuildFile; fileRef = 49BDB20E0F6F05C80082F122 /* FileInfoPanelController.m */; };
 		49D468220F28CFA30095A2AB /* dsa_pub.pem in Resources */ = {isa = PBXBuildFile; fileRef = 49D468210F28CFA30095A2AB /* dsa_pub.pem */; };
 		49D4694A0F0F2E52005D70FD /* commands.xml in Resources */ = {isa = PBXBuildFile; fileRef = 49D469490F0F2E52005D70FD /* commands.xml */; };
+		49DA64130F8D60FD004DDDD8 /* tinypencil.png in Resources */ = {isa = PBXBuildFile; fileRef = 49DA64110F8D60FD004DDDD8 /* tinypencil.png */; };
+		49DA64140F8D60FD004DDDD8 /* tinyspotlight.png in Resources */ = {isa = PBXBuildFile; fileRef = 49DA64120F8D60FD004DDDD8 /* tinyspotlight.png */; };
 		49E9119B0EF86C3F009D0CAF /* ffpresets in Resources */ = {isa = PBXBuildFile; fileRef = 49E911930EF86C3F009D0CAF /* ffpresets */; };
 		49FC93830ECB3CCD0058CDBB /* QTKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 49FC93820ECB3CCD0058CDBB /* QTKit.framework */; };
 		8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165CFE840E0CC02AAC07 /* InfoPlist.strings */; };
@@ -276,6 +278,8 @@
 		49BDB20E0F6F05C80082F122 /* FileInfoPanelController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FileInfoPanelController.m; path = classes/FileInfoPanelController.m; sourceTree = "<group>"; };
 		49D468210F28CFA30095A2AB /* dsa_pub.pem */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = dsa_pub.pem; sourceTree = "<group>"; };
 		49D469490F0F2E52005D70FD /* commands.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = commands.xml; sourceTree = "<group>"; };
+		49DA64110F8D60FD004DDDD8 /* tinypencil.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = tinypencil.png; path = images/tinypencil.png; sourceTree = "<group>"; };
+		49DA64120F8D60FD004DDDD8 /* tinyspotlight.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = tinyspotlight.png; path = images/tinyspotlight.png; sourceTree = "<group>"; };
 		49E911930EF86C3F009D0CAF /* ffpresets */ = {isa = PBXFileReference; lastKnownFileType = folder; path = ffpresets; sourceTree = "<group>"; };
 		49FC93820ECB3CCD0058CDBB /* QTKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QTKit.framework; path = /System/Library/Frameworks/QTKit.framework; sourceTree = "<absolute>"; };
 		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -418,55 +422,57 @@
 		4910FE7F0EC7B304001B578B /* Images */ = {
 			isa = PBXGroup;
 			children = (
-				4910FFB90EC87BB3001B578B /* itunesfile.png */,
-				49AADAC50F1D12950098F087 /* tinyitunesfile.png */,
 				4910FFAA0EC87BB3001B578B /* 3g.png */,
-				4910FFC30EC87BB3001B578B /* tiny3g.png */,
+				4910FFAB0EC87BB3001B578B /* aac.png */,
+				4910FFAC0EC87BB3001B578B /* aiff.png */,
 				4910FFAD0EC87BB3001B578B /* appletv.png */,
-				4910FFC40EC87BB3001B578B /* tinyappletv.png */,
+				4910FFAE0EC87BB3001B578B /* burntbottom.png */,
 				4910FFAF0EC87BB3001B578B /* cd.png */,
-				4910FFC50EC87BB3001B578B /* tinycd.png */,
 				4910FFB00EC87BB3001B578B /* dv.png */,
-				4910FFC60EC87BB3001B578B /* tinydv.png */,
+				4910FFB10EC87BB3001B578B /* dvd.png */,
 				4910FFB30EC87BB3001B578B /* file.png */,
-				4910FFC70EC87BB3001B578B /* tinyfile.png */,
 				4910FFB40EC87BB3001B578B /* flac.png */,
-				4910FFC80EC87BB3001B578B /* tinyflac.png */,
 				4910FFB50EC87BB3001B578B /* flash.png */,
-				4910FFC90EC87BB3001B578B /* tinyflash.png */,
+				4910FFB60EC87BB3001B578B /* grayback.png */,
 				4910FFB70EC87BB3001B578B /* iphone.png */,
-				4910FFCA0EC87BB3001B578B /* tinyiphone.png */,
 				4910FFB80EC87BB3001B578B /* ipod.png */,
-				4910FFCB0EC87BB3001B578B /* tinyipod.png */,
+				4910FFB90EC87BB3001B578B /* itunesfile.png */,
+				4910FFBA0EC87BB3001B578B /* mp3.png */,
 				4910FFBB0EC87BB3001B578B /* nano.png */,
-				4910FFCD0EC87BB3001B578B /* tinynano.png */,
 				4910FFBC0EC87BB3001B578B /* ogg.png */,
-				4910FFCE0EC87BB3001B578B /* tinyogg.png */,
 				4910FFBE0EC87BB3001B578B /* ps3.png */,
-				4910FFCF0EC87BB3001B578B /* tinyps3.png */,
 				4910FFBF0EC87BB3001B578B /* psp.png */,
+				4910FFC20EC87BB3001B578B /* selectbar.png */,
+				4910FFC30EC87BB3001B578B /* tiny3g.png */,
+				4910FFC40EC87BB3001B578B /* tinyappletv.png */,
+				4910FFC50EC87BB3001B578B /* tinycd.png */,
+				4910FFC60EC87BB3001B578B /* tinydv.png */,
+				4910FFC70EC87BB3001B578B /* tinyfile.png */,
+				4910FFC80EC87BB3001B578B /* tinyflac.png */,
+				4910FFC90EC87BB3001B578B /* tinyflash.png */,
+				4910FFCA0EC87BB3001B578B /* tinyiphone.png */,
+				4910FFCB0EC87BB3001B578B /* tinyipod.png */,
+				49AADAC50F1D12950098F087 /* tinyitunesfile.png */,
+				4910FFCD0EC87BB3001B578B /* tinynano.png */,
+				4910FFCE0EC87BB3001B578B /* tinyogg.png */,
+				49DA64110F8D60FD004DDDD8 /* tinypencil.png */,
+				4910FFCF0EC87BB3001B578B /* tinyps3.png */,
 				4910FFD00EC87BB3001B578B /* tinypsp.png */,
-				4910FFD60EC87BB3001B578B /* tivo.png */,
+				49DA64120F8D60FD004DDDD8 /* tinyspotlight.png */,
 				4910FFD10EC87BB3001B578B /* tinytivo.png */,
-				4910FFDB0EC87BB3001B578B /* wav.png */,
 				4910FFD20EC87BB3001B578B /* tinywav.png */,
-				4910FFDC0EC87BB3001B578B /* wii.png */,
 				4910FFD30EC87BB3001B578B /* tinywii.png */,
-				4910FFDD0EC87BB3001B578B /* wma.png */,
 				4910FFD40EC87BB3001B578B /* tinywma.png */,
-				4910FFDE0EC87BB3001B578B /* xbox360.png */,
 				4910FFD50EC87BB3001B578B /* tinyxbox360.png */,
+				4910FFD60EC87BB3001B578B /* tivo.png */,
 				4910FFD70EC87BB3001B578B /* toolbaraudio.png */,
 				4910FFD80EC87BB3001B578B /* toolbarinfo.png */,
 				4910FFD90EC87BB3001B578B /* toolbaroneoff.png */,
 				4910FFDA0EC87BB3001B578B /* topbar.png */,
-				4910FFAB0EC87BB3001B578B /* aac.png */,
-				4910FFAC0EC87BB3001B578B /* aiff.png */,
-				4910FFBA0EC87BB3001B578B /* mp3.png */,
-				4910FFB10EC87BB3001B578B /* dvd.png */,
-				4910FFAE0EC87BB3001B578B /* burntbottom.png */,
-				4910FFB60EC87BB3001B578B /* grayback.png */,
-				4910FFC20EC87BB3001B578B /* selectbar.png */,
+				4910FFDB0EC87BB3001B578B /* wav.png */,
+				4910FFDC0EC87BB3001B578B /* wii.png */,
+				4910FFDD0EC87BB3001B578B /* wma.png */,
+				4910FFDE0EC87BB3001B578B /* xbox360.png */,
 			);
 			name = Images;
 			sourceTree = "<group>";
@@ -657,6 +663,8 @@
 				4908A3B70F302179003B65E0 /* releasenotes.html in Resources */,
 				492BCAD80F61F08300BCBF24 /* videomonkeycast.xml in Resources */,
 				49B007A50F6FD9C700D0EFF2 /* VideoMonkeyDevel.icns in Resources */,
+				49DA64130F8D60FD004DDDD8 /* tinypencil.png in Resources */,
+				49DA64140F8D60FD004DDDD8 /* tinyspotlight.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
