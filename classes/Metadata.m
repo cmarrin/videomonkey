@@ -167,6 +167,17 @@ typedef enum { INPUT_TAG, SEARCH_TAG, USER_TAG, OUTPUT_TAG } TagType;
     return nil;
 }
 
+-(void) setPrimaryArtwork:(NSImage*) image
+{
+    id item = [ArtworkItem artworkItemWithImage:image sourceIcon:g_sourceUserIcon checked:YES];
+    [m_artworkList insertObject:item atIndex:0];
+}
+
+-(id) createArtwork:(NSImage*) image
+{
+    return [ArtworkItem artworkItemWithImage:image sourceIcon:g_sourceUserIcon checked:YES];
+}
+
 -(void) setTagValue:(NSString*) value forKey:(NSString*) key tag:(NSString*) tag type:(TagType) type
 {
     TagItem* item = (TagItem*) [m_tagDictionary valueForKey:key];
@@ -341,13 +352,6 @@ typedef enum { INPUT_TAG, SEARCH_TAG, USER_TAG, OUTPUT_TAG } TagType;
     [metadata readMetadata: transcoder.inputFileInfo.filename];
     
     return metadata;
-}
-
--(void) addArtwork:(NSImage*) image
-{
-    ArtworkItem* item = [ArtworkItem artworkItemWithImage:image sourceIcon:g_sourceUserIcon checked:YES];
-    if (item)
-        [m_artworkList addObject:item];
 }
 
 - (id)valueForUndefinedKey:(NSString *)key

@@ -116,23 +116,6 @@ typedef enum FileStatus { FS_INVALID, FS_VALID, FS_ENCODING, FS_PAUSED, FS_FAILE
 @property (readonly) TranscoderFileInfo* outputFileInfo;
 @property (readonly) Metadata* metadata;
 
-/*
-// Metadata
-@property (retain,readonly) NSString* metaName;
-@property (retain,readonly) NSString* metaShow;
-@property (retain,readonly) NSString* metaProduction;
-@property (retain,readonly) NSString* metaEpisode;
-@property (retain,readonly) NSString* metaSeason;
-@property (retain,readonly) NSString* metaTrack;
-@property (retain,readonly) NSString* metaDisc;
-@property (retain,readonly) NSString* metaDescription;
-@property (retain,readonly) NSString* metaReleaseDate;
-@property (retain,readonly) NSString* metaMediaKind;
-@property (retain,readonly) NSString* metaContentRating;
-@property (retain,readonly) NSString* metaComments;
-@property (retain,readonly) NSString* metaName;
-*/
-
 +(Transcoder*) transcoderWithController: (AppController*) controller;
 
 -(int) addInputFile: (NSString*) filename;

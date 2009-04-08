@@ -7,22 +7,30 @@
 //
 
 #import "FileInfoPanelController.h"
+#import "Metadata.h"
+#import "Transcoder.h"
 
 @implementation FileInfoPanelController
 
+-(NSImage*) primaryArtwork
+{
+    return [[(Transcoder*) [m_fileListController selection] metadata] primaryArtwork];
+}
+
+-(void) setPrimaryArtwork:(NSImage*) image
+{
+    id item = [[(Transcoder*) [m_fileListController selection] metadata] createArtwork: image];
+    [m_artworkListController insertObject:item atArrangedObjectIndex:0];
+}
+
 - (void)awakeFromNib {
     [m_searchField setRecentSearches:[NSArray arrayWithObjects:@"Foo", @"Bar", @"Baz", nil]];
-    [m_imageTable setRowHeight:[[[m_imageTable tableColumns] objectAtIndex:2] width]];
+    [m_artworkTable setRowHeight:[[[m_artworkTable tableColumns] objectAtIndex:2] width]];
 }
 
 -(IBAction)droppedInImage:(id)sender
 {
-    // user dropped in a new image. Deal with it
-    //ArtworkItem* item = [ArtworkItem artworkItemWithPath:[NSString stringWithFormat:@"%@_artwork_%d", tmpArtworkPath, i+1] sourceIcon:g_sourceInputIcon checked:YES];
-    //if (item)
-    //    [m_artworkList addObject:item];
-    printf("***\n");
-    
+    [m_artworkTable reloadData];
 }
 
 -(void) setVisible: (BOOL) b
@@ -58,7 +66,7 @@
 // NSDrawer delegate methods
 - (NSSize)drawerWillResizeContents:(NSDrawer *)sender toSize:(NSSize)contentSize
 {
-    [m_imageTable setRowHeight:[[[m_imageTable tableColumns] objectAtIndex:2] width]];
+    [m_artworkTable setRowHeight:[[[m_artworkTable tableColumns] objectAtIndex:2] width]];
     return contentSize;
 }
 
@@ -66,6 +74,12 @@
 - (void)drawerDidClose:(NSNotification *)notification
 {
     [m_artworkDrawerDisclosureButton setState:NSOffState];
+}
+
+- (id)valueForUndefinedKey:(NSString *)key
+{
+    NSLog(@"*** FileInfoPanelController::valueForUndefinedKey:%@\n", key);
+    return nil;
 }
 
 @end

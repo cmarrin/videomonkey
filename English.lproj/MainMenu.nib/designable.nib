@@ -2,15 +2,16 @@
 <archive type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="7.03">
 	<data>
 		<int key="IBDocument.SystemTarget">1050</int>
-		<string key="IBDocument.SystemVersion">9J33</string>
+		<string key="IBDocument.SystemVersion">9G55</string>
 		<string key="IBDocument.InterfaceBuilderVersion">677</string>
-		<string key="IBDocument.AppKitVersion">949.46</string>
+		<string key="IBDocument.AppKitVersion">949.43</string>
 		<string key="IBDocument.HIToolboxVersion">353.00</string>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
-			<integer value="475"/>
 			<integer value="3768"/>
 			<integer value="2662"/>
+			<integer value="371"/>
+			<integer value="29"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -11048,6 +11049,7 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 					<string>image</string>
 				</object>
 				<bool key="NSEditable">YES</bool>
+				<bool key="NSAutomaticallyPreparesContent">YES</bool>
 				<object class="_NSManagedProxy" key="_NSManagedProxy"/>
 				<bool key="NSAvoidsEmptySelection">YES</bool>
 				<bool key="NSPreservesSelection">YES</bool>
@@ -12937,14 +12939,6 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBOutletConnection" key="connection">
-						<string key="label">m_imageTable</string>
-						<reference key="source" ref="744558613"/>
-						<reference key="destination" ref="340089456"/>
-					</object>
-					<int key="connectionID">3791</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBOutletConnection" key="connection">
 						<string key="label">delegate</string>
 						<reference key="source" ref="689281257"/>
 						<reference key="destination" ref="744558613"/>
@@ -13752,6 +13746,46 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 					<int key="connectionID">3923</int>
 				</object>
 				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">content</string>
+						<reference key="source" ref="745083967"/>
+						<reference key="destination" ref="2824"/>
+					</object>
+					<int key="connectionID">3928</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">m_fileListController</string>
+						<reference key="source" ref="744558613"/>
+						<reference key="destination" ref="2824"/>
+					</object>
+					<int key="connectionID">3929</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">m_artworkTable</string>
+						<reference key="source" ref="744558613"/>
+						<reference key="destination" ref="340089456"/>
+					</object>
+					<int key="connectionID">3930</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">m_fileInfoTabView</string>
+						<reference key="source" ref="744558613"/>
+						<reference key="destination" ref="713585461"/>
+					</object>
+					<int key="connectionID">3931</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">m_artworkListController</string>
+						<reference key="source" ref="744558613"/>
+						<reference key="destination" ref="745083967"/>
+					</object>
+					<int key="connectionID">3932</int>
+				</object>
+				<object class="IBConnectionRecord">
 					<object class="IBBindingConnection" key="connection">
 						<string key="label">value: selection.metadata.primaryArtwork</string>
 						<reference key="source" ref="134321184"/>
@@ -13765,15 +13799,7 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 							<int key="NSNibBindingConnectorVersion">2</int>
 						</object>
 					</object>
-					<int key="connectionID">3925</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">droppedInImage:</string>
-						<reference key="source" ref="744558613"/>
-						<reference key="destination" ref="134321184"/>
-					</object>
-					<int key="connectionID">3926</int>
+					<int key="connectionID">3937</int>
 				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -21632,8 +21658,8 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<reference ref="9"/>
 					<string>{{525, 802}, {197, 73}}</string>
-					<string>{{-562, 439}, {466, 566}}</string>
-					<string>{{-562, 439}, {466, 566}}</string>
+					<string>{{-477, 409}, {466, 566}}</string>
+					<string>{{-477, 409}, {466, 566}}</string>
 					<reference ref="6"/>
 					<reference ref="5"/>
 					<reference ref="5"/>
@@ -22373,7 +22399,7 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">3926</int>
+			<int key="maxID">3937</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -22582,26 +22608,24 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 				<object class="IBPartialClassDescription">
 					<string key="className">FileInfoPanelController</string>
 					<string key="superclassName">NSObject</string>
-					<object class="NSMutableDictionary" key="actions">
-						<string key="NS.key.0">droppedInImage:</string>
-						<string key="NS.object.0">id</string>
-					</object>
 					<object class="NSMutableDictionary" key="outlets">
 						<bool key="EncodedWithXMLCoder">YES</bool>
 						<object class="NSMutableArray" key="dict.sortedKeys">
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>m_artworkDrawerDisclosureButton</string>
+							<string>m_artworkListController</string>
+							<string>m_artworkTable</string>
 							<string>m_fileInfoTabView</string>
-							<string>m_imageBrowser</string>
-							<string>m_imageTable</string>
+							<string>m_fileListController</string>
 							<string>m_searchField</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>NSButton</string>
-							<string>NSTabView</string>
-							<string>IKImageBrowserView</string>
+							<string>NSArrayController</string>
 							<string>NSTableView</string>
+							<string>NSTabView</string>
+							<string>FileListController</string>
 							<string>NSSearchField</string>
 						</object>
 					</object>

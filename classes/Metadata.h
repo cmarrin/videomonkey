@@ -23,10 +23,10 @@
 
 @property(readonly) NSMutableArray* artworkList;
 @property(readonly) NSMutableDictionary* tags;
-@property(readonly) NSImage* primaryArtwork;
+@property(assign) NSImage* primaryArtwork;
 
 +(Metadata*) metadataWithTranscoder: (Transcoder*) transcoder;
 
--(void) addArtwork:(NSImage*) image;
+-(id) createArtwork:(NSImage*) image;
 
 @end

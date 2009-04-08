@@ -8,17 +8,20 @@
 
 #import <Cocoa/Cocoa.h>
 
+@class FileListController;
+
 @interface FileInfoPanelController : NSObject {
 @private
     IBOutlet NSTabView* m_fileInfoTabView;
     IBOutlet NSSearchField* m_searchField;
-    IBOutlet IKImageBrowserView* m_imageBrowser;
-    IBOutlet NSTableView* m_imageTable;
+    IBOutlet NSTableView* m_artworkTable;
     IBOutlet NSButton* m_artworkDrawerDisclosureButton;
+    IBOutlet FileListController* m_fileListController;
+    IBOutlet NSArrayController* m_artworkListController;
 
     BOOL m_isVisible;
 }
 
--(IBAction) droppedInImage:(id)sender;
+@property(assign) NSImage* primaryArtwork;
 
 @end
