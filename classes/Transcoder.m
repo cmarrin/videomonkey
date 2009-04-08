@@ -643,6 +643,11 @@ static NSImage* getFileStatusImage(FileStatus status)
         [self finish: status];
 }
 
+-(void) updateFileInfo
+{
+    [m_appController updateFileInfo];
+}
+
 -(void) logToFile: (NSString*) string
 {
     // Output to log file

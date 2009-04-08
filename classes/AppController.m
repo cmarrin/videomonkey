@@ -458,6 +458,11 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
     [m_consoleView scrollRangeToVisible: range];    
 }
 
+-(void) updateFileInfo
+{
+    [m_fileListController rearrangeObjects];
+}
+
 -(void) setSelectedFile: (int) index
 {
     [m_moviePanel setMovie: (index < 0) ? nil : [[m_fileList objectAtIndex:index] inputFileInfo].filename];

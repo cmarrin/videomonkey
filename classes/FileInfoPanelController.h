@@ -22,6 +22,9 @@
     BOOL m_isVisible;
 }
 
+@property(readonly) NSArray* artworkList;
 @property(assign) NSImage* primaryArtwork;
+
+-(IBAction)artworkCheckedStateChanged:(id)sender;
 
 @end

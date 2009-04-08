@@ -21,8 +21,11 @@ NSImage* g_sourceUserIcon;
     NSImage* m_image;
     NSImage* m_sourceIcon;
     BOOL m_checked;
-    
 }
+
+@property(readwrite) BOOL checked;
+@property(readonly) NSImage* sourceIcon;
+@property(readonly) NSImage* image;
 
 +(ArtworkItem*) artworkItemWithPath:(NSString*) path sourceIcon:(NSImage*) icon checked:(BOOL) checked;
 +(ArtworkItem*) artworkItemWithImage:(NSImage*) image sourceIcon:(NSImage*) icon checked:(BOOL) checked;
@@ -30,6 +33,10 @@ NSImage* g_sourceUserIcon;
 @end
 
 @implementation ArtworkItem
+
+@synthesize checked = m_checked;
+@synthesize sourceIcon = m_sourceIcon;
+@synthesize image = m_image;
 
 +(ArtworkItem*) artworkItemWithPath:(NSString*) path sourceIcon:(NSImage*) icon checked:(BOOL) checked;
 {
@@ -63,21 +70,6 @@ NSImage* g_sourceUserIcon;
     item->m_sourceIcon = [icon retain];
     item->m_checked = checked;
     return item;
-}
-
--(NSNumber*) checked
-{
-    return [NSNumber numberWithBool:m_checked];
-}
-
--(NSImage*) sourceIcon
-{
-    return m_sourceIcon;
-}
-
--(NSImage*) image
-{
-    return m_image;
 }
 
 @end
@@ -162,7 +154,7 @@ typedef enum { INPUT_TAG, SEARCH_TAG, USER_TAG, OUTPUT_TAG } TagType;
 {
     // primary is the first checked image
     for (ArtworkItem* item in m_artworkList)
-        if ([[item checked] boolValue])
+        if ([item checked])
             return [item image];
     return nil;
 }
@@ -171,6 +163,7 @@ typedef enum { INPUT_TAG, SEARCH_TAG, USER_TAG, OUTPUT_TAG } TagType;
 {
     id item = [ArtworkItem artworkItemWithImage:image sourceIcon:g_sourceUserIcon checked:YES];
     [m_artworkList insertObject:item atIndex:0];
+    [m_transcoder updateFileInfo];
 }
 
 -(id) createArtwork:(NSImage*) image
@@ -219,7 +212,7 @@ typedef enum { INPUT_TAG, SEARCH_TAG, USER_TAG, OUTPUT_TAG } TagType;
         atom = [[atomArray objectAtIndex:2] stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"[]"]];
         
     // extract the content rating and annotation if this is iTunEXTC (and simplify atom name)
-    if ([atom isEqualToString:@"com.apple.iTunes;iTunEXTC"]) {
+    if ([atom isEqualToString:@"com.apple.iTunes;iTunEXTC"] || [atom isEqualToString:@"iTunEXTC"]) {
         NSArray* valueArray = [value componentsSeparatedByString:@"|"];
         value = [valueArray objectAtIndex:3];
         key = @"rating_annotation";

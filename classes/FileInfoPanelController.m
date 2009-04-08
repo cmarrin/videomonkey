@@ -12,6 +12,11 @@
 
 @implementation FileInfoPanelController
 
+-(NSArray*) artworkList
+{
+    return [[(Transcoder*) [m_fileListController selection] metadata] artworkList];
+}
+
 -(NSImage*) primaryArtwork
 {
     return [[(Transcoder*) [m_fileListController selection] metadata] primaryArtwork];
@@ -74,6 +79,11 @@
 - (void)drawerDidClose:(NSNotification *)notification
 {
     [m_artworkDrawerDisclosureButton setState:NSOffState];
+}
+
+-(IBAction)artworkCheckedStateChanged:(id)sender
+{
+    [m_fileListController rearrangeObjects];
 }
 
 - (id)valueForUndefinedKey:(NSString *)key
