@@ -169,6 +169,12 @@ typedef enum { INPUT_TAG, SEARCH_TAG, USER_TAG, OUTPUT_TAG } TagType;
     [m_transcoder updateFileInfo];
 }
 
+-(NSString*) contentRatingValue
+{
+    NSString* rating = [[m_tagDictionary valueForKey:@"contentRating"] displayValue];
+    return rating;
+}
+
 -(id) createArtwork:(NSImage*) image
 {
     return [ArtworkItem artworkItemWithImage:image sourceIcon:g_sourceUserIcon checked:YES];
@@ -190,10 +196,18 @@ typedef enum { INPUT_TAG, SEARCH_TAG, USER_TAG, OUTPUT_TAG } TagType;
     int status = [m_task terminationStatus];
     if (status)
         [m_transcoder log: @"ERROR reading metadata for %@:%d", m_transcoder.inputFileInfo.filename, status];
-        
-    // we always need a 'stik' value - defaults to Movie
-    if (![m_tagDictionary valueForKey:@"stik"])
-        [self setTagValue:@"Movie" forKey:@"stik" type:USER_TAG];
+}
+
+-(NSString*) handleTrackOrDisk:(NSString*) value totalKey:(NSString*) totalKey
+{
+    NSArray* array = [value componentsSeparatedByString:@" of "];
+    if ([array count] < 2)
+        array = [value componentsSeparatedByString:@"/"];
+    if ([array count] > 1) {
+        [self setTagValue:[[NSNumber numberWithInt:[[array objectAtIndex:1] intValue]] stringValue] forKey:totalKey type:INPUT_TAG];
+        value = [[NSNumber numberWithInt:[[array objectAtIndex:0] intValue]] stringValue];
+    }
+    return value;
 }
 
 -(void) processResponse: (NSString*) response
@@ -236,7 +250,7 @@ typedef enum { INPUT_TAG, SEARCH_TAG, USER_TAG, OUTPUT_TAG } TagType;
     
     atom = replacementAtom;
     
-    // Handle special values
+    // Handle year
     if ([atom isEqualToString:@"year"]) {
         // split out year, month, day
         NSArray* dayArray = [value componentsSeparatedByString:@"-"];
@@ -248,6 +262,14 @@ typedef enum { INPUT_TAG, SEARCH_TAG, USER_TAG, OUTPUT_TAG } TagType;
             [self setTagValue:[[NSNumber numberWithInt:[[dayArray objectAtIndex:2] intValue]] stringValue] forKey:@"year_day" type:INPUT_TAG];
     }
     
+    // handle tracknum
+    if ([atom isEqualToString:@"tracknum"])
+        value = [self handleTrackOrDisk:value totalKey:@"tracknum_total"];
+            
+    // handle disk
+    if ([atom isEqualToString:@"disk"])
+        value = [self handleTrackOrDisk:value totalKey:@"disk_total"];
+
     // handle artwork
     if ([atom isEqualToString:@"artwork"])
         m_numArtwork = [[[value componentsSeparatedByString:@" "] objectAtIndex:0] intValue];
@@ -286,20 +308,6 @@ typedef enum { INPUT_TAG, SEARCH_TAG, USER_TAG, OUTPUT_TAG } TagType;
     }
 }
 
--(void) processRead: (NSNotification*) note
-{
-    if (![[note name] isEqualToString:NSFileHandleReadCompletionNotification])
-        return;
-
-	NSData	*data = [[note userInfo] objectForKey:NSFileHandleNotificationDataItem];
-    [self processData: data];
-	
-	if([data length]) {
-        // read another buffer
-		[[note object] readInBackgroundAndNotify];
-    }
-}
-
 -(void) readMetadata:(NSString*) filename
 {
     // setup command
@@ -322,15 +330,16 @@ typedef enum { INPUT_TAG, SEARCH_TAG, USER_TAG, OUTPUT_TAG } TagType;
         
     // add notifications
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(processFinishEncode:) name:NSTaskDidTerminateNotification object:m_task];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(processRead:) name:NSFileHandleReadCompletionNotification object:[m_messagePipe fileHandleForReading]];
-
-    [[m_messagePipe fileHandleForReading] readInBackgroundAndNotify];
     
     [m_task launch];
     [m_task waitUntilExit];
     NSData* data = [[m_messagePipe fileHandleForReading] availableData];
     [self processData:data];
     
+    // we always need a 'stik' value - defaults to Movie
+    if (![m_tagDictionary valueForKey:@"stik"])
+        [self setTagValue:@"Movie" forKey:@"stik" type:USER_TAG];
+        
     // get artwork
     for (int i = 0; i < m_numArtwork; ++i) {
         ArtworkItem* item = [ArtworkItem artworkItemWithPath:[NSString stringWithFormat:@"%@_artwork_%d", tmpArtworkPath, i+1] sourceIcon:g_sourceInputIcon checked:YES];
