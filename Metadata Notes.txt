@@ -95,13 +95,22 @@ Info we are currently showing in Metadata panel:
 	Episode [tves]
 	Season [tvsn]
 	Track # of # [trkn]
-	Disc # of # [?]
-	Description [ldes]
+	Disc # of # [disk]
+	Description [desc]
 	Release date Y M D [©day]
 	Media Kind (Movie, TV Show, etc.) [stik]
 	Content Rating [com.apple.iTunes;iTunEXTC]
-	Artwork
+	Rating Annotation (from [com.apple.iTunes;iTunEXTC])
+	Content Advisory [rtng]
+	Artwork [covr]
 	Comments [©cmt]
+	Album [©alb]
+	Artist [©ART]
+	Album Artist [aART]
+	Copyright Notice [cprt]
+	Network [tvnn]
+	Encoding Tool [©too]
+	Genre [gnre] or [©gen]
 
 Accessing Metadata Services
 ===========================

@@ -16,6 +16,9 @@ NSImage* g_sourceInputIcon;
 NSImage* g_sourceSearchIcon;
 NSImage* g_sourceUserIcon;
 
+// Map from 4 char tag to AtomicParsley tag name
+static NSDictionary* g_tagMap = nil;
+
 // Artwork Item
 @interface ArtworkItem : NSObject {
     NSImage* m_image;
@@ -171,7 +174,7 @@ typedef enum { INPUT_TAG, SEARCH_TAG, USER_TAG, OUTPUT_TAG } TagType;
     return [ArtworkItem artworkItemWithImage:image sourceIcon:g_sourceUserIcon checked:YES];
 }
 
--(void) setTagValue:(NSString*) value forKey:(NSString*) key tag:(NSString*) tag type:(TagType) type
+-(void) setTagValue:(NSString*) value forKey:(NSString*) key type:(TagType) type
 {
     TagItem* item = (TagItem*) [m_tagDictionary valueForKey:key];
     if (!item) {
@@ -179,7 +182,7 @@ typedef enum { INPUT_TAG, SEARCH_TAG, USER_TAG, OUTPUT_TAG } TagType;
         [m_tagDictionary setValue:item forKey:key];
     }
     
-    [item setValue:value tag:tag type:type];
+    [item setValue:value tag:key type:type];
 }
 
 -(void) processFinishEncode: (NSNotification*) note
@@ -190,7 +193,7 @@ typedef enum { INPUT_TAG, SEARCH_TAG, USER_TAG, OUTPUT_TAG } TagType;
         
     // we always need a 'stik' value - defaults to Movie
     if (![m_tagDictionary valueForKey:@"stik"])
-        [self setTagValue:@"Movie" forKey:@"stik" tag:@"stik" type:USER_TAG];
+        [self setTagValue:@"Movie" forKey:@"stik" type:USER_TAG];
 }
 
 -(void) processResponse: (NSString*) response
@@ -203,7 +206,6 @@ typedef enum { INPUT_TAG, SEARCH_TAG, USER_TAG, OUTPUT_TAG } TagType;
     NSMutableArray* array = [NSMutableArray arrayWithArray:[response componentsSeparatedByString:@":"]];
     NSArray* atomArray = [[array objectAtIndex:0] componentsSeparatedByString:@" "];
     NSString* atom = [[atomArray objectAtIndex:1] stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"\""]];
-    NSString* key = atom;
     [array removeObjectAtIndex:0];
     NSString* value = [[array componentsJoinedByString:@":"] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
     
@@ -214,45 +216,47 @@ typedef enum { INPUT_TAG, SEARCH_TAG, USER_TAG, OUTPUT_TAG } TagType;
     // extract the content rating and annotation if this is iTunEXTC (and simplify atom name)
     if ([atom isEqualToString:@"com.apple.iTunes;iTunEXTC"] || [atom isEqualToString:@"iTunEXTC"]) {
         NSArray* valueArray = [value componentsSeparatedByString:@"|"];
+        
+        // set the annotation
         value = [valueArray objectAtIndex:3];
-        key = @"rating_annotation";
-        [self setTagValue:value forKey:key tag:@"rating_annotation" type:INPUT_TAG];
-        
+        [self setTagValue:value forKey:@"rating_annotation" type:INPUT_TAG];
+    
+        // prep the rating
         value = [valueArray objectAtIndex:1];
-        key = @"rating";
-        
+        atom = @"iTunEXTC";
     }
     
-    // keypaths can't have special characters, so change things like '©' to '__'
-    NSArray* legalArray = [key componentsSeparatedByCharactersInSet:[[NSCharacterSet alphanumericCharacterSet] invertedSet]];
-    key = [legalArray componentsJoinedByString:@"__"];
+    // map the atom to the tag name
+    NSString* replacementAtom = [g_tagMap valueForKey:atom];
+    
+    if (!replacementAtom) {
+        NSLog(@"*** Unknown tag: '%@' with value '%@'\n", atom, value);
+        return;
+    }
+    
+    atom = replacementAtom;
     
     // Handle special values
-    if ([key isEqualToString:@"__day"]) {
+    if ([atom isEqualToString:@"year"]) {
         // split out year, month, day
         NSArray* dayArray = [value componentsSeparatedByString:@"-"];
         if ([dayArray count] > 0)
-            [self setTagValue:[[NSNumber numberWithInt:[[dayArray objectAtIndex:0] intValue]] stringValue] forKey:@"__day_year" tag:@"©day" type:INPUT_TAG];
+            [self setTagValue:[[NSNumber numberWithInt:[[dayArray objectAtIndex:0] intValue]] stringValue] forKey:@"year_year" type:INPUT_TAG];
         if ([dayArray count] > 1)
-            [self setTagValue:[[NSNumber numberWithInt:[[dayArray objectAtIndex:1] intValue]] stringValue] forKey:@"__day_month" tag:@"©day" type:INPUT_TAG];
+            [self setTagValue:[[NSNumber numberWithInt:[[dayArray objectAtIndex:1] intValue]] stringValue] forKey:@"year_month" type:INPUT_TAG];
         if ([dayArray count] > 2)
-            [self setTagValue:[[NSNumber numberWithInt:[[dayArray objectAtIndex:2] intValue]] stringValue] forKey:@"__day_day" tag:@"©day" type:INPUT_TAG];
+            [self setTagValue:[[NSNumber numberWithInt:[[dayArray objectAtIndex:2] intValue]] stringValue] forKey:@"year_day" type:INPUT_TAG];
     }
     
     // handle artwork
-    if ([key isEqualToString:@"covr"])
+    if ([atom isEqualToString:@"artwork"])
         m_numArtwork = [[[value componentsSeparatedByString:@" "] objectAtIndex:0] intValue];
     else
-        [self setTagValue:value forKey:key tag:atom type:INPUT_TAG];
+        [self setTagValue:value forKey:atom type:INPUT_TAG];
 }
 
--(void) processRead: (NSNotification*) note
+-(void) processData: (NSData*) data
 {
-    if (![[note name] isEqualToString:NSFileHandleReadCompletionNotification])
-        return;
-
-	NSData	*data = [[note userInfo] objectForKey:NSFileHandleNotificationDataItem];
-	
 	if([data length]) {
 		NSString* string = [[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding] autorelease];
         
@@ -279,7 +283,18 @@ typedef enum { INPUT_TAG, SEARCH_TAG, USER_TAG, OUTPUT_TAG } TagType;
             // put remaining component in m_buffer for next time
             [m_buffer setString: [components objectAtIndex:[components count]-1]];
         }
-        
+    }
+}
+
+-(void) processRead: (NSNotification*) note
+{
+    if (![[note name] isEqualToString:NSFileHandleReadCompletionNotification])
+        return;
+
+	NSData	*data = [[note userInfo] objectForKey:NSFileHandleNotificationDataItem];
+    [self processData: data];
+	
+	if([data length]) {
         // read another buffer
 		[[note object] readInBackgroundAndNotify];
     }
@@ -313,6 +328,8 @@ typedef enum { INPUT_TAG, SEARCH_TAG, USER_TAG, OUTPUT_TAG } TagType;
     
     [m_task launch];
     [m_task waitUntilExit];
+    NSData* data = [[m_messagePipe fileHandleForReading] availableData];
+    [self processData:data];
     
     // get artwork
     for (int i = 0; i < m_numArtwork; ++i) {
@@ -324,6 +341,32 @@ typedef enum { INPUT_TAG, SEARCH_TAG, USER_TAG, OUTPUT_TAG } TagType;
 
 +(Metadata*) metadataWithTranscoder: (Transcoder*) transcoder
 {
+    // init the tag map, if needed
+    if (!g_tagMap)
+        g_tagMap = [[NSDictionary dictionaryWithObjectsAndKeys:
+            @"title",       	@"©nam", 
+            @"TVShowName",  	@"tvsh", 
+            @"TVEpisode",   	@"tven", 
+            @"TVEpisodeNum",	@"tves", 
+            @"TVSeasonNum", 	@"tvsn", 
+            @"tracknum",    	@"trkn", 
+            @"disk",        	@"disk", 
+            @"description", 	@"desc", 
+            @"year",        	@"©day", 
+            @"stik",        	@"stik", 
+            @"advisory",    	@"rtng", 
+            @"comment",     	@"©cmt", 
+            @"album",       	@"©alb", 
+            @"artist",      	@"©ART", 
+            @"albumArtist", 	@"aART", 
+            @"copyright",   	@"cprt", 
+            @"TVNetwork",   	@"tvnn", 
+            @"encodingTool",	@"©too", 
+            @"genre",       	@"gnre", 
+            @"contentRating",	@"iTunEXTC",	// you actually need to go: --rDNSatom "<org>|<rating>|<rating num>|<annotation>" name=iTunEXTC domain=com.apple.iTunes
+            @"artwork", 	  	@"covr", 		// with a full path, use multiples for more than one image
+            nil ] retain];
+                    
     // read in the icons, if needed
     if (!g_sourceInputIcon) {
         NSString* path = [[NSBundle mainBundle] pathForResource:@"tinyitunesfile" ofType:@"png"];
