@@ -175,8 +175,10 @@
     [self setSelectedObjects:[self arrangedObjects]];
 }
 
+/*
 -(id) selection
 {
+    NSArray* arr = [self arrangedObjects];
     NSArray* sel = [self selectedObjects];
     
     // I don't know why, but the first time through the selectedObjects
@@ -185,6 +187,7 @@
     
     return ([sel count] == 1 && [[sel objectAtIndex:0] isKindOfClass:[Transcoder class]]) ? [sel objectAtIndex:0] : nil;
 }
+*/
 
 - (void)selectNext:(id)sender
 {
@@ -210,6 +213,12 @@
 {
     NSLog(@"*** FileListController::valueForUndefinedKey:%@\n", key);
     return nil;
+}
+
+- (void)addObserver:(NSObject *)anObserver forKeyPath:(NSString *)keyPath options:(NSKeyValueObservingOptions)options context:(void *)context
+{
+    id sel = [self selection];
+    [super addObserver:anObserver forKeyPath:keyPath options:options context:context];
 }
 
 @end

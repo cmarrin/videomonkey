@@ -253,10 +253,9 @@ typedef enum { INPUT_TAG, SEARCH_TAG, USER_TAG, OUTPUT_TAG } TagType;
     // map the atom to the tag name
     NSString* replacementAtom = [g_tagMap valueForKey:atom];
     
-    if (!replacementAtom) {
-        NSLog(@"*** Unknown tag: '%@' with value '%@'\n", atom, value);
+    // ignore atoms we don't understand
+    if (!replacementAtom)
         return;
-    }
     
     atom = replacementAtom;
     
@@ -356,6 +355,14 @@ typedef enum { INPUT_TAG, SEARCH_TAG, USER_TAG, OUTPUT_TAG } TagType;
         if (item)
             [m_artworkList addObject:item];
     }
+
+    // All the keys in g_tagMap need to be filled in so the user can modify them.
+    // When writing out, we will not write keys that have never been set
+    for (NSString* key in g_tagMap) {
+        id atom = [g_tagMap valueForKey:key];
+        if (![m_tagDictionary valueForKey:atom])
+            [self setTagValue:@"" forKey:atom type:USER_TAG];
+    }
 }
 
 +(Metadata*) metadataWithTranscoder: (Transcoder*) transcoder
@@ -369,11 +376,17 @@ typedef enum { INPUT_TAG, SEARCH_TAG, USER_TAG, OUTPUT_TAG } TagType;
             @"TVEpisodeNum",	@"tves", 
             @"TVSeasonNum", 	@"tvsn", 
             @"tracknum",    	@"trkn", 
+            @"tracknum_total",  @"tracknum_total", 
             @"disk",        	@"disk", 
+            @"disk_total",      @"disk_total", 
             @"description", 	@"desc", 
             @"year",        	@"©day", 
+            @"year_year",      	@"year_year", 
+            @"year_month",     	@"year_month", 
+            @"year_day",       	@"year_day", 
             @"stik",        	@"stik", 
-            @"advisory",    	@"rtng", 
+            @"advisory",    	@"rtng",
+            @"rating_annotation",@"rating_annotation",
             @"comment",     	@"©cmt", 
             @"album",       	@"©alb", 
             @"artist",      	@"©ART", 

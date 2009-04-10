@@ -86,6 +86,12 @@
     [m_fileListController rearrangeObjects];
 }
 
+-(id) selection
+{
+    // if we get here it means the artwork has no selection
+    return nil;
+}
+
 - (id)valueForUndefinedKey:(NSString *)key
 {
     NSLog(@"*** FileInfoPanelController::valueForUndefinedKey:%@\n", key);

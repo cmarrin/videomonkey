@@ -13,6 +13,21 @@
 #import "MoviePanelController.h"
 #import "Transcoder.h"
 
+@interface DummyMetadata : NSObject {
+}
+
+@end
+
+@implementation DummyMetadata
+
+-(id) valueForKey:(NSString*) key
+{
+    NSLog(@"*** DummyMetadata::valueForKey:%@\n", key);
+    return nil;
+}
+
+@end
+
 @implementation MyPathCell
 -(void)setURL:(NSURL *)url
 {
@@ -475,6 +490,24 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
     }
     
     [m_fileListController reloadData];
+}
+
+-(id) metadata
+{
+    // if we ask for the metadata here, it means we have no selection.
+    return nil;
+}
+
+-(id) outputFileInfo
+{
+    // if we ask for outputFileInfo here, it means we have no selection.
+    return nil;
+}
+
+-(id) inputFileInfo
+{
+    // if we ask for inputFileInfo here, it means we have no selection.
+    return nil;
 }
 
 - (id)valueForUndefinedKey:(NSString *)key
