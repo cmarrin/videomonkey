@@ -130,12 +130,22 @@ typedef enum { INPUT_TAG, SEARCH_TAG, USER_TAG, OUTPUT_TAG } TagType;
 
 -(NSString*) displayValue
 {
+    return m_outputValue;
+    /*
     switch(m_tagToShow) {
         case INPUT_TAG: return m_inputValue;
         case SEARCH_TAG: return m_searchValue;
         case USER_TAG: return m_userValue;
         default: return m_outputValue;
     }
+    */
+}
+
+-(void) setDisplayValue:(NSString*) value
+{
+    [value retain];
+    [m_outputValue release];
+    m_outputValue = value;
 }
 
 -(BOOL) hasMultipleValues
