@@ -518,7 +518,7 @@ static NSImage* getFileStatusImage(FileStatus status)
     NSString* atomicParsleyParams = [m_metadata atomicParsleyParams];
     if (atomicParsleyParams && [atomicParsleyParams length] > 0) {
         NSString* cmdPath = [NSString stringWithString: [[NSBundle mainBundle] resourcePath]];
-        recipe = [NSString stringWithFormat:@"%@ ; %@ \"%@\" %@", 
+        recipe = [NSString stringWithFormat:@"%@ ; %@ \"%@\" -W %@", 
                     recipe, 
                     [cmdPath stringByAppendingPathComponent: @"bin/AtomicParsley"],
                     self.outputFileInfo.filename,

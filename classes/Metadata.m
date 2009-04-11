@@ -147,6 +147,8 @@ typedef enum { INPUT_TAG, SEARCH_TAG, USER_TAG, OUTPUT_TAG } TagType;
 
 -(void) setDisplayValue:(NSString*) value
 {
+    if ([value isKindOfClass:[NSAttributedString class]])
+        value = [(NSAttributedString*) value string];
     [value retain];
     [m_outputValue release];
     m_outputValue = value;
