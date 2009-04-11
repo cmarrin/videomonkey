@@ -89,6 +89,8 @@ typedef enum { INPUT_TAG, SEARCH_TAG, USER_TAG, OUTPUT_TAG } TagType;
     TagType m_tagToShow;
 }
 
+@property (readonly) NSString* outputValue;
+
 +(TagItem*) tagItem;
 
 -(void) setValue:(NSString*) value tag:(NSString*) tag type:(TagType) type;
@@ -96,6 +98,8 @@ typedef enum { INPUT_TAG, SEARCH_TAG, USER_TAG, OUTPUT_TAG } TagType;
 @end
 
 @implementation TagItem
+
+@synthesize outputValue = m_outputValue;
 
 +(TagItem*) tagItem;
 {
@@ -420,6 +424,98 @@ typedef enum { INPUT_TAG, SEARCH_TAG, USER_TAG, OUTPUT_TAG } TagType;
     [metadata readMetadata: transcoder.inputFileInfo.filename];
     
     return metadata;
+}
+
+-(NSString*) atomicParsleyParams
+{
+    NSMutableString* params = [[NSMutableString alloc] init];
+    NSMutableString* year = [[NSMutableString alloc] init];
+    NSMutableString* track = [[NSMutableString alloc] init];
+    NSMutableString* disk = [[NSMutableString alloc] init];
+    
+    for (NSString* key in g_tagMap) {
+        NSString* param = [g_tagMap valueForKey: key];
+        NSString* value = [[m_tagDictionary valueForKey: param] outputValue];
+        
+        // handle special cases
+        // if 'stik' is "Movie" don't bother writing it
+        if ([param isEqualToString:@"stik"] && [value isEqualToString:@"Movie"])
+            value = nil;
+            
+        if ([param isEqualToString:@"artwork"])
+            continue;
+            
+        // make year
+        if ([param isEqualToString:@"year"])
+            continue;
+            
+        if ([param isEqualToString:@"year_year"]) {
+            if (value && [value length] > 0)
+                [year appendString:value];
+            continue;
+        }
+        
+        if ([param isEqualToString:@"year_month"]) {
+            if (value && [value length] > 0) {
+                [year appendString:@"-"];
+                [year appendString:value];
+            }
+            continue;
+        }
+        
+        if ([param isEqualToString:@"year_day"]) {
+            if (value && [value length] > 0) {
+                [year appendString:@"-"];
+                [year appendString:value];
+            }
+            continue;
+        }
+
+        if ([param isEqualToString:@"tracknum"]) {
+            if (value && [value length] > 0) {
+                [track appendString:value];
+            }
+            continue;
+        }
+
+        if ([param isEqualToString:@"tracknum_total"]) {
+            if (value && [value length] > 0) {
+                [track appendString:@" of "];
+                [track appendString:value];
+            }
+            continue;
+        }
+
+        if ([param isEqualToString:@"disk"]) {
+            if (value && [value length] > 0) {
+                [disk appendString:value];
+            }
+            continue;
+        }
+
+        if ([param isEqualToString:@"disk_total"]) {
+            if (value && [value length] > 0) {
+                [disk appendString:@" of "];
+                [disk appendString:value];
+            }
+            continue;
+        }
+
+        if (value && [value length] > 0)
+            [params appendString:[NSString stringWithFormat:@" --%@ '%@'", param, value]];
+    }
+    
+    // add the specials
+    if ([year length] > 0)
+        [params appendString:[NSString stringWithFormat:@" --year '%@'", year]];
+    
+    if ([track length] > 0)
+        [params appendString:[NSString stringWithFormat:@" --tracknum '%@'", track]];
+    
+    if ([disk length] > 0)
+        [params appendString:[NSString stringWithFormat:@" --disk '%@'", disk]];
+    
+    return params;
 }
 
 - (id)valueForUndefinedKey:(NSString *)key

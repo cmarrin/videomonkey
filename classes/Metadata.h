@@ -29,4 +29,6 @@
 
 -(id) createArtwork:(NSImage*) image;
 
+-(NSString*) atomicParsleyParams;
+
 @end

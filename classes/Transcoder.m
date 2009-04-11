@@ -369,6 +369,7 @@ static NSImage* getFileStatusImage(FileStatus status)
     [env setValue: [cmdPath stringByAppendingPathComponent: @"bin/movtoy4m"] forKey: @"movtoy4m"];
     [env setValue: [cmdPath stringByAppendingPathComponent: @"bin/yuvadjust"] forKey: @"yuvadjust"];
     [env setValue: [cmdPath stringByAppendingPathComponent: @"bin/yuvcorrect"] forKey: @"yuvcorrect"];
+    [env setValue: [cmdPath stringByAppendingPathComponent: @"bin/AtomicParsley"] forKey: @"AtomicParsley"];
 
     // fill in the filenames
     [env setValue: self.inputFileInfo.filename forKey: @"input_file"];
@@ -511,6 +512,17 @@ static NSImage* getFileStatusImage(FileStatus status)
         [m_appController log:@"*** ERROR: No recipe returned, probably due to a previous JavaScript error\n"];
         [self finish: -1];
         return NO;
+    }
+    
+    // append the metadata command, if needed
+    NSString* atomicParsleyParams = [m_metadata atomicParsleyParams];
+    if (atomicParsleyParams && [atomicParsleyParams length] > 0) {
+        NSString* cmdPath = [NSString stringWithString: [[NSBundle mainBundle] resourcePath]];
+        recipe = [NSString stringWithFormat:@"%@ ; %@ \"%@\" %@", 
+                    recipe, 
+                    [cmdPath stringByAppendingPathComponent: @"bin/AtomicParsley"],
+                    self.outputFileInfo.filename,
+                    atomicParsleyParams];
     }
     
     // split out each command separately

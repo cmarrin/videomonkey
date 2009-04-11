@@ -215,10 +215,4 @@
     return nil;
 }
 
-- (void)addObserver:(NSObject *)anObserver forKeyPath:(NSString *)keyPath options:(NSKeyValueObservingOptions)options context:(void *)context
-{
-    id sel = [self selection];
-    [super addObserver:anObserver forKeyPath:keyPath options:options context:context];
-}
-
 @end
