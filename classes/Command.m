@@ -22,7 +22,7 @@
         m_buffer = [[NSMutableString alloc] init];
         
         m_task = [[NSTask alloc] init];
-        m_messagePipe = [NSPipe pipe];
+        m_messagePipe = [[NSPipe pipe] retain];
         
         if (m_outputType == OT_PIPE)
             m_outputPipe = [NSPipe pipe];
@@ -65,8 +65,6 @@
     [[m_messagePipe fileHandleForReading] readInBackgroundAndNotify];
     
     [m_task launch];
-    if (m_outputType == OT_WAIT)
-        [m_task waitUntilExit];
 }
 
 -(void) suspend
@@ -87,7 +85,8 @@
 
 -(void) terminate
 {
-    [m_task terminate];
+    if (m_task && [m_task isRunning])
+        [m_task terminate];
 }
 
 -(void) setInputPipe: (NSPipe*) pipe

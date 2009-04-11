@@ -99,6 +99,7 @@ typedef enum FileStatus { FS_INVALID, FS_VALID, FS_ENCODING, FS_PAUSED, FS_FAILE
     NSTask* m_task;
     NSPipe* m_pipe;
     NSMutableArray* m_commands;
+    int m_currentCommandIndex;
     NSProgressIndicator* m_progressIndicator;
     NSImageView* m_statusImageView;
     BOOL m_isLastCommandRunning;

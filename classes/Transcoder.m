@@ -461,6 +461,23 @@ static NSImage* getFileStatusImage(FileStatus status)
         [[NSFileManager defaultManager] removeFileAtPath:self.outputFileInfo.filename handler:nil];
 }
 
+-(void) startNextCommands
+{
+    Command* command = [m_commands objectAtIndex:m_currentCommandIndex];
+    
+    while (1) {
+        if ([m_commands count]-1 == m_currentCommandIndex)
+            m_isLastCommandRunning = YES;
+            
+        Command* nextCommand = m_isLastCommandRunning ? nil : [m_commands objectAtIndex:m_currentCommandIndex+1];
+        [command execute: nextCommand];
+        m_currentCommandIndex++;
+        if (!nextCommand || [command needsToWait])
+            return;
+        command = nextCommand;
+    }
+}
+
 - (BOOL) startEncode
 {
     if ([m_outputFiles count] == 0 || !m_enabled)
@@ -559,19 +576,9 @@ static NSImage* getFileStatusImage(FileStatus status)
     }
     
     // execute each command in turn
-    enumerator = [m_commands objectEnumerator];
-    Command* command = [enumerator nextObject];
     m_isLastCommandRunning = NO;
-    int i = 0;
-    
-    while(command) {
-        Command* nextCommand = [enumerator nextObject];
-        
-        if (++i >= [m_commands count])
-            m_isLastCommandRunning = YES;
-        [command execute: nextCommand];
-        command = nextCommand;
-    }
+    m_currentCommandIndex = 0;
+    [self startNextCommands];
 
     m_fileStatus = FS_ENCODING;
     [m_statusImageView setImage: getFileStatusImage(m_fileStatus)];
@@ -653,6 +660,8 @@ static NSImage* getFileStatusImage(FileStatus status)
 {
     if (m_isLastCommandRunning)
         [self finish: status];
+    else
+        [self startNextCommands];
 }
 
 -(void) updateFileInfo
