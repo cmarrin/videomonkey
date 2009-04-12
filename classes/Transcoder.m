@@ -531,17 +531,6 @@ static NSImage* getFileStatusImage(FileStatus status)
         return NO;
     }
     
-    // append the metadata command, if needed
-    NSString* atomicParsleyParams = [m_metadata atomicParsleyParams];
-    if (atomicParsleyParams && [atomicParsleyParams length] > 0) {
-        NSString* cmdPath = [NSString stringWithString: [[NSBundle mainBundle] resourcePath]];
-        recipe = [NSString stringWithFormat:@"%@ ; %@ \"%@\" -W %@", 
-                    recipe, 
-                    [cmdPath stringByAppendingPathComponent: @"bin/AtomicParsley"],
-                    self.outputFileInfo.filename,
-                    atomicParsleyParams];
-    }
-    
     // split out each command separately
     NSArray* elements = [recipe componentsSeparatedByCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@";&|"]];
     
@@ -577,6 +566,7 @@ static NSImage* getFileStatusImage(FileStatus status)
     
     // execute each command in turn
     m_isLastCommandRunning = NO;
+    m_wroteMetadata = NO;
     m_currentCommandIndex = 0;
     [self startNextCommands];
 
@@ -658,8 +648,28 @@ static NSImage* getFileStatusImage(FileStatus status)
 
 -(void) commandFinished: (Command*) command status: (int) status
 {
-    if (m_isLastCommandRunning)
-        [self finish: status];
+    if (m_isLastCommandRunning) {
+        // now do the metadata if needed
+        BOOL writingMetadata = NO;
+        if (!m_wroteMetadata) {
+            m_wroteMetadata = YES;
+            NSString* atomicParsleyParams = [m_metadata atomicParsleyParams];
+            if (atomicParsleyParams && [atomicParsleyParams length] > 0) {
+                writingMetadata = YES;
+                NSString* cmdPath = [NSString stringWithString: [[NSBundle mainBundle] resourcePath]];
+                NSString* commandString = [NSString stringWithFormat:@"%@ \"%@\" -W %@", 
+                                        [cmdPath stringByAppendingPathComponent: @"bin/AtomicParsley"],
+                                        self.outputFileInfo.filename,
+                                        atomicParsleyParams];
+                [m_commands addObject:[[Command alloc] initWithTranscoder:self command:commandString 
+                            outputType:OT_WAIT identifier:[[NSNumber numberWithInt:0] stringValue]]];
+                [[m_commands lastObject] execute: nil];
+            }
+        }
+        
+        if (!writingMetadata)
+            [self finish: status];
+    }
     else
         [self startNextCommands];
 }

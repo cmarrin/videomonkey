@@ -103,6 +103,7 @@ typedef enum FileStatus { FS_INVALID, FS_VALID, FS_ENCODING, FS_PAUSED, FS_FAILE
     NSProgressIndicator* m_progressIndicator;
     NSImageView* m_statusImageView;
     BOOL m_isLastCommandRunning;
+    BOOL m_wroteMetadata;
     
     NSFileHandle* m_logFile;
     NSString* m_tempAudioFileName;
