@@ -30,5 +30,6 @@
 -(id) createArtwork:(NSImage*) image;
 
 -(NSString*) atomicParsleyParams;
+-(void) cleanupAfterAtomicParsley;
 
 @end

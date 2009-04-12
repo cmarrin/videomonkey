@@ -2,14 +2,14 @@
 <archive type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="7.03">
 	<data>
 		<int key="IBDocument.SystemTarget">1050</int>
-		<string key="IBDocument.SystemVersion">9J33</string>
+		<string key="IBDocument.SystemVersion">9G55</string>
 		<string key="IBDocument.InterfaceBuilderVersion">677</string>
-		<string key="IBDocument.AppKitVersion">949.46</string>
+		<string key="IBDocument.AppKitVersion">949.43</string>
 		<string key="IBDocument.HIToolboxVersion">353.00</string>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
-			<integer value="2662"/>
 			<integer value="29"/>
+			<integer value="2662"/>
 			<integer value="3773"/>
 			<integer value="475"/>
 		</object>
@@ -4539,7 +4539,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 				<int key="NSWindowStyleMask">271</int>
 				<int key="NSWindowBacking">2</int>
 				<string key="NSWindowRect">{{668, 357}, {480, 350}}</string>
-				<int key="NSWTFlags">-469762048</int>
+				<int key="NSWTFlags">1677721600</int>
 				<string key="NSWindowTitle">Movie</string>
 				<string key="NSWindowClass">NSWindow</string>
 				<object class="NSToolbar" key="NSViewClass" id="466404551">
@@ -4922,7 +4922,7 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 				<int key="NSWindowStyleMask">15</int>
 				<int key="NSWindowBacking">2</int>
 				<string key="NSWindowRect">{{506, 360}, {466, 566}}</string>
-				<int key="NSWTFlags">-469762048</int>
+				<int key="NSWTFlags">1677721600</int>
 				<string key="NSWindowTitle">Window</string>
 				<string key="NSWindowClass">NSWindow</string>
 				<nil key="NSViewClass"/>

@@ -516,8 +516,31 @@ typedef enum { INPUT_TAG, SEARCH_TAG, USER_TAG, OUTPUT_TAG } TagType;
     
     if ([disk length] > 0)
         [params appendString:[NSString stringWithFormat:@" --disk '%@'", disk]];
+        
+    // write out temp artwork
+    NSString* tmpArtworkPath = [NSString stringWithFormat:@"/tmp/AtomicParlsleyArtwork_%p", self];
+    int i = 0;
     
+    for (ArtworkItem* artwork in m_artworkList) {
+        NSString* filename = [NSString stringWithFormat:@"%@_%d.jpg", tmpArtworkPath, i++];
+        NSBitmapImageRep* rep = [NSBitmapImageRep imageRepWithData:[[artwork image] TIFFRepresentation]];
+        [[rep representationUsingType:NSJPEGFileType properties:nil] writeToFile: filename atomically: YES];
+        
+        // write the param
+        [params appendFormat:@" --artwork %@", filename];
+    }
     return params;
+}
+
+-(void) cleanupAfterAtomicParsley
+{
+    NSString* tmpArtworkPath = [NSString stringWithFormat:@"/tmp/AtomicParlsleyArtwork_%p", self];
+    int i = 0;
+
+    for (ArtworkItem* artwork in m_artworkList) {
+        NSString* filename = [NSString stringWithFormat:@"%@_%d.jpg", tmpArtworkPath, i++];
+        [[NSFileManager defaultManager] removeFileAtPath:filename handler:nil];
+    }
 }
 
 - (id)valueForUndefinedKey:(NSString *)key
