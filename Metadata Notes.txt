@@ -119,3 +119,113 @@ API Keys
 --------
 TheMovieDB.org: ae6c3dcf41e60014a3d0508e7f650884
 TheTVDB.com: 75D1299AD9C7876E
+
+TVDB Interface
+--------------
+
+1) Hit: http://www.thetvdb.com/api/75D1299AD9C7876E/mirrors.xml returned XML has <mirrorpath> element. Use that as url
+2) Parse filename
+	a) Look for S<season>E<episode>
+	b) Takes anything before this as 'seriesName'
+	c) Put <season> into 'season' and <episode> into 'episode'
+	d) Replace '_' or '.' in 'seriesName with ' '
+3) Hit http://www.thetvdb.com/api/GetSeries.php?seriesname=<seriesName> (see example below)
+4) If only one hit, skip 5
+5) Get all <SeriesName> elements into an array, present to user for selection
+6) Get contents of selected <seriesid> into 'seriesid'
+7) Hit http://www.thetvdb.com/data/series/<seriesid>/all/ for XML of all episodes (see example below)
+8) Search through <Episode> results trying to match <SeasonNumber> to 'season' and <EpisodeNumber> to 'episode'
+9) If not found present all seasons and episodes in pulldowns for selection
+10) Extract metadata (shown above) from selected episode
+11) Present metadata to user
+
+Sample TVDB search result:
+
+<Data>
+	<Series>
+		<seriesid>82493</seriesid>
+		<language>en</language>
+		<SeriesName>iCarly</SeriesName>
+		<banner>graphical/82493-g.jpg</banner>
+		<Overview>
+			Carly is a teenager who lives with her twenty-six year old brother and guardian Spencer, 
+			and produces her own web casts from a studio she constructed in the attic of her home. 
+			She does this because she isn't looking for fame or fortune, but just because she wants 
+			to be a good role model for kids and teens. "iCarly" makes TV history as the first series 
+			to incorporate kid-generated original content into its script.
+		</Overview>
+		<FirstAired>2007-09-08</FirstAired>
+		<id>82493</id>
+	</Series>
+</Data>
+
+Sample TVDB series result:
+
+<?xml version="1.0" encoding="UTF-8" ?>
+<Data><Series>
+  	<id>82493</id>
+	 <Actors>|Miranda Cosgrove|</Actors>
+	 <Airs_DayOfWeek></Airs_DayOfWeek>
+	 <Airs_Time></Airs_Time>
+	 <ContentRating>TV-Y7</ContentRating>
+	 <FirstAired>2007-09-08</FirstAired>
+	 <Genre>|Children|Comedy|</Genre>
+	 <IMDB_ID></IMDB_ID>
+	 <Language>en</Language>
+	 <Network>Nickelodeon</Network>
+	 <NetworkID></NetworkID>
+	 <Overview>
+		Carly is a teenager who lives with her twenty-six year old brother and guardian Spencer, 
+		and produces her own web casts from a studio she constructed in the attic of her home. 
+		She does this because she isn't looking for fame or fortune, but just because she wants 
+		to be a good role model for kids and teens. &quot;iCarly&quot; makes TV history as the 
+		first series to incorporate kid-generated original content into its script.
+	</Overview>
+	<Rating></Rating>
+	<Runtime>30</Runtime>
+	<SeriesID>71399</SeriesID>
+	<SeriesName>iCarly</SeriesName>
+	<Status>Continuing</Status>
+	<added></added>
+	<addedBy></addedBy>
+	<banner>graphical/82493-g.jpg</banner>
+	<fanart>fanart/original/82493-2.jpg</fanart>
+	<lastupdated>1238914021</lastupdated>
+	<poster></poster>
+	<zap2it_id></zap2it_id>
+</Series>
+<Episode>
+  	<id>375316</id>
+	<Combined_episodenumber>1</Combined_episodenumber>
+	<Combined_season>0</Combined_season>
+	<DVD_chapter></DVD_chapter>
+	<DVD_discid></DVD_discid>
+	<DVD_episodenumber></DVD_episodenumber>
+	<DVD_season></DVD_season>
+	<Director></Director>
+	<EpImgFlag></EpImgFlag>
+	<EpisodeName>iCarly Saves TV</EpisodeName>
+	<EpisodeNumber>1</EpisodeNumber>
+	<FirstAired>2008-06-13</FirstAired>
+	<GuestStars>Mary Scheer (Mrs. Benson), Rachel Fox (Amber Tate),  Sammi Hanratty (Morgan),  Leon Thomas (Harper)</GuestStars>
+	<IMDB_ID></IMDB_ID>
+	<Language>en</Language>
+	<Overview>
+		TV producers want to turn iCarly into a hit TV show, and 100% fame wouldn't be a problem 
+		for Carly, Sam, and Freddie. But is it really what they expected?
+	</Overview>
+	<ProductionCode></ProductionCode>
+	<Rating></Rating>
+	<SeasonNumber>0</SeasonNumber>
+	<Writer></Writer>
+	<absolute_number></absolute_number>
+	<airsafter_season></airsafter_season>
+	<airsbefore_episode></airsbefore_episode>
+	<airsbefore_season></airsbefore_season>
+	<filename></filename>
+	<lastupdated>1216185914</lastupdated>
+	<seasonid>33660</seasonid>
+	<seriesid>82493</seriesid>
+</Episode>
+...
+</Data>
