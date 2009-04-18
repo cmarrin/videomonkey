@@ -9,6 +9,7 @@
 #import <Quartz/Quartz.h>
 
 #import "Metadata.h"
+#import "MetadataSearch.h"
 #import "Transcoder.h"
 
 // Artwork source icons
@@ -168,6 +169,8 @@ typedef enum { INPUT_TAG, SEARCH_TAG, USER_TAG, OUTPUT_TAG } TagType;
 
 @synthesize artworkList = m_artworkList;
 @synthesize tags = m_tagDictionary;
+@synthesize search = m_search;
+@synthesize rootFilename = m_rootFilename;
 
 -(NSImage*) primaryArtwork
 {
@@ -424,6 +427,11 @@ typedef enum { INPUT_TAG, SEARCH_TAG, USER_TAG, OUTPUT_TAG } TagType;
     metadata->m_artworkList = [[NSMutableArray alloc] init];
     
     [metadata readMetadata: transcoder.inputFileInfo.filename];
+    
+    metadata->m_search = [MetadataSearch metadataSearch];
+    [metadata->m_search search:transcoder.inputFileInfo.filename];
+    
+    metadata->m_rootFilename = [[transcoder.inputFileInfo.filename lastPathComponent] stringByDeletingPathExtension];
     
     return metadata;
 }

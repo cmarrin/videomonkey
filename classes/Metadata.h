@@ -8,6 +8,7 @@
 
 #import <Cocoa/Cocoa.h>
 
+@class MetadataSearch;
 @class Transcoder;
 
 @interface Metadata : NSObject {
@@ -19,11 +20,15 @@
     NSMutableDictionary* m_tagDictionary;
     NSMutableArray* m_artworkList;
     int m_numArtwork;
+    MetadataSearch* m_search;
+    NSString* m_rootFilename;
 }
 
 @property(readonly) NSMutableArray* artworkList;
 @property(readonly) NSMutableDictionary* tags;
 @property(assign) NSImage* primaryArtwork;
+@property(readonly) MetadataSearch* search;
+@property(readonly) NSString* rootFilename;
 
 +(Metadata*) metadataWithTranscoder: (Transcoder*) transcoder;
 

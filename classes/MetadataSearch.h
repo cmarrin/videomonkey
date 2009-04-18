@@ -1,0 +1,50 @@
+//
+//  MetadataSearch.h
+//  VideoMonkey
+//
+//  Created by Chris Marrin on 4/13/09.
+//  Copyright 2009 Apple. All rights reserved.
+//
+
+#import <Cocoa/Cocoa.h>
+
+@interface MetadataSearcher : NSObject {
+    NSMutableArray* m_foundShowNames;
+    NSMutableArray* m_foundShowIds;
+    NSMutableArray* m_foundSeasons;
+    NSMutableArray* m_foundEpisodes;
+}
+
+@property(readonly) NSArray* foundShowNames;
+@property(readonly) NSArray* foundShowIds;
+@property(readonly) NSArray* foundSeasons;
+@property(readonly) NSArray* foundEpisodes;
+
+-(BOOL) searchForShow:(NSString*) searchString;
+
+@end
+
+@interface MetadataSearch : NSObject {
+    NSArray* m_foundShowNames;
+    NSArray* m_foundShowIds;
+    NSArray* m_foundSeasons;
+    NSArray* m_foundEpisodes;
+    int m_season;
+    int m_episode;
+    
+    NSArray* m_searchers;
+}
+
+@property(readonly) NSString* currentShowName;
+@property(readonly) NSNumber* currentSeason;
+@property(readonly) NSNumber* currentEpisode;
+@property(readonly) NSArray* foundShowNames;
+@property(readonly) NSArray* foundShowIds;
+@property(readonly) NSArray* foundSeasons;
+@property(readonly) NSArray* foundEpisodes;
+
++(MetadataSearch*) metadataSearch;
+
+-(BOOL) search:(NSString*) filename;
+
+@end

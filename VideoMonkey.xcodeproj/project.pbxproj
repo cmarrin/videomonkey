@@ -119,6 +119,7 @@
 		49BC8CB20ED6892400027F1D /* Stop.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 49BC8CA90ED6892400027F1D /* Stop.tiff */; };
 		49BDB20F0F6F05C80082F122 /* FileInfoPanelController.m in Sources */ = {isa = PBXBuildFile; fileRef = 49BDB20E0F6F05C80082F122 /* FileInfoPanelController.m */; };
 		49CF726D0F93718B0080F5E7 /* MetadataSearch.m in Sources */ = {isa = PBXBuildFile; fileRef = 49CF726C0F93718B0080F5E7 /* MetadataSearch.m */; };
+		49CF72E40F9A3C400080F5E7 /* TVDBMetadataSearcher.m in Sources */ = {isa = PBXBuildFile; fileRef = 49CF72E20F9A3C400080F5E7 /* TVDBMetadataSearcher.m */; };
 		49D468220F28CFA30095A2AB /* dsa_pub.pem in Resources */ = {isa = PBXBuildFile; fileRef = 49D468210F28CFA30095A2AB /* dsa_pub.pem */; };
 		49D4694A0F0F2E52005D70FD /* commands.xml in Resources */ = {isa = PBXBuildFile; fileRef = 49D469490F0F2E52005D70FD /* commands.xml */; };
 		49DA64130F8D60FD004DDDD8 /* tinypencil.png in Resources */ = {isa = PBXBuildFile; fileRef = 49DA64110F8D60FD004DDDD8 /* tinypencil.png */; };
@@ -279,6 +280,8 @@
 		49BDB20E0F6F05C80082F122 /* FileInfoPanelController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FileInfoPanelController.m; path = classes/FileInfoPanelController.m; sourceTree = "<group>"; };
 		49CF726B0F93718B0080F5E7 /* MetadataSearch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MetadataSearch.h; path = classes/MetadataSearch.h; sourceTree = "<group>"; };
 		49CF726C0F93718B0080F5E7 /* MetadataSearch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MetadataSearch.m; path = classes/MetadataSearch.m; sourceTree = "<group>"; };
+		49CF72E20F9A3C400080F5E7 /* TVDBMetadataSearcher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TVDBMetadataSearcher.m; path = classes/TVDBMetadataSearcher.m; sourceTree = "<group>"; };
+		49CF72E30F9A3C400080F5E7 /* TVDBMetadataSearcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TVDBMetadataSearcher.h; path = classes/TVDBMetadataSearcher.h; sourceTree = "<group>"; };
 		49D468210F28CFA30095A2AB /* dsa_pub.pem */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = dsa_pub.pem; sourceTree = "<group>"; };
 		49D469490F0F2E52005D70FD /* commands.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = commands.xml; sourceTree = "<group>"; };
 		49DA64110F8D60FD004DDDD8 /* tinypencil.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = tinypencil.png; path = images/tinypencil.png; sourceTree = "<group>"; };
@@ -337,6 +340,8 @@
 				497E65A90EE4F284000372EC /* ProgressCell.m */,
 				499A31750EDD97EB000C0AAF /* Transcoder.h */,
 				499A31760EDD97EB000C0AAF /* Transcoder.m */,
+				49CF72E20F9A3C400080F5E7 /* TVDBMetadataSearcher.m */,
+				49CF72E30F9A3C400080F5E7 /* TVDBMetadataSearcher.h */,
 				4910A5870F69CBAC00453837 /* XMLDocument.h */,
 				4910A5880F69CBAC00453837 /* XMLDocument.m */,
 			);
@@ -712,6 +717,7 @@
 				495444D60F853B9800B046F4 /* Metadata.m in Sources */,
 				49A9E00F0F8CE71100CCDDEB /* ArtworkListController.m in Sources */,
 				49CF726D0F93718B0080F5E7 /* MetadataSearch.m in Sources */,
+				49CF72E40F9A3C400080F5E7 /* TVDBMetadataSearcher.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
