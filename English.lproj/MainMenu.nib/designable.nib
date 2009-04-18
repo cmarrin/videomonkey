@@ -9,7 +9,7 @@
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
 			<integer value="29"/>
-			<integer value="2649"/>
+			<integer value="2662"/>
 			<integer value="3773"/>
 			<integer value="475"/>
 		</object>
@@ -4953,7 +4953,7 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 								<object class="NSTabViewItem" id="950878162">
 									<string key="NSIdentifier">input_info</string>
 									<object class="NSView" key="NSView" id="147524687">
-										<reference key="NSNextResponder" ref="713585461"/>
+										<nil key="NSNextResponder"/>
 										<int key="NSvFlags">274</int>
 										<object class="NSMutableArray" key="NSSubviews">
 											<bool key="EncodedWithXMLCoder">YES</bool>
@@ -6012,7 +6012,6 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 											</object>
 										</object>
 										<string key="NSFrame">{{10, 33}, {462, 478}}</string>
-										<reference key="NSSuperview" ref="713585461"/>
 									</object>
 									<string key="NSLabel">Input Info</string>
 									<reference key="NSColor" ref="153400129"/>
@@ -7088,7 +7087,7 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 								<object class="NSTabViewItem" id="234333069">
 									<string key="NSIdentifier">metadata</string>
 									<object class="NSView" key="NSView" id="709235192">
-										<nil key="NSNextResponder"/>
+										<reference key="NSNextResponder" ref="713585461"/>
 										<int key="NSvFlags">274</int>
 										<object class="NSMutableArray" key="NSSubviews">
 											<bool key="EncodedWithXMLCoder">YES</bool>
@@ -7387,6 +7386,29 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 																													<object class="NSTextView" id="166982199">
 																														<reference key="NSNextResponder" ref="954213509"/>
 																														<int key="NSvFlags">2322</int>
+																														<object class="NSMutableSet" key="NSDragTypes">
+																															<bool key="EncodedWithXMLCoder">YES</bool>
+																															<object class="NSMutableArray" key="set.sortedObjects">
+																																<bool key="EncodedWithXMLCoder">YES</bool>
+																																<string>Apple HTML pasteboard type</string>
+																																<string>Apple PDF pasteboard type</string>
+																																<string>Apple PICT pasteboard type</string>
+																																<string>Apple PNG pasteboard type</string>
+																																<string>Apple URL pasteboard type</string>
+																																<string>CorePasteboardFlavorType 0x6D6F6F76</string>
+																																<string>CorePasteboardFlavorType 0x75726C20</string>
+																																<string>NSColor pasteboard type</string>
+																																<string>NSFilenamesPboardType</string>
+																																<string>NSStringPboardType</string>
+																																<string>NeXT Encapsulated PostScript v1.2 pasteboard type</string>
+																																<string>NeXT RTFD pasteboard type</string>
+																																<string>NeXT Rich Text Format v1.0 pasteboard type</string>
+																																<string>NeXT TIFF v4.0 pasteboard type</string>
+																																<string>NeXT font pasteboard type</string>
+																																<string>NeXT ruler pasteboard type</string>
+																																<string>WebURLsWithTitlesPboardType</string>
+																															</object>
+																														</object>
 																														<string key="NSFrameSize">{383, 14}</string>
 																														<reference key="NSSuperview" ref="954213509"/>
 																														<object class="NSTextContainer" key="NSTextContainer" id="644192947">
@@ -7748,6 +7770,29 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 																													<object class="NSTextView" id="438916276">
 																														<reference key="NSNextResponder" ref="851958838"/>
 																														<int key="NSvFlags">2322</int>
+																														<object class="NSMutableSet" key="NSDragTypes">
+																															<bool key="EncodedWithXMLCoder">YES</bool>
+																															<object class="NSMutableArray" key="set.sortedObjects">
+																																<bool key="EncodedWithXMLCoder">YES</bool>
+																																<string>Apple HTML pasteboard type</string>
+																																<string>Apple PDF pasteboard type</string>
+																																<string>Apple PICT pasteboard type</string>
+																																<string>Apple PNG pasteboard type</string>
+																																<string>Apple URL pasteboard type</string>
+																																<string>CorePasteboardFlavorType 0x6D6F6F76</string>
+																																<string>CorePasteboardFlavorType 0x75726C20</string>
+																																<string>NSColor pasteboard type</string>
+																																<string>NSFilenamesPboardType</string>
+																																<string>NSStringPboardType</string>
+																																<string>NeXT Encapsulated PostScript v1.2 pasteboard type</string>
+																																<string>NeXT RTFD pasteboard type</string>
+																																<string>NeXT Rich Text Format v1.0 pasteboard type</string>
+																																<string>NeXT TIFF v4.0 pasteboard type</string>
+																																<string>NeXT font pasteboard type</string>
+																																<string>NeXT ruler pasteboard type</string>
+																																<string>WebURLsWithTitlesPboardType</string>
+																															</object>
+																														</object>
 																														<string key="NSFrameSize">{385, 14}</string>
 																														<reference key="NSSuperview" ref="851958838"/>
 																														<object class="NSTextContainer" key="NSTextContainer" id="309215060">
@@ -10790,20 +10835,21 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 											</object>
 										</object>
 										<string key="NSFrame">{{10, 33}, {462, 478}}</string>
+										<reference key="NSSuperview" ref="713585461"/>
 									</object>
 									<string key="NSLabel">Metadata</string>
 									<reference key="NSColor" ref="153400129"/>
 									<reference key="NSTabView" ref="713585461"/>
 								</object>
 							</object>
-							<reference key="NSSelectedTabViewItem" ref="950878162"/>
+							<reference key="NSSelectedTabViewItem" ref="234333069"/>
 							<reference key="NSFont" ref="176004473"/>
 							<int key="NSTvFlags">0</int>
 							<bool key="NSAllowTruncatedLabels">YES</bool>
 							<bool key="NSDrawsBackground">YES</bool>
 							<object class="NSMutableArray" key="NSSubviews">
 								<bool key="EncodedWithXMLCoder">YES</bool>
-								<reference ref="147524687"/>
+								<reference ref="709235192"/>
 							</object>
 						</object>
 						<object class="NSButton" id="432324493">
@@ -13945,7 +13991,7 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 						<string key="label">contentValues: selection.metadata.search.foundShowNames</string>
 						<reference key="source" ref="146825493"/>
 						<reference key="destination" ref="2824"/>
-						<object class="NSNibBindingConnector" key="connector" id="655931336">
+						<object class="NSNibBindingConnector" key="connector" id="422952307">
 							<reference key="NSSource" ref="146825493"/>
 							<reference key="NSDestination" ref="2824"/>
 							<string key="NSLabel">contentValues: selection.metadata.search.foundShowNames</string>
@@ -13967,7 +14013,7 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 							<string key="NSLabel">value: selection.metadata.search.currentShowName</string>
 							<string key="NSBinding">value</string>
 							<string key="NSKeyPath">selection.metadata.search.currentShowName</string>
-							<reference key="NSPreviousConnector" ref="655931336"/>
+							<reference key="NSPreviousConnector" ref="422952307"/>
 							<int key="NSNibBindingConnectorVersion">2</int>
 						</object>
 					</object>
@@ -13978,7 +14024,7 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 						<string key="label">contentValues: selection.metadata.search.foundSeasons</string>
 						<reference key="source" ref="1031934949"/>
 						<reference key="destination" ref="2824"/>
-						<object class="NSNibBindingConnector" key="connector" id="419952939">
+						<object class="NSNibBindingConnector" key="connector" id="1060195363">
 							<reference key="NSSource" ref="1031934949"/>
 							<reference key="NSDestination" ref="2824"/>
 							<string key="NSLabel">contentValues: selection.metadata.search.foundSeasons</string>
@@ -14000,7 +14046,7 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 							<string key="NSLabel">value: selection.metadata.search.currentSeason</string>
 							<string key="NSBinding">value</string>
 							<string key="NSKeyPath">selection.metadata.search.currentSeason</string>
-							<reference key="NSPreviousConnector" ref="419952939"/>
+							<reference key="NSPreviousConnector" ref="1060195363"/>
 							<int key="NSNibBindingConnectorVersion">2</int>
 						</object>
 					</object>
@@ -14011,7 +14057,7 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 						<string key="label">contentValues: selection.metadata.search.foundEpisodes</string>
 						<reference key="source" ref="150576697"/>
 						<reference key="destination" ref="2824"/>
-						<object class="NSNibBindingConnector" key="connector" id="217670386">
+						<object class="NSNibBindingConnector" key="connector" id="731957949">
 							<reference key="NSSource" ref="150576697"/>
 							<reference key="NSDestination" ref="2824"/>
 							<string key="NSLabel">contentValues: selection.metadata.search.foundEpisodes</string>
@@ -14033,7 +14079,7 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 							<string key="NSLabel">value: selection.metadata.search.currentEpisode</string>
 							<string key="NSBinding">value</string>
 							<string key="NSKeyPath">selection.metadata.search.currentEpisode</string>
-							<reference key="NSPreviousConnector" ref="217670386"/>
+							<reference key="NSPreviousConnector" ref="731957949"/>
 							<int key="NSNibBindingConnectorVersion">2</int>
 						</object>
 					</object>
@@ -21989,7 +22035,7 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>{{-190, 625}, {128, 139}}</string>
+					<string>{{-190, 512}, {128, 139}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>

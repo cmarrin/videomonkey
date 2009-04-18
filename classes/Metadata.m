@@ -129,21 +129,18 @@ typedef enum { INPUT_TAG, SEARCH_TAG, USER_TAG, OUTPUT_TAG } TagType;
     [m_tag release];
     m_tag = [tag retain];
     
-    if (!m_outputValue)
+    if (value && [value length] > 0) {
+        [m_outputValue release];
         m_outputValue = [value retain];
+        m_tagToShow = type;
+    }
 }
 
 -(NSString*) displayValue
 {
+    if ([m_tag isEqualToString:@"stik"] && (!m_outputValue || [m_outputValue length] == 0))
+        return @"Movie";
     return m_outputValue;
-    /*
-    switch(m_tagToShow) {
-        case INPUT_TAG: return m_inputValue;
-        case SEARCH_TAG: return m_searchValue;
-        case USER_TAG: return m_userValue;
-        default: return m_outputValue;
-    }
-    */
 }
 
 -(void) setDisplayValue:(NSString*) value
@@ -354,10 +351,6 @@ typedef enum { INPUT_TAG, SEARCH_TAG, USER_TAG, OUTPUT_TAG } TagType;
     NSData* data = [[m_messagePipe fileHandleForReading] availableData];
     [self processData:data];
     
-    // we always need a 'stik' value - defaults to Movie
-    if (![m_tagDictionary valueForKey:@"stik"])
-        [self setTagValue:@"Movie" forKey:@"stik" type:USER_TAG];
-        
     // get artwork
     for (int i = 0; i < m_numArtwork; ++i) {
         ArtworkItem* item = [ArtworkItem artworkItemWithPath:[NSString stringWithFormat:@"%@_artwork_%d", tmpArtworkPath, i+1] sourceIcon:g_sourceInputIcon checked:YES];
@@ -371,6 +364,16 @@ typedef enum { INPUT_TAG, SEARCH_TAG, USER_TAG, OUTPUT_TAG } TagType;
         id atom = [g_tagMap valueForKey:key];
         if (![m_tagDictionary valueForKey:atom])
             [self setTagValue:@"" forKey:atom type:USER_TAG];
+    }
+}
+
+-(void) setSearchMetadata:(NSDictionary*) dictionary
+{
+    for (NSString* key in g_tagMap) {
+        NSString* param = [g_tagMap valueForKey: key];
+        NSString* value = [dictionary valueForKey: param];
+        if (value)
+            [self setTagValue:value forKey:param type:SEARCH_TAG];
     }
 }
 
@@ -428,8 +431,17 @@ typedef enum { INPUT_TAG, SEARCH_TAG, USER_TAG, OUTPUT_TAG } TagType;
     
     [metadata readMetadata: transcoder.inputFileInfo.filename];
     
+    // search for a title match
     metadata->m_search = [MetadataSearch metadataSearch];
     [metadata->m_search search:transcoder.inputFileInfo.filename];
+    
+    // If only one match, fill in the values
+    if ([metadata->m_search.foundShowIds count] == 1) {
+        NSDictionary* details = [metadata->m_search detailsForShow: [[metadata->m_search.foundShowIds objectAtIndex:0] intValue] 
+                                                    season: metadata->m_search.parsedSeason 
+                                                    episode: metadata->m_search.parsedEpisode];
+        [metadata setSearchMetadata:details];
+    }
     
     metadata->m_rootFilename = [[transcoder.inputFileInfo.filename lastPathComponent] stringByDeletingPathExtension];
     

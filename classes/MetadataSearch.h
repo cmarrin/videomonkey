@@ -21,12 +21,14 @@
 @property(readonly) NSArray* foundEpisodes;
 
 -(BOOL) searchForShow:(NSString*) searchString;
+-(NSDictionary*) detailsForShow:(int) showId season:(int) season episode:(int) episode;
 
 @end
 
 @interface MetadataSearch : NSObject {
     NSArray* m_foundShowNames;
     NSArray* m_foundShowIds;
+    MetadataSearcher* m_foundSearcher;
     NSArray* m_foundSeasons;
     NSArray* m_foundEpisodes;
     int m_season;
@@ -42,9 +44,12 @@
 @property(readonly) NSArray* foundShowIds;
 @property(readonly) NSArray* foundSeasons;
 @property(readonly) NSArray* foundEpisodes;
+@property(readonly) int parsedSeason;
+@property(readonly) int parsedEpisode;
 
 +(MetadataSearch*) metadataSearch;
 
 -(BOOL) search:(NSString*) filename;
+-(NSDictionary*) detailsForShow:(int) showId season:(int) season episode:(int) episode;
 
 @end

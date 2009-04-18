@@ -17,6 +17,7 @@
 @synthesize foundEpisodes = m_foundEpisodes;
 
 -(BOOL) searchForShow:(NSString*) searchString { return NO; }
+-(NSDictionary*) detailsForShow:(int) showId season:(int) season episode:(int) episode { return nil; }
 
 @end
 
@@ -26,6 +27,8 @@
 @synthesize foundShowIds = m_foundShowIds;
 @synthesize foundSeasons = m_foundSeasons;
 @synthesize foundEpisodes = m_foundEpisodes;
+@synthesize parsedSeason = m_season;
+@synthesize parsedEpisode = m_episode;
 
 -(NSString*) currentShowName
 {
@@ -61,10 +64,11 @@ static BOOL isValidInteger(NSString* s)
 
 -(BOOL) _searchForShows:(NSString*) searchString
 {
-    for (MetadataSearcher* searcher in m_searchers) {
-        if ([searcher searchForShow:searchString]) {
-            m_foundShowNames = [searcher.foundShowNames retain];
-            m_foundShowIds = [searcher.foundShowIds retain];
+    for (m_foundSearcher in m_searchers) {
+        if ([m_foundSearcher searchForShow:searchString]) {
+            m_foundShowNames = [m_foundSearcher.foundShowNames retain];
+            m_foundShowIds = [m_foundSearcher.foundShowIds retain];
+            [m_foundSearcher retain];
             return YES;
         }
     }
@@ -77,6 +81,8 @@ static BOOL isValidInteger(NSString* s)
     m_foundShowNames = nil;
     [m_foundShowIds release];
     m_foundShowIds = nil;
+    [m_foundSearcher release];
+    m_foundSearcher = nil;
     
     // Format the filename into something that we can search with.
     // Toss the prefix and suffix
@@ -112,6 +118,11 @@ static BOOL isValidInteger(NSString* s)
     }
     
     return NO;
+}
+
+-(NSDictionary*) detailsForShow:(int) showId season:(int) season episode:(int) episode
+{
+    return [m_foundSearcher detailsForShow:showId season:season episode:episode];
 }
 
 - (id)valueForUndefinedKey:(NSString *)key
