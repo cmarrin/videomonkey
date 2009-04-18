@@ -99,6 +99,15 @@ static NSDictionary* g_tvdbSeriesMap = nil;
     return YES;
 }
 
+-(void) collectArtwork:(NSArray*) fromArray toArray:(NSMutableArray*) toArray
+{
+    for (MyXMLElement* element in fromArray) {
+        NSString* s = [element content];
+        if (s && [s length] > 0)
+            [toArray addObject:[NSString stringWithFormat:@"http://www.thetvdb.com/banners/%@", s]];
+    }
+}
+
 -(NSDictionary*) detailsForShow:(int) showId season:(int) season episode:(int) episode
 {
     int i = 0;
@@ -166,6 +175,13 @@ static NSDictionary* g_tvdbSeriesMap = nil;
                         if ([yearArray count] > 2)
                             [dictionary setValue:[[NSNumber numberWithInt:[[yearArray objectAtIndex:2] intValue]] stringValue] forKey:@"year_day"];
                     }
+                    
+                    // collect the artwork, in order of preference
+                    NSMutableArray* artwork = [[NSMutableArray alloc] init];
+                    [self collectArtwork: [series elementsForName:@"poster"] toArray:artwork];
+                    [self collectArtwork: [series elementsForName:@"fanart"] toArray:artwork];
+                    [self collectArtwork: [series elementsForName:@"banner"] toArray:artwork];
+                    [dictionary setValue:artwork forKey:@"artwork"];
                     
                     return dictionary;
                 }

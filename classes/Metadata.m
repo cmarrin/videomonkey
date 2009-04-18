@@ -32,6 +32,7 @@ static NSDictionary* g_tagMap = nil;
 @property(readonly) NSImage* image;
 
 +(ArtworkItem*) artworkItemWithPath:(NSString*) path sourceIcon:(NSImage*) icon checked:(BOOL) checked;
++(ArtworkItem*) artworkItemWithURL:(NSURL*) url sourceIcon:(NSImage*) icon checked:(BOOL) checked;
 +(ArtworkItem*) artworkItemWithImage:(NSImage*) image sourceIcon:(NSImage*) icon checked:(BOOL) checked;
 
 @end
@@ -63,6 +64,15 @@ static NSDictionary* g_tagMap = nil;
     // toss image file
     [[NSFileManager defaultManager] removeFileAtPath:realPath handler:nil];
 
+    return [ArtworkItem artworkItemWithImage:image sourceIcon:icon checked:checked];
+}
+
++(ArtworkItem*) artworkItemWithURL:(NSURL*) url sourceIcon:(NSImage*) icon checked:(BOOL) checked
+{
+    NSImage* image = [[NSImage alloc] initWithContentsOfURL:url];
+    if (!image)
+        return nil;
+        
     return [ArtworkItem artworkItemWithImage:image sourceIcon:icon checked:checked];
 }
 
@@ -371,9 +381,25 @@ typedef enum { INPUT_TAG, SEARCH_TAG, USER_TAG, OUTPUT_TAG } TagType;
 {
     for (NSString* key in g_tagMap) {
         NSString* param = [g_tagMap valueForKey: key];
-        NSString* value = [dictionary valueForKey: param];
-        if (value)
-            [self setTagValue:value forKey:param type:SEARCH_TAG];
+        if ([param isEqualToString:@"artwork"]) {
+            NSArray* artwork = [dictionary valueForKey: param];
+
+            for (NSString* path in artwork) {
+                NSURL* url = [NSURL URLWithString:path];
+                ArtworkItem* item = [ArtworkItem artworkItemWithURL:url sourceIcon:g_sourceSearchIcon checked:NO];
+                if (item)
+                    [m_artworkList addObject:item];
+            }
+            
+            // select one if none are selected
+            if ([m_artworkList count] > 0 && ![self primaryArtwork])
+                [[m_artworkList objectAtIndex:0] setChecked:YES];
+        }
+        else {
+            NSString* value = [dictionary valueForKey: param];
+            if (value)
+                [self setTagValue:value forKey:param type:SEARCH_TAG];
+        }
     }
 }
 
