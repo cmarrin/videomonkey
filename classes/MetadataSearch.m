@@ -81,8 +81,8 @@ static BOOL isValidInteger(NSString* s)
 {
     for (m_foundSearcher in m_searchers) {
         if ([m_foundSearcher searchForShow:searchString]) {
-            m_foundShowNames = [m_foundSearcher.foundShowNames retain];
-            m_foundShowIds = [m_foundSearcher.foundShowIds retain];
+            self.foundShowNames = m_foundSearcher.foundShowNames;
+            self.foundShowIds = m_foundSearcher.foundShowIds;
             [m_foundSearcher retain];
             return YES;
         }
@@ -92,10 +92,8 @@ static BOOL isValidInteger(NSString* s)
 
 -(BOOL) search:(NSString*) filename
 {
-    [m_foundShowNames release];
-    m_foundShowNames = nil;
-    [m_foundShowIds release];
-    m_foundShowIds = nil;
+    self.foundShowNames = nil;
+    self.foundShowIds = nil;
     [m_foundSearcher release];
     m_foundSearcher = nil;
     
@@ -137,7 +135,10 @@ static BOOL isValidInteger(NSString* s)
 
 -(NSDictionary*) detailsForShow:(int) showId season:(int) season episode:(int) episode
 {
-    return [m_foundSearcher detailsForShow:showId season:season episode:episode];
+    NSDictionary* details = [m_foundSearcher detailsForShow:showId season:season episode:episode];
+    self.foundSeasons = m_foundSearcher.foundSeasons;
+    self.foundEpisodes = m_foundSearcher.foundEpisodes;
+    return details;
 }
 
 - (id)valueForUndefinedKey:(NSString *)key

@@ -9,10 +9,10 @@
 #import <Cocoa/Cocoa.h>
 
 @interface MetadataSearcher : NSObject {
-    NSMutableArray* m_foundShowNames;
-    NSMutableArray* m_foundShowIds;
-    NSMutableArray* m_foundSeasons;
-    NSMutableArray* m_foundEpisodes;
+    NSArray* m_foundShowNames;
+    NSArray* m_foundShowIds;
+    NSArray* m_foundSeasons;
+    NSArray* m_foundEpisodes;
 }
 
 @property(readonly) NSArray* foundShowNames;
@@ -40,10 +40,10 @@
 @property(readwrite,retain) NSString* currentShowName;
 @property(readwrite,retain) NSNumber* currentSeason;
 @property(readwrite,retain) NSNumber* currentEpisode;
-@property(readonly) NSArray* foundShowNames;
-@property(readonly) NSArray* foundShowIds;
-@property(readonly) NSArray* foundSeasons;
-@property(readonly) NSArray* foundEpisodes;
+@property(readwrite,retain) NSArray* foundShowNames;
+@property(readwrite,retain) NSArray* foundShowIds;
+@property(readwrite,retain) NSArray* foundSeasons;
+@property(readwrite,retain) NSArray* foundEpisodes;
 @property(readonly) int parsedSeason;
 @property(readonly) int parsedEpisode;
 
