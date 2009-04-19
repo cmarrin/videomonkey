@@ -221,7 +221,7 @@ typedef enum { INPUT_TAG, SEARCH_TAG, USER_TAG, OUTPUT_TAG } TagType;
 {
     int status = [m_task terminationStatus];
     if (status)
-        [m_transcoder log: @"ERROR reading metadata for %@:%d", m_transcoder.inputFileInfo.filename, status];
+        [m_transcoder log: @"Unable to read metadata for %@\n", m_rootFilename];
 }
 
 -(NSString*) handleTrackOrDisk:(NSString*) value totalKey:(NSString*) totalKey
@@ -454,6 +454,7 @@ typedef enum { INPUT_TAG, SEARCH_TAG, USER_TAG, OUTPUT_TAG } TagType;
     metadata->m_messagePipe = [NSPipe pipe];
     metadata->m_tagDictionary = [[NSMutableDictionary alloc] init];
     metadata->m_artworkList = [[NSMutableArray alloc] init];
+    metadata->m_rootFilename = [[[transcoder.inputFileInfo.filename lastPathComponent] stringByDeletingPathExtension] retain];
     
     [metadata readMetadata: transcoder.inputFileInfo.filename];
     
@@ -468,9 +469,7 @@ typedef enum { INPUT_TAG, SEARCH_TAG, USER_TAG, OUTPUT_TAG } TagType;
                                                     episode: metadata->m_search.parsedEpisode];
         [metadata setSearchMetadata:details];
     }
-    
-    metadata->m_rootFilename = [[transcoder.inputFileInfo.filename lastPathComponent] stringByDeletingPathExtension];
-    
+
     return metadata;
 }
 

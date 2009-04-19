@@ -37,9 +37,9 @@
     NSArray* m_searchers;
 }
 
-@property(readonly) NSString* currentShowName;
-@property(readonly) NSNumber* currentSeason;
-@property(readonly) NSNumber* currentEpisode;
+@property(readwrite,retain) NSString* currentShowName;
+@property(readwrite,retain) NSNumber* currentSeason;
+@property(readwrite,retain) NSNumber* currentEpisode;
 @property(readonly) NSArray* foundShowNames;
 @property(readonly) NSArray* foundShowIds;
 @property(readonly) NSArray* foundSeasons;

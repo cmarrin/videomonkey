@@ -101,7 +101,8 @@
         }
         else {
             // handle add of a new filename(s)
-            NSArray *filenames = [pboard propertyListForType:NSFilenamesPboardType];
+            NSArray *filenames = [[pboard propertyListForType:NSFilenamesPboardType] 
+                                    sortedArrayUsingSelector:@selector(caseInsensitiveCompare:)];
             
             // We create all the transcoders and then add them all at once. If we add a
             // transcoder too soon, the next transcoders validateInputFile will create 

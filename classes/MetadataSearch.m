@@ -36,16 +36,31 @@
     return (m_foundShowNames && [m_foundShowNames count] > 0) ? [m_foundShowNames objectAtIndex:0] : nil;
 }
 
+-(void) setCurrentShowName:(NSString*) value
+{
+    NSLog(@"********** setCurrentEpisode:'%@'\n", value);
+}
+
 -(NSNumber*) currentSeason
 {
     // For now just return the one we parsed
     return (m_season >= 0) ? [NSNumber numberWithInt:m_season] : nil;
 }
 
+-(void) setCurrentSeason:(NSNumber*) value
+{
+    NSLog(@"********** setCurrentEpisode:'%@'\n", value);
+}
+
 -(NSNumber*) currentEpisode
 {
     // For now just return the one we parsed
     return (m_episode >= 0) ? [NSNumber numberWithInt:m_episode] : nil;
+}
+
+-(void) setCurrentEpisode:(NSNumber*) value
+{
+    NSLog(@"********** setCurrentEpisode:'%@'\n", value);
 }
 
 +(MetadataSearch*) metadataSearch
@@ -127,7 +142,7 @@ static BOOL isValidInteger(NSString* s)
 
 - (id)valueForUndefinedKey:(NSString *)key
 {
-    NSLog(@"*** Metadata::valueForUndefinedKey:%@\n", key);
+    NSLog(@"*** MetadataSearch::valueForUndefinedKey:%@\n", key);
     return nil;
 }
 

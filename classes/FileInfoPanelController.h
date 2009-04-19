@@ -18,6 +18,7 @@
     IBOutlet NSButton* m_artworkDrawerDisclosureButton;
     IBOutlet FileListController* m_fileListController;
     IBOutlet NSArrayController* m_artworkListController;
+    IBOutlet NSScrollView* m_metadataScrollView;
 
     BOOL m_isVisible;
 }

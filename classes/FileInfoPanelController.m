@@ -29,8 +29,11 @@
 }
 
 - (void)awakeFromNib {
-    [m_searchField setRecentSearches:[NSArray arrayWithObjects:@"Foo", @"Bar", @"Baz", nil]];
     [m_artworkTable setRowHeight:[[[m_artworkTable tableColumns] objectAtIndex:2] width]];
+    
+    // scroll to top of metadata
+    NSPoint pt = NSMakePoint(0.0, [[m_metadataScrollView documentView] bounds].size.height);
+    [[m_metadataScrollView documentView] scrollPoint:pt];
 }
 
 -(IBAction)droppedInImage:(id)sender

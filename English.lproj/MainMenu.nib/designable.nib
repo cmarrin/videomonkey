@@ -9,7 +9,7 @@
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
 			<integer value="29"/>
-			<integer value="2662"/>
+			<integer value="2659"/>
 			<integer value="3773"/>
 			<integer value="475"/>
 		</object>
@@ -8215,7 +8215,7 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 																									<object class="NSTextField" id="358620694">
 																										<reference key="NSNextResponder" ref="183894700"/>
 																										<int key="NSvFlags">265</int>
-																										<string key="NSFrame">{{283, 459}, {47, 14}}</string>
+																										<string key="NSFrame">{{255, 457}, {47, 14}}</string>
 																										<reference key="NSSuperview" ref="183894700"/>
 																										<bool key="NSEnabled">YES</bool>
 																										<object class="NSTextFieldCell" key="NSCell" id="96595274">
@@ -13991,7 +13991,7 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 						<string key="label">contentValues: selection.metadata.search.foundShowNames</string>
 						<reference key="source" ref="146825493"/>
 						<reference key="destination" ref="2824"/>
-						<object class="NSNibBindingConnector" key="connector" id="422952307">
+						<object class="NSNibBindingConnector" key="connector" id="389538436">
 							<reference key="NSSource" ref="146825493"/>
 							<reference key="NSDestination" ref="2824"/>
 							<string key="NSLabel">contentValues: selection.metadata.search.foundShowNames</string>
@@ -14004,27 +14004,10 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBBindingConnection" key="connection">
-						<string key="label">value: selection.metadata.search.currentShowName</string>
-						<reference key="source" ref="146825493"/>
-						<reference key="destination" ref="2824"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="146825493"/>
-							<reference key="NSDestination" ref="2824"/>
-							<string key="NSLabel">value: selection.metadata.search.currentShowName</string>
-							<string key="NSBinding">value</string>
-							<string key="NSKeyPath">selection.metadata.search.currentShowName</string>
-							<reference key="NSPreviousConnector" ref="422952307"/>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">4027</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
 						<string key="label">contentValues: selection.metadata.search.foundSeasons</string>
 						<reference key="source" ref="1031934949"/>
 						<reference key="destination" ref="2824"/>
-						<object class="NSNibBindingConnector" key="connector" id="1060195363">
+						<object class="NSNibBindingConnector" key="connector" id="200216098">
 							<reference key="NSSource" ref="1031934949"/>
 							<reference key="NSDestination" ref="2824"/>
 							<string key="NSLabel">contentValues: selection.metadata.search.foundSeasons</string>
@@ -14037,27 +14020,10 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBBindingConnection" key="connection">
-						<string key="label">value: selection.metadata.search.currentSeason</string>
-						<reference key="source" ref="1031934949"/>
-						<reference key="destination" ref="2824"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="1031934949"/>
-							<reference key="NSDestination" ref="2824"/>
-							<string key="NSLabel">value: selection.metadata.search.currentSeason</string>
-							<string key="NSBinding">value</string>
-							<string key="NSKeyPath">selection.metadata.search.currentSeason</string>
-							<reference key="NSPreviousConnector" ref="1060195363"/>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">4038</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
 						<string key="label">contentValues: selection.metadata.search.foundEpisodes</string>
 						<reference key="source" ref="150576697"/>
 						<reference key="destination" ref="2824"/>
-						<object class="NSNibBindingConnector" key="connector" id="731957949">
+						<object class="NSNibBindingConnector" key="connector" id="935375838">
 							<reference key="NSSource" ref="150576697"/>
 							<reference key="NSDestination" ref="2824"/>
 							<string key="NSLabel">contentValues: selection.metadata.search.foundEpisodes</string>
@@ -14067,23 +14033,6 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 						</object>
 					</object>
 					<int key="connectionID">4039</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">value: selection.metadata.search.currentEpisode</string>
-						<reference key="source" ref="150576697"/>
-						<reference key="destination" ref="2824"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="150576697"/>
-							<reference key="NSDestination" ref="2824"/>
-							<string key="NSLabel">value: selection.metadata.search.currentEpisode</string>
-							<string key="NSBinding">value</string>
-							<string key="NSKeyPath">selection.metadata.search.currentEpisode</string>
-							<reference key="NSPreviousConnector" ref="731957949"/>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">4040</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBBindingConnection" key="connection">
@@ -14100,6 +14049,65 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 						</object>
 					</object>
 					<int key="connectionID">4042</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">value: selection.metadata.search.currentEpisode</string>
+						<reference key="source" ref="150576697"/>
+						<reference key="destination" ref="2824"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="150576697"/>
+							<reference key="NSDestination" ref="2824"/>
+							<string key="NSLabel">value: selection.metadata.search.currentEpisode</string>
+							<string key="NSBinding">value</string>
+							<string key="NSKeyPath">selection.metadata.search.currentEpisode</string>
+							<reference key="NSPreviousConnector" ref="935375838"/>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">4046</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">value: selection.metadata.search.currentSeason</string>
+						<reference key="source" ref="1031934949"/>
+						<reference key="destination" ref="2824"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="1031934949"/>
+							<reference key="NSDestination" ref="2824"/>
+							<string key="NSLabel">value: selection.metadata.search.currentSeason</string>
+							<string key="NSBinding">value</string>
+							<string key="NSKeyPath">selection.metadata.search.currentSeason</string>
+							<reference key="NSPreviousConnector" ref="200216098"/>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">4047</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">value: selection.metadata.search.currentShowName</string>
+						<reference key="source" ref="146825493"/>
+						<reference key="destination" ref="2824"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="146825493"/>
+							<reference key="NSDestination" ref="2824"/>
+							<string key="NSLabel">value: selection.metadata.search.currentShowName</string>
+							<string key="NSBinding">value</string>
+							<string key="NSKeyPath">selection.metadata.search.currentShowName</string>
+							<reference key="NSPreviousConnector" ref="389538436"/>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">4048</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">m_metadataScrollView</string>
+						<reference key="source" ref="744558613"/>
+						<reference key="destination" ref="228491495"/>
+					</object>
+					<int key="connectionID">4049</int>
 				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -22539,8 +22547,8 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>{{30, 125}, {711, 400}}</string>
-					<string>{{30, 125}, {711, 400}}</string>
+					<string>{{37, 151}, {711, 400}}</string>
+					<string>{{37, 151}, {711, 400}}</string>
 					<reference ref="9"/>
 					<string>{{33, 99}, {480, 360}}</string>
 					<reference ref="9"/>
@@ -22692,7 +22700,7 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">4042</int>
+			<int key="maxID">4049</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -22930,6 +22938,7 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 							<string>m_artworkTable</string>
 							<string>m_fileInfoTabView</string>
 							<string>m_fileListController</string>
+							<string>m_metadataScrollView</string>
 							<string>m_searchField</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
@@ -22939,6 +22948,7 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 							<string>NSTableView</string>
 							<string>NSTabView</string>
 							<string>FileListController</string>
+							<string>NSScrollView</string>
 							<string>NSSearchField</string>
 						</object>
 					</object>
