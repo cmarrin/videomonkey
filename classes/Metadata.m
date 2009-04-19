@@ -477,9 +477,14 @@ typedef enum { INPUT_TAG, SEARCH_TAG, USER_TAG, OUTPUT_TAG } TagType;
 -(NSString*) atomicParsleyParams
 {
     NSMutableString* params = [[NSMutableString alloc] init];
-    NSMutableString* year = [[NSMutableString alloc] init];
-    NSMutableString* track = [[NSMutableString alloc] init];
-    NSMutableString* disk = [[NSMutableString alloc] init];
+    
+    NSString* year_year;
+    NSString* year_month;
+    NSString* year_day;
+    NSString* tracknum;
+    NSString* track_total;
+    NSString* disknum;
+    NSString* disk_total;
     
     for (NSString* key in g_tagMap) {
         NSString* param = [g_tagMap valueForKey: key];
@@ -493,87 +498,99 @@ typedef enum { INPUT_TAG, SEARCH_TAG, USER_TAG, OUTPUT_TAG } TagType;
         if ([param isEqualToString:@"artwork"])
             continue;
             
-        // make year
         if ([param isEqualToString:@"year"])
             continue;
             
         if ([param isEqualToString:@"year_year"]) {
-            if (value && [value length] > 0)
-                [year appendString:value];
+            year_year = value;
             continue;
         }
-        
         if ([param isEqualToString:@"year_month"]) {
-            if (value && [value length] > 0) {
-                [year appendString:@"-"];
-                [year appendString:value];
-            }
+            year_month = value;
             continue;
         }
-        
         if ([param isEqualToString:@"year_day"]) {
-            if (value && [value length] > 0) {
-                [year appendString:@"-"];
-                [year appendString:value];
-            }
+            year_day = value;
             continue;
         }
 
         if ([param isEqualToString:@"tracknum"]) {
-            if (value && [value length] > 0) {
-                [track appendString:value];
-            }
+            tracknum = value;
             continue;
         }
 
         if ([param isEqualToString:@"tracknum_total"]) {
-            if (value && [value length] > 0) {
-                [track appendString:@" of "];
-                [track appendString:value];
-            }
+            track_total = value;
             continue;
         }
 
         if ([param isEqualToString:@"disk"]) {
-            if (value && [value length] > 0) {
-                [disk appendString:value];
-            }
+            disknum = value;
             continue;
         }
 
         if ([param isEqualToString:@"disk_total"]) {
-            if (value && [value length] > 0) {
-                [disk appendString:@" of "];
-                [disk appendString:value];
-            }
+            disk_total = value;
             continue;
         }
 
-        if (value && [value length] > 0)
-            [params appendString:[NSString stringWithFormat:@" --%@ '%@'", param, value]];
+        if (value && [value length] > 0) {
+            // escape all the quotes
+            value = [value stringByReplacingOccurrencesOfString:@"\"" withString:@"\\\""];
+            [params appendString:[NSString stringWithFormat:@" --%@ \"%@\"", param, value]];
+        }
     }
     
     // add the specials
-    if ([year length] > 0)
+    if (year_year && [year_year length] > 0) {
+        NSMutableString* year = [NSMutableString stringWithString:year_year];
+    
+        if (year_month && [year_month length] > 0) {
+            [year appendString:@"-"];
+            [year appendString:year_month];
+            
+            if (year_day && [year_day length] > 0) {
+                [year appendString:@"-"];
+                [year appendString:year_day];
+            }
+        }
         [params appendString:[NSString stringWithFormat:@" --year '%@'", year]];
-    
-    if ([track length] > 0)
+    }
+
+    if (tracknum && [tracknum length] > 0) {
+        NSMutableString* track = [NSMutableString stringWithString:tracknum];
+
+        if (track_total && [track_total length] > 0) {
+            [track appendString:@" of "];
+            [track appendString:track_total];
+        }
         [params appendString:[NSString stringWithFormat:@" --tracknum '%@'", track]];
-    
-    if ([disk length] > 0)
+    }
+
+    if (disknum && [disknum length] > 0) {
+        NSMutableString* disk = [NSMutableString stringWithString:disknum];
+
+        if (disk_total && [disk_total length] > 0) {
+            [disk appendString:@" of "];
+            [disk appendString:disk_total];
+        }
         [params appendString:[NSString stringWithFormat:@" --disk '%@'", disk]];
-        
+    }
+
     // write out temp artwork
     NSString* tmpArtworkPath = [NSString stringWithFormat:@"/tmp/AtomicParlsleyArtwork_%p", self];
     int i = 0;
     
     for (ArtworkItem* artwork in m_artworkList) {
-        NSString* filename = [NSString stringWithFormat:@"%@_%d.jpg", tmpArtworkPath, i++];
-        NSBitmapImageRep* rep = [NSBitmapImageRep imageRepWithData:[[artwork image] TIFFRepresentation]];
-        [[rep representationUsingType:NSJPEGFileType properties:nil] writeToFile: filename atomically: YES];
+        if ([artwork checked]) {
+            NSString* filename = [NSString stringWithFormat:@"%@_%d.jpg", tmpArtworkPath, i];
+            NSBitmapImageRep* rep = [NSBitmapImageRep imageRepWithData:[[artwork image] TIFFRepresentation]];
+            [[rep representationUsingType:NSJPEGFileType properties:nil] writeToFile: filename atomically: YES];
         
-        // write the param
-        [params appendFormat:@" --artwork %@", filename];
+            // write the param
+            [params appendFormat:@" --artwork %@", filename];
+        }
+        ++i;
     }
     return params;
 }
