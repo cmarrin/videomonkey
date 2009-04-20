@@ -21,7 +21,7 @@
 @property(readonly) NSArray* foundEpisodes;
 
 -(BOOL) searchForShow:(NSString*) searchString;
--(NSDictionary*) detailsForShow:(int) showId season:(int) season episode:(int) episode;
+-(NSDictionary*) detailsForShow:(int) showId season:(int*) season episode:(int*) episode;
 
 @end
 
@@ -51,7 +51,8 @@
 
 +(MetadataSearch*) metadataSearch:(Metadata*) metadata;
 
--(BOOL) search:(NSString*) filename;
+-(BOOL) searchWithString:(NSString*) string;
+-(BOOL) searchWithFilename:(NSString*) filename;
 -(NSDictionary*) details;
 
 @end

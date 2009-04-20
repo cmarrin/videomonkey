@@ -18,7 +18,7 @@
 @synthesize foundEpisodes = m_foundEpisodes;
 
 -(BOOL) searchForShow:(NSString*) searchString { return NO; }
--(NSDictionary*) detailsForShow:(int) showId season:(int) season episode:(int) episode { return nil; }
+-(NSDictionary*) detailsForShow:(int) showId season:(int*) season episode:(int*) episode { return nil; }
 
 @end
 
@@ -37,7 +37,8 @@
 
 -(void) setCurrentShowName:(NSString*) value
 {
-    NSLog(@"********** setCurrentShowName:'%@'\n", value);
+    [self searchWithString:value];
+    [m_metadata searchMetadataChanged];
 }
 
 -(NSNumber*) currentSeason
@@ -90,7 +91,25 @@ static BOOL isValidInteger(NSString* s)
     return NO;
 }
 
--(BOOL) search:(NSString*) filename
+-(BOOL) searchWithString:(NSString*) string
+{
+    self.foundShowNames = nil;
+    self.foundShowIds = nil;
+    [m_foundSearcher release];
+    m_foundSearcher = nil;
+    
+    m_season = -1;
+    m_episode = -1;
+    if ([self _searchForShows: string]) {
+        // make the first thing found the current
+        m_showId = [[m_foundShowIds objectAtIndex:0] intValue];
+        return YES;
+    }
+    
+    return NO;
+}
+
+-(BOOL) searchWithFilename:(NSString*) filename
 {
     self.foundShowNames = nil;
     self.foundShowIds = nil;
@@ -125,7 +144,7 @@ static BOOL isValidInteger(NSString* s)
     while ([array count]) {
         if ([self _searchForShows: [array componentsJoinedByString:@" "]]) {
             // make the first thing found the current
-            m_showId = ([m_foundShowIds count] > 0) ? [[m_foundShowIds objectAtIndex:0] intValue] : -1;
+            m_showId = [[m_foundShowIds objectAtIndex:0] intValue];
             return YES;
         }
         
@@ -138,7 +157,7 @@ static BOOL isValidInteger(NSString* s)
 
 -(NSDictionary*) details
 {
-    NSDictionary* details = [m_foundSearcher detailsForShow:m_showId season:m_season episode:m_episode];
+    NSDictionary* details = [m_foundSearcher detailsForShow:m_showId season:&m_season episode:&m_episode];
     self.foundSeasons = m_foundSearcher.foundSeasons;
     self.foundEpisodes = m_foundSearcher.foundEpisodes;
     
@@ -153,7 +172,7 @@ static BOOL isValidInteger(NSString* s)
         
     m_episode = [[self.foundEpisodes objectAtIndex:0] intValue];
     [self setCurrentEpisode:[NSNumber numberWithInt:m_episode]];
-    return [m_foundSearcher detailsForShow:m_showId season:m_season episode:m_episode];
+    return [m_foundSearcher detailsForShow:m_showId season:&m_season episode:&m_episode];
 }
 
 - (id)valueForUndefinedKey:(NSString *)key

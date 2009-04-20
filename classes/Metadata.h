@@ -27,7 +27,7 @@
 @property(readonly) NSMutableArray* artworkList;
 @property(retain) NSMutableDictionary* tags;
 @property(assign) NSImage* primaryArtwork;
-@property(readonly) MetadataSearch* search;
+@property(retain) MetadataSearch* search;
 @property(readonly) NSString* rootFilename;
 
 +(Metadata*) metadataWithTranscoder: (Transcoder*) transcoder;

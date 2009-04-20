@@ -97,7 +97,7 @@ typedef enum { INPUT_TAG, SEARCH_TAG, USER_TAG, OUTPUT_TAG } TagType;
     NSString* m_userValue;
     NSString* m_outputValue;
     NSString* m_tag;
-    TagType m_tagToShow;
+    TagType m_typeShowing;
 }
 
 @property (readonly) NSString* outputValue;
@@ -115,7 +115,7 @@ typedef enum { INPUT_TAG, SEARCH_TAG, USER_TAG, OUTPUT_TAG } TagType;
 +(TagItem*) tagItem;
 {
     TagItem* item = [[TagItem alloc] init];
-    item->m_tagToShow = OUTPUT_TAG;
+    item->m_typeShowing = OUTPUT_TAG;
     return item;
 }
 
@@ -139,10 +139,10 @@ typedef enum { INPUT_TAG, SEARCH_TAG, USER_TAG, OUTPUT_TAG } TagType;
     [m_tag release];
     m_tag = [tag retain];
     
-    if (value && [value length] > 0) {
+    if (value && [value length] > 0 || type == m_typeShowing) {
         [m_outputValue release];
         m_outputValue = [value retain];
-        m_tagToShow = type;
+        m_typeShowing = type;
     }
 }
 
@@ -375,6 +375,9 @@ typedef enum { INPUT_TAG, SEARCH_TAG, USER_TAG, OUTPUT_TAG } TagType;
 {
     NSDictionary* dictionary = [m_search details];
     
+    if (!dictionary)
+        return;
+        
     for (NSString* key in g_tagMap) {
         NSString* param = [g_tagMap valueForKey: key];
         if ([param isEqualToString:@"artwork"]) {
@@ -393,8 +396,7 @@ typedef enum { INPUT_TAG, SEARCH_TAG, USER_TAG, OUTPUT_TAG } TagType;
         }
         else {
             NSString* value = [dictionary valueForKey: param];
-            if (value)
-                [self setTagValue:value forKey:param type:SEARCH_TAG];
+            [self setTagValue:value forKey:param type:SEARCH_TAG];
         }
     }
     
@@ -459,7 +461,7 @@ typedef enum { INPUT_TAG, SEARCH_TAG, USER_TAG, OUTPUT_TAG } TagType;
     
     // search for a title match
     metadata->m_search = [MetadataSearch metadataSearch:metadata];
-    [metadata->m_search search:transcoder.inputFileInfo.filename];
+    [metadata->m_search searchWithFilename:transcoder.inputFileInfo.filename];
     
     // If only one match, fill in the values
     if ([metadata->m_search.foundShowIds count] == 1)

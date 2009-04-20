@@ -235,13 +235,15 @@ static NSArray* numericallySortedArray(NSArray* array)
     }
 }
 
--(NSDictionary*) detailsForShow:(int) showId season:(int) season episode:(int) episode
+-(NSDictionary*) detailsForShow:(int) showId season:(int*) season episode:(int*) episode
 {
     if (showId != m_loadedShowId)
         [self loadDetailsForShow:showId];
     
-    NSString* s = [[NSNumber numberWithInt:season] stringValue];
-    NSString* e = [[NSNumber numberWithInt:episode] stringValue];
+    if (*season < 0 && [m_foundSeasons count] > 0)
+        *season = [[m_foundSeasons objectAtIndex:0] intValue];
+        
+    NSString* s = [[NSNumber numberWithInt:*season] stringValue];
     NSDictionary* episodes = [m_seasons valueForKey:s];
     
     if (!episodes)
@@ -254,6 +256,10 @@ static NSArray* numericallySortedArray(NSArray* array)
         [foundEpisodes addObject: key];
     m_foundEpisodes = [numericallySortedArray(foundEpisodes) retain];
 
+    if (*episode < 0 && [m_foundEpisodes count] > 0)
+        *episode = [[m_foundEpisodes objectAtIndex:0] intValue];
+
+    NSString* e = [[NSNumber numberWithInt:*episode] stringValue];
     return [episodes valueForKey:e];
 }
 
