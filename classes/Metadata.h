@@ -25,7 +25,7 @@
 }
 
 @property(readonly) NSMutableArray* artworkList;
-@property(readonly) NSMutableDictionary* tags;
+@property(retain) NSMutableDictionary* tags;
 @property(assign) NSImage* primaryArtwork;
 @property(readonly) MetadataSearch* search;
 @property(readonly) NSString* rootFilename;
@@ -36,5 +36,7 @@
 
 -(NSString*) atomicParsleyParams;
 -(void) cleanupAfterAtomicParsley;
+
+-(void) searchMetadataChanged;
 
 @end

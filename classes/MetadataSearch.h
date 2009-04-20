@@ -25,6 +25,8 @@
 
 @end
 
+@class Metadata;
+
 @interface MetadataSearch : NSObject {
     NSArray* m_foundShowNames;
     NSArray* m_foundShowIds;
@@ -33,6 +35,8 @@
     NSArray* m_foundEpisodes;
     int m_season;
     int m_episode;
+    int m_showId;
+    Metadata* m_metadata;
     
     NSArray* m_searchers;
 }
@@ -44,12 +48,10 @@
 @property(readwrite,retain) NSArray* foundShowIds;
 @property(readwrite,retain) NSArray* foundSeasons;
 @property(readwrite,retain) NSArray* foundEpisodes;
-@property(readonly) int parsedSeason;
-@property(readonly) int parsedEpisode;
 
-+(MetadataSearch*) metadataSearch;
++(MetadataSearch*) metadataSearch:(Metadata*) metadata;
 
 -(BOOL) search:(NSString*) filename;
--(NSDictionary*) detailsForShow:(int) showId season:(int) season episode:(int) episode;
+-(NSDictionary*) details;
 
 @end

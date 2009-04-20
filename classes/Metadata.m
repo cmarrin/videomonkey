@@ -195,12 +195,6 @@ typedef enum { INPUT_TAG, SEARCH_TAG, USER_TAG, OUTPUT_TAG } TagType;
     [m_transcoder updateFileInfo];
 }
 
--(NSString*) contentRatingValue
-{
-    NSString* rating = [[m_tagDictionary valueForKey:@"contentRating"] displayValue];
-    return rating;
-}
-
 -(id) createArtwork:(NSImage*) image
 {
     return [ArtworkItem artworkItemWithImage:image sourceIcon:g_sourceUserIcon checked:YES];
@@ -377,8 +371,10 @@ typedef enum { INPUT_TAG, SEARCH_TAG, USER_TAG, OUTPUT_TAG } TagType;
     }
 }
 
--(void) setSearchMetadata:(NSDictionary*) dictionary
+-(void) loadSearchMetadata
 {
+    NSDictionary* dictionary = [m_search details];
+    
     for (NSString* key in g_tagMap) {
         NSString* param = [g_tagMap valueForKey: key];
         if ([param isEqualToString:@"artwork"]) {
@@ -401,6 +397,9 @@ typedef enum { INPUT_TAG, SEARCH_TAG, USER_TAG, OUTPUT_TAG } TagType;
                 [self setTagValue:value forKey:param type:SEARCH_TAG];
         }
     }
+    
+    // Get the data to be reevaluated
+    self.tags = self.tags;
 }
 
 +(Metadata*) metadataWithTranscoder: (Transcoder*) transcoder
@@ -459,16 +458,12 @@ typedef enum { INPUT_TAG, SEARCH_TAG, USER_TAG, OUTPUT_TAG } TagType;
     [metadata readMetadata: transcoder.inputFileInfo.filename];
     
     // search for a title match
-    metadata->m_search = [MetadataSearch metadataSearch];
+    metadata->m_search = [MetadataSearch metadataSearch:metadata];
     [metadata->m_search search:transcoder.inputFileInfo.filename];
     
     // If only one match, fill in the values
-    if ([metadata->m_search.foundShowIds count] == 1) {
-        NSDictionary* details = [metadata->m_search detailsForShow: [[metadata->m_search.foundShowIds objectAtIndex:0] intValue] 
-                                                    season: metadata->m_search.parsedSeason 
-                                                    episode: metadata->m_search.parsedEpisode];
-        [metadata setSearchMetadata:details];
-    }
+    if ([metadata->m_search.foundShowIds count] == 1)
+        [metadata loadSearchMetadata];
 
     return metadata;
 }
@@ -603,6 +598,11 @@ typedef enum { INPUT_TAG, SEARCH_TAG, USER_TAG, OUTPUT_TAG } TagType;
         NSString* filename = [NSString stringWithFormat:@"%@_%d.jpg", tmpArtworkPath, i++];
         [[NSFileManager defaultManager] removeFileAtPath:filename handler:nil];
     }
+}
+
+-(void) searchMetadataChanged
+{
+    [self loadSearchMetadata];
 }
 
 - (id)valueForUndefinedKey:(NSString *)key

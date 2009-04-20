@@ -230,7 +230,7 @@ static NSArray* numericallySortedArray(NSArray* array)
             NSMutableArray* foundSeasons = [[NSMutableArray alloc] init];
             for (NSString* key in m_seasons)
                 [foundSeasons addObject: key];
-            m_foundSeasons = numericallySortedArray(foundSeasons);
+            m_foundSeasons = [numericallySortedArray(foundSeasons) retain];
         }
     }
 }
@@ -252,7 +252,7 @@ static NSArray* numericallySortedArray(NSArray* array)
     NSMutableArray* foundEpisodes = [[NSMutableArray alloc] init];
     for (NSString* key in episodes)
         [foundEpisodes addObject: key];
-    m_foundEpisodes = numericallySortedArray(foundEpisodes);
+    m_foundEpisodes = [numericallySortedArray(foundEpisodes) retain];
 
     return [episodes valueForKey:e];
 }

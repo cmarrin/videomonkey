@@ -7,6 +7,7 @@
 //
 
 #import "MetadataSearch.h"
+#import "Metadata.h"
 #import "TVDBMetadataSearcher.h"
 
 @implementation MetadataSearcher
@@ -27,8 +28,6 @@
 @synthesize foundShowIds = m_foundShowIds;
 @synthesize foundSeasons = m_foundSeasons;
 @synthesize foundEpisodes = m_foundEpisodes;
-@synthesize parsedSeason = m_season;
-@synthesize parsedEpisode = m_episode;
 
 -(NSString*) currentShowName
 {
@@ -38,7 +37,7 @@
 
 -(void) setCurrentShowName:(NSString*) value
 {
-    NSLog(@"********** setCurrentEpisode:'%@'\n", value);
+    NSLog(@"********** setCurrentShowName:'%@'\n", value);
 }
 
 -(NSNumber*) currentSeason
@@ -49,7 +48,8 @@
 
 -(void) setCurrentSeason:(NSNumber*) value
 {
-    NSLog(@"********** setCurrentEpisode:'%@'\n", value);
+    m_season = [value intValue];
+    [m_metadata searchMetadataChanged];
 }
 
 -(NSNumber*) currentEpisode
@@ -60,15 +60,15 @@
 
 -(void) setCurrentEpisode:(NSNumber*) value
 {
-    NSLog(@"********** setCurrentEpisode:'%@'\n", value);
+    m_episode = [value intValue];
+    [m_metadata searchMetadataChanged];
 }
 
-+(MetadataSearch*) metadataSearch
++(MetadataSearch*) metadataSearch:(Metadata*) metadata
 {
     MetadataSearch* metadataSearch = [[MetadataSearch alloc] init];
-    metadataSearch->m_searchers = [NSArray arrayWithObjects:
-                                    [[TVDBMetadataSearcher alloc] init], 
-                                    nil];
+    metadataSearch->m_searchers = [[NSArray arrayWithObjects:[[TVDBMetadataSearcher alloc] init], nil] retain];
+    metadataSearch->m_metadata = metadata;
     return metadataSearch;
 }
 
@@ -123,8 +123,11 @@ static BOOL isValidInteger(NSString* s)
     
     // search until we find something
     while ([array count]) {
-        if ([self _searchForShows: [array componentsJoinedByString:@" "]])
+        if ([self _searchForShows: [array componentsJoinedByString:@" "]]) {
+            // make the first thing found the current
+            m_showId = ([m_foundShowIds count] > 0) ? [[m_foundShowIds objectAtIndex:0] intValue] : -1;
             return YES;
+        }
         
         // remove the last component
         [array removeLastObject];
@@ -133,12 +136,24 @@ static BOOL isValidInteger(NSString* s)
     return NO;
 }
 
--(NSDictionary*) detailsForShow:(int) showId season:(int) season episode:(int) episode
+-(NSDictionary*) details
 {
-    NSDictionary* details = [m_foundSearcher detailsForShow:showId season:season episode:episode];
+    NSDictionary* details = [m_foundSearcher detailsForShow:m_showId season:m_season episode:m_episode];
     self.foundSeasons = m_foundSearcher.foundSeasons;
     self.foundEpisodes = m_foundSearcher.foundEpisodes;
-    return details;
+    
+    // If there is not an episode in foundEpisodes that matches m_episode, 
+    // set m_episode to the first valid one and redo the search
+    for (NSString* e in self.foundEpisodes)
+        if ([e intValue] == m_episode)
+            return details;
+    
+    if (!self.foundEpisodes || [self.foundEpisodes count] == 0)
+        return nil;
+        
+    m_episode = [[self.foundEpisodes objectAtIndex:0] intValue];
+    [self setCurrentEpisode:[NSNumber numberWithInt:m_episode]];
+    return [m_foundSearcher detailsForShow:m_showId season:m_season episode:m_episode];
 }
 
 - (id)valueForUndefinedKey:(NSString *)key
