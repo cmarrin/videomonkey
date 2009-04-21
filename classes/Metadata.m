@@ -121,6 +121,9 @@ typedef enum { INPUT_TAG, SEARCH_TAG, USER_TAG, OUTPUT_TAG } TagType;
 
 -(void) setValue:(NSString*) value tag:(NSString*) tag type:(TagType) type;
 {
+    if (value && [value length] == 0)
+        value = nil;
+        
     switch (type) {
         case INPUT_TAG:
             [m_inputValue release];
@@ -632,6 +635,13 @@ typedef enum { INPUT_TAG, SEARCH_TAG, USER_TAG, OUTPUT_TAG } TagType;
         NSString* filename = [NSString stringWithFormat:@"%@_%d.jpg", tmpArtworkPath, i++];
         [[NSFileManager defaultManager] removeFileAtPath:filename handler:nil];
     }
+}
+
+-(BOOL) searchWithString:(NSString*) string
+{
+    if ([m_search searchWithString:string])
+        [self loadSearchMetadata];
+    return YES;
 }
 
 -(void) searchMetadataChanged

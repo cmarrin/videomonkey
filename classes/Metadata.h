@@ -37,6 +37,7 @@
 -(NSString*) atomicParsleyParams;
 -(void) cleanupAfterAtomicParsley;
 
+-(BOOL) searchWithString:(NSString*) string;
 -(void) searchMetadataChanged;
 
 @end

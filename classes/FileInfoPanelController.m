@@ -89,6 +89,12 @@
     [m_fileListController rearrangeObjects];
 }
 
+-(IBAction)searchBoxSelected:(id)sender
+{
+    NSString* searchString = [sender stringValue];
+    [[(Transcoder*) [m_fileListController selection] metadata] searchWithString:searchString];
+}
+
 -(id) selection
 {
     // if we get here it means the artwork has no selection

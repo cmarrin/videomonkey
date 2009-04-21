@@ -37,37 +37,9 @@
 
 -(void) setCurrentShowName:(NSString*) value
 {
-    // Case 1: name being set programatically. Set the internal variable and return
-    if (!m_currentShowName)
-        m_currentShowName = [value retain];
-    else {
-        int i = 0;
-        
-        for (NSString* name in m_foundShowNames) {
-            if ([name isEqualToString: value]) {
-                // Case 2: name is being selected from the drop down list. load these details
-                
-                // We  may have entered here as a result of the user typing in a show
-                // name (the UI will trigger when the show in the combobox is changed), so
-                // skip the work in that case
-                if (m_showId == [[m_foundShowIds objectAtIndex:i] intValue])
-                    return;
-                    
-                [value retain];
-                [m_currentShowName release];
-                m_currentShowName = value;
-                m_showId = [[m_foundShowIds objectAtIndex:i] intValue];
-                [m_metadata searchMetadataChanged];
-                return;
-            }
-            
-            ++i;
-        }
-            
-        // Case 3: the user typed in a name. Do a new search
-        [self searchWithString:value];
-        [m_metadata searchMetadataChanged];
-    }
+    [value retain];
+    [m_currentShowName release];
+    m_currentShowName = value;
 }
 
 -(NSNumber*) currentSeason

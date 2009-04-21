@@ -13,7 +13,6 @@
 @interface FileInfoPanelController : NSObject {
 @private
     IBOutlet NSTabView* m_fileInfoTabView;
-    IBOutlet NSSearchField* m_searchField;
     IBOutlet NSTableView* m_artworkTable;
     IBOutlet NSButton* m_artworkDrawerDisclosureButton;
     IBOutlet FileListController* m_fileListController;
@@ -27,5 +26,6 @@
 @property(assign) NSImage* primaryArtwork;
 
 -(IBAction)artworkCheckedStateChanged:(id)sender;
+-(IBAction)searchBoxSelected:(id)sender;
 
 @end
