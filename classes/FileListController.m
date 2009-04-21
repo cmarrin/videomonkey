@@ -176,20 +176,6 @@
     [self setSelectedObjects:[self arrangedObjects]];
 }
 
-/*
--(id) selection
-{
-    NSArray* arr = [self arrangedObjects];
-    NSArray* sel = [self selectedObjects];
-    
-    // I don't know why, but the first time through the selectedObjects
-    // array contains one object, which is the AppController. Return
-    // nil if you see that.
-    
-    return ([sel count] == 1 && [[sel objectAtIndex:0] isKindOfClass:[Transcoder class]]) ? [sel objectAtIndex:0] : nil;
-}
-*/
-
 - (void)selectNext:(id)sender
 {
     if ([[self selectionIndexes] count] == 0)

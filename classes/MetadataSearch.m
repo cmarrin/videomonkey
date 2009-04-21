@@ -32,13 +32,42 @@
 -(NSString*) currentShowName
 {
     // For now just return the first show
-    return (m_foundShowNames && [m_foundShowNames count] > 0) ? [m_foundShowNames objectAtIndex:0] : nil;
+    return m_currentShowName;
 }
 
 -(void) setCurrentShowName:(NSString*) value
 {
-    [self searchWithString:value];
-    [m_metadata searchMetadataChanged];
+    // There are three reasons we can get here. First, we may have gotten here because we
+    // programatically set currentShowName after finding a show. Third, we may have
+    // gotten here because the user selected a name from the drop down list. Second, we may 
+    // have gotten here because the user typed in a new name to search for. In the first case
+    // m_currentShowName will be nil, so we will just fill it in. In the second case the
+    // passed value will match an entry in m_foundShowNames, so we will select on of those.
+    // In the third case we need to do a new search.
+    
+    // Case 1: name being set programatically. Set the internal variable and return
+    if (!m_currentShowName)
+        m_currentShowName = [value retain];
+    else {
+        int i = 0;
+        
+        for (NSString* name in m_foundShowNames) {
+            if ([name isEqualToString: value]) {
+                // Case 2: name is being selected from the drop down list. load these details
+                [value retain];
+                [m_currentShowName release];
+                m_currentShowName = value;
+                m_showId = [[m_foundShowIds objectAtIndex:i] intValue];
+                return;
+            }
+            
+            ++i;
+        }
+            
+        // Case 3: the user typed in a name. Do a new search
+        [self searchWithString:value];
+        [m_metadata searchMetadataChanged];
+    }
 }
 
 -(NSNumber*) currentSeason
@@ -102,6 +131,9 @@ static BOOL isValidInteger(NSString* s)
     m_episode = -1;
     if ([self _searchForShows: string]) {
         // make the first thing found the current
+        [m_currentShowName release];
+        m_currentShowName = nil;
+        [self setCurrentShowName:[m_foundShowNames objectAtIndex:0]];
         m_showId = [[m_foundShowIds objectAtIndex:0] intValue];
         return YES;
     }
@@ -144,6 +176,9 @@ static BOOL isValidInteger(NSString* s)
     while ([array count]) {
         if ([self _searchForShows: [array componentsJoinedByString:@" "]]) {
             // make the first thing found the current
+            [m_currentShowName release];
+            m_currentShowName = nil;
+            [self setCurrentShowName:[m_foundShowNames objectAtIndex:0]];
             m_showId = [[m_foundShowIds objectAtIndex:0] intValue];
             return YES;
         }

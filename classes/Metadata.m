@@ -402,6 +402,7 @@ typedef enum { INPUT_TAG, SEARCH_TAG, USER_TAG, OUTPUT_TAG } TagType;
     
     // Get the data to be reevaluated
     self.tags = self.tags;
+    self.search = self.search;
 }
 
 +(Metadata*) metadataWithTranscoder: (Transcoder*) transcoder
@@ -459,13 +460,31 @@ typedef enum { INPUT_TAG, SEARCH_TAG, USER_TAG, OUTPUT_TAG } TagType;
     
     [metadata readMetadata: transcoder.inputFileInfo.filename];
     
-    // search for a title match
+    // Search for metadata
     metadata->m_search = [MetadataSearch metadataSearch:metadata];
-    [metadata->m_search searchWithFilename:transcoder.inputFileInfo.filename];
     
-    // If only one match, fill in the values
-    if ([metadata->m_search.foundShowIds count] == 1)
-        [metadata loadSearchMetadata];
+    // If we have a TVShowName or title, use that for the search, otherwise use the filename
+    NSString* value = [[metadata->m_tagDictionary valueForKey:@"TVShowName"] displayValue];
+    if (value && [value length] > 0)
+        [metadata->m_search searchWithString:value];
+    else {
+        value = [[metadata->m_tagDictionary valueForKey:@"title"] displayValue];
+        if (value && [value length] > 0)
+            [metadata->m_search searchWithString:value];
+        else
+            [metadata->m_search searchWithFilename:transcoder.inputFileInfo.filename];
+    }
+
+    // if the season and episode were in the input metadata, set them
+    value = [[metadata->m_tagDictionary valueForKey:@"TVSeasonNum"] displayValue];
+    if (value && [value length] > 0)
+        metadata->m_search.currentSeason = [NSNumber numberWithInt:[value intValue]];
+    
+    value = [[metadata->m_tagDictionary valueForKey:@"TVEpisodeNum"] displayValue];
+    if (value && [value length] > 0)
+        metadata->m_search.currentEpisode = [NSNumber numberWithInt:[value intValue]];
+    
+    [metadata loadSearchMetadata];
 
     return metadata;
 }

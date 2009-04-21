@@ -37,6 +37,7 @@
     int m_episode;
     int m_showId;
     Metadata* m_metadata;
+    NSString* m_currentShowName;
     
     NSArray* m_searchers;
 }
