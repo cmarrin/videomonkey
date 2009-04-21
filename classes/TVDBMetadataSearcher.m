@@ -261,11 +261,13 @@ static NSArray* numericallySortedArray(NSArray* array)
 -(NSDictionary*) detailsForShow:(int) showId season:(int*) season episode:(int*) episode
 {
     if (showId != m_loadedShowId) {
-        [self loadDetailsForShow:showId];
+        // if we are switching from one show to another, clear the season and episode
+        if (m_loadedShowId >= 0) {
+            *season = -1;
+            *episode = -1;
+        }
         
-        // when loading a new show, reset the season and episode
-        *season = -1;
-        *episode = -1;
+        [self loadDetailsForShow:showId];
     }
     
     if (*season < 0 && [m_foundSeasons count] > 0)

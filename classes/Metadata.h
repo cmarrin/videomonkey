@@ -24,7 +24,7 @@
     NSString* m_rootFilename;
 }
 
-@property(readonly) NSMutableArray* artworkList;
+@property(retain) NSMutableArray* artworkList;
 @property(retain) NSMutableDictionary* tags;
 @property(assign) NSImage* primaryArtwork;
 @property(retain) MetadataSearch* search;

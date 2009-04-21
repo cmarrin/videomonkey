@@ -136,8 +136,11 @@ typedef enum { INPUT_TAG, SEARCH_TAG, USER_TAG, OUTPUT_TAG } TagType;
             break;
     }
     
-    [m_tag release];
-    m_tag = [tag retain];
+    if (tag) {
+        [tag retain];
+        [m_tag release];
+        m_tag = tag;
+    }
     
     [m_outputValue release];
     m_outputValue = [value retain];
@@ -376,6 +379,17 @@ typedef enum { INPUT_TAG, SEARCH_TAG, USER_TAG, OUTPUT_TAG } TagType;
     if (!dictionary)
         return;
         
+    // clear all existing search metadata
+    for (NSString* key in m_tagDictionary) 
+        [[m_tagDictionary valueForKey:key] setValue:nil tag:nil type:SEARCH_TAG];
+        
+    for (int i = 0; i < [m_artworkList count]; ) {
+        if ([[m_artworkList objectAtIndex:i] sourceIcon] == g_sourceSearchIcon)
+            [m_artworkList removeObjectAtIndex:i];
+        else
+            ++i;
+    }
+        
     for (NSString* key in g_tagMap) {
         NSString* param = [g_tagMap valueForKey: key];
         if ([param isEqualToString:@"artwork"]) {
@@ -401,6 +415,7 @@ typedef enum { INPUT_TAG, SEARCH_TAG, USER_TAG, OUTPUT_TAG } TagType;
     // Get the data to be reevaluated
     self.tags = self.tags;
     self.search = self.search;
+    self.artworkList = self.artworkList;
 }
 
 +(Metadata*) metadataWithTranscoder: (Transcoder*) transcoder
