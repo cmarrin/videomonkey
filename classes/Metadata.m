@@ -139,11 +139,9 @@ typedef enum { INPUT_TAG, SEARCH_TAG, USER_TAG, OUTPUT_TAG } TagType;
     [m_tag release];
     m_tag = [tag retain];
     
-    if (value && [value length] > 0 || type == m_typeShowing) {
-        [m_outputValue release];
-        m_outputValue = [value retain];
-        m_typeShowing = type;
-    }
+    [m_outputValue release];
+    m_outputValue = [value retain];
+    m_typeShowing = type;
 }
 
 -(NSString*) displayValue

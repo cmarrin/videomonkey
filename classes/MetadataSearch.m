@@ -37,14 +37,6 @@
 
 -(void) setCurrentShowName:(NSString*) value
 {
-    // There are three reasons we can get here. First, we may have gotten here because we
-    // programatically set currentShowName after finding a show. Third, we may have
-    // gotten here because the user selected a name from the drop down list. Second, we may 
-    // have gotten here because the user typed in a new name to search for. In the first case
-    // m_currentShowName will be nil, so we will just fill it in. In the second case the
-    // passed value will match an entry in m_foundShowNames, so we will select on of those.
-    // In the third case we need to do a new search.
-    
     // Case 1: name being set programatically. Set the internal variable and return
     if (!m_currentShowName)
         m_currentShowName = [value retain];
@@ -54,10 +46,18 @@
         for (NSString* name in m_foundShowNames) {
             if ([name isEqualToString: value]) {
                 // Case 2: name is being selected from the drop down list. load these details
+                
+                // We  may have entered here as a result of the user typing in a show
+                // name (the UI will trigger when the show in the combobox is changed), so
+                // skip the work in that case
+                if (m_showId == [[m_foundShowIds objectAtIndex:i] intValue])
+                    return;
+                    
                 [value retain];
                 [m_currentShowName release];
                 m_currentShowName = value;
                 m_showId = [[m_foundShowIds objectAtIndex:i] intValue];
+                [m_metadata searchMetadataChanged];
                 return;
             }
             

@@ -23,20 +23,31 @@ static NSDictionary* g_tvdbSeriesMap = nil;
     if (!g_tvdbEpisodeMap) {
         g_tvdbEpisodeMap = [[NSDictionary dictionaryWithObjectsAndKeys:
             @"title",       	@"EpisodeName", 
-            //@"TVShowName",  	@"TVShowName", 
             @"TVEpisode",   	@"ProductionCode", 
+            @"description", 	@"Overview", 
+            @"year",        	@"FirstAired",
+            
+            // Automatically generated:
+            
             //@"TVEpisodeNum",	@"EpisodeNumber", 
             //@"TVSeasonNum", 	@"SeasonNumber", 
             //@"tracknum",    	@"tracknum", 
-            @"description", 	@"Overview", 
-            @"year",        	@"FirstAired", 
-            //@"year_year",      	@"year_year", 
-            //@"year_month",     	@"year_month", 
-            //@"year_day",       	@"year_day", 
-            //@"stik",        	@"stik", 
+            //@"year_year",     @"year_year", 
+            //@"year_month",    @"year_month", 
+            //@"year_day",      @"year_day", 
             nil ] retain];
 
         g_tvdbSeriesMap = [[NSDictionary dictionaryWithObjectsAndKeys:
+            @"TVShowName",  	@"SeriesName", 
+            @"TVNetwork",   	@"Network", 
+            @"contentRating",	@"ContentRating",
+            
+            // Automatically generated:
+            
+            //@"stik",        	@"stik", 
+            
+            // Not currently added:
+            
             //@"advisory",    	@"advisory",
             //@"rating_annotation",@"rating_annotation",
             //@"comment",     	@"©cmt", 
@@ -44,11 +55,8 @@ static NSDictionary* g_tvdbSeriesMap = nil;
             //@"artist",      	@"©ART", 
             //@"albumArtist", 	@"aART", 
             //@"copyright",   	@"cprt", 
-            @"TVShowName",  	@"SeriesName", 
-            @"TVNetwork",   	@"Network", 
             //@"encodingTool",	@"©too", 
             //@"genre",       	@"gnre", 
-            @"contentRating",	@"ContentRating",
             nil ] retain];
     }
     
@@ -144,6 +152,68 @@ static NSArray* numericallySortedArray(NSArray* array)
     return [array sortedArrayUsingFunction:intSort context:nil];
 }
 
+-(void) _addEpisode:(MyXMLElement*) episodeElement forSeries:(MyXMLElement*) series
+{
+    NSString* s = episodeElement ? [[episodeElement lastElementForName:@"SeasonNumber"] content] : nil;
+    NSString* e = episodeElement ? [[episodeElement lastElementForName:@"EpisodeNumber"] content] : nil;
+    
+    if (!s)
+        s = @"0";
+        
+    if (!e)
+        e = @"0";
+        
+    // build dictionary with values
+    NSMutableDictionary* dictionary = [self addSeason:s episode: e];
+
+    // this is a tv show
+    [dictionary setValue:@"TV Show" forKey:@"stik"];
+    
+    // set the track, episode and season
+    [dictionary setValue:s forKey:@"TVSeasonNum"];
+    [dictionary setValue:e forKey:@"TVEpisodeNum"];
+    [dictionary setValue:e forKey:@"tracknum"];
+    
+    NSString* value;
+    
+    // first get all the series info
+    for (NSString* key in g_tvdbSeriesMap) {
+        NSString* dictionaryKey = [g_tvdbSeriesMap valueForKey:key];
+        value = [[series lastElementForName:key] content];
+        if (value)
+            [dictionary setValue:value forKey:dictionaryKey];
+    }
+    
+    // then do all the episode info
+    if (episodeElement) {
+        for (NSString* key in g_tvdbEpisodeMap) {
+            NSString* dictionaryKey = [g_tvdbEpisodeMap valueForKey:key];
+            value = [[episodeElement lastElementForName:key] content];
+            if (value)
+                [dictionary setValue:value forKey:dictionaryKey];
+        }
+    }
+    
+    // If we have a year, set the y/m/d
+    NSString* year = [dictionary valueForKey:@"year"];
+    if (year && [year length] > 0) {
+        NSArray* yearArray = [year componentsSeparatedByString:@"-"];
+        if ([yearArray count] > 0)
+            [dictionary setValue:[[NSNumber numberWithInt:[[yearArray objectAtIndex:0] intValue]] stringValue] forKey:@"year_year"];
+        if ([yearArray count] > 1)
+            [dictionary setValue:[[NSNumber numberWithInt:[[yearArray objectAtIndex:1] intValue]] stringValue] forKey:@"year_month"];
+        if ([yearArray count] > 2)
+            [dictionary setValue:[[NSNumber numberWithInt:[[yearArray objectAtIndex:2] intValue]] stringValue] forKey:@"year_day"];
+    }
+    
+    // collect the artwork, in order of preference
+    NSMutableArray* artwork = [[NSMutableArray alloc] init];
+    [self collectArtwork: [series elementsForName:@"poster"] toArray:artwork];
+    [self collectArtwork: [series elementsForName:@"fanart"] toArray:artwork];
+    [self collectArtwork: [series elementsForName:@"banner"] toArray:artwork];
+    [dictionary setValue:artwork forKey:@"artwork"];
+}
+
 -(void) loadDetailsForShow:(int) showId
 {
     [m_seasons release];
@@ -164,66 +234,19 @@ static NSArray* numericallySortedArray(NSArray* array)
             // find the season and episode
             MyXMLElement* series = [[doc rootElement] lastElementForName:@"Series"];
             NSArray* episodes = [[doc rootElement] elementsForName:@"Episode"];
-            if (!episodes)
-                return;
-                
+
             // We found our show. Fill in the details
             m_loadedShowId = showId;
                 
+            // This show may have no episodes, in which case we will fake an array with
+            // season 0, episode 0 (we can still fill in the series info)
             m_seasons = [[NSMutableDictionary alloc] init];
                 
-            NSString* value;
-            
-            for (MyXMLElement* episodeElement in episodes) {
-                NSString* s = [[episodeElement lastElementForName:@"SeasonNumber"] content];
-                NSString* e = [[episodeElement lastElementForName:@"EpisodeNumber"] content];
-                
-                // build dictionary with values
-                NSMutableDictionary* dictionary = [self addSeason:s episode: e];
-            
-                // this is a tv show
-                [dictionary setValue:@"TV Show" forKey:@"stik"];
-                
-                // set the track, episode and season
-                [dictionary setValue:s forKey:@"TVSeasonNum"];
-                [dictionary setValue:e forKey:@"TVEpisodeNum"];
-                [dictionary setValue:e forKey:@"tracknum"];
-                
-                // first get all the series info
-                for (NSString* key in g_tvdbSeriesMap) {
-                    NSString* dictionaryKey = [g_tvdbSeriesMap valueForKey:key];
-                    value = [[series lastElementForName:key] content];
-                    if (value)
-                        [dictionary setValue:value forKey:dictionaryKey];
-                }
-                
-                // then do all the episode info
-                for (NSString* key in g_tvdbEpisodeMap) {
-                    NSString* dictionaryKey = [g_tvdbEpisodeMap valueForKey:key];
-                    value = [[episodeElement lastElementForName:key] content];
-                    if (value)
-                        [dictionary setValue:value forKey:dictionaryKey];
-                }
-                
-                // If we have a year, set the y/m/d
-                NSString* year = [dictionary valueForKey:@"year"];
-                if (year && [year length] > 0) {
-                    NSArray* yearArray = [year componentsSeparatedByString:@"-"];
-                    if ([yearArray count] > 0)
-                        [dictionary setValue:[[NSNumber numberWithInt:[[yearArray objectAtIndex:0] intValue]] stringValue] forKey:@"year_year"];
-                    if ([yearArray count] > 1)
-                        [dictionary setValue:[[NSNumber numberWithInt:[[yearArray objectAtIndex:1] intValue]] stringValue] forKey:@"year_month"];
-                    if ([yearArray count] > 2)
-                        [dictionary setValue:[[NSNumber numberWithInt:[[yearArray objectAtIndex:2] intValue]] stringValue] forKey:@"year_day"];
-                }
-                
-                // collect the artwork, in order of preference
-                NSMutableArray* artwork = [[NSMutableArray alloc] init];
-                [self collectArtwork: [series elementsForName:@"poster"] toArray:artwork];
-                [self collectArtwork: [series elementsForName:@"fanart"] toArray:artwork];
-                [self collectArtwork: [series elementsForName:@"banner"] toArray:artwork];
-                [dictionary setValue:artwork forKey:@"artwork"];
-            }
+            if (episodes && [episodes count] > 0)
+                for (MyXMLElement* episodeElement in episodes)
+                    [self _addEpisode:episodeElement forSeries:series];
+            else
+                [self _addEpisode:nil forSeries:series];
             
             // load up the m_foundSeasons array
             [m_foundSeasons release];
@@ -237,14 +260,18 @@ static NSArray* numericallySortedArray(NSArray* array)
 
 -(NSDictionary*) detailsForShow:(int) showId season:(int*) season episode:(int*) episode
 {
-    if (showId != m_loadedShowId)
+    if (showId != m_loadedShowId) {
         [self loadDetailsForShow:showId];
+        
+        // when loading a new show, reset the season and episode
+        *season = -1;
+        *episode = -1;
+    }
     
     if (*season < 0 && [m_foundSeasons count] > 0)
         *season = [[m_foundSeasons objectAtIndex:0] intValue];
         
-    NSString* s = [[NSNumber numberWithInt:*season] stringValue];
-    NSDictionary* episodes = [m_seasons valueForKey:s];
+    NSDictionary* episodes = [m_seasons valueForKey:[[NSNumber numberWithInt:*season] stringValue]];
     
     if (!episodes)
         return nil;
