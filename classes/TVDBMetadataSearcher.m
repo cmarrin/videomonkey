@@ -158,10 +158,10 @@ static NSArray* numericallySortedArray(NSArray* array)
     NSString* e = episodeElement ? [[episodeElement lastElementForName:@"EpisodeNumber"] content] : nil;
     
     if (!s)
-        s = @"0";
+        s = @"--";
         
     if (!e)
-        e = @"0";
+        e = @"--";
         
     // build dictionary with values
     NSMutableDictionary* dictionary = [self addSeason:s episode: e];
@@ -258,6 +258,16 @@ static NSArray* numericallySortedArray(NSArray* array)
     }
 }
 
+-(int) seasonOrEpisodeAsInt:(NSString*) value
+{
+    return [value isEqualToString:@"--"] ? -1 : [value intValue];
+}
+
+-(NSString*) seasonOrEpisodeAsString:(int) value
+{
+    return (value < 0) ? @"--" : [[NSNumber numberWithInt:value] stringValue];
+}
+
 -(NSDictionary*) detailsForShow:(int) showId season:(int*) season episode:(int*) episode
 {
     if (showId != m_loadedShowId) {
@@ -269,11 +279,11 @@ static NSArray* numericallySortedArray(NSArray* array)
         
         [self loadDetailsForShow:showId];
     }
-    
+
     if (*season < 0 && [m_foundSeasons count] > 0)
-        *season = [[m_foundSeasons objectAtIndex:0] intValue];
+        *season = [self seasonOrEpisodeAsInt:[m_foundSeasons objectAtIndex:0]];
         
-    NSDictionary* episodes = [m_seasons valueForKey:[[NSNumber numberWithInt:*season] stringValue]];
+    NSDictionary* episodes = [m_seasons valueForKey:[self seasonOrEpisodeAsString:*season]];
     
     if (!episodes)
         return nil;
@@ -286,10 +296,9 @@ static NSArray* numericallySortedArray(NSArray* array)
     m_foundEpisodes = [numericallySortedArray(foundEpisodes) retain];
 
     if (*episode < 0 && [m_foundEpisodes count] > 0)
-        *episode = [[m_foundEpisodes objectAtIndex:0] intValue];
+        *episode = [self seasonOrEpisodeAsInt:[m_foundEpisodes objectAtIndex:0]];
 
-    NSString* e = [[NSNumber numberWithInt:*episode] stringValue];
-    return [episodes valueForKey:e];
+    return [episodes valueForKey:[self seasonOrEpisodeAsString:*episode]];
 }
 
 @end

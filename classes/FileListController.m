@@ -176,6 +176,14 @@
     [self setSelectedObjects:[self arrangedObjects]];
 }
 
+-(id) selection
+{
+    if ([[self selectionIndexes] count] != 1)
+        return nil;
+        
+    return [[self arrangedObjects] objectAtIndex:[self selectionIndex]];
+}
+
 - (void)selectNext:(id)sender
 {
     if ([[self selectionIndexes] count] == 0)

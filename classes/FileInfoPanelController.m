@@ -92,7 +92,7 @@
 -(IBAction)searchBoxSelected:(id)sender
 {
     NSString* searchString = [sender stringValue];
-    [[(Transcoder*) [m_fileListController selection] metadata] searchWithString:searchString];
+    [[(Transcoder*)[m_fileListController selection] metadata] searchWithString:searchString];
 }
 
 -(id) selection

@@ -28,41 +28,27 @@
 @synthesize foundShowIds = m_foundShowIds;
 @synthesize foundSeasons = m_foundSeasons;
 @synthesize foundEpisodes = m_foundEpisodes;
+@synthesize currentShowName = m_currentShowName;
 
--(NSString*) currentShowName
+-(NSString*) currentSeason
 {
-    // For now just return the first show
-    return m_currentShowName;
+    return (m_season >= 0) ? [[NSNumber numberWithInt:m_season] stringValue] : @"--";
 }
 
--(void) setCurrentShowName:(NSString*) value
+-(void) setCurrentSeason:(NSString*) value
 {
-    [value retain];
-    [m_currentShowName release];
-    m_currentShowName = value;
-}
-
--(NSNumber*) currentSeason
-{
-    // For now just return the one we parsed
-    return (m_season >= 0) ? [NSNumber numberWithInt:m_season] : nil;
-}
-
--(void) setCurrentSeason:(NSNumber*) value
-{
-    m_season = [value intValue];
+    m_season = [value isEqualToString:@"--"] ? -1 : [value intValue];
     [m_metadata searchMetadataChanged];
 }
 
--(NSNumber*) currentEpisode
+-(NSString*) currentEpisode
 {
-    // For now just return the one we parsed
-    return (m_episode >= 0) ? [NSNumber numberWithInt:m_episode] : nil;
+    return (m_episode >= 0) ? [[NSNumber numberWithInt:m_episode] stringValue] : @"--";
 }
 
--(void) setCurrentEpisode:(NSNumber*) value
+-(void) setCurrentEpisode:(NSString*) value
 {
-    m_episode = [value intValue];
+    m_episode = [value isEqualToString:@"--"] ? -1 : [value intValue];
     [m_metadata searchMetadataChanged];
 }
 
@@ -94,6 +80,19 @@ static BOOL isValidInteger(NSString* s)
 
 -(BOOL) searchWithString:(NSString*) string
 {
+    // see if the search string in in our list already
+    int i = 0;
+    for (NSString* name in self.foundShowNames) {
+        if ([string isEqualToString:name]) {
+            self.currentShowName = [m_foundShowNames objectAtIndex:i];
+            m_showId = [[m_foundShowIds objectAtIndex:i] intValue];
+            return YES;
+        }
+        
+        i++;
+    }
+    
+    // not found, we need to do a full search
     self.foundShowNames = nil;
     self.foundShowIds = nil;
     [m_foundSearcher release];
@@ -103,9 +102,7 @@ static BOOL isValidInteger(NSString* s)
     m_episode = -1;
     if ([self _searchForShows: string]) {
         // make the first thing found the current
-        [m_currentShowName release];
-        m_currentShowName = nil;
-        [self setCurrentShowName:[m_foundShowNames objectAtIndex:0]];
+        self.currentShowName = [m_foundShowNames objectAtIndex:0];
         m_showId = [[m_foundShowIds objectAtIndex:0] intValue];
         return YES;
     }
@@ -167,19 +164,7 @@ static BOOL isValidInteger(NSString* s)
     NSDictionary* details = [m_foundSearcher detailsForShow:m_showId season:&m_season episode:&m_episode];
     self.foundSeasons = m_foundSearcher.foundSeasons;
     self.foundEpisodes = m_foundSearcher.foundEpisodes;
-    
-    // If there is not an episode in foundEpisodes that matches m_episode, 
-    // set m_episode to the first valid one and redo the search
-    for (NSString* e in self.foundEpisodes)
-        if ([e intValue] == m_episode)
-            return details;
-    
-    if (!self.foundEpisodes || [self.foundEpisodes count] == 0)
-        return nil;
-        
-    m_episode = [[self.foundEpisodes objectAtIndex:0] intValue];
-    [self setCurrentEpisode:[NSNumber numberWithInt:m_episode]];
-    return [m_foundSearcher detailsForShow:m_showId season:&m_season episode:&m_episode];
+    return details;
 }
 
 - (id)valueForUndefinedKey:(NSString *)key

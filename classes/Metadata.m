@@ -494,11 +494,11 @@ typedef enum { INPUT_TAG, SEARCH_TAG, USER_TAG, OUTPUT_TAG } TagType;
     // if the season and episode were in the input metadata, set them
     value = [[metadata->m_tagDictionary valueForKey:@"TVSeasonNum"] displayValue];
     if (value && [value length] > 0)
-        metadata->m_search.currentSeason = [NSNumber numberWithInt:[value intValue]];
+        metadata->m_search.currentSeason = [[NSNumber numberWithInt:[value intValue]] stringValue];
     
     value = [[metadata->m_tagDictionary valueForKey:@"TVEpisodeNum"] displayValue];
     if (value && [value length] > 0)
-        metadata->m_search.currentEpisode = [NSNumber numberWithInt:[value intValue]];
+        metadata->m_search.currentEpisode = [[NSNumber numberWithInt:[value intValue]] stringValue];
     
     [metadata loadSearchMetadata];
 

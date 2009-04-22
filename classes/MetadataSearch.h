@@ -43,8 +43,8 @@
 }
 
 @property(readwrite,retain) NSString* currentShowName;
-@property(readwrite,retain) NSNumber* currentSeason;
-@property(readwrite,retain) NSNumber* currentEpisode;
+@property(readwrite,retain) NSString* currentSeason;
+@property(readwrite,retain) NSString* currentEpisode;
 @property(readwrite,retain) NSArray* foundShowNames;
 @property(readwrite,retain) NSArray* foundShowIds;
 @property(readwrite,retain) NSArray* foundSeasons;
