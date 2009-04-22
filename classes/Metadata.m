@@ -162,17 +162,20 @@ typedef enum { INPUT_TAG, SEARCH_TAG, USER_TAG, OUTPUT_TAG } TagType;
     if ([value isKindOfClass:[NSAttributedString class]])
         value = [(NSAttributedString*) value string];
     [value retain];
+    m_userValue = value;
+    [value retain];
     [m_outputValue release];
     m_outputValue = value;
+    m_typeShowing = USER_TAG;
 }
 
--(BOOL) hasMultipleValues
-{
-    int count = m_inputValue ? 1 : 0;
-    count += m_searchValue ? 1 : 0;
-    count += m_userValue ? 1 : 0;
-    return count > 1;
-}
+-(BOOL) hasInputValue { return m_inputValue != nil; }
+-(BOOL) hasSearchValue { return m_searchValue != nil; }
+-(BOOL) hasUserValue { return m_userValue != nil; }
+
+-(BOOL) isInputValueCurrent { return m_typeShowing == INPUT_TAG; }
+-(BOOL) isSearchValueCurrent { return m_typeShowing == SEARCH_TAG; }
+-(BOOL) isUserValueCurrent { return m_typeShowing == USER_TAG; }
 
 @end
 
