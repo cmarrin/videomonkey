@@ -12,6 +12,9 @@
 
 @implementation FileInfoPanelController
 
+@synthesize fileListController = m_fileListController;
+@synthesize metadataPanel = m_metadataPanel;
+
 -(NSArray*) artworkList
 {
     return [[(Transcoder*) [m_fileListController selection] metadata] artworkList];
@@ -34,6 +37,9 @@
     // scroll to top of metadata
     NSPoint pt = NSMakePoint(0.0, [[m_metadataScrollView documentView] bounds].size.height);
     [[m_metadataScrollView documentView] scrollPoint:pt];
+    
+    // make the search box selected
+    [m_searchField becomeFirstResponder];
 }
 
 -(IBAction)droppedInImage:(id)sender

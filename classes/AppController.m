@@ -13,21 +13,6 @@
 #import "MoviePanelController.h"
 #import "Transcoder.h"
 
-@interface DummyMetadata : NSObject {
-}
-
-@end
-
-@implementation DummyMetadata
-
--(id) valueForKey:(NSString*) key
-{
-    NSLog(@"*** DummyMetadata::valueForKey:%@\n", key);
-    return nil;
-}
-
-@end
-
 @implementation MyPathCell
 -(void)setURL:(NSURL *)url
 {
@@ -43,6 +28,7 @@
 
 @synthesize fileList = m_fileList;
 @synthesize deviceController = m_deviceController;
+@synthesize fileInfoPanelController = m_fileInfoPanelController;
 @synthesize limitParams = m_limitParams;
 
 -(double) currentTime

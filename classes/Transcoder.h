@@ -16,6 +16,7 @@
 @class AppController;
 @class Command;
 @class Metadata;
+@class MetadataPanel;
 
 // FrameSize is a 32 bit integer with upper 16 bits width and lower 16 bits height
 typedef uint32_t FrameSize;
@@ -117,6 +118,7 @@ typedef enum FileStatus { FS_INVALID, FS_VALID, FS_ENCODING, FS_PAUSED, FS_FAILE
 @property (readonly) TranscoderFileInfo* inputFileInfo;
 @property (readonly) TranscoderFileInfo* outputFileInfo;
 @property (readonly) Metadata* metadata;
+@property (readonly) MetadataPanel* metadataPanel;
 
 +(Transcoder*) transcoderWithController: (AppController*) controller;
 

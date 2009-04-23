@@ -9,6 +9,7 @@
 #import <Quartz/Quartz.h>
 
 #import "Metadata.h"
+#import "MetadataPanel.h"
 #import "MetadataSearch.h"
 #import "Transcoder.h"
 
@@ -424,6 +425,18 @@ typedef enum { INPUT_TAG, SEARCH_TAG, USER_TAG, OUTPUT_TAG } TagType;
     self.artworkList = self.artworkList;
 }
 
+-(void) setupMetadataPanelBindings
+{
+    MetadataPanel* panel = [m_transcoder metadataPanel];
+    
+    for (MetadataPanelItem* item in [[panel contentView] subviews]) {
+        if (![item isKindOfClass:[MetadataPanelItem class]])
+            continue;
+            
+        [item bindToTagItem: [self.tags valueForKey:[item key]]];
+    }
+}
+
 +(Metadata*) metadataWithTranscoder: (Transcoder*) transcoder
 {
     // init the tag map, if needed
@@ -477,7 +490,11 @@ typedef enum { INPUT_TAG, SEARCH_TAG, USER_TAG, OUTPUT_TAG } TagType;
     metadata->m_artworkList = [[NSMutableArray alloc] init];
     metadata->m_rootFilename = [[[transcoder.inputFileInfo.filename lastPathComponent] stringByDeletingPathExtension] retain];
     
+    // read the input metadata (this also creates the tagDictionary)
     [metadata readMetadata: transcoder.inputFileInfo.filename];
+    
+    // setup the bindings to the metadata panel
+    [metadata setupMetadataPanelBindings];
     
     // Search for metadata
     metadata->m_search = [MetadataSearch metadataSearch:metadata];

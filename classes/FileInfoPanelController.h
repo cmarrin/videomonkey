@@ -9,6 +9,7 @@
 #import <Cocoa/Cocoa.h>
 
 @class FileListController;
+@class MetadataPanel;
 
 @interface FileInfoPanelController : NSObject {
 @private
@@ -18,16 +19,15 @@
     IBOutlet FileListController* m_fileListController;
     IBOutlet NSArrayController* m_artworkListController;
     IBOutlet NSScrollView* m_metadataScrollView;
-    IBOutlet NSBox* m_metadataBox;
+    IBOutlet NSComboBox* m_searchField;
+    IBOutlet MetadataPanel* m_metadataPanel;
     
-    // Metadata items
-    IBOutlet NSBox* m_metadataTitle;
-    
-
     BOOL m_isVisible;
 }
 
 @property(readonly) NSArray* artworkList;
+@property(readonly) FileListController* fileListController;
+@property(readonly) MetadataPanel* metadataPanel;
 @property(assign) NSImage* primaryArtwork;
 
 -(IBAction)artworkCheckedStateChanged:(id)sender;

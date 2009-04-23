@@ -79,32 +79,7 @@ int heightFromFrameSize(FrameSize f) { return f & 0xffff; }
 @synthesize enabled = m_enabled;
 @synthesize metadata = m_metadata;
 
-
-
-
-
-/*
-
--(NSString*) inputMetaName { return [m_metadata inputValueForTag:@"©nam"]; }
-
-@property (retain,readonly) NSString* metaName;
-@property (retain,readonly) NSString* metaShow;
-@property (retain,readonly) NSString* metaProduction;
-@property (retain,readonly) NSString* metaEpisode;
-@property (retain,readonly) NSString* metaSeason;
-@property (retain,readonly) NSString* metaTrack;
-@property (retain,readonly) NSString* metaDisc;
-@property (retain,readonly) NSString* metaDescription;
-@property (retain,readonly) NSString* metaReleaseDate;
-@property (retain,readonly) NSString* metaMediaKind;
-@property (retain,readonly) NSString* metaContentRating;
-@property (retain,readonly) NSString* metaComments;
-@property (retain,readonly) NSString* metaName;
-*/
-
-
-
-
+-(MetadataPanel*) metadataPanel { return [[m_appController fileInfoPanelController] metadataPanel]; }
 
 -(BOOL) _validateInputFile: (TranscoderFileInfo*) info
 {
