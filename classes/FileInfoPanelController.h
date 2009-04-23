@@ -18,6 +18,11 @@
     IBOutlet FileListController* m_fileListController;
     IBOutlet NSArrayController* m_artworkListController;
     IBOutlet NSScrollView* m_metadataScrollView;
+    IBOutlet NSBox* m_metadataBox;
+    
+    // Metadata items
+    IBOutlet NSBox* m_metadataTitle;
+    
 
     BOOL m_isVisible;
 }
