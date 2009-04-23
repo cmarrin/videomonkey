@@ -12,12 +12,35 @@
 
 @interface MetadataPanelItem : NSBox {
     NSTextField* m_mainTextField;
-    NSTextField* m_totalTextField;
     NSMatrix* m_sourceMatrix;
 }
 
--(NSString*) key;
 -(void) bindToTagItem:() item;
+
+@end
+
+@interface MetadataTrackDiskPanelItem : MetadataPanelItem {
+    NSTextField* m_totalTextField;
+}
+
+@end
+
+@interface MetadataYearPanelItem : MetadataPanelItem {
+    NSTextField* m_monthTextField;
+    NSTextField* m_dayTextField;
+}
+
+@end
+
+@interface MetadataTextViewPanelItem : MetadataPanelItem {
+    NSTextView* m_textView;
+}
+
+@end
+
+@interface MetadataPopUpButtonPanelItem : MetadataPanelItem {
+    NSPopUpButton* m_popupButton;
+}
 
 @end
 
