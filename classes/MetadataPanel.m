@@ -26,14 +26,16 @@
     m_sourceMatrix = [[self contentView] viewWithTag:SOURCE_MATRIX];
 }
 
--(void) controlTextDidChange:(NSNotification*) notification
-{
-    [self setValue: [[notification object] stringValue]];
-}
-
 -(id) fileListController
 {
     return [(MetadataPanel*)[[self superview] superview] fileListController];
+}
+
+-(void) controlTextDidChange:(NSNotification*) notification
+{
+    NSString* value = [self value];
+    NSString* keyPath = [NSString stringWithFormat:@"selection.metadata.tags.%@.displayValue", [self key]];
+    [[self fileListController] setValue:value forKeyPath:keyPath];
 }
 
 -(NSString*) value
@@ -55,9 +57,7 @@
 {
     NSString* keyPath = [NSString stringWithFormat:@"selection.metadata.tags.%@.displayValue", [self key]];
     [self bind:@"value" toObject:[self fileListController] withKeyPath:keyPath 
-        options: [NSDictionary dictionaryWithObjectsAndKeys:
-                    [NSNumber numberWithBool:YES], NSContinuouslyUpdatesValueBindingOption,
-                    nil]];
+        options: nil];
 }
 
 @end
@@ -68,6 +68,7 @@
 {
     [super awakeFromNib];
     m_totalTextField = [[self contentView] viewWithTag:TOTAL_TEXTFIELD];
+    [m_totalTextField setDelegate:self];
 }
 
 -(NSString*) value
@@ -109,7 +110,9 @@
 {
     [super awakeFromNib];
     m_monthTextField = [[self contentView] viewWithTag:MONTH_TEXTFIELD];
+    [m_monthTextField setDelegate:self];
     m_dayTextField = [[self contentView] viewWithTag:DAY_TEXTFIELD];
+    [m_dayTextField setDelegate:self];
 }
 
 -(NSString*) value
@@ -118,15 +121,15 @@
     NSString* month = [m_monthTextField stringValue];
     NSString* day = [m_dayTextField stringValue];
     
-    if (!year || [year length] == 0)
-        return @"";
+    if (!year)
+        year = @"";
         
-    if (!month || [month length] == 0)
-        return year;
+    if (!month)
+        month = @"";
         
-    if (!day || [day length] == 0)
-        return [NSString stringWithFormat:@"%@-%@", year, month];
-    
+    if (!day)
+        day = @"";
+        
     return [NSString stringWithFormat:@"%@-%@-%@", year, month, day];
 }
 
@@ -157,6 +160,13 @@
 
 @implementation MetadataTextViewPanelItem
 
+-(void) textDidChange:(NSNotification*) notification
+{
+    NSString* value = [self value];
+    NSString* keyPath = [NSString stringWithFormat:@"selection.metadata.tags.%@.displayValue", [self key]];
+    [[self fileListController] setValue:value forKeyPath:keyPath];
+}
+
 -(NSString*) value
 {
     return [m_textView string];
@@ -185,6 +195,13 @@
 -(void) setValue:(NSString*) value
 {
     [m_popupButton selectItemWithTitle:value ? value : @""];
+}
+
+-(IBAction)valueChanged:(id)sender
+{
+    NSString* value = [self value];
+    NSString* keyPath = [NSString stringWithFormat:@"selection.metadata.tags.%@.displayValue", [self key]];
+    [[self fileListController] setValue:value forKeyPath:keyPath];
 }
 
 @end

@@ -42,6 +42,8 @@
     NSPopUpButton* m_popupButton;
 }
 
+-(IBAction)valueChanged:(id)sender;
+
 @end
 
 @interface MetadataPanel : NSBox {
