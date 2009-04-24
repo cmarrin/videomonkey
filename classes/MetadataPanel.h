@@ -33,7 +33,7 @@
 @end
 
 @interface MetadataTextViewPanelItem : MetadataPanelItem {
-    NSTextView* m_textView;
+    IBOutlet NSTextView* m_textView;
 }
 
 @end

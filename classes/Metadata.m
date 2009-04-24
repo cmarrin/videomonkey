@@ -146,6 +146,24 @@ typedef enum { INPUT_TAG, SEARCH_TAG, USER_TAG, OUTPUT_TAG } TagType;
         m_tag = tag;
     }
     
+    // if we are displaying the value we are changing and
+    // it is being cleared, we need to select another in this
+    // order: USER, SEARCH, INPUT
+    if (m_typeShowing == type && !value) {
+        if (type != USER_TAG && m_userValue) {
+            value = m_userValue;
+            type = USER_TAG;
+        }
+        else if (type != SEARCH_TAG && m_searchValue) {
+            value = m_searchValue;
+            type = SEARCH_TAG;
+        }
+        else if (type != INPUT_TAG && m_inputValue) {
+            value = m_inputValue;
+            type = INPUT_TAG;
+        }
+    }
+    
     [m_outputValue release];
     m_outputValue = [value retain];
     m_typeShowing = type;
@@ -277,26 +295,6 @@ typedef enum { INPUT_TAG, SEARCH_TAG, USER_TAG, OUTPUT_TAG } TagType;
     
     atom = replacementAtom;
     
-    // Handle year
-    if ([atom isEqualToString:@"year"]) {
-        // split out year, month, day
-        NSArray* dayArray = [value componentsSeparatedByString:@"-"];
-        if ([dayArray count] > 0)
-            [self setTagValue:[[NSNumber numberWithInt:[[dayArray objectAtIndex:0] intValue]] stringValue] forKey:@"year_year" type:INPUT_TAG];
-        if ([dayArray count] > 1)
-            [self setTagValue:[[NSNumber numberWithInt:[[dayArray objectAtIndex:1] intValue]] stringValue] forKey:@"year_month" type:INPUT_TAG];
-        if ([dayArray count] > 2)
-            [self setTagValue:[[NSNumber numberWithInt:[[dayArray objectAtIndex:2] intValue]] stringValue] forKey:@"year_day" type:INPUT_TAG];
-    }
-    
-    // handle tracknum
-    if ([atom isEqualToString:@"tracknum"])
-        value = [self handleTrackOrDisk:value totalKey:@"tracknum_total"];
-            
-    // handle disk
-    if ([atom isEqualToString:@"disk"])
-        value = [self handleTrackOrDisk:value totalKey:@"disk_total"];
-
     // handle artwork
     if ([atom isEqualToString:@"artwork"])
         m_numArtwork = [[[value componentsSeparatedByString:@" "] objectAtIndex:0] intValue];
@@ -448,14 +446,9 @@ typedef enum { INPUT_TAG, SEARCH_TAG, USER_TAG, OUTPUT_TAG } TagType;
             @"TVEpisodeNum",	@"tves", 
             @"TVSeasonNum", 	@"tvsn", 
             @"tracknum",    	@"trkn", 
-            @"tracknum_total",  @"tracknum_total", 
             @"disk",        	@"disk", 
-            @"disk_total",      @"disk_total", 
             @"description", 	@"desc", 
             @"year",        	@"©day", 
-            @"year_year",      	@"year_year", 
-            @"year_month",     	@"year_month", 
-            @"year_day",       	@"year_day", 
             @"stik",        	@"stik", 
             @"advisory",    	@"rtng",
             @"rating_annotation",@"rating_annotation",
@@ -529,14 +522,6 @@ typedef enum { INPUT_TAG, SEARCH_TAG, USER_TAG, OUTPUT_TAG } TagType;
 {
     NSMutableString* params = [[NSMutableString alloc] init];
     
-    NSString* year_year;
-    NSString* year_month;
-    NSString* year_day;
-    NSString* tracknum;
-    NSString* track_total;
-    NSString* disknum;
-    NSString* disk_total;
-    
     for (NSString* key in g_tagMap) {
         NSString* param = [g_tagMap valueForKey: key];
         NSString* value = [[m_tagDictionary valueForKey: param] outputValue];
@@ -549,42 +534,6 @@ typedef enum { INPUT_TAG, SEARCH_TAG, USER_TAG, OUTPUT_TAG } TagType;
         if ([param isEqualToString:@"artwork"])
             continue;
             
-        if ([param isEqualToString:@"year"])
-            continue;
-            
-        if ([param isEqualToString:@"year_year"]) {
-            year_year = value;
-            continue;
-        }
-        if ([param isEqualToString:@"year_month"]) {
-            year_month = value;
-            continue;
-        }
-        if ([param isEqualToString:@"year_day"]) {
-            year_day = value;
-            continue;
-        }
-
-        if ([param isEqualToString:@"tracknum"]) {
-            tracknum = value;
-            continue;
-        }
-
-        if ([param isEqualToString:@"tracknum_total"]) {
-            track_total = value;
-            continue;
-        }
-
-        if ([param isEqualToString:@"disk"]) {
-            disknum = value;
-            continue;
-        }
-
-        if ([param isEqualToString:@"disk_total"]) {
-            disk_total = value;
-            continue;
-        }
-
         if (value && [value length] > 0) {
             // escape all the quotes
             value = [value stringByReplacingOccurrencesOfString:@"\"" withString:@"\\\""];
@@ -592,42 +541,6 @@ typedef enum { INPUT_TAG, SEARCH_TAG, USER_TAG, OUTPUT_TAG } TagType;
         }
     }
     
-    // add the specials
-    if (year_year && [year_year length] > 0) {
-        NSMutableString* year = [NSMutableString stringWithString:year_year];
-    
-        if (year_month && [year_month length] > 0) {
-            [year appendString:@"-"];
-            [year appendString:year_month];
-            
-            if (year_day && [year_day length] > 0) {
-                [year appendString:@"-"];
-                [year appendString:year_day];
-            }
-        }
-        [params appendString:[NSString stringWithFormat:@" --year '%@'", year]];
-    }
-
-    if (tracknum && [tracknum length] > 0) {
-        NSMutableString* track = [NSMutableString stringWithString:tracknum];
-
-        if (track_total && [track_total length] > 0) {
-            [track appendString:@" of "];
-            [track appendString:track_total];
-        }
-        [params appendString:[NSString stringWithFormat:@" --tracknum '%@'", track]];
-    }
-
-    if (disknum && [disknum length] > 0) {
-        NSMutableString* disk = [NSMutableString stringWithString:disknum];
-
-        if (disk_total && [disk_total length] > 0) {
-            [disk appendString:@" of "];
-            [disk appendString:disk_total];
-        }
-        [params appendString:[NSString stringWithFormat:@" --disk '%@'", disk]];
-    }
-
     // write out temp artwork
     NSString* tmpArtworkPath = [NSString stringWithFormat:@"/tmp/AtomicParlsleyArtwork_%p", self];
     int i = 0;

@@ -21,7 +21,14 @@
 -(void) awakeFromNib
 {
     m_mainTextField = [[self contentView] viewWithTag:MAIN_TEXTFIELD];
+    [m_mainTextField setDelegate:self];
+    
     m_sourceMatrix = [[self contentView] viewWithTag:SOURCE_MATRIX];
+}
+
+-(void) controlTextDidChange:(NSNotification*) notification
+{
+    [self setValue: [[notification object] stringValue]];
 }
 
 -(id) fileListController
@@ -47,7 +54,10 @@
 -(void) bindToTagItem:(id) item
 {
     NSString* keyPath = [NSString stringWithFormat:@"selection.metadata.tags.%@.displayValue", [self key]];
-    [self bind:@"value" toObject:[self fileListController] withKeyPath:keyPath options:nil];
+    [self bind:@"value" toObject:[self fileListController] withKeyPath:keyPath 
+        options: [NSDictionary dictionaryWithObjectsAndKeys:
+                    [NSNumber numberWithBool:YES], NSContinuouslyUpdatesValueBindingOption,
+                    nil]];
 }
 
 @end
@@ -87,8 +97,8 @@
         }
     }
         
-    [m_mainTextField setStringValue:value ? main : @""];
-    [m_totalTextField setStringValue:value ? total : @""];
+    [m_mainTextField setStringValue:main ? main : @""];
+    [m_totalTextField setStringValue:total ? total : @""];
 }
 
 @end
@@ -138,29 +148,23 @@
         }
     }
             
-    [m_mainTextField setStringValue:value ? year : @""];
-    [m_monthTextField setStringValue:value ? month : @""];
-    [m_dayTextField setStringValue:value ? day : @""];
+    [m_mainTextField setStringValue:year ? year : @""];
+    [m_monthTextField setStringValue:month ? month : @""];
+    [m_dayTextField setStringValue:day ? day : @""];
 }
 
 @end
 
 @implementation MetadataTextViewPanelItem
 
--(void) awakeFromNib
-{
-    [super awakeFromNib];
-    //m_textView = [[self contentView] viewWithTag:TOTAL_TEXTFIELD];
-}
-
 -(NSString*) value
 {
-    return [m_mainTextField stringValue];
+    return [m_textView string];
 }
 
 -(void) setValue:(NSString*) value
 {
-    [m_mainTextField setStringValue:value ? value : @""];
+    [m_textView setString:value ? value : @""];
 }
 
 @end
