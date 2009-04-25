@@ -89,8 +89,6 @@ static NSDictionary* g_tagMap = nil;
 
 @end
 
-typedef enum { INPUT_TAG, SEARCH_TAG, USER_TAG, OUTPUT_TAG } TagType;
-
 // Tag Item
 @interface TagItem : NSObject {
     NSString* m_inputValue;
@@ -188,13 +186,24 @@ typedef enum { INPUT_TAG, SEARCH_TAG, USER_TAG, OUTPUT_TAG } TagType;
     m_typeShowing = USER_TAG;
 }
 
--(BOOL) hasInputValue { return m_inputValue != nil; }
--(BOOL) hasSearchValue { return m_searchValue != nil; }
--(BOOL) hasUserValue { return m_userValue != nil; }
+-(BOOL) hasInputSource { return m_inputValue != nil; }
+-(BOOL) hasSearchSource { return m_searchValue != nil; }
+-(BOOL) hasUserSource { return m_userValue != nil; }
 
--(BOOL) isInputValueCurrent { return m_typeShowing == INPUT_TAG; }
--(BOOL) isSearchValueCurrent { return m_typeShowing == SEARCH_TAG; }
--(BOOL) isUserValueCurrent { return m_typeShowing == USER_TAG; }
+-(TagType) currentSource { return m_typeShowing; }
+-(void) setCurrentSource:(TagType) type
+{
+    m_typeShowing = type;
+    NSString* oldValue = m_outputValue;
+    
+    switch (type) {
+        case INPUT_TAG:     m_outputValue = [m_inputValue retain];  break;
+        case SEARCH_TAG:    m_outputValue = [m_searchValue retain];  break;
+        case USER_TAG:      m_outputValue = [m_searchValue retain];  break;
+    }
+    
+    [oldValue release];
+}
 
 @end
 

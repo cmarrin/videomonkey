@@ -38,6 +38,11 @@
     [[self fileListController] setValue:value forKeyPath:keyPath];
 }
 
+-(IBAction)sourceMatrixChanged:(id)sender
+{
+    printf("***\n");
+}
+
 -(NSString*) value
 {
     return [m_mainTextField stringValue];
@@ -48,6 +53,40 @@
     [m_mainTextField setStringValue:value ? value : @""];
 }
 
+-(NSButtonCell*) inputButton { return [m_sourceMatrix cellAtRow:0 column:0]; }
+-(NSButtonCell*) searchButton { return [m_sourceMatrix cellAtRow:0 column:1]; }
+-(NSButtonCell*) userButton { return [m_sourceMatrix cellAtRow:0 column:2]; }
+
+-(BOOL) hasInputSource { return ![[self inputButton] isTransparent]; }
+-(BOOL) hasSearchSource { return ![[self searchButton] isTransparent]; }
+-(BOOL) hasUserSource { return ![[self userButton] isTransparent]; }
+
+-(void) setHasInputSource:(BOOL) value
+{
+    [[self inputButton] setTransparent:!value];
+    [[self inputButton] setEnabled:value];
+}
+
+-(void) setHasSearchSource:(BOOL) value
+{
+    [[self searchButton] setTransparent:!value];
+    [[self searchButton] setEnabled:value];
+}
+
+-(void) setHasUserSource:(BOOL) value
+{
+    [[self userButton] setTransparent:!value];
+    [[self userButton] setEnabled:value];
+}
+
+-(TagType) currentSource { return m_currentSource; }
+-(void) setCurrentSource:(TagType) type
+{
+    [[self inputButton] setBordered:type == INPUT_TAG];
+    [[self searchButton] setBordered:type == SEARCH_TAG];
+    [[self userButton] setBordered:type == USER_TAG];
+}
+
 -(NSString*) key
 {
     return [self title];
@@ -55,9 +94,23 @@
 
 -(void) bindToTagItem:(id) item
 {
+    // bind value
     NSString* keyPath = [NSString stringWithFormat:@"selection.metadata.tags.%@.displayValue", [self key]];
-    [self bind:@"value" toObject:[self fileListController] withKeyPath:keyPath 
-        options: nil];
+    [self bind:@"value" toObject:[self fileListController] withKeyPath:keyPath options: nil];
+        
+    // bind the hasXXXSource properties
+    keyPath = [NSString stringWithFormat:@"selection.metadata.tags.%@.hasInputSource", [self key]];
+    [self bind:@"hasInputSource" toObject:[self fileListController] withKeyPath:keyPath options: nil];
+
+    keyPath = [NSString stringWithFormat:@"selection.metadata.tags.%@.hasSearchSource", [self key]];
+    [self bind:@"hasSearchSource" toObject:[self fileListController] withKeyPath:keyPath options: nil];
+
+    keyPath = [NSString stringWithFormat:@"selection.metadata.tags.%@.hasUserSource", [self key]];
+    [self bind:@"hasUserSource" toObject:[self fileListController] withKeyPath:keyPath options: nil];
+    
+    // bind currentSource
+    keyPath = [NSString stringWithFormat:@"selection.metadata.tags.%@.currentSource", [self key]];
+    [self bind:@"currentSource" toObject:[self fileListController] withKeyPath:keyPath options: nil];
 }
 
 @end

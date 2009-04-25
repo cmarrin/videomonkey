@@ -8,12 +8,17 @@
 
 #import <Cocoa/Cocoa.h>
 
+typedef enum { INPUT_TAG, SEARCH_TAG, USER_TAG, OUTPUT_TAG } TagType;
+
 @class FileListController;
 
 @interface MetadataPanelItem : NSBox {
     NSTextField* m_mainTextField;
     NSMatrix* m_sourceMatrix;
+    TagType m_currentSource;
 }
+
+-(IBAction)sourceMatrixChanged:(id)sender;
 
 -(void) bindToTagItem:() item;
 
