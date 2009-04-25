@@ -38,11 +38,6 @@
     [[self fileListController] setValue:value forKeyPath:keyPath];
 }
 
--(IBAction)sourceMatrixChanged:(id)sender
-{
-    printf("***\n");
-}
-
 -(NSString*) value
 {
     return [m_mainTextField stringValue];
@@ -57,31 +52,39 @@
 -(NSButtonCell*) searchButton { return [m_sourceMatrix cellAtRow:0 column:1]; }
 -(NSButtonCell*) userButton { return [m_sourceMatrix cellAtRow:0 column:2]; }
 
--(BOOL) hasInputSource { return ![[self inputButton] isTransparent]; }
--(BOOL) hasSearchSource { return ![[self searchButton] isTransparent]; }
--(BOOL) hasUserSource { return ![[self userButton] isTransparent]; }
+-(NSNumber*) hasInputSource { return [NSNumber numberWithBool:![[self inputButton] isTransparent]]; }
+-(NSNumber*) hasSearchSource { return [NSNumber numberWithBool:![[self searchButton] isTransparent]]; }
+-(NSNumber*) hasUserSource { return [NSNumber numberWithBool:![[self userButton] isTransparent]]; }
 
--(void) setHasInputSource:(BOOL) value
+-(void) setHasInputSource:(NSNumber*) v
 {
+    BOOL value = [v boolValue];
     [[self inputButton] setTransparent:!value];
     [[self inputButton] setEnabled:value];
 }
 
--(void) setHasSearchSource:(BOOL) value
+-(void) setHasSearchSource:(NSNumber*) v
 {
+    BOOL value = [v boolValue];
     [[self searchButton] setTransparent:!value];
     [[self searchButton] setEnabled:value];
 }
 
--(void) setHasUserSource:(BOOL) value
+-(void) setHasUserSource:(NSNumber*) v
 {
+    BOOL value = [v boolValue];
     [[self userButton] setTransparent:!value];
     [[self userButton] setEnabled:value];
 }
 
--(TagType) currentSource { return m_currentSource; }
--(void) setCurrentSource:(TagType) type
+-(NSNumber*) currentSource
 {
+    return [NSNumber numberWithInt:(int) m_currentSource];
+}
+
+-(void) setCurrentSource:(NSNumber*) t
+{
+    TagType type = (TagType) [t intValue];
     [[self inputButton] setBordered:type == INPUT_TAG];
     [[self searchButton] setBordered:type == SEARCH_TAG];
     [[self userButton] setBordered:type == USER_TAG];
@@ -90,6 +93,24 @@
 -(NSString*) key
 {
     return [self title];
+}
+
+-(IBAction)sourceMatrixChanged:(id)sender
+{
+    TagType type = OUTPUT_TAG;
+    
+    if ([sender selectedCell] == [self inputButton])
+        type = INPUT_TAG;
+    else if ([sender selectedCell] == [self searchButton])
+        type = SEARCH_TAG;
+    else if ([sender selectedCell] == [self userButton])
+        type = USER_TAG;
+
+    if (type != OUTPUT_TAG) {
+        [self setCurrentSource: [NSNumber numberWithInt:(int) type]];
+        NSString* keyPath = [NSString stringWithFormat:@"selection.metadata.tags.%@.currentSource", [self key]];
+        [[self fileListController] setValue:[NSNumber numberWithInt:(int) type] forKeyPath:keyPath];
+    }
 }
 
 -(void) bindToTagItem:(id) item
