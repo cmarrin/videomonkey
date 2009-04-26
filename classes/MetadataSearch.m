@@ -57,6 +57,8 @@
     MetadataSearch* metadataSearch = [[MetadataSearch alloc] init];
     metadataSearch->m_searchers = [[NSArray arrayWithObjects:[[TVDBMetadataSearcher alloc] init], nil] retain];
     metadataSearch->m_metadata = metadata;
+    metadataSearch->m_season = -1;
+    metadataSearch->m_episode = -1;
     return metadataSearch;
 }
 
@@ -78,8 +80,58 @@ static BOOL isValidInteger(NSString* s)
     return NO;
 }
 
+// This function not only returns the found season/episode, but also returns a new string with
+// everything up to but not including the season/episode and all the non alpha-numeric characters 
+// converted to spaces
+-(NSString*) checkString:(NSString*) string forSeason:(int*) season episode:(int*) episode
+{
+    // See if anything looks like SxxEyy
+    *season = -1;
+    *episode = -1;
+    
+    NSArray* array = [string componentsSeparatedByCharactersInSet:
+                                    [[NSCharacterSet alphanumericCharacterSet] invertedSet]];
+    NSMutableString* outputString = [[NSMutableString alloc] init];
+
+    BOOL firstTime = YES;
+    
+    for (NSString* item in array) {
+        item = [item lowercaseString];
+        if ([item hasPrefix:@"s"]) {
+            item = [item substringFromIndex: 1];
+            NSArray* seArray = [item componentsSeparatedByString:@"e"];
+            if ([seArray count] == 2 && isValidInteger([seArray objectAtIndex:0]) && isValidInteger([seArray objectAtIndex:1])) {
+                *season = [[seArray objectAtIndex:0] intValue];
+                *episode = [[seArray objectAtIndex:1] intValue];
+                
+                // remove it from the string and return a new one
+                return outputString;
+            }
+        }
+        
+        if (!firstTime) {
+            [outputString appendString:@" "];
+            firstTime = NO;
+        }
+        [outputString appendString:item];
+    }
+    
+    return outputString;
+}
+
 -(BOOL) searchWithString:(NSString*) string
 {
+    // sometimes a show name has the season/episode encoded into it. See if it does and remove it if so
+    int season;
+    int episode;
+    string = [self checkString:string forSeason:&season episode:&episode];
+    
+    if (season >= 0 && m_season < 0)
+        m_season = season;
+        
+    if (episode >= 0 && m_episode < 0)
+        m_episode = episode;
+        
     // see if the search string in in our list already
     int i = 0;
     for (NSString* name in self.foundShowNames) {
@@ -121,25 +173,10 @@ static BOOL isValidInteger(NSString* s)
     // Toss the prefix and suffix
     NSString* searchString = [[filename lastPathComponent] stringByDeletingPathExtension];
     
-    // Replace anything other than letters and numbers with spaces
-    NSMutableArray* array = [NSMutableArray arrayWithArray: [searchString componentsSeparatedByCharactersInSet:[[NSCharacterSet alphanumericCharacterSet] invertedSet]]];
-    
-    // See if anything looks like SxxEyy
-    m_season = -1;
-    m_episode = -1;
-    
-    for (NSString* item in array) {
-        item = [item lowercaseString];
-        if ([item hasPrefix:@"s"]) {
-            item = [item substringFromIndex: 1];
-            NSArray* seArray = [item componentsSeparatedByString:@"e"];
-            if ([seArray count] == 2 && isValidInteger([seArray objectAtIndex:0]) && isValidInteger([seArray objectAtIndex:1])) {
-                m_season = [[seArray objectAtIndex:0] intValue];
-                m_episode = [[seArray objectAtIndex:1] intValue];
-                break;
-            }
-        }
-    }
+     // See if anything looks like SxxEyy
+    searchString = [self checkString:searchString forSeason:&m_season episode:&m_episode];
+        
+    NSMutableArray* array = [NSMutableArray arrayWithArray: [searchString componentsSeparatedByString:@" "]];
     
     // search until we find something
     while ([array count]) {

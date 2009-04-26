@@ -199,7 +199,7 @@ static NSDictionary* g_tagMap = nil;
     switch (type) {
         case INPUT_TAG:     m_outputValue = [m_inputValue retain];  break;
         case SEARCH_TAG:    m_outputValue = [m_searchValue retain];  break;
-        case USER_TAG:      m_outputValue = [m_searchValue retain];  break;
+        case USER_TAG:      m_outputValue = [m_userValue retain];  break;
     }
     
     [oldValue release];

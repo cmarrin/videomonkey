@@ -31,13 +31,6 @@
     return [(MetadataPanel*)[[self superview] superview] fileListController];
 }
 
--(void) controlTextDidChange:(NSNotification*) notification
-{
-    NSString* value = [self value];
-    NSString* keyPath = [NSString stringWithFormat:@"selection.metadata.tags.%@.displayValue", [self key]];
-    [[self fileListController] setValue:value forKeyPath:keyPath];
-}
-
 -(NSString*) value
 {
     return [m_mainTextField stringValue];
@@ -90,6 +83,14 @@
     [[self userButton] setBordered:type == USER_TAG];
 }
 
+-(void) controlTextDidChange:(NSNotification*) notification
+{
+    NSString* value = [self value];
+    NSString* keyPath = [NSString stringWithFormat:@"selection.metadata.tags.%@.displayValue", [self key]];
+    [[self fileListController] setValue:value forKeyPath:keyPath];
+    [[self fileListController] reloadData];
+}
+
 -(NSString*) key
 {
     return [self title];
@@ -110,6 +111,7 @@
         [self setCurrentSource: [NSNumber numberWithInt:(int) type]];
         NSString* keyPath = [NSString stringWithFormat:@"selection.metadata.tags.%@.currentSource", [self key]];
         [[self fileListController] setValue:[NSNumber numberWithInt:(int) type] forKeyPath:keyPath];
+        [[self fileListController] reloadData];
     }
 }
 
@@ -239,6 +241,7 @@
     NSString* value = [self value];
     NSString* keyPath = [NSString stringWithFormat:@"selection.metadata.tags.%@.displayValue", [self key]];
     [[self fileListController] setValue:value forKeyPath:keyPath];
+    [[self fileListController] reloadData];
 }
 
 -(NSString*) value
@@ -276,6 +279,7 @@
     NSString* value = [self value];
     NSString* keyPath = [NSString stringWithFormat:@"selection.metadata.tags.%@.displayValue", [self key]];
     [[self fileListController] setValue:value forKeyPath:keyPath];
+    [[self fileListController] reloadData];
 }
 
 @end

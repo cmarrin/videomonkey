@@ -28,6 +28,9 @@
 
 -(void) reloadData
 {
+    NSIndexSet* indexes = [self selectionIndexes];
+    [self setSelectionIndexes:[NSIndexSet indexSet]];
+    [self setSelectionIndexes:indexes];
     [m_fileListView reloadData];
 }
 
