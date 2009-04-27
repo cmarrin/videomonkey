@@ -403,6 +403,8 @@ static NSImage* getFileStatusImage(FileStatus status)
 -(void) finish: (int) status
 {
     BOOL deleteOutputFile = NO;
+    BOOL moveOutputFileToTrash = NO;
+    
     m_fileStatus = (status == 0) ? FS_SUCCEEDED : (status == 255) ? FS_VALID : FS_FAILED;
     
     if (status == 0) {
@@ -413,7 +415,7 @@ static NSImage* getFileStatusImage(FileStatus status)
                 m_fileStatus = FS_FAILED;
             }
             else if ([m_appController deleteFromDestination])
-                deleteOutputFile = YES;
+                moveOutputFileToTrash = YES;
         }
     }
     else {
@@ -431,9 +433,16 @@ static NSImage* getFileStatusImage(FileStatus status)
     [m_logFile release];
     m_logFile = nil;
     
-    // toss output file is not successful
+    // toss output file if not successful
     if (deleteOutputFile)
         [[NSFileManager defaultManager] removeFileAtPath:self.outputFileInfo.filename handler:nil];
+    else if (moveOutputFileToTrash)
+        [[NSWorkspace sharedWorkspace] 
+            performFileOperation:NSWorkspaceRecycleOperation 
+            source:[self.outputFileInfo.filename stringByDeletingLastPathComponent]
+            destination:@""
+            files:[NSArray arrayWithObject:[self.outputFileInfo.filename lastPathComponent]]
+            tag:nil];
 }
 
 -(void) startNextCommands

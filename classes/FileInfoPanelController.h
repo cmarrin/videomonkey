@@ -32,5 +32,6 @@
 
 -(IBAction)artworkCheckedStateChanged:(id)sender;
 -(IBAction)searchBoxSelected:(id)sender;
+-(IBAction)writeMetadata:(id)sender;
 
 @end

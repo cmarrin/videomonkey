@@ -214,6 +214,31 @@ static NSDictionary* g_tagMap = nil;
 @synthesize search = m_search;
 @synthesize rootFilename = m_rootFilename;
 
+-(BOOL) canWriteMetadataToInputFile
+{
+    return YES;
+    BOOL value = [m_transcoder inputFileInfo].format == @"MPEG-4" &&
+        [[NSFileManager defaultManager] isWritableFileAtPath:[m_transcoder inputFileInfo].filename];
+    return [m_transcoder inputFileInfo].format == @"MPEG-4" &&
+        [[NSFileManager defaultManager] isWritableFileAtPath:[m_transcoder inputFileInfo].filename];
+}
+
+-(BOOL) canWriteMetadataToOutputFile
+{
+    return [m_transcoder outputFileInfo].format == @"MPEG-4" &&
+        [[NSFileManager defaultManager] isWritableFileAtPath:[m_transcoder outputFileInfo].filename];
+}
+
+-(void) writeMetadataToInputFile
+{
+    printf("***\n");
+}
+
+-(void) writeMetadataToOutputFile
+{
+    printf("***\n");
+}
+
 -(NSImage*) primaryArtwork
 {
     // primary is the first checked image

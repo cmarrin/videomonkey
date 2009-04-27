@@ -101,6 +101,11 @@
     [[(Transcoder*)[m_fileListController selection] metadata] searchWithString:searchString];
 }
 
+-(IBAction)writeMetadata:(id)sender
+{
+    printf("***\n");
+}
+
 -(id) selection
 {
     // if we get here it means the artwork has no selection
