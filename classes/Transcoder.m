@@ -550,7 +550,6 @@ static NSImage* getFileStatusImage(FileStatus status)
     
     // execute each command in turn
     m_isLastCommandRunning = NO;
-    m_wroteMetadata = NO;
     m_currentCommandIndex = 0;
     [self startNextCommands];
 
@@ -634,25 +633,12 @@ static NSImage* getFileStatusImage(FileStatus status)
 {
     if (m_isLastCommandRunning) {
         // now do the metadata if needed
-        BOOL writingMetadata = NO;
-        if (!m_wroteMetadata) {
-            m_wroteMetadata = YES;
-            NSString* atomicParsleyParams = [m_metadata atomicParsleyParams];
-            if (atomicParsleyParams && [atomicParsleyParams length] > 0) {
-                writingMetadata = YES;
-                NSString* cmdPath = [NSString stringWithString: [[NSBundle mainBundle] resourcePath]];
-                NSString* commandString = [NSString stringWithFormat:@"%@ \"%@\" -W %@", 
-                                        [cmdPath stringByAppendingPathComponent: @"bin/AtomicParsley"],
-                                        self.outputFileInfo.filename,
-                                        atomicParsleyParams];
-                [m_commands addObject:[[Command alloc] initWithTranscoder:self command:commandString 
-                            outputType:OT_WAIT identifier:[[NSNumber numberWithInt:0] stringValue]]];
-                [[m_commands lastObject] execute: nil];
-            }
+        if (status == 0 && [self.outputFileInfo.format isEqualToString:@"MPEG-4"]) {
+            if (![m_metadata writeMetadata:self.outputFileInfo.filename])
+                status = -1;
         }
         
-        if (!writingMetadata)
-            [self finish: status];
+        [self finish: status];
     }
     else
         [self startNextCommands];

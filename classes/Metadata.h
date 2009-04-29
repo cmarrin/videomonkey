@@ -22,6 +22,9 @@
     int m_numArtwork;
     MetadataSearch* m_search;
     NSString* m_rootFilename;
+    BOOL m_metadataWriteSucceeded;
+    BOOL m_isMetadataBusy;
+    NSString* m_metadataStatus;
 }
 
 @property(retain) NSMutableArray* artworkList;
@@ -29,13 +32,14 @@
 @property(assign) NSImage* primaryArtwork;
 @property(retain) MetadataSearch* search;
 @property(readonly) NSString* rootFilename;
+@property(assign) BOOL isMetadataBusy;
+@property(retain) NSString* metadataStatus;
 
 +(Metadata*) metadataWithTranscoder: (Transcoder*) transcoder;
 
 -(id) createArtwork:(NSImage*) image;
 
--(NSString*) atomicParsleyParams;
--(void) cleanupAfterAtomicParsley;
+-(BOOL) writeMetadata:(NSString*) filename;
 
 -(BOOL) searchWithString:(NSString*) string;
 -(void) searchMetadataChanged;

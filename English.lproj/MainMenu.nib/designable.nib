@@ -8,10 +8,10 @@
 		<string key="IBDocument.HIToolboxVersion">353.00</string>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
-			<integer value="4765"/>
-			<integer value="29"/>
-			<integer value="3773"/>
 			<integer value="371"/>
+			<integer value="29"/>
+			<integer value="2657"/>
+			<integer value="3773"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -284,6 +284,10 @@
 					<string>metadata</string>
 					<string>metadata.canWriteMetadataToInputFile</string>
 					<string>metadata.canWriteMetadataToOutputFile</string>
+					<string>metadata.isWritingMetadata</string>
+					<string>metadata.writingMetadataStatus</string>
+					<string>metadata.isMetadataBusy</string>
+					<string>metadata.metadataStatus</string>
 				</object>
 				<string key="NSObjectClassName">Transcoder</string>
 				<bool key="NSEditable">YES</bool>
@@ -11375,7 +11379,7 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 													<object class="NSMenuItem" key="NSMenuItem" id="606358842">
 														<reference key="NSMenu" ref="412050871"/>
 														<bool key="NSIsHidden">YES</bool>
-														<string key="NSTitle">Item 1</string>
+														<string key="NSTitle"/>
 														<string key="NSKeyEquiv"/>
 														<int key="NSKeyEquivModMask">1048576</int>
 														<int key="NSMnemonicLoc">2147483647</int>
@@ -11394,7 +11398,7 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 															<reference ref="606358842"/>
 															<object class="NSMenuItem" id="662700932">
 																<reference key="NSMenu" ref="412050871"/>
-																<string key="NSTitle">Item 2</string>
+																<string key="NSTitle">Write Metadata to Input File</string>
 																<string key="NSKeyEquiv"/>
 																<int key="NSKeyEquivModMask">1048576</int>
 																<int key="NSMnemonicLoc">2147483647</int>
@@ -11405,7 +11409,7 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 															</object>
 															<object class="NSMenuItem" id="575464316">
 																<reference key="NSMenu" ref="412050871"/>
-																<string key="NSTitle">Item 3</string>
+																<string key="NSTitle">Write Metadata to Output File</string>
 																<string key="NSKeyEquiv"/>
 																<int key="NSKeyEquivModMask">1048576</int>
 																<int key="NSMnemonicLoc">2147483647</int>
@@ -11432,7 +11436,7 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 												<object class="NSTextFieldCell" key="NSCell" id="843501035">
 													<int key="NSCellFlags">68288064</int>
 													<int key="NSCellFlags2">71435264</int>
-													<string key="NSContents">Label</string>
+													<string key="NSContents"/>
 													<reference key="NSSupport" ref="26"/>
 													<reference key="NSControlView" ref="138968188"/>
 													<reference key="NSBackgroundColor" ref="153400129"/>
@@ -11441,7 +11445,7 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 											</object>
 											<object class="NSProgressIndicator" id="46645561">
 												<reference key="NSNextResponder" ref="709235192"/>
-												<int key="NSvFlags">1292</int>
+												<int key="NSvFlags">-2147482356</int>
 												<object class="NSPSMatrix" key="NSDrawMatrix"/>
 												<string key="NSFrame">{{429, 5}, {16, 16}}</string>
 												<reference key="NSSuperview" ref="709235192"/>
@@ -14158,6 +14162,145 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 						<reference key="destination" ref="197139227"/>
 					</object>
 					<int key="connectionID">4733</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">enabled: selection.metadata.canWriteMetadataToInputFile</string>
+						<reference key="source" ref="662700932"/>
+						<reference key="destination" ref="2824"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="662700932"/>
+							<reference key="NSDestination" ref="2824"/>
+							<string key="NSLabel">enabled: selection.metadata.canWriteMetadataToInputFile</string>
+							<string key="NSBinding">enabled</string>
+							<string key="NSKeyPath">selection.metadata.canWriteMetadataToInputFile</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">4766</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">target: selection.metadata</string>
+						<reference key="source" ref="662700932"/>
+						<reference key="destination" ref="2824"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="662700932"/>
+							<reference key="NSDestination" ref="2824"/>
+							<string key="NSLabel">target: selection.metadata</string>
+							<string key="NSBinding">target</string>
+							<string key="NSKeyPath">selection.metadata</string>
+							<object class="NSDictionary" key="NSOptions">
+								<bool key="EncodedWithXMLCoder">YES</bool>
+								<object class="NSMutableArray" key="dict.sortedKeys">
+									<bool key="EncodedWithXMLCoder">YES</bool>
+									<string>NSConditionallySetsEnabled</string>
+									<string>NSSelectorName</string>
+								</object>
+								<object class="NSMutableArray" key="dict.values">
+									<bool key="EncodedWithXMLCoder">YES</bool>
+									<reference ref="6"/>
+									<string>writeMetadataToInputFile</string>
+								</object>
+							</object>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">4770</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">target: selection.metadata</string>
+						<reference key="source" ref="575464316"/>
+						<reference key="destination" ref="2824"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="575464316"/>
+							<reference key="NSDestination" ref="2824"/>
+							<string key="NSLabel">target: selection.metadata</string>
+							<string key="NSBinding">target</string>
+							<string key="NSKeyPath">selection.metadata</string>
+							<object class="NSDictionary" key="NSOptions">
+								<bool key="EncodedWithXMLCoder">YES</bool>
+								<object class="NSMutableArray" key="dict.sortedKeys">
+									<bool key="EncodedWithXMLCoder">YES</bool>
+									<string>NSConditionallySetsEnabled</string>
+									<string>NSSelectorName</string>
+								</object>
+								<object class="NSMutableArray" key="dict.values">
+									<bool key="EncodedWithXMLCoder">YES</bool>
+									<reference ref="6"/>
+									<string>writeMetadataToOutputFile</string>
+								</object>
+							</object>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">4775</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">enabled: selection.metadata.canWriteMetadataToOutputFile</string>
+						<reference key="source" ref="575464316"/>
+						<reference key="destination" ref="2824"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="575464316"/>
+							<reference key="NSDestination" ref="2824"/>
+							<string key="NSLabel">enabled: selection.metadata.canWriteMetadataToOutputFile</string>
+							<string key="NSBinding">enabled</string>
+							<string key="NSKeyPath">selection.metadata.canWriteMetadataToOutputFile</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">4776</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">hidden: selection.metadata.isMetadataBusy</string>
+						<reference key="source" ref="46645561"/>
+						<reference key="destination" ref="2824"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="46645561"/>
+							<reference key="NSDestination" ref="2824"/>
+							<string key="NSLabel">hidden: selection.metadata.isMetadataBusy</string>
+							<string key="NSBinding">hidden</string>
+							<string key="NSKeyPath">selection.metadata.isMetadataBusy</string>
+							<object class="NSDictionary" key="NSOptions">
+								<string key="NS.key.0">NSValueTransformerName</string>
+								<string key="NS.object.0">NSNegateBoolean</string>
+							</object>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">4782</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">value: selection.metadata.metadataStatus</string>
+						<reference key="source" ref="138968188"/>
+						<reference key="destination" ref="2824"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="138968188"/>
+							<reference key="NSDestination" ref="2824"/>
+							<string key="NSLabel">value: selection.metadata.metadataStatus</string>
+							<string key="NSBinding">value</string>
+							<string key="NSKeyPath">selection.metadata.metadataStatus</string>
+							<object class="NSDictionary" key="NSOptions">
+								<bool key="EncodedWithXMLCoder">YES</bool>
+								<object class="NSMutableArray" key="dict.sortedKeys">
+									<bool key="EncodedWithXMLCoder">YES</bool>
+									<string>NSContinuouslyUpdatesValue</string>
+									<string>NSValidatesImmediately</string>
+								</object>
+								<object class="NSMutableArray" key="dict.values">
+									<bool key="EncodedWithXMLCoder">YES</bool>
+									<reference ref="5"/>
+									<reference ref="5"/>
+								</object>
+							</object>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">4793</int>
 				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -21890,10 +22033,10 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<reference ref="9"/>
 					<string>{{525, 802}, {197, 73}}</string>
-					<string>{{-698, 473}, {466, 566}}</string>
+					<string>{{-700, 472}, {466, 566}}</string>
 					<reference ref="6"/>
 					<reference ref="6"/>
-					<string>{{-698, 473}, {466, 566}}</string>
+					<string>{{-700, 472}, {466, 566}}</string>
 					<reference ref="6"/>
 					<reference ref="5"/>
 					<reference ref="5"/>
@@ -22546,7 +22689,7 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>{{-487, 449}, {113, 63}}</string>
+					<string>{{-472, 491}, {220, 54}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -22664,7 +22807,7 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">4765</int>
+			<int key="maxID">4793</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">

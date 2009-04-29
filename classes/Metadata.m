@@ -100,6 +100,9 @@ static NSDictionary* g_tagMap = nil;
 }
 
 @property (readonly) NSString* outputValue;
+@property (retain) NSString* inputValue;
+@property (retain) NSString* searchValue;
+@property (retain) NSString* userValue;
 
 +(TagItem*) tagItem;
 
@@ -110,6 +113,9 @@ static NSDictionary* g_tagMap = nil;
 @implementation TagItem
 
 @synthesize outputValue = m_outputValue;
+@synthesize inputValue = m_inputValue;
+@synthesize searchValue = m_searchValue;
+@synthesize userValue = m_userValue;
 
 +(TagItem*) tagItem;
 {
@@ -125,16 +131,13 @@ static NSDictionary* g_tagMap = nil;
         
     switch (type) {
         case INPUT_TAG:
-            [m_inputValue release];
-            m_inputValue = [value retain];
+            self.inputValue = value;
             break;
         case SEARCH_TAG:
-            [m_searchValue release];
-            m_searchValue = [value retain];
+            self.searchValue = value;
             break;
         case USER_TAG:
-            [m_userValue release];
-            m_userValue = [value retain];
+            self.userValue = value;
             break;
     }
     
@@ -167,29 +170,6 @@ static NSDictionary* g_tagMap = nil;
     m_typeShowing = type;
 }
 
--(NSString*) displayValue
-{
-    if ([m_tag isEqualToString:@"stik"] && (!m_outputValue || [m_outputValue length] == 0))
-        return @"Movie";
-    return m_outputValue;
-}
-
--(void) setDisplayValue:(NSString*) value
-{
-    if ([value isKindOfClass:[NSAttributedString class]])
-        value = [(NSAttributedString*) value string];
-    [value retain];
-    m_userValue = value;
-    [value retain];
-    [m_outputValue release];
-    m_outputValue = value;
-    m_typeShowing = USER_TAG;
-}
-
--(BOOL) hasInputSource { return m_inputValue != nil; }
--(BOOL) hasSearchSource { return m_searchValue != nil; }
--(BOOL) hasUserSource { return m_userValue != nil; }
-
 -(TagType) currentSource { return m_typeShowing; }
 -(void) setCurrentSource:(TagType) type
 {
@@ -205,6 +185,21 @@ static NSDictionary* g_tagMap = nil;
     [oldValue release];
 }
 
+-(NSString*) displayValue
+{
+    if ([m_tag isEqualToString:@"stik"] && (!m_outputValue || [m_outputValue length] == 0))
+        return @"Movie";
+    return m_outputValue;
+}
+
+-(void) setDisplayValue:(NSString*) value
+{
+    if ([value isKindOfClass:[NSAttributedString class]])
+        value = [(NSAttributedString*) value string];
+    self.userValue = value;
+    [self setCurrentSource:USER_TAG];
+}
+
 @end
 
 @implementation Metadata
@@ -213,30 +208,29 @@ static NSDictionary* g_tagMap = nil;
 @synthesize tags = m_tagDictionary;
 @synthesize search = m_search;
 @synthesize rootFilename = m_rootFilename;
+@synthesize isMetadataBusy = m_isMetadataBusy;
+@synthesize metadataStatus = m_metadataStatus;
 
 -(BOOL) canWriteMetadataToInputFile
 {
-    return YES;
-    BOOL value = [m_transcoder inputFileInfo].format == @"MPEG-4" &&
-        [[NSFileManager defaultManager] isWritableFileAtPath:[m_transcoder inputFileInfo].filename];
-    return [m_transcoder inputFileInfo].format == @"MPEG-4" &&
+    return [[m_transcoder inputFileInfo].format isEqualToString:@"MPEG-4"] &&
         [[NSFileManager defaultManager] isWritableFileAtPath:[m_transcoder inputFileInfo].filename];
 }
 
 -(BOOL) canWriteMetadataToOutputFile
 {
-    return [m_transcoder outputFileInfo].format == @"MPEG-4" &&
+    return [[m_transcoder inputFileInfo].format isEqualToString:@"MPEG-4"] &&
         [[NSFileManager defaultManager] isWritableFileAtPath:[m_transcoder outputFileInfo].filename];
 }
 
 -(void) writeMetadataToInputFile
 {
-    printf("***\n");
+    [self writeMetadata:[m_transcoder inputFileInfo].filename];
 }
 
 -(void) writeMetadataToOutputFile
 {
-    printf("***\n");
+    [self writeMetadata:[m_transcoder outputFileInfo].filename];
 }
 
 -(NSImage*) primaryArtwork
@@ -271,7 +265,7 @@ static NSDictionary* g_tagMap = nil;
     [item setValue:value tag:key type:type];
 }
 
--(void) processFinishEncode: (NSNotification*) note
+-(void) processFinishReadMetadata: (NSNotification*) note
 {
     int status = [m_task terminationStatus];
     if (status)
@@ -388,7 +382,7 @@ static NSDictionary* g_tagMap = nil;
     [m_task setStandardOutput: [m_messagePipe fileHandleForWriting]];
         
     // add notifications
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(processFinishEncode:) name:NSTaskDidTerminateNotification object:m_task];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(processFinishReadMetadata:) name:NSTaskDidTerminateNotification object:m_task];
     
     [m_task launch];
     [m_task waitUntilExit];
@@ -409,6 +403,124 @@ static NSDictionary* g_tagMap = nil;
         if (![m_tagDictionary valueForKey:atom])
             [self setTagValue:@"" forKey:atom type:USER_TAG];
     }
+}
+
+-(NSString*) atomicParsleyParams
+{
+    NSMutableString* params = [[NSMutableString alloc] init];
+    
+    for (NSString* key in g_tagMap) {
+        NSString* param = [g_tagMap valueForKey: key];
+        NSString* value = [[m_tagDictionary valueForKey: param] outputValue];
+        
+        // handle special cases
+        // if 'stik' is "Movie" don't bother writing it
+        if ([param isEqualToString:@"stik"] && [value isEqualToString:@"Movie"])
+            value = nil;
+            
+        if ([param isEqualToString:@"artwork"])
+            continue;
+            
+        if (value && [value length] > 0) {
+            // escape all the quotes
+            value = [value stringByReplacingOccurrencesOfString:@"\"" withString:@"\\\""];
+            [params appendString:[NSString stringWithFormat:@" --%@ \"%@\"", param, value]];
+        }
+    }
+    
+    // write out temp artwork
+    NSString* tmpArtworkPath = [NSString stringWithFormat:@"/tmp/AtomicParlsleyArtwork_%p", self];
+    int i = 0;
+    
+    for (ArtworkItem* artwork in m_artworkList) {
+        if ([artwork checked]) {
+            NSString* filename = [NSString stringWithFormat:@"%@_%d.jpg", tmpArtworkPath, i];
+            NSBitmapImageRep* rep = [NSBitmapImageRep imageRepWithData:[[artwork image] TIFFRepresentation]];
+            [[rep representationUsingType:NSJPEGFileType properties:nil] writeToFile: filename atomically: YES];
+        
+            // write the param
+            [params appendFormat:@" --artwork %@", filename];
+        }
+        ++i;
+    }
+    return params;
+}
+
+-(void) cleanupAfterAtomicParsley
+{
+    NSString* tmpArtworkPath = [NSString stringWithFormat:@"/tmp/AtomicParlsleyArtwork_%p", self];
+    int i = 0;
+
+    for (ArtworkItem* artwork in m_artworkList) {
+        NSString* filename = [NSString stringWithFormat:@"%@_%d.jpg", tmpArtworkPath, i++];
+        [[NSFileManager defaultManager] removeFileAtPath:filename handler:nil];
+    }
+}
+
+-(void) processWriteMetadataOutput: (NSNotification*) note
+{
+    if (![[note name] isEqualToString:NSFileHandleReadCompletionNotification])
+        return;
+
+	NSData	*data = [[note userInfo] objectForKey:NSFileHandleNotificationDataItem];
+	
+	if([data length]) {
+		NSString* string = [[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding] autorelease];
+        
+        // read another buffer
+		[[note object] readInBackgroundAndNotify];
+    }
+}
+
+-(void) processFinishWriteMetadata: (NSNotification*) note
+{
+    int status = [m_task terminationStatus];
+    if (status)
+        [m_transcoder log: @"Metadata write FAILED\n"];
+    else
+        [m_transcoder log: @"Metadata write succeeded\n"];
+    
+    m_metadataWriteSucceeded = status == 0;
+}
+
+-(BOOL) writeMetadata:(NSString*) filename
+{
+    // Only write if we have params
+    NSString* atomicParsleyParams = [self atomicParsleyParams];
+    if (!atomicParsleyParams || [atomicParsleyParams length] == 0)
+        return TRUE;
+        
+    // setup command
+    NSString* cmdPath = [NSString stringWithString: [[NSBundle mainBundle] resourcePath]];
+    NSString* command = [NSString stringWithFormat:@"%@ \"%@\" -W %@", 
+                            [cmdPath stringByAppendingPathComponent: @"bin/AtomicParsley"],
+                            filename,
+                            atomicParsleyParams];
+    
+    m_task = [[NSTask alloc] init];
+    m_messagePipe = [NSPipe pipe];
+    
+    // execute the command
+    [m_task setArguments: [NSArray arrayWithObjects: @"-c", command, nil]];
+    [m_task setLaunchPath: @"/bin/sh"];
+    [m_task setStandardOutput: [m_messagePipe fileHandleForWriting]];
+        
+    // add notifications
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(processFinishWriteMetadata:) name:NSTaskDidTerminateNotification object:m_task];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(processWriteMetadataOutput:) name:NSFileHandleReadCompletionNotification object:[m_messagePipe fileHandleForReading]];
+
+    [[m_messagePipe fileHandleForReading] readInBackgroundAndNotify];
+    
+    self.isMetadataBusy = YES;
+    self.metadataStatus = @"Writing metadata...";
+    [m_task launch];
+    [m_task waitUntilExit];
+
+    // clean up
+    [self cleanupAfterAtomicParsley];
+    self.isMetadataBusy = NO;
+    self.metadataStatus = @"";
+    return m_metadataWriteSucceeded;
 }
 
 -(void) loadSearchMetadata
@@ -524,6 +636,8 @@ static NSDictionary* g_tagMap = nil;
     [metadata setupMetadataPanelBindings];
     
     // Search for metadata
+    metadata.isMetadataBusy = YES;
+    metadata.metadataStatus = @"Searching for metadata...";
     metadata->m_search = [MetadataSearch metadataSearch:metadata];
     
     // If we have a TVShowName or title, use that for the search, otherwise use the filename
@@ -549,65 +663,19 @@ static NSDictionary* g_tagMap = nil;
     
     [metadata loadSearchMetadata];
 
+    metadata.isMetadataBusy = NO;
+    metadata.metadataStatus = @"";
     return metadata;
-}
-
--(NSString*) atomicParsleyParams
-{
-    NSMutableString* params = [[NSMutableString alloc] init];
-    
-    for (NSString* key in g_tagMap) {
-        NSString* param = [g_tagMap valueForKey: key];
-        NSString* value = [[m_tagDictionary valueForKey: param] outputValue];
-        
-        // handle special cases
-        // if 'stik' is "Movie" don't bother writing it
-        if ([param isEqualToString:@"stik"] && [value isEqualToString:@"Movie"])
-            value = nil;
-            
-        if ([param isEqualToString:@"artwork"])
-            continue;
-            
-        if (value && [value length] > 0) {
-            // escape all the quotes
-            value = [value stringByReplacingOccurrencesOfString:@"\"" withString:@"\\\""];
-            [params appendString:[NSString stringWithFormat:@" --%@ \"%@\"", param, value]];
-        }
-    }
-    
-    // write out temp artwork
-    NSString* tmpArtworkPath = [NSString stringWithFormat:@"/tmp/AtomicParlsleyArtwork_%p", self];
-    int i = 0;
-    
-    for (ArtworkItem* artwork in m_artworkList) {
-        if ([artwork checked]) {
-            NSString* filename = [NSString stringWithFormat:@"%@_%d.jpg", tmpArtworkPath, i];
-            NSBitmapImageRep* rep = [NSBitmapImageRep imageRepWithData:[[artwork image] TIFFRepresentation]];
-            [[rep representationUsingType:NSJPEGFileType properties:nil] writeToFile: filename atomically: YES];
-        
-            // write the param
-            [params appendFormat:@" --artwork %@", filename];
-        }
-        ++i;
-    }
-    return params;
-}
-
--(void) cleanupAfterAtomicParsley
-{
-    NSString* tmpArtworkPath = [NSString stringWithFormat:@"/tmp/AtomicParlsleyArtwork_%p", self];
-    int i = 0;
-
-    for (ArtworkItem* artwork in m_artworkList) {
-        NSString* filename = [NSString stringWithFormat:@"%@_%d.jpg", tmpArtworkPath, i++];
-        [[NSFileManager defaultManager] removeFileAtPath:filename handler:nil];
-    }
 }
 
 -(BOOL) searchWithString:(NSString*) string
 {
+    self.isMetadataBusy = YES;
+    self.metadataStatus = @"Searching for metadata...";
     if ([m_search searchWithString:string])
         [self loadSearchMetadata];
+    self.isMetadataBusy = NO;
+    self.metadataStatus = @"";
     return YES;
 }
 

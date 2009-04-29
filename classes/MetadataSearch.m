@@ -98,8 +98,7 @@ static BOOL isValidInteger(NSString* s)
     for (NSString* item in array) {
         item = [item lowercaseString];
         if ([item hasPrefix:@"s"]) {
-            item = [item substringFromIndex: 1];
-            NSArray* seArray = [item componentsSeparatedByString:@"e"];
+            NSArray* seArray = [[item substringFromIndex: 1] componentsSeparatedByString:@"e"];
             if ([seArray count] == 2 && isValidInteger([seArray objectAtIndex:0]) && isValidInteger([seArray objectAtIndex:1])) {
                 *season = [[seArray objectAtIndex:0] intValue];
                 *episode = [[seArray objectAtIndex:1] intValue];
@@ -109,10 +108,11 @@ static BOOL isValidInteger(NSString* s)
             }
         }
         
-        if (!firstTime) {
+        if (!firstTime)
             [outputString appendString:@" "];
+        else
             firstTime = NO;
-        }
+
         [outputString appendString:item];
     }
     
@@ -124,7 +124,7 @@ static BOOL isValidInteger(NSString* s)
     // sometimes a show name has the season/episode encoded into it. See if it does and remove it if so
     int season;
     int episode;
-    string = [self checkString:string forSeason:&season episode:&episode];
+    NSString* newString = [self checkString:string forSeason:&season episode:&episode];
     
     if (season >= 0 && m_season < 0)
         m_season = season;
@@ -150,9 +150,10 @@ static BOOL isValidInteger(NSString* s)
     [m_foundSearcher release];
     m_foundSearcher = nil;
     
-    m_season = -1;
-    m_episode = -1;
-    if ([self _searchForShows: string]) {
+    m_season = (season >= 0) ? season : -1;
+    m_episode = (episode >= 0) ? episode : -1;
+    
+    if ([self _searchForShows: newString]) {
         // make the first thing found the current
         self.currentShowName = [m_foundShowNames objectAtIndex:0];
         m_showId = [[m_foundShowIds objectAtIndex:0] intValue];
