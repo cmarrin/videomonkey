@@ -8,10 +8,10 @@
 		<string key="IBDocument.HIToolboxVersion">353.00</string>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
+			<integer value="3773"/>
+			<integer value="2657"/>
 			<integer value="371"/>
 			<integer value="29"/>
-			<integer value="2657"/>
-			<integer value="3773"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -11079,7 +11079,7 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 																			</object>
 																		</object>
 																		<string key="NSFrame">{{1, 1}, {449, 418}}</string>
-																		<string key="NSBounds">{{0, 382}, {449, 418}}</string>
+																		<string key="NSBounds">{{0, 292}, {449, 418}}</string>
 																		<reference key="NSSuperview" ref="228491495"/>
 																		<reference key="NSNextKeyView" ref="827023795"/>
 																		<reference key="NSDocView" ref="827023795"/>
@@ -11094,6 +11094,7 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 																		<bool key="NSEnabled">YES</bool>
 																		<reference key="NSTarget" ref="228491495"/>
 																		<string key="NSAction">_doScroller:</string>
+																		<double key="NSCurValue">2.356021e-01</double>
 																		<double key="NSPercent">5.225000e-01</double>
 																	</object>
 																	<object class="NSScroller" id="90840183">
