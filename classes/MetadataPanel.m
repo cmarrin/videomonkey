@@ -18,6 +18,11 @@
 
 @implementation MetadataPanelItem
 
+-(IBAction)useThisValueForAllFiles:(id)sender
+{
+    printf("***\n");
+}
+
 -(void) awakeFromNib
 {
     m_mainTextField = [[self contentView] viewWithTag:MAIN_TEXTFIELD];
@@ -138,6 +143,13 @@
 
 -(void) bindToTagItem:(id) item
 {
+    // add a context menu
+    NSMenu* menu = [[NSMenu alloc]init];
+    [menu addItem:[[NSMenuItem alloc] initWithTitle:@"Use this value for all files" 
+                                        action:@selector(useThisValueForAllFiles:) 
+                                        keyEquivalent:@""]];
+    [m_title setMenu:menu];
+
     // bind value
     NSString* keyPath = [NSString stringWithFormat:@"selection.metadata.tags.%@.displayValue", [self key]];
     [self bind:@"value" toObject:[self fileListController] withKeyPath:keyPath options: nil];

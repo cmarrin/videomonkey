@@ -106,6 +106,11 @@
     printf("***\n");
 }
 
+-(IBAction)useThisValueForAllFiles:(id)sender
+{
+    printf("***\n");
+}
+
 -(id) selection
 {
     // if we get here it means the artwork has no selection

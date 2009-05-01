@@ -13,6 +13,7 @@
 
 @interface FileInfoPanelController : NSObject {
 @private
+    IBOutlet NSWindow* m_fileInfoWindow;
     IBOutlet NSTabView* m_fileInfoTabView;
     IBOutlet NSTableView* m_artworkTable;
     IBOutlet NSButton* m_artworkDrawerDisclosureButton;
@@ -33,5 +34,6 @@
 -(IBAction)artworkCheckedStateChanged:(id)sender;
 -(IBAction)searchBoxSelected:(id)sender;
 -(IBAction)writeMetadata:(id)sender;
+-(IBAction)useThisValueForAllFiles:(id)sender;
 
 @end
