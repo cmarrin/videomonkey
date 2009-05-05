@@ -28,7 +28,7 @@ typedef enum { INPUT_TAG, SEARCH_TAG, USER_TAG, OUTPUT_TAG } TagType;
 
 -(IBAction)sourceMatrixChanged:(id)sender;
 
--(void) bindToTagItem:() item;
+-(void) bind;
 
 @end
 
@@ -64,5 +64,14 @@ typedef enum { INPUT_TAG, SEARCH_TAG, USER_TAG, OUTPUT_TAG } TagType;
 }
 
 @property (readonly) FileListController* fileListController;
+
+-(IBAction)useAllInputValuesForThisFile:(id)sender;
+-(IBAction)useAllSearchValuesForThisFile:(id)sender;
+-(IBAction)useAllUserValuesForThisFile:(id)sender;
+-(IBAction)useAllInputValuesForAllFiles:(id)sender;
+-(IBAction)useAllSearchValuesForAllFiles:(id)sender;
+-(IBAction)useAllUserValuesForAllFiles:(id)sender;
+
+-(void) setupMetadataPanelBindings;
 
 @end

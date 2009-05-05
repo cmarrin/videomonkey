@@ -58,6 +58,19 @@
     [m_mainTextField setStringValue:value ? value : @""];
 }
 
+-(NSString*) valueForSource:(TagType) type
+{
+    switch (type) {
+        case INPUT_TAG:
+            return m_inputValue;
+        case SEARCH_TAG:
+            return m_searchValue;
+        case USER_TAG:
+            return m_userValue;
+    }
+    return nil;
+}
+
 -(NSButtonCell*) inputButton { return [m_sourceMatrix cellAtRow:0 column:0]; }
 -(NSButtonCell*) searchButton { return [m_sourceMatrix cellAtRow:0 column:1]; }
 -(NSButtonCell*) userButton { return [m_sourceMatrix cellAtRow:0 column:2]; }
@@ -149,7 +162,7 @@
     }
 }
 
--(void) bindToTagItem:(id) item
+-(void) bind
 {
     // add a context menu
     NSMenu* menu = [[NSMenu alloc]init];
@@ -328,5 +341,66 @@
 @implementation MetadataPanel
 
 @synthesize fileListController = m_fileListController;
+
+-(void) setMetadataSource:(TagType) type
+{
+    NSNumber* t = [NSNumber numberWithInt:(int) type];
+    
+    for (MetadataPanelItem* item in [[self contentView] subviews]) {
+        if (![item isKindOfClass:[MetadataPanelItem class]])
+            continue;
+        
+        if ([item valueForSource:type])
+            [item setCurrentSource:t];
+    }
+}
+
+-(void) setAllMetadataSource:(TagType) type
+{
+    for (Transcoder* transcoder in [m_fileListController arrangedObjects])
+        [[transcoder metadata] setMetadataSource:type];
+    
+    [self setMetadataSource:type];
+}
+
+-(void) useAllInputValuesForThisFile:(id)sender
+{
+    [self setMetadataSource:INPUT_TAG];
+}
+
+-(void) useAllSearchValuesForThisFile:(id)sender
+{
+    [self setMetadataSource:SEARCH_TAG];
+}
+
+-(void) useAllUserValuesForThisFile:(id)sender
+{
+    [self setMetadataSource:USER_TAG];
+}
+
+-(void) useAllInputValuesForAllFiles:(id)sender
+{
+    [self setAllMetadataSource:INPUT_TAG];
+}
+
+-(void) useAllSearchValuesForAllFiles:(id)sender
+{
+    [self setAllMetadataSource:SEARCH_TAG];
+}
+
+-(void) useAllUserValuesForAllFiles:(id)sender
+{
+    [self setAllMetadataSource:USER_TAG];
+}
+
+-(void) setupMetadataPanelBindings
+{
+    for (MetadataPanelItem* item in [[self contentView] subviews]) {
+        if (![item isKindOfClass:[MetadataPanelItem class]])
+            continue;
+            
+        [item bind];
+    }
+}
 
 @end

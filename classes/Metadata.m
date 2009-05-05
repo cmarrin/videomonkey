@@ -9,7 +9,6 @@
 #import <Quartz/Quartz.h>
 
 #import "Metadata.h"
-#import "MetadataPanel.h"
 #import "MetadataSearch.h"
 #import "Transcoder.h"
 
@@ -124,6 +123,19 @@ static NSDictionary* g_tagMap = nil;
     return item;
 }
 
+-(NSString*) valueForSource:(TagType) type
+{
+    switch (type) {
+        case INPUT_TAG:
+            return self.inputValue;
+        case SEARCH_TAG:
+            return self.searchValue;
+        case USER_TAG:
+            return self.userValue;
+    }
+    return nil;
+}
+
 -(void) setValue:(NSString*) value tag:(NSString*) tag type:(TagType) type;
 {
     if (value && [value length] == 0)
@@ -185,6 +197,12 @@ static NSDictionary* g_tagMap = nil;
     [oldValue release];
 }
 
+-(void) setCurrentSourceIfExists:(TagType) type
+{
+    if ([self valueForSource:type])
+        [self setCurrentSource:type];
+}
+
 -(NSString*) displayValue
 {
     if ([m_tag isEqualToString:@"stik"] && (!m_outputValue || [m_outputValue length] == 0))
@@ -223,6 +241,22 @@ static NSDictionary* g_tagMap = nil;
         [[NSFileManager defaultManager] isWritableFileAtPath:[m_transcoder outputFileInfo].filename];
 }
 
+-(BOOL) canWriteMetadataForAllInputFiles
+{
+    for (Transcoder* transcoder in [[[m_transcoder metadataPanel] fileListController] arrangedObjects])
+        if (![[transcoder metadata] canWriteMetadataToInputFile])
+            return NO;
+    return YES;
+}
+
+-(BOOL) canWriteMetadataForAllOutputFiles
+{
+    for (Transcoder* transcoder in [[[m_transcoder metadataPanel] fileListController] arrangedObjects])
+        if (![[transcoder metadata] canWriteMetadataToOutputFile])
+            return NO;
+    return YES;
+}
+
 -(void) writeMetadataToInputFile
 {
     [self writeMetadata:[m_transcoder inputFileInfo].filename];
@@ -231,6 +265,18 @@ static NSDictionary* g_tagMap = nil;
 -(void) writeMetadataToOutputFile
 {
     [self writeMetadata:[m_transcoder outputFileInfo].filename];
+}
+
+-(void) writeMetadataForAllInputFiles
+{
+    for (Transcoder* transcoder in [[[m_transcoder metadataPanel] fileListController] arrangedObjects])
+        [[transcoder metadata] writeMetadata:[transcoder inputFileInfo].filename];
+}
+
+-(void) writeMetadataForAllOutputFiles
+{
+    for (Transcoder* transcoder in [[[m_transcoder metadataPanel] fileListController] arrangedObjects])
+        [[transcoder metadata] writeMetadata:[transcoder outputFileInfo].filename];
 }
 
 -(NSImage*) primaryArtwork
@@ -532,6 +578,12 @@ static NSDictionary* g_tagMap = nil;
     return m_metadataWriteSucceeded;
 }
 
+-(void) setMetadataSource:(TagType) type
+{
+    for (NSString* key in m_tagDictionary)
+        [[m_tagDictionary valueForKey:key] setCurrentSourceIfExists:type];
+}
+
 -(void) loadSearchMetadata
 {
     NSDictionary* dictionary = [m_search details];
@@ -576,18 +628,6 @@ static NSDictionary* g_tagMap = nil;
     self.tags = self.tags;
     self.search = self.search;
     self.artworkList = self.artworkList;
-}
-
--(void) setupMetadataPanelBindings
-{
-    MetadataPanel* panel = [m_transcoder metadataPanel];
-    
-    for (MetadataPanelItem* item in [[panel contentView] subviews]) {
-        if (![item isKindOfClass:[MetadataPanelItem class]])
-            continue;
-            
-        [item bindToTagItem: [self.tags valueForKey:[item key]]];
-    }
 }
 
 +(Metadata*) metadataWithTranscoder: (Transcoder*) transcoder
@@ -643,7 +683,7 @@ static NSDictionary* g_tagMap = nil;
     [metadata readMetadata: transcoder.inputFileInfo.filename];
     
     // setup the bindings to the metadata panel
-    [metadata setupMetadataPanelBindings];
+    [[metadata->m_transcoder metadataPanel] setupMetadataPanelBindings];
     
     // Search for metadata
     metadata.isMetadataBusy = YES;

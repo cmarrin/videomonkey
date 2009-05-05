@@ -8,6 +8,8 @@
 
 #import <Cocoa/Cocoa.h>
 
+#import "MetadataPanel.h"
+
 @class MetadataSearch;
 @class Transcoder;
 
@@ -40,6 +42,7 @@
 -(id) createArtwork:(NSImage*) image;
 
 -(BOOL) writeMetadata:(NSString*) filename;
+-(void) setMetadataSource:(TagType) type;
 
 -(BOOL) searchWithString:(NSString*) string;
 -(void) searchMetadataChanged;
