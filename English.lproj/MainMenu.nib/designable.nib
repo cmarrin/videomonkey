@@ -2,15 +2,15 @@
 <archive type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="7.03">
 	<data>
 		<int key="IBDocument.SystemTarget">1050</int>
-		<string key="IBDocument.SystemVersion">9G55</string>
+		<string key="IBDocument.SystemVersion">9J33</string>
 		<string key="IBDocument.InterfaceBuilderVersion">677</string>
-		<string key="IBDocument.AppKitVersion">949.43</string>
+		<string key="IBDocument.AppKitVersion">949.46</string>
 		<string key="IBDocument.HIToolboxVersion">353.00</string>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
 			<integer value="3773"/>
-			<integer value="2662"/>
 			<integer value="371"/>
+			<integer value="2650"/>
 			<integer value="29"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
@@ -11073,7 +11073,7 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 																						<real value="0.000000e+00" key="NSBorderWidth2"/>
 																					</object>
 																				</object>
-																				<string key="NSFrame">{{0, -258}, {435, 800}}</string>
+																				<string key="NSFrameSize">{435, 800}</string>
 																				<reference key="NSSuperview" ref="882082592"/>
 																				<string key="NSClassName">NSView</string>
 																			</object>
@@ -11093,6 +11093,7 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 																		<bool key="NSEnabled">YES</bool>
 																		<reference key="NSTarget" ref="228491495"/>
 																		<string key="NSAction">_doScroller:</string>
+																		<double key="NSCurValue">1.000000e+00</double>
 																		<double key="NSPercent">6.775000e-01</double>
 																	</object>
 																	<object class="NSScroller" id="90840183">
@@ -11357,7 +11358,7 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 											<object class="NSPopUpButton" id="511849643">
 												<reference key="NSNextResponder" ref="709235192"/>
 												<int key="NSvFlags">292</int>
-												<string key="NSFrame">{{237, 3}, {35, 22}}</string>
+												<string key="NSFrame">{{237, 3}, {35, 17}}</string>
 												<reference key="NSSuperview" ref="709235192"/>
 												<bool key="NSEnabled">YES</bool>
 												<object class="NSPopUpButtonCell" key="NSCell" id="56799792">
@@ -11419,9 +11420,44 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 																<string key="NSAction">_popUpItemAction:</string>
 																<reference key="NSTarget" ref="56799792"/>
 															</object>
+															<object class="NSMenuItem" id="7396">
+																<reference key="NSMenu" ref="412050871"/>
+																<bool key="NSIsSeparator">YES</bool>
+																<string key="NSTitle"/>
+																<string key="NSKeyEquiv"/>
+																<int key="NSMnemonicLoc">2147483647</int>
+																<reference key="NSOnImage" ref="35465992"/>
+																<reference key="NSMixedImage" ref="502551668"/>
+																<string key="NSAction">_popUpItemAction:</string>
+																<reference key="NSTarget" ref="56799792"/>
+															</object>
+															<object class="NSMenuItem" id="809407237">
+																<reference key="NSMenu" ref="412050871"/>
+																<bool key="NSIsHidden">YES</bool>
+																<string key="NSTitle">Write Metadata for All Input Files</string>
+																<string key="NSKeyEquiv"/>
+																<int key="NSKeyEquivModMask">1048576</int>
+																<int key="NSMnemonicLoc">2147483647</int>
+																<reference key="NSOnImage" ref="35465992"/>
+																<reference key="NSMixedImage" ref="502551668"/>
+																<string key="NSAction">_popUpItemAction:</string>
+																<reference key="NSTarget" ref="56799792"/>
+															</object>
+															<object class="NSMenuItem" id="1014085436">
+																<reference key="NSMenu" ref="412050871"/>
+																<bool key="NSIsHidden">YES</bool>
+																<string key="NSTitle">Write Metadata for All Output Files</string>
+																<string key="NSKeyEquiv"/>
+																<int key="NSKeyEquivModMask">1048576</int>
+																<int key="NSMnemonicLoc">2147483647</int>
+																<reference key="NSOnImage" ref="35465992"/>
+																<reference key="NSMixedImage" ref="502551668"/>
+																<string key="NSAction">_popUpItemAction:</string>
+																<reference key="NSTarget" ref="56799792"/>
+															</object>
 														</object>
 													</object>
-													<int key="NSSelectedIndex">2</int>
+													<int key="NSSelectedIndex">3</int>
 													<bool key="NSPullDown">YES</bool>
 													<int key="NSPreferredEdge">1</int>
 													<bool key="NSUsesItemFromMenu">YES</bool>
@@ -11449,7 +11485,7 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 												<reference key="NSNextResponder" ref="709235192"/>
 												<int key="NSvFlags">-2147482335</int>
 												<object class="NSPSMatrix" key="NSDrawMatrix"/>
-												<string key="NSFrame">{{429, 6}, {16, 16}}</string>
+												<string key="NSFrame">{{429, 5}, {16, 16}}</string>
 												<reference key="NSSuperview" ref="709235192"/>
 												<int key="NSpiFlags">20746</int>
 												<double key="NSMinValue">1.600000e+01</double>
@@ -14169,64 +14205,6 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBBindingConnection" key="connection">
-						<string key="label">target: selection.metadata</string>
-						<reference key="source" ref="662700932"/>
-						<reference key="destination" ref="2824"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="662700932"/>
-							<reference key="NSDestination" ref="2824"/>
-							<string key="NSLabel">target: selection.metadata</string>
-							<string key="NSBinding">target</string>
-							<string key="NSKeyPath">selection.metadata</string>
-							<object class="NSDictionary" key="NSOptions">
-								<bool key="EncodedWithXMLCoder">YES</bool>
-								<object class="NSMutableArray" key="dict.sortedKeys">
-									<bool key="EncodedWithXMLCoder">YES</bool>
-									<string>NSConditionallySetsEnabled</string>
-									<string>NSSelectorName</string>
-								</object>
-								<object class="NSMutableArray" key="dict.values">
-									<bool key="EncodedWithXMLCoder">YES</bool>
-									<reference ref="6"/>
-									<string>writeMetadataToInputFile</string>
-								</object>
-							</object>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">4770</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">target: selection.metadata</string>
-						<reference key="source" ref="575464316"/>
-						<reference key="destination" ref="2824"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="575464316"/>
-							<reference key="NSDestination" ref="2824"/>
-							<string key="NSLabel">target: selection.metadata</string>
-							<string key="NSBinding">target</string>
-							<string key="NSKeyPath">selection.metadata</string>
-							<object class="NSDictionary" key="NSOptions">
-								<bool key="EncodedWithXMLCoder">YES</bool>
-								<object class="NSMutableArray" key="dict.sortedKeys">
-									<bool key="EncodedWithXMLCoder">YES</bool>
-									<string>NSConditionallySetsEnabled</string>
-									<string>NSSelectorName</string>
-								</object>
-								<object class="NSMutableArray" key="dict.values">
-									<bool key="EncodedWithXMLCoder">YES</bool>
-									<reference ref="6"/>
-									<string>writeMetadataToOutputFile</string>
-								</object>
-							</object>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">4775</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
 						<string key="label">enabled: selection.metadata.canWriteMetadataToOutputFile</string>
 						<reference key="source" ref="575464316"/>
 						<reference key="destination" ref="2824"/>
@@ -14473,6 +14451,154 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 						<reference key="destination" ref="402733670"/>
 					</object>
 					<int key="connectionID">4884</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">enabled: selection.metadata.canWriteMetadataToInputFile</string>
+						<reference key="source" ref="809407237"/>
+						<reference key="destination" ref="2824"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="809407237"/>
+							<reference key="NSDestination" ref="2824"/>
+							<string key="NSLabel">enabled: selection.metadata.canWriteMetadataToInputFile</string>
+							<string key="NSBinding">enabled</string>
+							<string key="NSKeyPath">selection.metadata.canWriteMetadataToInputFile</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">4892</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">enabled: selection.metadata.canWriteMetadataToOutputFile</string>
+						<reference key="source" ref="1014085436"/>
+						<reference key="destination" ref="2824"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="1014085436"/>
+							<reference key="NSDestination" ref="2824"/>
+							<string key="NSLabel">enabled: selection.metadata.canWriteMetadataToOutputFile</string>
+							<string key="NSBinding">enabled</string>
+							<string key="NSKeyPath">selection.metadata.canWriteMetadataToOutputFile</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">4894</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">target: selection.metadata</string>
+						<reference key="source" ref="662700932"/>
+						<reference key="destination" ref="2824"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="662700932"/>
+							<reference key="NSDestination" ref="2824"/>
+							<string key="NSLabel">target: selection.metadata</string>
+							<string key="NSBinding">target</string>
+							<string key="NSKeyPath">selection.metadata</string>
+							<object class="NSDictionary" key="NSOptions">
+								<bool key="EncodedWithXMLCoder">YES</bool>
+								<object class="NSMutableArray" key="dict.sortedKeys">
+									<bool key="EncodedWithXMLCoder">YES</bool>
+									<string>NSConditionallySetsHidden</string>
+									<string>NSSelectorName</string>
+								</object>
+								<object class="NSMutableArray" key="dict.values">
+									<bool key="EncodedWithXMLCoder">YES</bool>
+									<reference ref="5"/>
+									<string>writeMetadataToInputFile</string>
+								</object>
+							</object>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">4902</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">target: selection.metadata</string>
+						<reference key="source" ref="575464316"/>
+						<reference key="destination" ref="2824"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="575464316"/>
+							<reference key="NSDestination" ref="2824"/>
+							<string key="NSLabel">target: selection.metadata</string>
+							<string key="NSBinding">target</string>
+							<string key="NSKeyPath">selection.metadata</string>
+							<object class="NSDictionary" key="NSOptions">
+								<bool key="EncodedWithXMLCoder">YES</bool>
+								<object class="NSMutableArray" key="dict.sortedKeys">
+									<bool key="EncodedWithXMLCoder">YES</bool>
+									<string>NSConditionallySetsHidden</string>
+									<string>NSSelectorName</string>
+								</object>
+								<object class="NSMutableArray" key="dict.values">
+									<bool key="EncodedWithXMLCoder">YES</bool>
+									<reference ref="5"/>
+									<string>writeMetadataToOutputFile</string>
+								</object>
+							</object>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">4904</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">target: selection.metadata</string>
+						<reference key="source" ref="809407237"/>
+						<reference key="destination" ref="2824"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="809407237"/>
+							<reference key="NSDestination" ref="2824"/>
+							<string key="NSLabel">target: selection.metadata</string>
+							<string key="NSBinding">target</string>
+							<string key="NSKeyPath">selection.metadata</string>
+							<object class="NSDictionary" key="NSOptions">
+								<bool key="EncodedWithXMLCoder">YES</bool>
+								<object class="NSMutableArray" key="dict.sortedKeys">
+									<bool key="EncodedWithXMLCoder">YES</bool>
+									<string>NSConditionallySetsHidden</string>
+									<string>NSSelectorName</string>
+								</object>
+								<object class="NSMutableArray" key="dict.values">
+									<bool key="EncodedWithXMLCoder">YES</bool>
+									<reference ref="5"/>
+									<string>writeMetadataToInputFile</string>
+								</object>
+							</object>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">4906</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">target: selection.metadata</string>
+						<reference key="source" ref="1014085436"/>
+						<reference key="destination" ref="2824"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="1014085436"/>
+							<reference key="NSDestination" ref="2824"/>
+							<string key="NSLabel">target: selection.metadata</string>
+							<string key="NSBinding">target</string>
+							<string key="NSKeyPath">selection.metadata</string>
+							<object class="NSDictionary" key="NSOptions">
+								<bool key="EncodedWithXMLCoder">YES</bool>
+								<object class="NSMutableArray" key="dict.sortedKeys">
+									<bool key="EncodedWithXMLCoder">YES</bool>
+									<string>NSConditionallySetsHidden</string>
+									<string>NSSelectorName</string>
+								</object>
+								<object class="NSMutableArray" key="dict.values">
+									<bool key="EncodedWithXMLCoder">YES</bool>
+									<reference ref="5"/>
+									<string>writeMetadataToOutputFile</string>
+								</object>
+							</object>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">4908</int>
 				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -16731,9 +16857,9 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 							<reference ref="995641970"/>
 							<reference ref="975349025"/>
 							<reference ref="232703411"/>
-							<reference ref="138968188"/>
 							<reference ref="46645561"/>
 							<reference ref="511849643"/>
+							<reference ref="138968188"/>
 						</object>
 						<reference key="parent" ref="234333069"/>
 						<string key="objectName">Metadata View</string>
@@ -20443,9 +20569,12 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 						<reference key="object" ref="412050871"/>
 						<object class="NSMutableArray" key="children">
 							<bool key="EncodedWithXMLCoder">YES</bool>
-							<reference ref="575464316"/>
 							<reference ref="662700932"/>
 							<reference ref="606358842"/>
+							<reference ref="7396"/>
+							<reference ref="809407237"/>
+							<reference ref="575464316"/>
+							<reference ref="1014085436"/>
 						</object>
 						<reference key="parent" ref="56799792"/>
 					</object>
@@ -20482,6 +20611,21 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 						<int key="objectID">4765</int>
 						<reference key="object" ref="46645561"/>
 						<reference key="parent" ref="709235192"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">4885</int>
+						<reference key="object" ref="809407237"/>
+						<reference key="parent" ref="412050871"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">4886</int>
+						<reference key="object" ref="7396"/>
+						<reference key="parent" ref="412050871"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">4887</int>
+						<reference key="object" ref="1014085436"/>
+						<reference key="parent" ref="412050871"/>
 					</object>
 				</object>
 			</object>
@@ -20876,7 +21020,9 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 					<string>2662.CustomClassName</string>
 					<string>2662.IBPluginDependency</string>
 					<string>2662.IBUserGuides</string>
+					<string>2663.IBAttributePlaceholdersKey</string>
 					<string>2663.IBPluginDependency</string>
+					<string>2664.IBAttributePlaceholdersKey</string>
 					<string>2664.IBPluginDependency</string>
 					<string>2665.IBPluginDependency</string>
 					<string>2672.IBPluginDependency</string>
@@ -20884,11 +21030,14 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 					<string>2674.IBPluginDependency</string>
 					<string>2675.IBPluginDependency</string>
 					<string>2676.IBPluginDependency</string>
+					<string>2677.IBAttributePlaceholdersKey</string>
 					<string>2677.IBPluginDependency</string>
 					<string>2678.IBPluginDependency</string>
 					<string>2679.IBPluginDependency</string>
 					<string>2680.IBPluginDependency</string>
+					<string>2691.IBAttributePlaceholdersKey</string>
 					<string>2691.IBPluginDependency</string>
+					<string>2694.IBAttributePlaceholdersKey</string>
 					<string>2694.IBPluginDependency</string>
 					<string>2695.IBPluginDependency</string>
 					<string>2696.IBPluginDependency</string>
@@ -21231,6 +21380,7 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 					<string>4462.IBPluginDependency</string>
 					<string>4462.IBUserGuides</string>
 					<string>4463.IBPluginDependency</string>
+					<string>4464.IBAttributePlaceholdersKey</string>
 					<string>4464.IBPluginDependency</string>
 					<string>4465.IBPluginDependency</string>
 					<string>4466.IBPluginDependency</string>
@@ -21243,6 +21393,7 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 					<string>4472.IBPluginDependency</string>
 					<string>4472.IBUserGuides</string>
 					<string>4473.IBPluginDependency</string>
+					<string>4474.IBAttributePlaceholdersKey</string>
 					<string>4474.IBPluginDependency</string>
 					<string>4475.IBPluginDependency</string>
 					<string>4476.IBPluginDependency</string>
@@ -21255,6 +21406,7 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 					<string>4497.IBPluginDependency</string>
 					<string>4497.IBUserGuides</string>
 					<string>4498.IBPluginDependency</string>
+					<string>4499.IBAttributePlaceholdersKey</string>
 					<string>4499.IBPluginDependency</string>
 					<string>450.IBPluginDependency</string>
 					<string>4500.IBPluginDependency</string>
@@ -21271,6 +21423,7 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 					<string>4534.CustomClassName</string>
 					<string>4534.IBPluginDependency</string>
 					<string>4534.IBUserGuides</string>
+					<string>4535.IBAttributePlaceholdersKey</string>
 					<string>4535.IBPluginDependency</string>
 					<string>4536.IBPluginDependency</string>
 					<string>4537.IBPluginDependency</string>
@@ -21290,6 +21443,7 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 					<string>4558.IBUserGuides</string>
 					<string>4559.IBPluginDependency</string>
 					<string>456.IBPluginDependency</string>
+					<string>4560.IBAttributePlaceholdersKey</string>
 					<string>4560.IBPluginDependency</string>
 					<string>4561.IBPluginDependency</string>
 					<string>4562.IBPluginDependency</string>
@@ -21310,6 +21464,7 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 					<string>4574.IBPluginDependency</string>
 					<string>4574.IBUserGuides</string>
 					<string>4575.IBPluginDependency</string>
+					<string>4576.IBAttributePlaceholdersKey</string>
 					<string>4576.IBPluginDependency</string>
 					<string>4577.IBPluginDependency</string>
 					<string>4578.IBPluginDependency</string>
@@ -21323,6 +21478,7 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 					<string>4584.IBPluginDependency</string>
 					<string>4584.IBUserGuides</string>
 					<string>4585.IBPluginDependency</string>
+					<string>4586.IBAttributePlaceholdersKey</string>
 					<string>4586.IBPluginDependency</string>
 					<string>4587.IBPluginDependency</string>
 					<string>4588.IBPluginDependency</string>
@@ -21336,6 +21492,7 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 					<string>4594.IBPluginDependency</string>
 					<string>4595.IBPluginDependency</string>
 					<string>4596.IBPluginDependency</string>
+					<string>4597.IBAttributePlaceholdersKey</string>
 					<string>4597.IBPluginDependency</string>
 					<string>4598.IBPluginDependency</string>
 					<string>4599.IBPluginDependency</string>
@@ -21350,6 +21507,7 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 					<string>4606.IBPluginDependency</string>
 					<string>4606.IBUserGuides</string>
 					<string>4607.IBPluginDependency</string>
+					<string>4608.IBAttributePlaceholdersKey</string>
 					<string>4608.IBPluginDependency</string>
 					<string>4609.IBPluginDependency</string>
 					<string>461.IBPluginDependency</string>
@@ -21363,6 +21521,7 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 					<string>4616.IBPluginDependency</string>
 					<string>4616.IBUserGuides</string>
 					<string>4617.IBPluginDependency</string>
+					<string>4618.IBAttributePlaceholdersKey</string>
 					<string>4618.IBPluginDependency</string>
 					<string>4619.IBPluginDependency</string>
 					<string>462.IBPluginDependency</string>
@@ -21376,6 +21535,7 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 					<string>4626.IBPluginDependency</string>
 					<string>4626.IBUserGuides</string>
 					<string>4627.IBPluginDependency</string>
+					<string>4628.IBAttributePlaceholdersKey</string>
 					<string>4628.IBPluginDependency</string>
 					<string>4629.IBPluginDependency</string>
 					<string>463.IBPluginDependency</string>
@@ -21389,6 +21549,7 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 					<string>4636.IBPluginDependency</string>
 					<string>4636.IBUserGuides</string>
 					<string>4637.IBPluginDependency</string>
+					<string>4638.IBAttributePlaceholdersKey</string>
 					<string>4638.IBPluginDependency</string>
 					<string>4639.IBPluginDependency</string>
 					<string>464.IBEditorWindowLastContentRect</string>
@@ -21403,6 +21564,7 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 					<string>4646.IBPluginDependency</string>
 					<string>4646.IBUserGuides</string>
 					<string>4647.IBPluginDependency</string>
+					<string>4648.IBAttributePlaceholdersKey</string>
 					<string>4648.IBPluginDependency</string>
 					<string>4649.IBPluginDependency</string>
 					<string>4650.IBPluginDependency</string>
@@ -21415,6 +21577,7 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 					<string>4656.IBPluginDependency</string>
 					<string>4656.IBUserGuides</string>
 					<string>4657.IBPluginDependency</string>
+					<string>4658.IBAttributePlaceholdersKey</string>
 					<string>4658.IBPluginDependency</string>
 					<string>4659.IBPluginDependency</string>
 					<string>4660.IBPluginDependency</string>
@@ -21426,6 +21589,7 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 					<string>4666.CustomClassName</string>
 					<string>4666.IBPluginDependency</string>
 					<string>4666.IBUserGuides</string>
+					<string>4667.IBAttributePlaceholdersKey</string>
 					<string>4667.IBPluginDependency</string>
 					<string>4668.IBPluginDependency</string>
 					<string>4669.IBPluginDependency</string>
@@ -21443,6 +21607,7 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 					<string>4678.IBPluginDependency</string>
 					<string>4679.CustomClassName</string>
 					<string>4679.IBPluginDependency</string>
+					<string>4680.IBAttributePlaceholdersKey</string>
 					<string>4680.IBPluginDependency</string>
 					<string>4681.IBPluginDependency</string>
 					<string>4682.IBPluginDependency</string>
@@ -21466,7 +21631,9 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 					<string>4758.IBEditorWindowLastContentRect</string>
 					<string>4758.IBPluginDependency</string>
 					<string>4759.IBPluginDependency</string>
+					<string>4760.IBAttributePlaceholdersKey</string>
 					<string>4760.IBPluginDependency</string>
+					<string>4761.IBAttributePlaceholdersKey</string>
 					<string>4761.IBPluginDependency</string>
 					<string>4763.IBPluginDependency</string>
 					<string>4764.IBPluginDependency</string>
@@ -21476,6 +21643,11 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 					<string>479.IBPluginDependency</string>
 					<string>481.IBPluginDependency</string>
 					<string>482.IBPluginDependency</string>
+					<string>4885.IBAttributePlaceholdersKey</string>
+					<string>4885.IBPluginDependency</string>
+					<string>4886.IBPluginDependency</string>
+					<string>4887.IBAttributePlaceholdersKey</string>
+					<string>4887.IBPluginDependency</string>
 					<string>499.IBPluginDependency</string>
 					<string>5.IBPluginDependency</string>
 					<string>5.ImportedFromIB2</string>
@@ -22193,10 +22365,10 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<reference ref="9"/>
 					<string>{{525, 802}, {197, 73}}</string>
-					<string>{{-596, 394}, {466, 690}}</string>
+					<string>{{-596, 384}, {466, 690}}</string>
 					<reference ref="6"/>
 					<reference ref="6"/>
-					<string>{{-596, 394}, {466, 690}}</string>
+					<string>{{-596, 384}, {466, 690}}</string>
 					<reference ref="6"/>
 					<reference ref="5"/>
 					<reference ref="5"/>
@@ -22227,6 +22399,23 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 					<object class="NSMutableArray">
 						<bool key="EncodedWithXMLCoder">YES</bool>
 					</object>
+					<object class="NSMutableDictionary">
+						<string key="NS.key.0">ToolTip</string>
+						<object class="IBToolTipAttribute" key="NS.object.0">
+							<string key="name">ToolTip</string>
+							<reference key="object" ref="347259825"/>
+							<string key="toolTip">Rating, assigned by a rating authority. Used for parental controls (ctrl-click or right click for options)</string>
+						</object>
+					</object>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<object class="NSMutableDictionary">
+						<string key="NS.key.0">ToolTip</string>
+						<object class="IBToolTipAttribute" key="NS.object.0">
+							<string key="name">ToolTip</string>
+							<reference key="object" ref="675427495"/>
+							<string key="toolTip">The type of the media (ctrl-click or right click for options)</string>
+						</object>
+					</object>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -22234,12 +22423,35 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<object class="NSMutableDictionary">
+						<string key="NS.key.0">ToolTip</string>
+						<object class="IBToolTipAttribute" key="NS.object.0">
+							<string key="name">ToolTip</string>
+							<reference key="object" ref="7422252"/>
+							<string key="toolTip">Movie release date or TV show first-aired date. Can just use year if desired (ctrl-click or right click for options)</string>
+						</object>
+					</object>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<object class="NSMutableDictionary">
+						<string key="NS.key.0">ToolTip</string>
+						<object class="IBToolTipAttribute" key="NS.object.0">
+							<string key="name">ToolTip</string>
+							<reference key="object" ref="399154306"/>
+							<string key="toolTip">Description of movie or TV show (ctrl-click or right click for options)</string>
+						</object>
+					</object>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<object class="NSMutableDictionary">
+						<string key="NS.key.0">ToolTip</string>
+						<object class="IBToolTipAttribute" key="NS.object.0">
+							<string key="name">ToolTip</string>
+							<reference key="object" ref="166619472"/>
+							<string key="toolTip">Title or movie or TV episode (ctrl-click or right click for options)</string>
+						</object>
+					</object>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -22589,6 +22801,90 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 						<bool key="EncodedWithXMLCoder">YES</bool>
 					</object>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<object class="NSMutableDictionary">
+						<string key="NS.key.0">ToolTip</string>
+						<object class="IBToolTipAttribute" key="NS.object.0">
+							<string key="name">ToolTip</string>
+							<reference key="object" ref="741687023"/>
+							<string key="toolTip">TV series title (ctrl-click or right click for options)</string>
+						</object>
+					</object>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<string>MetadataPanelItem</string>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<object class="NSMutableArray">
+						<bool key="EncodedWithXMLCoder">YES</bool>
+					</object>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<object class="NSMutableDictionary">
+						<string key="NS.key.0">ToolTip</string>
+						<object class="IBToolTipAttribute" key="NS.object.0">
+							<string key="name">ToolTip</string>
+							<reference key="object" ref="977404665"/>
+							<string key="toolTip">TV season number (ctrl-click or right click for options)</string>
+						</object>
+					</object>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<string>MetadataTrackDiskPanelItem</string>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<object class="NSMutableArray">
+						<bool key="EncodedWithXMLCoder">YES</bool>
+					</object>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<object class="NSMutableDictionary">
+						<string key="NS.key.0">ToolTip</string>
+						<object class="IBToolTipAttribute" key="NS.object.0">
+							<string key="name">ToolTip</string>
+							<reference key="object" ref="49029222"/>
+							<string key="toolTip">Track number. Usually the same as the episode number or the DVD track (ctrl-click or right click for options)</string>
+						</object>
+					</object>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<string>MetadataTrackDiskPanelItem</string>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<object class="NSMutableArray">
+						<bool key="EncodedWithXMLCoder">YES</bool>
+					</object>
+					<object class="NSMutableDictionary">
+						<string key="NS.key.0">ToolTip</string>
+						<object class="IBToolTipAttribute" key="NS.object.0">
+							<string key="name">ToolTip</string>
+							<reference key="object" ref="402733670"/>
+							<string key="toolTip">DVD disk number. (ctrl-click or right click for options)</string>
+						</object>
+					</object>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -22604,58 +22900,14 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 					</object>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>MetadataTrackDiskPanelItem</string>
-					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<object class="NSMutableArray">
-						<bool key="EncodedWithXMLCoder">YES</bool>
+					<object class="NSMutableDictionary">
+						<string key="NS.key.0">ToolTip</string>
+						<object class="IBToolTipAttribute" key="NS.object.0">
+							<string key="name">ToolTip</string>
+							<reference key="object" ref="1067647043"/>
+							<string key="toolTip">TV episode number (ctrl-click or right click for options)</string>
+						</object>
 					</object>
-					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>MetadataTrackDiskPanelItem</string>
-					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<object class="NSMutableArray">
-						<bool key="EncodedWithXMLCoder">YES</bool>
-					</object>
-					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>MetadataPanelItem</string>
-					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<object class="NSMutableArray">
-						<bool key="EncodedWithXMLCoder">YES</bool>
-					</object>
-					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -22678,6 +22930,14 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 						<bool key="EncodedWithXMLCoder">YES</bool>
 					</object>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<object class="NSMutableDictionary">
+						<string key="NS.key.0">ToolTip</string>
+						<object class="IBToolTipAttribute" key="NS.object.0">
+							<string key="name">ToolTip</string>
+							<reference key="object" ref="438026666"/>
+							<string key="toolTip">Production number. Movie or TV show identifier assigned by the studio (ctrl-click or right click for options)</string>
+						</object>
+					</object>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -22693,6 +22953,14 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 						<bool key="EncodedWithXMLCoder">YES</bool>
 					</object>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<object class="NSMutableDictionary">
+						<string key="NS.key.0">ToolTip</string>
+						<object class="IBToolTipAttribute" key="NS.object.0">
+							<string key="name">ToolTip</string>
+							<reference key="object" ref="780048346"/>
+							<string key="toolTip">More details about the rating. Usually the reason for the rating - violence, language, etc. (ctrl-click or right click for options)</string>
+						</object>
+					</object>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -22706,20 +22974,14 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>MetadataPanelItem</string>
-					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<object class="NSMutableArray">
+					<object class="NSMutableDictionary">
 						<bool key="EncodedWithXMLCoder">YES</bool>
+						<object class="NSArray" key="dict.sortedKeys">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+						</object>
+						<object class="NSMutableArray" key="dict.values">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+						</object>
 					</object>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -22737,6 +22999,14 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 						<bool key="EncodedWithXMLCoder">YES</bool>
 					</object>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<object class="NSMutableDictionary">
+						<string key="NS.key.0">ToolTip</string>
+						<object class="IBToolTipAttribute" key="NS.object.0">
+							<string key="name">ToolTip</string>
+							<reference key="object" ref="536597237"/>
+							<string key="toolTip">Name of the album. Often the show name, season and episode for TV Shows (ctrl-click or right click for options)</string>
+						</object>
+					</object>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -22752,6 +23022,14 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 						<bool key="EncodedWithXMLCoder">YES</bool>
 					</object>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<object class="NSMutableDictionary">
+						<string key="NS.key.0">ToolTip</string>
+						<object class="IBToolTipAttribute" key="NS.object.0">
+							<string key="name">ToolTip</string>
+							<reference key="object" ref="941440003"/>
+							<string key="toolTip">Name of the artist responsible for the media (ctrl-click or right click for options)</string>
+						</object>
+					</object>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -22767,6 +23045,37 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 						<bool key="EncodedWithXMLCoder">YES</bool>
 					</object>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<object class="NSMutableDictionary">
+						<string key="NS.key.0">ToolTip</string>
+						<object class="IBToolTipAttribute" key="NS.object.0">
+							<string key="name">ToolTip</string>
+							<reference key="object" ref="27421573"/>
+							<string key="toolTip">Copyright for the media (ctrl-click or right click for options)</string>
+						</object>
+					</object>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<string>MetadataPanelItem</string>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<object class="NSMutableArray">
+						<bool key="EncodedWithXMLCoder">YES</bool>
+					</object>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<object class="NSMutableDictionary">
+						<string key="NS.key.0">ToolTip</string>
+						<object class="IBToolTipAttribute" key="NS.object.0">
+							<string key="name">ToolTip</string>
+							<reference key="object" ref="663063133"/>
+							<string key="toolTip">Encoding tool. Video Monkey fills this in automatically unless changed (ctrl-click or right click for options)</string>
+						</object>
+					</object>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>{{138, 739}, {616, 0}}</string>
@@ -22783,6 +23092,14 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 						<bool key="EncodedWithXMLCoder">YES</bool>
 					</object>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<object class="NSMutableDictionary">
+						<string key="NS.key.0">ToolTip</string>
+						<object class="IBToolTipAttribute" key="NS.object.0">
+							<string key="name">ToolTip</string>
+							<reference key="object" ref="415432871"/>
+							<string key="toolTip">Name of the artist for the album, as opposed to individual tracks. (ctrl-click or right click for options)</string>
+						</object>
+					</object>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -22797,6 +23114,14 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 						<bool key="EncodedWithXMLCoder">YES</bool>
 					</object>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<object class="NSMutableDictionary">
+						<string key="NS.key.0">ToolTip</string>
+						<object class="IBToolTipAttribute" key="NS.object.0">
+							<string key="name">ToolTip</string>
+							<reference key="object" ref="614103772"/>
+							<string key="toolTip">For TV Shows the name of the network first airing the episode. (ctrl-click or right click for options)</string>
+						</object>
+					</object>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -22809,6 +23134,14 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<object class="NSMutableArray">
 						<bool key="EncodedWithXMLCoder">YES</bool>
+					</object>
+					<object class="NSMutableDictionary">
+						<string key="NS.key.0">ToolTip</string>
+						<object class="IBToolTipAttribute" key="NS.object.0">
+							<string key="name">ToolTip</string>
+							<reference key="object" ref="18985343"/>
+							<string key="toolTip">Genre of the media (ctrl-click or right click for options)</string>
+						</object>
 					</object>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -22827,6 +23160,14 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>MetadataPopUpButtonPanelItem</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<object class="NSMutableDictionary">
+						<string key="NS.key.0">ToolTip</string>
+						<object class="IBToolTipAttribute" key="NS.object.0">
+							<string key="name">ToolTip</string>
+							<reference key="object" ref="279686553"/>
+							<string key="toolTip">Content advisory. Used for parental controls (ctrl-click or right click for options)</string>
+						</object>
+					</object>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -22847,7 +23188,26 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>{{-472, 491}, {220, 54}}</string>
+					<string>{{-368, 354}, {248, 98}}</string>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<object class="NSMutableDictionary">
+						<string key="NS.key.0">ToolTip</string>
+						<object class="IBToolTipAttribute" key="NS.object.0">
+							<string key="name">ToolTip</string>
+							<reference key="object" ref="662700932"/>
+							<string key="toolTip">Writes the currently shown metadata to the corresponding input file (as shown in the Input Info)</string>
+						</object>
+					</object>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<object class="NSMutableDictionary">
+						<string key="NS.key.0">ToolTip</string>
+						<object class="IBToolTipAttribute" key="NS.object.0">
+							<string key="name">ToolTip</string>
+							<reference key="object" ref="575464316"/>
+							<string key="toolTip">Writes the currently shown metadata to the corresponding output file (as shown in the Output Info). Note that the output file must exist (i.e., file must have previously been encoded and not moved to iTunes).</string>
+						</object>
+					</object>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -22857,8 +23217,24 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<object class="NSMutableDictionary">
+						<string key="NS.key.0">ToolTip</string>
+						<object class="IBToolTipAttribute" key="NS.object.0">
+							<string key="name">ToolTip</string>
+							<reference key="object" ref="809407237"/>
+							<string key="toolTip">For each file in the file list, writes metadata corresponding to that file (shown when the file is selected) to the corresponding input file (as showin in the Input Info)</string>
+						</object>
+					</object>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<object class="NSMutableDictionary">
+						<string key="NS.key.0">ToolTip</string>
+						<object class="IBToolTipAttribute" key="NS.object.0">
+							<string key="name">ToolTip</string>
+							<reference key="object" ref="1014085436"/>
+							<string key="toolTip">For each file in the file list, writes metadata corresponding to that file (shown when the file is selected) to the corresponding output file (as showin in the Output Info). Note that the output files must exist (i.e., file must have previously been encoded and not moved to iTunes).</string>
+						</object>
+					</object>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -22965,7 +23341,7 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">4884</int>
+			<int key="maxID">4908</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">

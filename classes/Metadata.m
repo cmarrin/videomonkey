@@ -102,7 +102,7 @@ static NSDictionary* g_tagMap = nil;
 @property (readonly) NSString* outputValue;
 @property (retain) NSString* inputValue;
 @property (retain) NSString* searchValue;
-@property (retain) NSString* userValue;
+@property (copy) NSString* userValue;
 
 +(TagItem*) tagItem;
 
@@ -321,13 +321,22 @@ static NSDictionary* g_tagMap = nil;
     if (!replacementAtom)
         return;
     
-    atom = replacementAtom;
-    
     // handle artwork
-    if ([atom isEqualToString:@"artwork"])
+    if ([replacementAtom isEqualToString:@"artwork"])
         m_numArtwork = [[[value componentsSeparatedByString:@" "] objectAtIndex:0] intValue];
-    else
-        [self setTagValue:value forKey:atom type:INPUT_TAG];
+    else {
+        // handle ldes and desc, with a preference for ldes
+        if ([replacementAtom isEqualToString:@"description"]) {
+            NSString* currentValue = [[m_tagDictionary valueForKey:@"description"] inputValue];
+            
+            // If we already have a current value, we will replace it only if
+            // we have a non-empty new value and this is the 'ldes' atom
+            if (currentValue && [currentValue length] > 0 && ![atom isEqualToString:@"ldes"])
+                return;
+        }
+        
+        [self setTagValue:value forKey:replacementAtom type:INPUT_TAG];
+    }
 }
 
 -(void) processData: (NSData*) data
@@ -593,7 +602,8 @@ static NSDictionary* g_tagMap = nil;
             @"TVSeasonNum", 	@"tvsn", 
             @"tracknum",    	@"trkn", 
             @"disk",        	@"disk", 
-            @"description", 	@"desc", 
+            @"description", 	@"desc",    // Use desc or ldes, whichever exists, prefer ldes
+            @"description", 	@"ldes", 
             @"year",        	@"©day", 
             @"stik",        	@"stik", 
             @"advisory",    	@"rtng",

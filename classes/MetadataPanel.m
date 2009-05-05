@@ -8,6 +8,7 @@
 
 #import "MetadataPanel.h"
 #import "FileInfoPanelController.h"
+#import "Transcoder.h"
 
 #define MAIN_TEXTFIELD 10
 #define MONTH_TEXTFIELD 15
@@ -17,11 +18,6 @@
 #define SOURCE_MATRIX 30
 
 @implementation MetadataPanelItem
-
--(IBAction)useThisValueForAllFiles:(id)sender
-{
-    printf("***\n");
-}
 
 -(void) awakeFromNib
 {
@@ -37,6 +33,19 @@
 -(id) fileListController
 {
     return [(MetadataPanel*)[[self superview] superview] fileListController];
+}
+
+-(IBAction)useThisValueForAllFiles:(id)sender
+{
+    NSString* value = [self value];
+    NSString* keyPath = [NSString stringWithFormat:@"metadata.tags.%@.displayValue", [self key]];
+
+    NSArray* array = [[self fileListController] arrangedObjects];
+    for (Transcoder* transcoder in array) {
+        [transcoder setValue:value forKeyPath:keyPath];
+    }
+    
+    [[self fileListController] reloadData];
 }
 
 -(NSString*) value
@@ -81,9 +90,8 @@
 
 -(void) setUserValue:(NSString*) value
 {
-    [value retain];
     [m_userValue release];
-    m_userValue = value;
+    m_userValue = value ? [[NSString stringWithString:value] retain] : nil;
     
     BOOL hasValue = value && [value length] > 0;
     [[self userButton] setTransparent:!hasValue];
