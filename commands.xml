@@ -343,7 +343,7 @@ A property name is anything from the character after the '$' to the next whitesp
 		        <command id="ffmpeg_options">
 		            -vcodec $ffmpeg_vcodec -b $output_video_bitrate -s $(output_video_width)x$(output_video_height) 
 						-aspect $(output_video_width):$(output_video_height) -r $(output_video_frame_rate)
-					-acodec $ffmpeg_acodec -ab $output_audio_bitrate -ar $output_audio_sample_rate -ac $output_audio_channels
+					-async 50 -acodec $ffmpeg_acodec -ab $output_audio_bitrate -ar $output_audio_sample_rate -ac $output_audio_channels
 				</command>
 		        <command id="quicktime_to_audio_file">
 					$qt_export "$input_file" --video=0 "$tmp_audio_file"
