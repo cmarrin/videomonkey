@@ -37,7 +37,6 @@ int heightFromFrameSize(FrameSize f) { return f & 0xffff; }
 @synthesize videoProfile;
 @synthesize videoInterlaced;
 @synthesize videoFrameSize;
-@synthesize pixelAspectRatio;
 @synthesize videoAspectRatio;
 @synthesize videoFrameRate;
 @synthesize videoBitrate;
@@ -142,7 +141,6 @@ int heightFromFrameSize(FrameSize f) { return f & 0xffff; }
         info.videoInterlaced = [[video objectAtIndex:6] isEqualToString:@"Interlace"];
         FrameSize frameSize = makeFrameSize([[video objectAtIndex:8] intValue], [[video objectAtIndex:9] intValue]);
         info.videoFrameSize = frameSize;
-        info.pixelAspectRatio = [[video objectAtIndex:10] doubleValue];
         info.videoAspectRatio = [[video objectAtIndex:11] doubleValue];
         info.videoFrameRate = [[video objectAtIndex:12] doubleValue];
         info.videoBitrate = [[video objectAtIndex:13] doubleValue];
@@ -357,6 +355,7 @@ static NSImage* getFileStatusImage(FileStatus status)
     [env setValue: [[NSNumber numberWithInt: widthFromFrameSize(frameSize)] stringValue] forKey: @"input_video_width"];
     [env setValue: [[NSNumber numberWithInt: heightFromFrameSize(frameSize)] stringValue] forKey: @"input_video_height"];
     [env setValue: [[NSNumber numberWithDouble: self.inputFileInfo.videoFrameRate] stringValue] forKey: @"input_frame_rate"];
+    [env setValue: [[NSNumber numberWithDouble: self.inputFileInfo.videoAspectRatio] stringValue] forKey: @"input_video_aspect"];
     [env setValue: [[NSNumber numberWithInt: self.inputFileInfo.videoBitrate] stringValue] forKey: @"input_video_bitrate"];
     
     [env setValue: ([self isInputQuicktime] ? @"true" : @"false") forKey: @"is_quicktime"];

@@ -102,7 +102,7 @@
 	[super dealloc];
 }
 
--(void) showSyntaxError:(JSValueRef) error
+-(void) showSyntaxError:(JSValueRef) error forScript:(NSString*) script
 {
     if (!JSValueIsNull(m_jsContext, error)) {
         JavaScriptObject* obj = [JavaScriptObject javaScriptObject:self withJSValue:error];
@@ -110,7 +110,12 @@
         double lineNumber = JSValueToNumber(m_jsContext, line, NULL);
         NSString* errorString = [NSString stringWithJSValue: error fromContext: m_jsContext];
         
-        NSString* alertString = [NSString stringWithFormat: @"%@ at line %d", errorString, (int) lineNumber];
+        NSString* snippet = script;
+        int length = 80;
+        if ([script length] > length)
+            snippet = [script substringToIndex:length];
+        
+        NSString* alertString = [NSString stringWithFormat: @"%@ at line %d\n\nWhile parsing script starting with:\n\n%@", errorString, (int) lineNumber, snippet];
         NSRunAlertPanel(@"JavaScript error in evaluation", alertString, nil, nil, nil);
     }
 }
@@ -358,7 +363,7 @@
 		JSValueRef result = JSEvaluateScript( m_jsContext, scriptJS, NULL, [@"MyScript" jsStringValue], 0, &error );
         
         if (!JSValueIsNull(m_jsContext, error)) {
-            [self showSyntaxError: error];
+            [self showSyntaxError: error forScript:(NSString*) theJavaScript];
         }
         else if ( result != NULL)
 			resultString = [NSString stringWithJSValue:result fromContext: m_jsContext];

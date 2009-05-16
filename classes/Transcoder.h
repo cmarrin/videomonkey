@@ -41,7 +41,6 @@ typedef enum FileStatus { FS_INVALID, FS_VALID, FS_ENCODING, FS_PAUSED, FS_FAILE
     BOOL videoInterlaced;
     FrameSize videoFrameSize;
     double videoBitrate;
-    double pixelAspectRatio;
     double videoAspectRatio;
     double videoFrameRate;
     
@@ -71,7 +70,6 @@ typedef enum FileStatus { FS_INVALID, FS_VALID, FS_ENCODING, FS_PAUSED, FS_FAILE
 @property(retain) NSString* videoProfile;
 @property(assign) BOOL videoInterlaced;
 @property(assign) FrameSize videoFrameSize;
-@property(assign) double pixelAspectRatio;
 @property(assign) double videoAspectRatio;
 @property(assign) double videoFrameRate;
 @property(assign) double videoBitrate;

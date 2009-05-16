@@ -100,6 +100,7 @@ input_video_width       Width, in pixels, of the input file
 input_video_height      Height, in pixels, of the input file
 input_frame_rate        Frame rate, in fps, of the input file
 input_video_bitrate     Bitrate of the video in the input file
+input_video_aspect		Video aspect ratio (may be different from width/height for non-square pixels)
 input_video_codec       Name of the video codec of the input file
 
 is_quicktime            "true" if the input file is quicktime
@@ -243,11 +244,34 @@ A property name is anything from the character after the '$' to the next whitesp
 			{
                 params.special_qt = params.is_quicktime == "true" && params.input_video_codec == "wmv3";
             
+				// adjust input size to match aspect ratio
+				var inputWidth = params.input_video_width;
+				var inputHeight = params.input_video_height;
+				var inputAspect = inputWidth / inputHeight;
+				if (Math.abs(inputAspect - params.input_video_aspect) > 0.01) {
+					if (inputAspect < params.input_video_aspect) {
+						// stretch horizontally
+						inputWidth = inputHeight * params.input_video_aspect;
+					}
+					else {
+						// stretch vertically
+						inputHeight = inputWidth / params.input_video_aspect;
+					}
+				}
+				
+				// adjust for limit_output_params
+				if (bool(params.limit_output_params)) {
+					if (params.frame_width > inputWidth || params.frame_height > inputHeight) {
+						params.frame_width = inputWidth;
+						params.frame_height = inputHeight;
+					}
+					
+					if (params.output_video_bitrate > params.input_video_bitrate)
+						params.output_video_bitrate = params.input_video_bitrate;
+				}
+				
 	            // adjust video frame size
-			    if (params.input_video_width == undefined)
-                    var inputAspect = 4/3;
-                else
-	                var inputAspect = params.input_video_width / params.input_video_height;
+	            inputAspect = inputWidth / inputHeight;
 
                 var requestedAspect = params.frame_width / params.frame_height;
                 
@@ -261,7 +285,7 @@ A property name is anything from the character after the '$' to the next whitesp
 					params.output_video_height = params.frame_height;
 					params.output_video_width = params.frame_height * inputAspect;
 				}
-			
+				
 				// Make frame size divisible by 16
 				params.output_video_width = Math.round(params.output_video_width / 16) * 16;
 				params.output_video_height = Math.round(params.output_video_height / 16) * 16;
@@ -459,8 +483,7 @@ A property name is anything from the character after the '$' to the next whitesp
 						"iPod touch": 			[ 	20, 30, 30, 30, 30 ],
 						"Apple TV": 			[ 	31, 31, 31, 31, 31 ]
 					};
-					
-					
+
 					var title = params.title;
 					var qualityStop = number(params.quality_stop);
 					var quality = number(params.quality);
@@ -477,17 +500,6 @@ A property name is anything from the character after the '$' to the next whitesp
 					var sizeString = deviceFrameSizeMap[title][index][qualityStop];
 					params.frame_width = frameSizes[sizeString][0];
 					params.frame_height = frameSizes[sizeString][1];
-					
-					// adjust for limit_output_params
-					if (bool(params.limit_output_params)) {
-						if (params.frame_width > params.input_video_width || params.frame_height > params.input_video_height) {
-							params.frame_width = params.input_video_width;
-							params.frame_height = params.input_video_height;
-						}
-						
-						if (params.output_video_bitrate > params.input_video_bitrate)
-							params.output_video_bitrate = params.input_video_bitrate;
-					}
 						
 					adjustVideoParams();
 					
