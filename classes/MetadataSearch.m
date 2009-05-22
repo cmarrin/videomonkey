@@ -8,6 +8,7 @@
 
 #import "MetadataSearch.h"
 #import "Metadata.h"
+#import "MovieDBMetadataSearcher.h"
 #import "TVDBMetadataSearcher.h"
 
 @implementation MetadataSearcher
@@ -29,6 +30,21 @@
 @synthesize foundSeasons = m_foundSeasons;
 @synthesize foundEpisodes = m_foundEpisodes;
 @synthesize currentShowName = m_currentShowName;
+@synthesize currentSearcher = m_currentSearcher;
+
+-(NSString*) currentSearcher
+{
+    return m_currentSearcher;
+}
+
+-(void) setCurrentSearcher:(NSString*) string
+{
+    if (m_currentSearcher == string)
+        return;
+        
+    m_currentSearcher = string;
+    [m_metadata searchAgain];
+}
 
 -(NSString*) currentSeason
 {
@@ -55,10 +71,14 @@
 +(MetadataSearch*) metadataSearch:(Metadata*) metadata
 {
     MetadataSearch* metadataSearch = [[MetadataSearch alloc] init];
-    metadataSearch->m_searchers = [[NSArray arrayWithObjects:[[TVDBMetadataSearcher alloc] init], nil] retain];
+    metadataSearch->m_searchers = [[NSDictionary dictionaryWithObjectsAndKeys:
+                                    [[TVDBMetadataSearcher alloc] init], @"thetvdb.com",
+                                    [[MovieDBMetadataSearcher alloc] init], @"themoviedb.org",
+                                    nil] retain];
     metadataSearch->m_metadata = metadata;
     metadataSearch->m_season = -1;
     metadataSearch->m_episode = -1;
+    [metadataSearch setCurrentSearcher: @"thetvdb.com"];
     return metadataSearch;
 }
 
@@ -69,13 +89,15 @@ static BOOL isValidInteger(NSString* s)
 
 -(BOOL) _searchForShows:(NSString*) searchString
 {
-    for (m_foundSearcher in m_searchers) {
-        if ([m_foundSearcher searchForShow:searchString]) {
-            self.foundShowNames = m_foundSearcher.foundShowNames;
-            self.foundShowIds = m_foundSearcher.foundShowIds;
-            [m_foundSearcher retain];
-            return YES;
-        }
+    m_foundSearcher = [m_searchers valueForKey:[self currentSearcher]];
+    if (!m_foundSearcher)
+        return NO;
+        
+    if ([m_foundSearcher searchForShow:searchString]) {
+        self.foundShowNames = m_foundSearcher.foundShowNames;
+        self.foundShowIds = m_foundSearcher.foundShowIds;
+        [m_foundSearcher retain];
+        return YES;
     }
     return NO;
 }

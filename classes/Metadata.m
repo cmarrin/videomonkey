@@ -686,35 +686,10 @@ static NSDictionary* g_tagMap = nil;
     [[metadata->m_transcoder metadataPanel] setupMetadataPanelBindings];
     
     // Search for metadata
-    metadata.isMetadataBusy = YES;
-    metadata.metadataStatus = @"Searching for metadata...";
     metadata->m_search = [MetadataSearch metadataSearch:metadata];
     
-    // If we have a TVShowName or title, use that for the search, otherwise use the filename
-    NSString* value = [[metadata->m_tagDictionary valueForKey:@"TVShowName"] displayValue];
-    if (value && [value length] > 0)
-        [metadata->m_search searchWithString:value];
-    else {
-        value = [[metadata->m_tagDictionary valueForKey:@"title"] displayValue];
-        if (value && [value length] > 0)
-            [metadata->m_search searchWithString:value];
-        else
-            [metadata->m_search searchWithFilename:transcoder.inputFileInfo.filename];
-    }
+    [metadata searchAgain];
 
-    // if the season and episode were in the input metadata, set them
-    value = [[metadata->m_tagDictionary valueForKey:@"TVSeasonNum"] displayValue];
-    if (value && [value length] > 0)
-        metadata->m_search.currentSeason = [[NSNumber numberWithInt:[value intValue]] stringValue];
-    
-    value = [[metadata->m_tagDictionary valueForKey:@"TVEpisodeNum"] displayValue];
-    if (value && [value length] > 0)
-        metadata->m_search.currentEpisode = [[NSNumber numberWithInt:[value intValue]] stringValue];
-    
-    [metadata loadSearchMetadata];
-
-    metadata.isMetadataBusy = NO;
-    metadata.metadataStatus = @"";
     return metadata;
 }
 
@@ -729,6 +704,38 @@ static NSDictionary* g_tagMap = nil;
     return YES;
 }
 
+-(void) searchAgain
+{
+    self.isMetadataBusy = YES;
+    self.metadataStatus = @"Searching for metadata...";
+    
+    // If we have a TVShowName or title, use that for the search, otherwise use the filename
+    NSString* value = [[m_tagDictionary valueForKey:@"TVShowName"] valueForSource:INPUT_TAG];
+    if (value && [value length] > 0)
+        [m_search searchWithString:value];
+    else {
+        value = [[m_tagDictionary valueForKey:@"title"] valueForSource:INPUT_TAG];
+        if (value && [value length] > 0)
+            [m_search searchWithString:value];
+        else
+            [m_search searchWithFilename:m_transcoder.inputFileInfo.filename];
+    }
+
+    // if the season and episode were in the input metadata, set them
+    value = [[m_tagDictionary valueForKey:@"TVSeasonNum"] valueForSource:INPUT_TAG];
+    if (value && [value length] > 0)
+        m_search.currentSeason = [[NSNumber numberWithInt:[value intValue]] stringValue];
+    
+    value = [[m_tagDictionary valueForKey:@"TVEpisodeNum"] valueForSource:INPUT_TAG];
+    if (value && [value length] > 0)
+        m_search.currentEpisode = [[NSNumber numberWithInt:[value intValue]] stringValue];
+    
+    [self loadSearchMetadata];
+
+    self.isMetadataBusy = NO;
+    self.metadataStatus = @"";
+}
+
 -(void) searchMetadataChanged
 {
     [self loadSearchMetadata];
@@ -739,7 +746,5 @@ static NSDictionary* g_tagMap = nil;
     NSLog(@"*** Metadata::valueForUndefinedKey:%@\n", key);
     return nil;
 }
-
-
 
 @end

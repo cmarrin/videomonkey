@@ -38,7 +38,7 @@
     int m_showId;
     Metadata* m_metadata;
     NSString* m_currentShowName;
-    
+    NSString* m_currentSearcher;
     NSArray* m_searchers;
 }
 
@@ -49,6 +49,7 @@
 @property(readwrite,retain) NSArray* foundShowIds;
 @property(readwrite,retain) NSArray* foundSeasons;
 @property(readwrite,retain) NSArray* foundEpisodes;
+@property(readwrite,retain) NSString* currentSearcher;
 
 +(MetadataSearch*) metadataSearch:(Metadata*) metadata;
 

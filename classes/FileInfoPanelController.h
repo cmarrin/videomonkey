@@ -22,6 +22,7 @@
     IBOutlet NSScrollView* m_metadataScrollView;
     IBOutlet NSComboBox* m_searchField;
     IBOutlet MetadataPanel* m_metadataPanel;
+    IBOutlet NSPopUpButton* m_currentSearcher;
     
     BOOL m_isVisible;
 }

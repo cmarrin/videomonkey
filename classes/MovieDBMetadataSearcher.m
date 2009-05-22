@@ -97,7 +97,7 @@ static NSDictionary* g_moviedbMap = nil;
     m_dictionary = [[NSMutableDictionary alloc] init];
     m_loadedShowId = -1;
     
-    NSString* urlString = [NSString stringWithFormat:@"http://api.themoviedb.org/2.0/Movie.getInfo?id=%@&api_key=ae6c3dcf41e60014a3d0508e7f650884", showId];
+    NSString* urlString = [NSString stringWithFormat:@"http://api.themoviedb.org/2.0/Movie.getInfo?id=%d&api_key=ae6c3dcf41e60014a3d0508e7f650884", showId];
     NSURL* url = [NSURL URLWithString:urlString];
     MyXMLDocument* doc = [MyXMLDocument xmlDocumentWithContentsOfURL:url];
             

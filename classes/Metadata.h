@@ -46,5 +46,6 @@
 
 -(BOOL) searchWithString:(NSString*) string;
 -(void) searchMetadataChanged;
+-(void) searchAgain;
 
 @end
