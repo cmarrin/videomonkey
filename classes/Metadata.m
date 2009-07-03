@@ -290,6 +290,11 @@ static NSDictionary* g_tagMap = nil;
 
 -(void) setPrimaryArtwork:(NSImage*) image
 {
+    // Make sure this image is not already in the list
+    for (ArtworkItem* item in m_artworkList)
+        if ([item image] == image)
+            return;
+    
     id item = [ArtworkItem artworkItemWithImage:image sourceIcon:g_sourceUserIcon checked:YES];
     [m_artworkList insertObject:item atIndex:0];
     [m_transcoder updateFileInfo];

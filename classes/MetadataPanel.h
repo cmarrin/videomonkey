@@ -61,6 +61,8 @@ typedef enum { INPUT_TAG, SEARCH_TAG, USER_TAG, OUTPUT_TAG } TagType;
 
 @interface MetadataPanel : NSBox {
     IBOutlet FileListController* m_fileListController;
+    IBOutlet NSTextField* m_artworkTitle;
+    IBOutlet NSImageView* m_artworkImageWell;
 }
 
 @property (readonly) FileListController* fileListController;

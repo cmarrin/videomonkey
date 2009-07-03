@@ -393,6 +393,18 @@
     [self setAllMetadataSource:USER_TAG];
 }
 
+-(IBAction)addThisImageToAllFiles:(id)sender
+{
+    NSImage* image = [m_artworkImageWell image];
+    NSString* keyPath = @"metadata.primaryArtwork";
+
+    NSArray* array = [[self fileListController] arrangedObjects];
+    for (Transcoder* transcoder in array)
+        [transcoder setValue:image forKeyPath:keyPath];
+    
+    [[self fileListController] reloadData];
+}
+
 -(void) setupMetadataPanelBindings
 {
     for (MetadataPanelItem* item in [[self contentView] subviews]) {
@@ -401,6 +413,14 @@
             
         [item bind];
     }
+    
+    // Add a context menu for the artwork
+    NSMenu* menu = [[NSMenu alloc]init];
+    [menu addItem:[[NSMenuItem alloc] initWithTitle:@"Add this image to all files" 
+                                        action:@selector(addThisImageToAllFiles:) 
+                                        keyEquivalent:@""]];
+    [m_artworkTitle setMenu:menu];
+    
 }
 
 @end
