@@ -452,23 +452,20 @@ static NSDictionary* g_tagMap = nil;
         NSString* value = [[m_tagDictionary valueForKey: param] outputValue];
         
         // handle special cases
-        // if 'stik' is "Movie" don't bother writing it
-        if ([param isEqualToString:@"stik"] && [value isEqualToString:@"Movie"])
-            value = nil;
-            
         if ([param isEqualToString:@"artwork"])
             continue;
             
-        if (value && [value length] > 0) {
-            // escape all the quotes
-            value = [value stringByReplacingOccurrencesOfString:@"\"" withString:@"\\\""];
-            [params appendString:[NSString stringWithFormat:@" --%@ \"%@\"", param, value]];
-        }
+        // escape all the quotes
+        value = value ? [value stringByReplacingOccurrencesOfString:@"\"" withString:@"\\\""] : @"";
+        [params appendString:[NSString stringWithFormat:@" --%@ \"%@\"", param, value]];
     }
     
     // write out temp artwork
     NSString* tmpArtworkPath = [NSString stringWithFormat:@"/tmp/AtomicParlsleyArtwork_%p", self];
     int i = 0;
+    
+    // remove old artwork
+    [params appendFormat:@" --artwork REMOVE_ALL"];
     
     for (ArtworkItem* artwork in m_artworkList) {
         if ([artwork checked]) {
@@ -578,7 +575,6 @@ static NSDictionary* g_tagMap = nil;
             @"year",        	@"©day", 
             @"stik",        	@"stik", 
             @"advisory",    	@"rtng",
-            @"rating_annotation",@"rating_annotation",
             @"comment",     	@"©cmt", 
             @"album",       	@"©alb", 
             @"artist",      	@"©ART", 

@@ -10,7 +10,7 @@
 			<bool key="EncodedWithXMLCoder">YES</bool>
 			<integer value="371"/>
 			<integer value="29"/>
-			<integer value="3773"/>
+			<integer value="3771"/>
 			<integer value="2650"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
@@ -18508,8 +18508,8 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 						<reference key="object" ref="195561277"/>
 						<object class="NSMutableArray" key="children">
 							<bool key="EncodedWithXMLCoder">YES</bool>
-							<reference ref="225693932"/>
 							<reference ref="532907413"/>
+							<reference ref="225693932"/>
 						</object>
 						<reference key="parent" ref="1049"/>
 						<string key="objectName">File Info Artwork Drawer View</string>
@@ -22987,7 +22987,7 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 					<reference ref="9"/>
 					<string>{3.40282e+38, 3.40282e+38}</string>
 					<string>{711, 400}</string>
-					<string>{{4, 99}, {253, 309}}</string>
+					<string>{{543, 116}, {253, 309}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
