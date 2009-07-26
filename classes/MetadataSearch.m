@@ -99,6 +99,7 @@ static BOOL isValidInteger(NSString* s)
         [m_foundSearcher retain];
         return YES;
     }
+    m_foundSearcher = nil;
     return NO;
 }
 

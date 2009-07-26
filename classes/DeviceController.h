@@ -19,6 +19,7 @@
     IBOutlet NSTabView* m_deviceControllerTabView;
     IBOutlet NSPopUpButton* m_deviceButton;
     IBOutlet NSPopUpButton* m_performanceButton;
+    IBOutlet NSPopUpButton* m_actionButton;
     IBOutlet NSTextField* m_deviceName;
     IBOutlet NSImageView* m_deviceImageView;
     
@@ -41,6 +42,10 @@
 -(void) setCurrentParamsWithEnvironment: (NSDictionary*) env;
 -(NSString*) recipe;
 -(NSString*) paramForKey:(NSString*) key;
+
+-(BOOL) shouldEncode;
+-(BOOL) shouldWriteMetadata;
+-(BOOL) shouldWriteMetadataToOutputFile;
 
 -(void) uiChanged;
 

@@ -284,6 +284,8 @@ static void addMenuSeparator(NSPopUpButton* button)
     [m_performanceButton selectItemAtIndex:performanceIndex];
     
     [self setCurrentParamsWithEnvironment:nil];
+    
+    [m_actionButton selectItemAtIndex:0];
 }
 
 - (BOOL)validateMenuItem:(NSMenuItem *)menuItem
@@ -291,12 +293,14 @@ static void addMenuSeparator(NSPopUpButton* button)
     return [menuItem isEnabled];
 }
 
-- (IBAction)selectDevice:(id)sender {
+- (IBAction)selectDevice:(id)sender
+{
     [self setCurrentDevice:[self findDeviceEntryWithIndex:[[sender selectedItem] tag]]];
     [self uiChanged];
 }
 
-- (IBAction)selectPerformance:(id)sender {
+- (IBAction)selectPerformance:(id)sender
+{
     [self uiChanged];
 }
 
@@ -360,6 +364,24 @@ static JSValueRef _jsLog(JSContextRef ctx, JSObjectRef function, JSObjectRef thi
 -(void) uiChanged
 {
     [m_delegate uiChanged];
+}
+
+-(BOOL) shouldEncode
+{
+    NSInteger sel = [m_actionButton indexOfSelectedItem];
+    return sel == 0 || sel == 1;
+}
+
+-(BOOL) shouldWriteMetadata
+{
+    NSInteger sel = [m_actionButton indexOfSelectedItem];
+    return sel == 0 || sel == 2 || sel == 3;
+}
+
+-(BOOL) shouldWriteMetadataToOutputFile
+{
+    NSInteger sel = [m_actionButton indexOfSelectedItem];
+    return sel == 0 || sel == 3;
 }
 
 @end

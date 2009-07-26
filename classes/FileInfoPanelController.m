@@ -101,11 +101,6 @@
     [[(Transcoder*)[m_fileListController selection] metadata] searchWithString:searchString];
 }
 
--(IBAction)writeMetadata:(id)sender
-{
-    printf("***\n");
-}
-
 -(IBAction)useThisValueForAllFiles:(id)sender
 {
     printf("***\n");

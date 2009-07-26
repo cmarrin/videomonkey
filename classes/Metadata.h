@@ -41,7 +41,10 @@
 
 -(id) createArtwork:(NSImage*) image;
 
--(BOOL) writeMetadata:(NSString*) filename;
+-(NSString*) metadataCommand:(NSString*) filename;
+-(BOOL) canWriteMetadataToInputFile;
+-(BOOL) canWriteMetadataToOutputFile;
+-(void) cleanupAfterMetadataWrite;
 -(void) setMetadataSource:(TagType) type;
 
 -(BOOL) searchWithString:(NSString*) string;

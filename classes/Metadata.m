@@ -257,28 +257,6 @@ static NSDictionary* g_tagMap = nil;
     return YES;
 }
 
--(void) writeMetadataToInputFile
-{
-    [self writeMetadata:[m_transcoder inputFileInfo].filename];
-}
-
--(void) writeMetadataToOutputFile
-{
-    [self writeMetadata:[m_transcoder outputFileInfo].filename];
-}
-
--(void) writeMetadataForAllInputFiles
-{
-    for (Transcoder* transcoder in [[[m_transcoder metadataPanel] fileListController] arrangedObjects])
-        [[transcoder metadata] writeMetadata:[transcoder inputFileInfo].filename];
-}
-
--(void) writeMetadataForAllOutputFiles
-{
-    for (Transcoder* transcoder in [[[m_transcoder metadataPanel] fileListController] arrangedObjects])
-        [[transcoder metadata] writeMetadata:[transcoder outputFileInfo].filename];
-}
-
 -(NSImage*) primaryArtwork
 {
     // primary is the first checked image
@@ -506,7 +484,7 @@ static NSDictionary* g_tagMap = nil;
     return params;
 }
 
--(void) cleanupAfterAtomicParsley
+-(void) cleanupAfterMetadataWrite
 {
     NSString* tmpArtworkPath = [NSString stringWithFormat:@"/tmp/AtomicParlsleyArtwork_%p", self];
     int i = 0;
@@ -517,38 +495,12 @@ static NSDictionary* g_tagMap = nil;
     }
 }
 
--(void) processWriteMetadataOutput: (NSNotification*) note
-{
-    if (![[note name] isEqualToString:NSFileHandleReadCompletionNotification])
-        return;
-
-	NSData	*data = [[note userInfo] objectForKey:NSFileHandleNotificationDataItem];
-	
-	if([data length]) {
-		NSString* string = [[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding] autorelease];
-        
-        // read another buffer
-		[[note object] readInBackgroundAndNotify];
-    }
-}
-
--(void) processFinishWriteMetadata: (NSNotification*) note
-{
-    int status = [m_task terminationStatus];
-    if (status)
-        [m_transcoder log: @"Metadata write FAILED\n"];
-    else
-        [m_transcoder log: @"Metadata write succeeded\n"];
-    
-    m_metadataWriteSucceeded = status == 0;
-}
-
--(BOOL) writeMetadata:(NSString*) filename
+-(NSString*) metadataCommand:(NSString*) filename
 {
     // Only write if we have params
     NSString* atomicParsleyParams = [self atomicParsleyParams];
     if (!atomicParsleyParams || [atomicParsleyParams length] == 0)
-        return TRUE;
+        return @"";
         
     // setup command
     NSString* cmdPath = [NSString stringWithString: [[NSBundle mainBundle] resourcePath]];
@@ -556,31 +508,7 @@ static NSDictionary* g_tagMap = nil;
                             [cmdPath stringByAppendingPathComponent: @"bin/AtomicParsley"],
                             filename,
                             atomicParsleyParams];
-    
-    m_task = [[NSTask alloc] init];
-    m_messagePipe = [NSPipe pipe];
-    
-    // execute the command
-    [m_task setArguments: [NSArray arrayWithObjects: @"-c", command, nil]];
-    [m_task setLaunchPath: @"/bin/sh"];
-    [m_task setStandardOutput: [m_messagePipe fileHandleForWriting]];
-        
-    // add notifications
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(processFinishWriteMetadata:) name:NSTaskDidTerminateNotification object:m_task];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(processWriteMetadataOutput:) name:NSFileHandleReadCompletionNotification object:[m_messagePipe fileHandleForReading]];
-
-    [[m_messagePipe fileHandleForReading] readInBackgroundAndNotify];
-    
-    self.isMetadataBusy = YES;
-    self.metadataStatus = @"Writing metadata...";
-    [m_task launch];
-    [m_task waitUntilExit];
-
-    // clean up
-    [self cleanupAfterAtomicParsley];
-    self.isMetadataBusy = NO;
-    self.metadataStatus = @"";
-    return m_metadataWriteSucceeded;
+    return command;
 }
 
 -(void) setMetadataSource:(TagType) type
@@ -630,9 +558,7 @@ static NSDictionary* g_tagMap = nil;
     }
     
     // Get the data to be reevaluated
-    self.tags = self.tags;
-    self.search = self.search;
-    self.artworkList = self.artworkList;
+    [m_transcoder updateFileInfo];
 }
 
 +(Metadata*) metadataWithTranscoder: (Transcoder*) transcoder

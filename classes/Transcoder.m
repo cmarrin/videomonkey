@@ -407,7 +407,7 @@ static NSImage* getFileStatusImage(FileStatus status)
     m_fileStatus = (status == 0) ? FS_SUCCEEDED : (status == 255) ? FS_VALID : FS_FAILED;
     
     if (status == 0) {
-        [m_appController log: @"Transcode succeeded!\n"];
+        [m_appController log: @"Succeeded!\n"];
         
         if ([m_appController addToMediaLibrary]) {
             if (![self addToMediaLibrary: self.outputFileInfo.filename]) {
@@ -419,7 +419,7 @@ static NSImage* getFileStatusImage(FileStatus status)
     }
     else {
         deleteOutputFile = YES;
-        [m_appController log: @"Transcode FAILED with error code: %d\n", status];
+        [m_appController log: @"FAILED with error code: %d\n", status];
     }
         
     [m_statusImageView setImage: getFileStatusImage(m_fileStatus)];
@@ -442,6 +442,9 @@ static NSImage* getFileStatusImage(FileStatus status)
             destination:@""
             files:[NSArray arrayWithObject:[self.outputFileInfo.filename lastPathComponent]]
             tag:nil];
+            
+    // In case metadata was written, cleanup after it
+    [m_metadata cleanupAfterMetadataWrite];
 }
 
 -(void) startNextCommands
@@ -523,38 +526,85 @@ static NSImage* getFileStatusImage(FileStatus status)
     int commandId = 0;
     int index = 0;
     
-    while (s = (NSString*) [enumerator nextObject]) {
-        CommandOutputType type = OT_NONE;
+    if ([[m_appController deviceController] shouldEncode]) {
+        while (s = (NSString*) [enumerator nextObject]) {
+            CommandOutputType type = OT_NONE;
+            
+            // in splitting the commands, we've lost it's separator, so we have to reconstruct it from the original string
+            index += [s length];
+            unichar sep = (index < [recipe length]) ? [recipe characterAtIndex:index] : ';';
+            index++;
+            
+            switch(sep)
+            {
+                case ';': type = OT_WAIT; break;
+                case '|': type = OT_PIPE; break;
+                case '&': type = OT_CONTINUE; break;
+            }
+            
+            s = [s stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+            if (![s length])
+                continue;
+
+            // make a Command object for this command
+            [m_commands addObject:[[Command alloc] initWithTranscoder:self command:s 
+                                outputType:type identifier:[[NSNumber numberWithInt:commandId++] stringValue]]];
+        }
+    }
+    
+    if ([[m_appController deviceController] shouldWriteMetadata]) {
+        // Before writing metadata, make sure it can be done
+        BOOL canWrite = true;
         
-        // in splitting the commands, we've lost it's separator, so we have to reconstruct it from the original string
-        index += [s length];
-        unichar sep = (index < [recipe length]) ? [recipe characterAtIndex:index] : '&';
-        index++;
-        
-        switch(sep)
-        {
-            case ';': type = OT_WAIT; break;
-            case '|': type = OT_PIPE; break;
-            case '&': type = OT_CONTINUE; break;
+        if (![[m_appController deviceController] shouldEncode]) {
+            if ([[m_appController deviceController] shouldWriteMetadataToOutputFile]) {
+                if (![m_metadata canWriteMetadataToOutputFile])
+                    canWrite = false;
+            }
+            else {
+                if (![m_metadata canWriteMetadataToInputFile])
+                    canWrite = false;
+            }
         }
         
-        s = [s stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
-        if (![s length])
-            continue;
-
-        // make a Command object for this command
-        [m_commands addObject:[[Command alloc] initWithTranscoder:self command:s 
-                            outputType:type identifier:[[NSNumber numberWithInt:commandId] stringValue]]];
+        NSString* filename = [[m_appController deviceController] shouldWriteMetadataToOutputFile] ?
+                                self.outputFileInfo.filename :
+                                self.inputFileInfo.filename;
+        NSString* metadataCommand = [m_metadata metadataCommand:filename];
+                                
+        if ([metadataCommand length] > 0) {
+            if (canWrite) {
+                // Add command for writing metadata
+                [m_commands addObject:[[Command alloc] initWithTranscoder:self command:metadataCommand
+                            outputType:OT_WAIT identifier:[[NSNumber numberWithInt:commandId] stringValue]]];
+            }
+            else {
+                // Can't write metadata to this type of file
+                if ([[m_appController deviceController] shouldWriteMetadataToOutputFile])
+                    [m_appController log: @"WARNING! Unable to write metadata to output file. "
+                                        "Either you haven't yet encoded it and the file doesn't exist, "
+                                        "or this file format does not support metadata.\n"];
+                else
+                    [m_appController log: @"WARNING! Unable to write metadata to input file. "
+                                        "This file format probably does not support metadata.\n"];
+            }
+        }
     }
     
     // execute each command in turn
-    m_isLastCommandRunning = NO;
-    m_currentCommandIndex = 0;
-    [self startNextCommands];
+    if ([m_commands count] > 0) {
+        m_isLastCommandRunning = NO;
+        m_currentCommandIndex = 0;
+        [self startNextCommands];
 
-    m_fileStatus = FS_ENCODING;
-    [m_statusImageView setImage: getFileStatusImage(m_fileStatus)];
-    return YES;
+        m_fileStatus = FS_ENCODING;
+        [m_statusImageView setImage: getFileStatusImage(m_fileStatus)];
+        return YES;
+    }
+    else {
+        [self finish: -1];
+        return NO;
+    }
 }
 
 - (BOOL) pauseEncode
@@ -630,15 +680,8 @@ static NSImage* getFileStatusImage(FileStatus status)
 
 -(void) commandFinished: (Command*) command status: (int) status
 {
-    if (m_isLastCommandRunning) {
-        // now do the metadata if needed
-        if (status == 0 && [self.outputFileInfo.format isEqualToString:@"MPEG-4"]) {
-            if (![m_metadata writeMetadata:self.outputFileInfo.filename])
-                status = -1;
-        }
-        
+    if (m_isLastCommandRunning)
         [self finish: status];
-    }
     else
         [self startNextCommands];
 }

@@ -50,6 +50,7 @@
     [m_task setArguments: [NSArray arrayWithObjects: @"-c", m_command, nil]];
     [m_task setLaunchPath: @"/bin/sh"];
     [m_task setStandardError: [m_messagePipe fileHandleForWriting]];
+    [m_task setStandardOutput: [m_messagePipe fileHandleForWriting]];
     
     if (m_outputType == OT_PIPE) {
         [m_task setStandardOutput: m_outputPipe];
@@ -99,54 +100,36 @@
     return m_outputType == OT_WAIT;
 }
 
--(void) processFinishEncode: (NSNotification*) note
-{
-    int status = [m_task terminationStatus];
-    
-    // notify the Transcoder we're done
-    [m_transcoder commandFinished: self status: status];
-}
-
-static NSDictionary* makeDictionary(NSString* s)
-{
-    NSMutableDictionary* dictionary = [[NSMutableDictionary alloc] init];
-    NSArray* elements = [s componentsSeparatedByString:@";"];
-    for (int i = 0; i < [elements count]; ++i) {
-        NSArray* values = [[elements objectAtIndex:i] componentsSeparatedByString:@":"];
-        if ([values count] != 2)
-            continue;
-        [dictionary setValue: [values objectAtIndex:1] forKey: [values objectAtIndex:0]];
-    }
-    
-    return dictionary;
-}
-
 -(void) processResponse: (NSString*) response
 {
-    // If this looks like a progress line for ffmpeg, process it like that
-    if (![response hasPrefix:@"frame="]) {
-        if ([response length] > 0)
-            [m_transcoder logCommand: m_id withFormat:@"--> %@", response];
-        return;
+    // FIXME: These should go into some sort of callback functions
+    if ([response hasPrefix:@"frame="]) {
+        // This looks like a progress line for ffmpeg, process it like that
+        // parse out the frame
+        NSRange range = [response rangeOfString: @"frame="];
+        NSString* s = [response substringFromIndex:(range.location + range.length)];
+        double frame = [s doubleValue];
+        double totalFrames = m_transcoder.outputFileInfo.duration * m_transcoder.outputFileInfo.videoFrameRate;
+        double percentage = frame / totalFrames;
+        
+        [m_transcoder setProgressForCommand: self to: percentage];
     }
+    else if ([response hasPrefix:@" Progress: "]) {
+        // This looks like a progress line for AtomicParsley, process it like that
+        // parse out the progress
+        NSRange range = [response rangeOfCharacterFromSet:[NSCharacterSet decimalDigitCharacterSet]];
+        NSString* s = [response substringFromIndex:(range.location)];
+        double percentage = [s doubleValue] / 100;
+        
+        [m_transcoder setProgressForCommand: self to: percentage];
+    }
+    else if ([response length] > 0)
+        [m_transcoder logCommand: m_id withFormat:@"--> %@", response];
     
-    // parse out the frame
-    NSRange range = [response rangeOfString: @"frame="];
-    NSString* s = [response substringFromIndex:(range.location + range.length)];
-    double frame = [s doubleValue];
-    double totalFrames = m_transcoder.outputFileInfo.duration * m_transcoder.outputFileInfo.videoFrameRate;
-    double percentage = frame / totalFrames;
-    
-    [m_transcoder setProgressForCommand: self to: percentage];
 }
 
--(void) processRead: (NSNotification*) note
+-(void) processData:(NSData*) data
 {
-    if (![[note name] isEqualToString:NSFileHandleReadCompletionNotification])
-        return;
-
-	NSData	*data = [[note userInfo] objectForKey:NSFileHandleNotificationDataItem];
-	
 	if([data length]) {
 		NSString* string = [[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding] autorelease];
         
@@ -173,7 +156,40 @@ static NSDictionary* makeDictionary(NSString* s)
             // put remaining component in m_buffer for next time
             [m_buffer setString: [components objectAtIndex:[components count]-1]];
         }
-        
+    }
+}
+
+-(void) processFinishEncode: (NSNotification*) note
+{
+    int status = [m_task terminationStatus];
+    
+    // notify the Transcoder we're done
+    [m_transcoder commandFinished: self status: status];
+}
+
+static NSDictionary* makeDictionary(NSString* s)
+{
+    NSMutableDictionary* dictionary = [[NSMutableDictionary alloc] init];
+    NSArray* elements = [s componentsSeparatedByString:@";"];
+    for (int i = 0; i < [elements count]; ++i) {
+        NSArray* values = [[elements objectAtIndex:i] componentsSeparatedByString:@":"];
+        if ([values count] != 2)
+            continue;
+        [dictionary setValue: [values objectAtIndex:1] forKey: [values objectAtIndex:0]];
+    }
+    
+    return dictionary;
+}
+
+-(void) processRead: (NSNotification*) note
+{
+    if (![[note name] isEqualToString:NSFileHandleReadCompletionNotification])
+        return;
+
+	NSData	*data = [[note userInfo] objectForKey:NSFileHandleNotificationDataItem];
+	
+    [self processData:data];
+	if([data length]) {
         // read another buffer
 		[[note object] readInBackgroundAndNotify];
     }
