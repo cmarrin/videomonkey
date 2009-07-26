@@ -24,7 +24,6 @@
     int m_numArtwork;
     MetadataSearch* m_search;
     NSString* m_rootFilename;
-    BOOL m_metadataWriteSucceeded;
     BOOL m_isMetadataBusy;
     NSString* m_metadataStatus;
 }
