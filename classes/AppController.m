@@ -445,7 +445,7 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
     NSString* s = [[NSString alloc] initWithFormat:format arguments: args];
     
     // Output to stderr
-    fprintf(stderr, [s UTF8String]);
+    fprintf(stderr, "%s", [s UTF8String]);
     
     // Output to log file
     if ([m_fileList count] > m_currentEncoding)

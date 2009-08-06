@@ -34,6 +34,14 @@
     [m_fileListView reloadData];
 }
 
+- (void)rearrangeObjects
+{
+	// Remember the selection because rearrange loses it on SnowLeopard
+    NSIndexSet* indexes = [self selectionIndexes];
+	[super rearrangeObjects];
+	[self setSelectionIndexes:indexes];
+}
+
 // dragging methods
 - (BOOL)tableView: (NSTableView *)aTableView
     writeRows: (NSArray *)rows

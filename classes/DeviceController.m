@@ -265,20 +265,22 @@ static void addMenuSeparator(NSPopUpButton* button)
     }
     
     // set the selected item
-    [m_deviceButton selectItemAtIndex:deviceIndex];
-    DeviceEntry* deviceEntry = [self findDeviceEntryWithIndex:[[m_deviceButton itemAtIndex: deviceIndex] tag]];
-    
-    // if the deviceEntry is nil, it mean we had an invalid deviceIndex (probably a bad index from the pref file)
-    // fix that here
-    if (!deviceEntry) {
-        deviceIndex = 1;
-        [m_deviceButton selectItemAtIndex:deviceIndex];
-        deviceEntry = [self findDeviceEntryWithIndex:[[m_deviceButton itemAtIndex: deviceIndex] tag]];
-        [[[NSUserDefaultsController sharedUserDefaultsController] values] setValue:[NSNumber numberWithInt:deviceIndex] forKey:@"currentDeviceIndex"];
-    }
-    
-    [self setCurrentDevice:deviceEntry];
-
+	if ([m_deviceButton numberOfItems] > deviceIndex) {
+		[m_deviceButton selectItemAtIndex:deviceIndex];
+		DeviceEntry* deviceEntry = [self findDeviceEntryWithIndex:[[m_deviceButton itemAtIndex: deviceIndex] tag]];
+		
+		// if the deviceEntry is nil, it mean we had an invalid deviceIndex (probably a bad index from the pref file)
+		// fix that here
+		if (!deviceEntry) {
+			deviceIndex = 1;
+			[m_deviceButton selectItemAtIndex:deviceIndex];
+			deviceEntry = [self findDeviceEntryWithIndex:[[m_deviceButton itemAtIndex: deviceIndex] tag]];
+			[[[NSUserDefaultsController sharedUserDefaultsController] values] setValue:[NSNumber numberWithInt:deviceIndex] forKey:@"currentDeviceIndex"];
+		}
+		
+		[self setCurrentDevice:deviceEntry];
+	}
+	
     // set the selected item
     // FIXME: need to get this from prefs
     [m_performanceButton selectItemAtIndex:performanceIndex];

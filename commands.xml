@@ -144,6 +144,7 @@ A property name is anything from the character after the '$' to the next whitesp
 
 -->
 
+<!-- 
 <!DOCTYPE videomonkey [
     <!ELEMENT videomonkey    (default_device|devices)*>
     <!ELEMENT script    (#PCDATA)>
@@ -180,6 +181,8 @@ A property name is anything from the character after the '$' to the next whitesp
      <!ELEMENT menu_item    (script|param|command)*>
         <!ATTLIST menu_item title CDATA "">
 ]>
+-->
+
 <videomonkey>
     <default_device>
         <script>

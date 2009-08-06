@@ -107,9 +107,8 @@
 
 +(MyXMLDocument*) xmlDocumentWithContentsOfURL: (NSURL*) url
 {
-    MyXMLDocument* doc = [[MyXMLDocument alloc] init];
     NSError* error;
-    NSXMLDocument* document = [[NSXMLDocument alloc] initWithContentsOfURL:url options:NSXMLDocumentValidate error:&error];
+    NSXMLDocument* document = [[NSXMLDocument alloc] initWithContentsOfURL:url options:0 error:&error];
 
     NSString* desc = [error localizedDescription];
     
@@ -118,6 +117,7 @@
         return nil;
     }
     
+	MyXMLDocument* doc = [[MyXMLDocument alloc] init];
     doc->m_rootElement = [MyXMLElement elementWithNSXMLElement: [document rootElement]];
     return doc;
 }
