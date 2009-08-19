@@ -107,7 +107,7 @@ int heightFromFrameSize(FrameSize f) { return f & 0xffff; }
     if (![data hasPrefix: @"-General-"])
         return NO;
     
-    NSArray* components = [data componentsSeparatedByString:@"\r\n"];
+    NSArray* components = [data componentsSeparatedByString:@"\n"];
     
     // We always have a General line.
     NSArray* general = [[components objectAtIndex:0] componentsSeparatedByString:@","];
