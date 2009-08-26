@@ -247,7 +247,18 @@ A property name is anything from the character after the '$' to the next whitesp
 			{
                 params.special_qt = params.is_quicktime == "true" && params.input_video_codec == "wmv3";
             
-				// adjust input size to match aspect ratio
+           		// set the frame rate
+           		params.frame_rate = 1;
+           		if (params.title != "Apple TV" && number(params.quality_stop) == 0)
+           		    params.frame_rate = 0.5;
+
+				params.output_video_frame_rate = params.input_frame_rate * params.frame_rate;
+				
+				// All devices have a max frame rate of 30fps
+				if (params.output_video_frame_rate > 30)
+					params.output_video_frame_rate = 30;
+				
+				// Set output frame size
 				var inputWidth = params.input_video_width;
 				var inputHeight = params.input_video_height;
 				var inputAspect = inputWidth / inputHeight;
@@ -273,6 +284,16 @@ A property name is anything from the character after the '$' to the next whitesp
 						params.output_video_bitrate = params.input_video_bitrate;
 				}
 				
+				// Adjust frame rate and frame size based on format_limits for Apple TV
+				if (params.title == "Apple TV" && params.output_video_frame_rate > 24 && (params.frame_width > 960 || params.frame_height > 540)) {
+					if (params.format_limits == "24fps")
+						params.output_video_frame_rate = 24;
+					else {
+						params.frame_width = 960;
+						params.frame_height = 540;
+					}
+				}
+					
 	            // adjust video frame size
 	            inputAspect = inputWidth / inputHeight;
 
@@ -293,8 +314,17 @@ A property name is anything from the character after the '$' to the next whitesp
 				params.output_video_width = Math.round(params.output_video_width / 16) * 16;
 				params.output_video_height = Math.round(params.output_video_height / 16) * 16;
 				
-				// set frame rate
-				params.output_video_frame_rate = params.input_frame_rate * params.frame_rate;
+				// set endoder
+				params.ffmpeg_vcodec = bool(params.h264) ? "libx264" : "mpeg4";
+				params.output_video_codec = bool(params.h264) ? "H.264" : "mpeg4"
+				params.output_audio_codec = "AAC";
+				
+				// adjust vpre for baseline if needed
+				// FIXME: For some reason, creating anything other than baseline does not work
+				// on Apple TV. This seems to have something to do with VFR of the input source?
+				// For now always use baseline
+				//if (title != "Apple TV")
+					params.ffmpeg_profile = "-bf 0 -coder 0 -flags2 -wpred-dct8x8";
 			}
 			
 			audio("high");
@@ -508,24 +538,7 @@ A property name is anything from the character after the '$' to the next whitesp
 					
 					// set audio quality
                		audio(audioQualityMap[title][qualityStop]);
-               		
-               		// set the frame rate
-               		params.frame_rate = 1;
-               		if (title != "Apple TV" && qualityStop == 0)
-               		    params.frame_rate = 0.5;
-
-					// set endoder
-					params.ffmpeg_vcodec = h264 ? "libx264" : "mpeg4";
-					params.output_video_codec = h264 ? "H.264" : "mpeg4"
-					params.output_audio_codec = "AAC";
-					
-					// adjust vpre for baseline if needed
-					// FIXME: For some reason, creating anything other than baseline does not work
-					// on Apple TV. This seems to have something to do with VFR of the input source?
-					// For now always use baseline
-					//if (title != "Apple TV")
-						params.ffmpeg_profile = "-bf 0 -coder 0 -flags2 -wpred-dct8x8";
-						
+ 						
 					// The level is not necessarily accurate
 					params.output_video_profile = (title != "Apple TV") ? "baseline" : "main";
 					params.output_video_level = levelMap[title][qualityStop];
@@ -639,6 +652,14 @@ A property name is anything from the character after the '$' to the next whitesp
             
             <!-- Apple TV -->
             <device title="Apple TV" icon="appletv">
+                <menu which="0" title="Format Limits:">
+                	<menu_item title="1024x720@24fps">
+                       	<param id="format_limits" value="24fps" />
+                    </menu_item>
+                    <menu_item title="960x540@30fps">
+                       	<param id="format_limits" value="30fps" />
+                   	</menu_item>
+                </menu>
                 <checkbox which="0" title="H.264 Video">
                     <checked_item>
                        	<param id="h264" value="true" />
