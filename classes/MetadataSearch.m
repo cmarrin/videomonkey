@@ -126,11 +126,26 @@ static BOOL isValidInteger(NSString* s)
                 *season = [[seArray objectAtIndex:0] intValue];
                 *episode = [[seArray objectAtIndex:1] intValue];
                 
-                // remove it from the string and return a new one
-                return outputString;
+                // don't put it in the output string
+                continue;
             }
         }
         
+        NSArray* seasonEpisode = [item componentsSeparatedByString:@"x"];
+        if ([seasonEpisode count] == 2) {
+            // see if this is of the form <number>x<number>
+            NSRange range = [[seasonEpisode objectAtIndex:0] rangeOfCharacterFromSet:[[NSCharacterSet decimalDigitCharacterSet] invertedSet]];
+            if (range.location == NSNotFound) {
+                range = [[seasonEpisode objectAtIndex:1] rangeOfCharacterFromSet:[[NSCharacterSet decimalDigitCharacterSet] invertedSet]];
+                if (range.location == NSNotFound) {
+                    // we have a season/episode
+                    *season = [[seasonEpisode objectAtIndex:0] intValue];
+                    *episode = [[seasonEpisode objectAtIndex:1] intValue];
+                    continue;
+                }
+            }
+        }
+                
         if (!firstTime)
             [outputString appendString:@" "];
         else
@@ -200,7 +215,7 @@ static BOOL isValidInteger(NSString* s)
      // See if anything looks like SxxEyy
     searchString = [self checkString:searchString forSeason:&m_season episode:&m_episode];
         
-    NSMutableArray* array = [NSMutableArray arrayWithArray: [searchString componentsSeparatedByString:@" "]];
+    NSMutableArray* array = [[NSMutableArray arrayWithArray: [searchString componentsSeparatedByString:@" "]] retain];
     
     // search until we find something
     while ([array count]) {
@@ -216,6 +231,8 @@ static BOOL isValidInteger(NSString* s)
         // remove the last component
         [array removeLastObject];
     }
+    
+    [array release];
     
     return NO;
 }

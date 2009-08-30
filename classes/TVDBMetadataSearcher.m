@@ -75,7 +75,7 @@ static NSDictionary* g_tvdbSeriesMap = nil;
     m_foundEpisodes = nil;
 
     NSString* urlString = [NSString stringWithFormat:@"http://www.thetvdb.com/api/GetSeries.php?seriesname=%@", searchString];
-    urlString = [urlString stringByAddingPercentEscapesUsingEncoding:NSASCIIStringEncoding];
+    urlString = [urlString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     NSURL* url = [NSURL URLWithString:urlString];
     MyXMLDocument* doc = [MyXMLDocument xmlDocumentWithContentsOfURL:url];
     
