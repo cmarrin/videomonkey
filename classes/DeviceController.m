@@ -380,6 +380,12 @@ static JSValueRef _jsLog(JSContextRef ctx, JSObjectRef function, JSObjectRef thi
     return sel == 0 || sel == 2 || sel == 3;
 }
 
+-(BOOL) shouldWriteMetadataToInputFile
+{
+    NSInteger sel = [m_actionButton indexOfSelectedItem];
+    return sel == 2;
+}
+
 -(BOOL) shouldWriteMetadataToOutputFile
 {
     NSInteger sel = [m_actionButton indexOfSelectedItem];

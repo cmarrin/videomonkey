@@ -45,6 +45,7 @@
 
 -(BOOL) shouldEncode;
 -(BOOL) shouldWriteMetadata;
+-(BOOL) shouldWriteMetadataToInputFile;
 -(BOOL) shouldWriteMetadataToOutputFile;
 
 -(void) uiChanged;

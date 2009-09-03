@@ -410,10 +410,12 @@ static NSImage* getFileStatusImage(FileStatus status)
         [m_appController log: @"Succeeded!\n"];
         
         if ([m_appController addToMediaLibrary]) {
-            if (![self addToMediaLibrary: self.outputFileInfo.filename]) {
+            NSString* filename = [[m_appController deviceController] shouldWriteMetadataToInputFile] ?
+                                self.inputFileInfo.filename : self.outputFileInfo.filename;
+            if (![self addToMediaLibrary: filename]) {
                 m_fileStatus = FS_FAILED;
             }
-            else if ([m_appController deleteFromDestination])
+            else if ([m_appController deleteFromDestination] && ![[m_appController deviceController] shouldWriteMetadataToInputFile])
                 moveOutputFileToTrash = YES;
         }
     }
