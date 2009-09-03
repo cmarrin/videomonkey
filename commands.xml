@@ -286,14 +286,24 @@ A property name is anything from the character after the '$' to the next whitesp
 				
 				// Adjust frame rate and frame size based on format_limits for Apple TV
 				if (params.title == "Apple TV" && params.output_video_frame_rate > 24 && (params.frame_width > 960 || params.frame_height > 540)) {
-					if (params.format_limits == "24fps")
-						params.output_video_frame_rate = 24;
+					if (params.format_limits == "24fps") {
+						if (params.output_video_frame_rate > 24)
+							params.output_video_frame_rate = 24;
+						if (params.frame_width > 1280)
+							params.frame_width = 1280;
+						if (params.frame_height > 1024)
+							params.frame_height = 1024;
+					}
 					else {
-						params.frame_width = 960;
-						params.frame_height = 540;
+						if (params.output_video_frame_rate > 30)
+							params.output_video_frame_rate = 30;
+						if (params.frame_width > 960)
+							params.frame_width = 960;
+						if (params.frame_height > 540)
+							params.frame_height = 540;
 					}
 				}
-					
+				
 	            // adjust video frame size
 	            inputAspect = inputWidth / inputHeight;
 
@@ -314,6 +324,24 @@ A property name is anything from the character after the '$' to the next whitesp
 				params.output_video_width = Math.round(params.output_video_width / 16) * 16;
 				params.output_video_height = Math.round(params.output_video_height / 16) * 16;
 				
+				// One more problem. If we are frame size limited (Apple TV) then rounding could have pushed us over that limit.
+				// We need to make sure the width and height
+				// are below the maximums.
+				if (params.title == "Apple TV") {
+					if (params.format_limits == "24fps") {
+						if (params.output_video_width > 1280)
+							params.output_video_width -= 16;
+						if (params.output_video_height > 1024)
+							params.output_video_height -= 16;
+					}
+					else {
+						if (params.output_video_width > 960)
+							params.output_video_width -= 16;
+						if (params.output_video_height > 540)
+							params.output_video_height -= 16;
+					}
+				}
+
 				// set endoder
 				params.ffmpeg_vcodec = bool(params.h264) ? "libx264" : "mpeg4";
 				params.output_video_codec = bool(params.h264) ? "H.264" : "mpeg4"
