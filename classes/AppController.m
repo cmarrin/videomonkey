@@ -376,6 +376,12 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
     [[[NSUserDefaultsController sharedUserDefaultsController] values] setValue:m_savePath forKey:@"saveToLocation"];
 }
 
+- (void)pathControl:(NSPathControl *)pathControl willDisplayOpenPanel: (NSOpenPanel *)openPanel
+{
+	[openPanel setCanCreateDirectories:YES];
+	[openPanel setCanChooseDirectories:YES];
+}
+
 // This is a delegate for NSPathControl to add the 'Same folder as input file' menu item
 - (void)pathControl:(NSPathControl *)pathControl willPopUpMenu:(NSMenu *)menu
 {
