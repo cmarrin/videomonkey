@@ -443,9 +443,9 @@ A property name is anything from the character after the '$' to the next whitesp
                     $movtoy4m -f -w $input_video_width -h $input_video_height -F $(output_video_frame_rate) 
                         -a $(output_video_width):$(output_video_height) "$input_file" | $correct_yuv 
                 </command>
-                <command id="yuv_to_ffmpeg_av"> $ffmpeg -y -i - -i "$tmp_audio_file" </command>
-                <command id="yuv_to_ffmpeg_v"> $ffmpeg -y -i - </command>
-                <command id="ffmpeg_normal"> $ffmpeg -y -i "$input_file" </command>
+                <command id="yuv_to_ffmpeg_av"> $ffmpeg -threads $num_cpus -y -i - -i "$tmp_audio_file" </command>
+                <command id="yuv_to_ffmpeg_v"> $ffmpeg -threads $num_cpus -y -i - </command>
+                <command id="ffmpeg_normal"> $ffmpeg -threads $num_cpus -y -i "$input_file" </command>
                 <command id="quicktime_av_single_pass">
                     $quicktime_to_yuv | $yuv_to_ffmpeg_av $ffmpeg_options $ffmpeg_single_pass_options "$output_file"
                 </command>

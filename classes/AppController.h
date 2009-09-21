@@ -51,6 +51,7 @@ typedef enum { RS_STOPPED, RS_RUNNING, RS_PAUSED } RunStateType;
     BOOL m_isTerminated;
     BOOL m_addToMediaLibrary;
     BOOL m_deleteFromDestination;
+    int m_numCPUs;
     
     int m_numFilesToConvert;
     int m_fileConvertingIndex;
@@ -73,6 +74,7 @@ typedef enum { RS_STOPPED, RS_RUNNING, RS_PAUSED } RunStateType;
 @property (readonly) DeviceController* deviceController;
 @property (readonly) FileInfoPanelController* fileInfoPanelController;
 @property (readonly) BOOL limitParams;
+@property (readonly) int numCPUs;
 
 -(IBAction)startEncode:(id)sender;
 -(IBAction)pauseEncode:(id)sender;

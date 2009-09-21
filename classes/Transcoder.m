@@ -361,6 +361,9 @@ static NSImage* getFileStatusImage(FileStatus status)
     [env setValue: ([self isInputQuicktime] ? @"true" : @"false") forKey: @"is_quicktime"];
     [env setValue: ([self hasInputAudio] ? @"true" : @"false") forKey: @"has_audio"];
     [env setValue: ([m_appController limitParams] ? @"true" : @"false") forKey: @"limit_output_params"];
+    
+    // set the number of CPUs
+    [env setValue: [[NSNumber numberWithInt: [m_appController numCPUs]] stringValue] forKey: @"num_cpus"];
 
     [env setValue: self.inputFileInfo.videoCodec forKey: @"input_video_codec"];
 

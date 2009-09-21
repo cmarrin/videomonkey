@@ -13,6 +13,9 @@
 #import "MoviePanelController.h"
 #import "Transcoder.h"
 
+#import <sys/types.h>
+#import <sys/sysctl.h>
+
 @implementation MyPathCell
 -(void)setURL:(NSURL *)url
 {
@@ -30,6 +33,7 @@
 @synthesize deviceController = m_deviceController;
 @synthesize fileInfoPanelController = m_fileInfoPanelController;
 @synthesize limitParams = m_limitParams;
+@synthesize numCPUs = m_numCPUs;
 
 -(double) currentTime
 {
@@ -107,8 +111,15 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
     m_savePath = [[[NSUserDefaultsController sharedUserDefaultsController] values] valueForKey:@"saveToLocation"];
     [m_savePathControl setURL: [NSURL fileURLWithPath:m_savePath ? m_savePath : @""]];
 
-
     m_limitParams = [[[[NSUserDefaultsController sharedUserDefaultsController] values] valueForKey:@"limitOutputParams"] boolValue];
+
+    // get the number of CPUs
+    size_t size = sizeof(m_numCPUs);
+    m_numCPUs = 2;
+    if (sysctlbyname("hw.ncpu", &m_numCPUs, &size, NULL, 0))
+        m_numCPUs = 2;
+    else if (m_numCPUs < 1)
+        m_numCPUs = 2;
 }
 
 // Main Encoding Functions
