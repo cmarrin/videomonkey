@@ -23,6 +23,8 @@
     int m_extraFrameHeight;
     NSTimeInterval m_selectionStart;
     NSTimeInterval m_selectionEnd;
+    
+    NSMutableDictionary* m_currentTimeDictionary;
 }
 
 -(IBAction)startSelection:(id)sender;

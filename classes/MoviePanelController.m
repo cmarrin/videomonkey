@@ -25,6 +25,8 @@
     m_selectionStart = -1;
     m_selectionEnd = -1;
     
+    m_currentTimeDictionary = [[NSMutableDictionary alloc] init];
+    
     //QTTimeRange range = QTMakeTimeRange(QTMakeTimeWithTimeInterval(5), QTMakeTimeWithTimeInterval(10));
     //[[m_movieView movie] setSelection: range];
     
@@ -67,13 +69,49 @@
 {
 }
 
+-(void) saveCurrentTime
+{
+    if (!m_filename)
+        return;
+        
+    BOOL isPaused = [[m_movieView movie] rate] == 0;
+        
+    [m_movieView pause:self];
+    NSTimeInterval currentTime = [self currentMovieTime];
+    
+    // negative currentTime means we are paused
+    if (isPaused && currentTime > 0)
+        currentTime = -currentTime;
+        
+    [m_currentTimeDictionary setValue:[NSNumber numberWithDouble:currentTime] forKey:m_filename];
+}
+
 -(void) setMovie:(NSString*) filename
 {
     if ([filename isEqualToString:m_filename] && m_movieIsSet)
         return;
     
+    [self saveCurrentTime];
+    
     [m_filename release];
     m_filename = [filename retain];
+    
+    // add it to the dictionary if needed
+    NSNumber* ct = nil;
+    if (m_filename) {
+        ct = [m_currentTimeDictionary valueForKey:filename];
+        if (!ct) {
+            ct = [NSNumber numberWithDouble:0];
+            [m_currentTimeDictionary setValue:ct forKey:m_filename];
+        }
+    }
+    
+    NSTimeInterval currentTime = ct ? [ct doubleValue] : 0;
+    BOOL isPaused = currentTime < 0;
+    if (isPaused)
+        currentTime = -currentTime;
+    if (currentTime == 0)
+        isPaused = YES;
 
     if (m_isVisible) {
         if (m_filename && ![QTMovie canInitWithFile: filename]) {
@@ -87,6 +125,9 @@
             if (m_filename) {
                 QTMovie* movie = [QTMovie movieWithFile:filename error:nil];
                 [m_movieView setMovie:movie];
+                [movie setCurrentTime: QTMakeTimeWithTimeInterval(currentTime)];
+                if (!isPaused)
+                    [movie setRate:1];
                 
                 // set the aspect ratio of its window
                 NSSize size = [[[m_movieView window] contentView] frame].size;
@@ -135,6 +176,7 @@
 - (void)windowWillClose:(NSNotification *)notification
 {
     [self setVisible:NO];
+    [self saveCurrentTime];
 }
 
 - (void)windowDidBecomeKey:(NSNotification *)notification
