@@ -11,6 +11,7 @@
 #define MAX_CHECKBOXES 4
 #define MAX_MENUS 4
 #define MAX_RADIOS 4
+#define MAX_POPUPS 2
 
 @class DeviceController;
 @class JavaScriptContext;
@@ -21,13 +22,13 @@
     IBOutlet NSTextField* m_buttonLabel0;
     IBOutlet NSButton* m_button1;
     IBOutlet NSTextField* m_buttonLabel1;
-    IBOutlet NSButton* m_button2;           // menu 0
+    IBOutlet NSButton* m_button2;          
     IBOutlet NSTextField* m_buttonLabel2;
-    IBOutlet NSButton* m_button3;           // menu 1
-    IBOutlet NSTextField* m_buttonLabel3;
+    IBOutlet NSPopUpButton* m_menu;
+    IBOutlet NSTextField* m_menuLabel;
     
     IBOutlet NSMatrix* m_radio;
-    IBOutlet NSTextField* m_radioLabel0;
+    IBOutlet NSTextField* m_radioLabel;
     
     IBOutlet NSSlider* m_slider;
     IBOutlet NSTextField* m_sliderLabel1;
@@ -57,8 +58,7 @@
 @end
 
 #define DT_NO_MENUS @"nomenus"
-#define DT_RADIO_2_CHECK @"radio2check"
-#define DT_2_MENU_2_CHECK @"2menu2check"
+#define DT_RADIO_MENU @"radiomenu"
 #define DT_DVD @"dvd"
 
 @interface QualityStop : NSObject {

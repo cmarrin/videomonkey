@@ -81,14 +81,8 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
 {
     self = [super init];
     m_fileList = [[NSMutableArray alloc] init];
-	
-#if defined( __LP64__ )
-	m_applicationIcon = [[NSImage alloc] initWithContentsOfFile:[[NSBundle mainBundle] pathForImageResource:@"VideoMonkey.icns"]];
-#else
-	m_applicationIcon = [[NSImage alloc] initWithContentsOfFile:[[NSBundle mainBundle] pathForImageResource:@"VideoMonkey.icns"]];
-#endif
-	if( m_applicationIcon != nil )
-		[NSApp setApplicationIconImage:m_applicationIcon];
+    
+    m_applicationIcon = [[NSApplication sharedApplication] applicationIconImage];
 	
     return self;
 }

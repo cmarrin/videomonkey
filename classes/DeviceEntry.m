@@ -98,44 +98,57 @@ static void setButton(NSButton* button, MyButton* item)
     int size = [checkboxes count];
     setButton(m_button0, (size > 0) ? ((MyButton*) [checkboxes objectAtIndex:0]) : nil);
     setButton(m_button1, (size > 1) ? ((MyButton*) [checkboxes objectAtIndex:1]) : nil);
+	setButton(m_button2, (size > 2) ? ((MyButton*) [checkboxes objectAtIndex:2]) : nil);
 }
 
 -(void) setMenus: (NSArray*) menus
 {
     int size = [menus count];
     
-    if (m_radio) {
-        if (size > 0) {
-            Menu* menu = (Menu*) [menus objectAtIndex:0];
+    // menu 0 is the radio (with 2 choices) and menu 1 is the menu
+    if (m_radio && size > 0 && [menus objectAtIndex:0]) {
+        Menu* menu = (Menu*) [menus objectAtIndex:0];
             
-            [m_radioLabel0 setHidden:NO];
-            [m_radioLabel0 setStringValue:  [menu title]];
-            [m_radio setHidden:NO];
+        [m_radioLabel setHidden:NO];
+        [m_radioLabel setStringValue:[menu title]];
+        [m_radio setHidden:NO];
             
-            NSArray* itemTitles = [menu itemTitles];
-            [m_radio renewRows:[itemTitles count] columns:1];
-            for (int i = 0; i < [itemTitles count]; ++i) {
-                NSButtonCell* cell = (NSButtonCell*) [m_radio cellAtRow:i column:0];
-                [cell setTitle:[itemTitles objectAtIndex:i]];
-            }
-        }
-        else {
-            [m_radioLabel0 setHidden:YES];
-            [m_radio setHidden:YES];
+        NSArray* itemTitles = [menu itemTitles];
+        [m_radio renewRows:[itemTitles count] columns:1];
+        for (int i = 0; i < [itemTitles count]; ++i) {
+            NSButtonCell* cell = (NSButtonCell*) [m_radio cellAtRow:i column:0];
+            [cell setTitle:[itemTitles objectAtIndex:i]];
         }
     }
     else {
-        // handle menus
-        setButton(m_button2, (size > 0) ? ((MyButton*) [menus objectAtIndex:0]) : nil);
-        setButton(m_button3, (size > 1) ? ((MyButton*) [menus objectAtIndex:1]) : nil);
-        
-        // FIXME: add items
+        [m_radioLabel setHidden:YES];
+        [m_radio setHidden:YES];
     }
+    
+    if (m_menu && size > 1 && [menus objectAtIndex:1]) {
+        // handle menus
+        Menu* menu = (Menu*) [menus objectAtIndex:1];
+        [m_menuLabel setHidden:NO];
+        [m_menuLabel setStringValue:[menu title]];
+        [m_menu setHidden:NO];
+
+        NSArray* itemTitles = [menu itemTitles];
+        [m_menu removeAllItems];
+        for (int i = 0; i < [itemTitles count]; ++i)
+            [m_menu insertItemWithTitle:[itemTitles objectAtIndex:i] atIndex:i];
+            
+        [m_menu sizeToFit];
+    }
+    else {
+        [m_menuLabel setHidden:YES];
+        [m_menu setHidden:YES];
+    }	
 }
 
 -(void) setQuality: (NSArray*) qualityStops
 {
     // We can draw a slider with 2, 3, or 5 tick marks. 
+	// If its 1 we keep it but disable it. I think it looks cleaner.
     // If we see any other number in the array we will turn off the quality slider
     [m_slider setHidden:NO];
     [m_sliderLabel1 setHidden:NO];
@@ -143,8 +156,16 @@ static void setButton(NSButton* button, MyButton* item)
     [m_sliderLabel3 setHidden:NO];
     [m_sliderLabel4 setHidden:NO];
     [m_sliderLabel5 setHidden:NO];
-    
-    if ([qualityStops count] == 2) {
+	
+	if([qualityStops count] == 1) {
+		[m_slider setEnabled:NO];
+		[m_sliderLabel1 setEnabled:NO];
+		[m_sliderLabel2 setEnabled:NO];
+		[m_sliderLabel3 setEnabled:NO];
+		[m_sliderLabel4 setEnabled:NO];
+		[m_sliderLabel5 setEnabled:NO];
+	}
+    else if ([qualityStops count] == 2) {
         [m_slider setNumberOfTickMarks:2];
         [m_sliderLabel1 setStringValue:[(QualityStop*) [qualityStops objectAtIndex:0] title]];
         [m_sliderLabel2 setHidden:YES];
@@ -174,7 +195,7 @@ static void setButton(NSButton* button, MyButton* item)
 
 -(int) checkboxState:(int) index
 {
-    NSButton* button = (index == 0) ? m_button0 : ((index == 1) ? m_button1 : nil);
+    NSButton* button = (index == 0) ? m_button0 : (index == 1) ? m_button1 : ((index == 2) ? m_button2 : nil);
     
     // return 1 if button is one, 0 if it is off, or -1 if it is hidden
     return button ? ([button isHidden] ? -1 : (([button state] == NSOnState) ? 1 : 0)) : -1;
@@ -186,7 +207,7 @@ static void setButton(NSButton* button, MyButton* item)
         // return -1 if radio is hidden or index of selected item
         return [m_radio isHidden] ? -1 : [m_radio selectedRow];
         
-    NSPopUpButton* button = (NSPopUpButton*) ((index == 0) ? m_button2 : ((index == 1) ? m_button3 : nil));
+    NSPopUpButton* button = (NSPopUpButton*) (index == 0) ? m_menu : nil;
     
     // return -1 if button is hidden or index of selected item
     return button ? ([button isHidden] ? -1 : [button indexOfSelectedItem]) : -1;
@@ -413,9 +434,10 @@ static void setButton(NSButton* button, MyButton* item)
         [m_qualityStops addObject:[QualityStop qualityStopWithElement: element]];
     }
     
-    // The only legal number of quality stops is 0, 2, 3, and 5
+    // The only legal number of quality stops is 0, 1, 2, 3, and 5
+	// 1 is Disabled
     int count = [m_qualityStops count];
-    if (count != 2 && count != 3 && count != 5)
+    if (count != 1 && count != 2 && count != 3 && count != 5)
         [m_qualityStops removeAllObjects];
 }
 
@@ -486,14 +508,12 @@ static void setButton(NSButton* button, MyButton* item)
     
     // handle menus
     [self parseMenus:[element elementsForName:@"menu"]];
-    
+	
     // Set the device tab enum
     if ([m_menus count] == 0)
         m_deviceTabName = DT_NO_MENUS;
-    else if ([m_menus count] == 1 && [[(Menu*) [m_menus objectAtIndex:0] itemTitles] count] <= 3)
-        m_deviceTabName = DT_RADIO_2_CHECK;
     else
-        m_deviceTabName = DT_2_MENU_2_CHECK;
+        m_deviceTabName = DT_RADIO_MENU;
     
     return self;
 }
@@ -656,7 +676,7 @@ static void setButton(NSButton* button, MyButton* item)
         if (state >= 0)
             [context addParams: (NSDictionary*) [[menu itemParams] objectAtIndex:state]];
         i++;
-    }    
+    }
 }
 
 -(void) evaluateScript: (JavaScriptContext*) context performanceIndex:(int) perfIndex
@@ -688,7 +708,7 @@ static void setButton(NSButton* button, MyButton* item)
             [context evaluateJavaScript: (NSString*)[[menu itemScripts] objectAtIndex:state]];
         i++;
     }
-
+	
     // Evaluate global script
     [context evaluateJavaScript:m_script];
 }
