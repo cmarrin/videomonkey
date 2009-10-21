@@ -81,6 +81,15 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
 {
     self = [super init];
     m_fileList = [[NSMutableArray alloc] init];
+	
+#if defined( __LP64__ )
+	m_applicationIcon = [[NSImage alloc] initWithContentsOfFile:[[NSBundle mainBundle] pathForImageResource:@"VideoMonkey.icns"]];
+#else
+	m_applicationIcon = [[NSImage alloc] initWithContentsOfFile:[[NSBundle mainBundle] pathForImageResource:@"VideoMonkey.icns"]];
+#endif
+	if( m_applicationIcon != nil )
+		[NSApp setApplicationIconImage:m_applicationIcon];
+	
     return self;
 }
 
@@ -224,6 +233,7 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
         [m_totalProgressBar startAnimation:self];
         [m_progressText setStringValue:@"Press start to encode"];
         [m_fileNumberText setStringValue:@""];
+		[self UpdateDockIcon:0.0];
         return;
     }
     
@@ -257,6 +267,7 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
         overallProgress *= m_currentEncodedFileSize / m_totalEncodedFileSize;
         overallProgress += m_finishedEncodedFileSize / m_totalEncodedFileSize;
         [m_totalProgressBar setDoubleValue: overallProgress];
+		[self UpdateDockIcon:(float)progress];
         
         if (!timeRemainingString) {
             // compute time remaining
@@ -322,6 +333,79 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
     [m_progressText setStringValue:@""];
     [m_fileListController reloadData];
     [self startNextEncode];
+}
+
+// Icon Progress bar
+- (void) UpdateDockIcon: (float) progress
+{
+    NSData * tiff;
+    NSBitmapImageRep * bmp;
+    uint32_t * pen;
+    uint32_t black = htonl( 0x000000FF );
+    uint32_t blue   = htonl( 0x4682B4FF );
+    uint32_t white = htonl( 0xFFFFFFFF );
+    int row_start, row_end;
+    int i, j;
+	
+    if( progress <= 0 || progress >= 1 )
+    {
+        [NSApp setApplicationIconImage: m_applicationIcon];
+        return;
+    }
+	
+    /* Get it in a raw bitmap form */
+    tiff = [m_applicationIcon TIFFRepresentationUsingCompression:
+            NSTIFFCompressionNone factor: 1.0];
+    bmp = [NSBitmapImageRep imageRepWithData: tiff];
+    
+    /* Draw the progression bar */
+    /* It's pretty simple (ugly?) now, but I'm no designer */
+	
+    row_start = 3 * (int) [bmp size].height / 4;
+    row_end   = 7 * (int) [bmp size].height / 8;
+	
+    for( i = row_start; i < row_start + 2; i++ )
+    {
+        pen = (uint32_t *) ( [bmp bitmapData] + i * [bmp bytesPerRow] );
+        for( j = 0; j < (int) [bmp size].width; j++ )
+        {
+            pen[j] = black;
+        }
+    }
+    for( i = row_start + 2; i < row_end - 2; i++ )
+    {
+        pen = (uint32_t *) ( [bmp bitmapData] + i * [bmp bytesPerRow] );
+        pen[0] = black;
+        pen[1] = black;
+        for( j = 2; j < (int) [bmp size].width - 2; j++ )
+        {
+            if( j < 2 + (int) ( ( [bmp size].width - 4.0 ) * progress ) )
+            {
+                pen[j] = blue;
+            }
+            else
+            {
+                pen[j] = white;
+            }
+        }
+        pen[j]   = black;
+        pen[j+1] = black;
+    }
+    for( i = row_end - 2; i < row_end; i++ )
+    {
+        pen = (uint32_t *) ( [bmp bitmapData] + i * [bmp bytesPerRow] );
+        for( j = 0; j < (int) [bmp size].width; j++ )
+        {
+            pen[j] = black;
+        }
+    }
+	
+    /* Now update the dock icon */
+    tiff = [bmp TIFFRepresentationUsingCompression:
+            NSTIFFCompressionNone factor: 1.0];
+    NSImage* icon = [[NSImage alloc] initWithData: tiff];
+    [NSApp setApplicationIconImage: icon];
+    [icon release];
 }
 
 // Toolbar delegate method

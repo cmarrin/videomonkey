@@ -43,6 +43,8 @@ typedef enum { RS_STOPPED, RS_RUNNING, RS_PAUSED } RunStateType;
     IBOutlet NSButton* m_addToMediaLibraryButton;
     IBOutlet NSButton* m_deleteFromDestinationButton;
     IBOutlet NSPathControl* m_savePathControl;
+	
+	NSImage* m_applicationIcon;
     
     NSString* m_savePath;
     int m_currentEncoding;
@@ -95,6 +97,7 @@ typedef enum { RS_STOPPED, RS_RUNNING, RS_PAUSED } RunStateType;
 
 -(void) setProgressFor: (Transcoder*) transcoder to: (double) progress;
 -(void) encodeFinished: (Transcoder*) transcoder withStatus:(int) status;
+-(void) UpdateDockIcon: (float) progress;
 
 -(void) log: (NSString*) format, ...;
 
