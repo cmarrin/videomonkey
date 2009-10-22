@@ -1,0 +1,44 @@
+Current Video Params
+
+ffmpeg_vpre:                "fastest", "default", "normal", "hq"
+ffmpeg_vpre_pass1:          "normal-pass1", "hq-pass1"
+ffmpeg_profile:             "-bf 0 -coder 0 -flags2 -wpred-dct8x8"
+ffmpeg_vcodec:              "libx264" ("H.264"), "mpeg4" ("mpeg4"), "dvvideo", "mpeg1video", "mpeg2video", "wmv1", 
+output_video_bitrate:       <number>
+output_video_width:         <number>
+output_video_height:        <number>
+output_video_frame_rate:    <number>
+ffmpeg_acodec:              "libfaac", "pcm_s16le", "libmp3lame", "wmav2", "mp2", "ac3"
+output_audio_bitrate:       <number>
+output_audio_sample_rate:   <number>
+output_audio_channels:      <number>
+num_cpus:                   <number>
+
+pix_fmt:                    "-pix_fmt yuv411p", "-pix_fmt yuv420p"
+forceFormat:                "-f mov", "-f psp"
+aspect:                     "-aspect 16:9", "-aspect 3:2"
+qmin:                       "-qmin "+<number>, "-bf 2", "-qmin 5 -bf 2", "-qmin "+<number>+" -bf 2"
+padding:                    "-padleft 56 -padright 56", "-padtop 32 -padbottom 32", "-padleft 160 -padright 160", 
+                            "-padleft 80 -padright 96", "-padleft 240 -padright 240", "-padleft 128 -padright 136"
+                            "-padtop 32 -padbottom 32", "-padtop 48 -padbottom 48", "-padtop 64 -padbottom 64"
+                            "-padtop 96 -padbottom 112", "-padtop 112 -padbottom 112", "-padtop 64 -padbottom 48"
+gop_size:                   "-g 300", "-g 200", "-g 50", "-g 15"
+extras:                     "-sc_threshold 40 -partitions partp4x4 -rc_eq 'blurCplx^(1-qComp)' -refs 1 -coder 1 -level 21 -qmax 51 -bf 1",
+                            "-maxrate 24k -bufsize 5k -g 30", "-maxrate 34k -bufsize 5k -g 30",
+                            "-maxrate "+<number>+" -bufsize "+<number>,
+                            "-bf 1 -level 41 -sc_threshold 40 -partitions partp4x4 -rc_eq 'blurCplx^(1-qComp)' -refs 3  -qmax 51"
+thumbnail:                  "-an -s 72x54 -ss 50 -vframes 1 -f image2"
+dashv:                      "-vcodec"
+dashtarget:                 "-target"
+target:                     "ntsc-vcd", "pal-vcd"
+fps:                        "10", "ntsc", "pal"
+tag:                        "-vtag DX50"
+dashb:                      "-b"
+k56:                        "-maxrate 40k -bufsize 5k -g ntsc", "-maxrate 24k -bufsize 5k -g 30"
+
+-async 50
+
+In PSP section:
+    if(params.input_video_aspect >= "1.2" && params.input_video_aspect <= "1.5") {
+    
+That can't be right!
