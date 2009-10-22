@@ -1,9 +1,13 @@
+The purpose of this file is to keep track of all the ffmpeg params. This will serve two purposes: it will allow
+me to organize the params so they make more sense and are easier to maintain, and it will allow me to come up
+with a rational set of advanced settings
+
 Current Video Params
 
 ffmpeg_vpre:                "fastest", "default", "normal", "hq"
 ffmpeg_vpre_pass1:          "normal-pass1", "hq-pass1"
 ffmpeg_profile:             "-bf 0 -coder 0 -flags2 -wpred-dct8x8"
-ffmpeg_vcodec:              "libx264" ("H.264"), "mpeg4" ("mpeg4"), "dvvideo", "mpeg1video", "mpeg2video", "wmv1", 
+ffmpeg_vcodec:              "libx264", "mpeg4", "dvvideo", "mpeg1video", "mpeg2video", "wmv1", 
 output_video_bitrate:       <number>
 output_video_width:         <number>
 output_video_height:        <number>
@@ -13,6 +17,12 @@ output_audio_bitrate:       <number>
 output_audio_sample_rate:   <number>
 output_audio_channels:      <number>
 num_cpus:                   <number>
+
+output_format:              "MPEG-4", "DV"
+output_video_codec:         "H.264", "mpeg4", "DV", "H264", "MPEG-4", "MPEG-2", "MPEG4", "WMV", "Dont Worry About It!"
+output_video_profile:       "baseline", "main"
+output_video_level:         <number>
+output_audio_codec:         "AAC", "PCM", "MP3", "WMA", "MP2", "AC3"
 
 pix_fmt:                    "-pix_fmt yuv411p", "-pix_fmt yuv420p"
 forceFormat:                "-f mov", "-f psp"
@@ -42,3 +52,9 @@ In PSP section:
     if(params.input_video_aspect >= "1.2" && params.input_video_aspect <= "1.5") {
     
 That can't be right!
+
+    params.output_video_codec = params.top_crop
+    
+but top_crop is never defined
+
+There are many places where output_format, etc., are not set.

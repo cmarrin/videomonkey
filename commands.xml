@@ -411,20 +411,17 @@ A property name is anything from the character after the '$' to the next whitesp
                     }
                 }
 
-                ///I took this stuff ou. I think it was screwing with stuff later on.//
-                // set endoder
                 params.ffmpeg_vcodec = bool(params.h264) ? "libx264" : "mpeg4";
                 params.output_video_codec = bool(params.h264) ? "H.264" : "mpeg4"
                 params.output_audio_codec = "AAC";
                 
                 
-                ///I took the profile out because i was basing the formats from what visualhub did but it should be fine to keep them in.
                 // adjust vpre for baseline if needed
                 // FIXME: For some reason, creating anything other than baseline does not work
                 // on Apple TV. This seems to have something to do with VFR of the input source?
                 // For now always use baseline
                 //if (title != "Apple TV")
-                    params.ffmpeg_profile = "-bf 0 -coder 0 -flags2 -wpred-dct8x8";
+                params.ffmpeg_profile = "-bf 0 -coder 0 -flags2 -wpred-dct8x8";
             }
             
             audio("high");
@@ -927,6 +924,7 @@ A property name is anything from the character after the '$' to the next whitesp
                     // set endoder
                     
                     params.ffmpeg_vcodec = "dvvideo";
+                    params.output_video_codec = "DV"
                         
                     // The level is not necessarily accurate
                     params.output_video_profile = (title != "Apple TV") ? "baseline" : "main";
@@ -1141,9 +1139,6 @@ A property name is anything from the character after the '$' to the next whitesp
                 <command id="normal_single_pass">
                     $ffmpeg_normal $ffmpeg_options $ffmpeg_single_pass_options "$output_file"
                 </command>
-                
-                
-                
                 <command id="thumbnail">
                     -an -s 72x54 -ss 50 -vframes 1 -f image2 
                 </command>
@@ -1153,11 +1148,12 @@ A property name is anything from the character after the '$' to the next whitesp
                 <script>
                     <![CDATA[
     
-                    // At this point, we know what 2 quality stops we are between (params.quality_stop and params.quality_stop+1)
-                    // and we know what percentage of the way between the two we are (params.quality). We also which device we have 
-                    // selected (params.title), whether we are doing h.264 or mpeg4 (params.h264), and whether we want to optimize 
-                    // for TV or iPod (params.for_tv). From this we need to compute params.frame_width, params.frame_height,
-                    // params.audio_quality and params.output_video_bitrate.
+                    // At this point, we know what 2 quality stops we are between (params.quality_stop 
+                    // and params.quality_stop+1) and we know what percentage of the way between the 
+                    // two we are (params.quality). We also which device we have selected (params.title), 
+                    // whether we are doing h.264 or mpeg4 (params.h264), and whether we want to optimize 
+                    // for TV or iPod (params.for_tv). From this we need to compute params.frame_width,
+                    // params.frame_height, params.audio_quality and params.output_video_bitrate.
                     
                     // We support a number of standard frame sizes. After adjusting these sizes according to the flags
                     // (h264, forTV), we determine the actual frame size using these as maximum values, taking
