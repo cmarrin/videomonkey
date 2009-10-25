@@ -82,7 +82,7 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
     self = [super init];
     m_fileList = [[NSMutableArray alloc] init];
     
-    m_applicationIcon = [[NSApplication sharedApplication] applicationIconImage];
+    m_applicationIcon = [[[NSApplication sharedApplication] applicationIconImage] copy];
 	
     return self;
 }
@@ -129,8 +129,10 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
 -(void) startNextEncode
 {
     m_currentEncodingStartTime = [self currentTime];
-    m_numInitialTotalTimeEstimates = 0;
-    m_initialTotalTimeEstimaes = 0;
+    m_numTotalTimeEstimates = 0;
+    m_totalTimeEstimaes = 0;
+    m_lastMinutesRemaining = -1;
+    m_firstTimeEstimate = YES;
     
     if (!m_isTerminated) {
         if (++m_currentEncoding < [m_fileList count]) {
@@ -227,7 +229,7 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
         [m_totalProgressBar startAnimation:self];
         [m_progressText setStringValue:@"Press start to encode"];
         [m_fileNumberText setStringValue:@""];
-		[self UpdateDockIcon:0.0];
+		[self updateDockIcon:0.0];
         return;
     }
     
@@ -249,6 +251,7 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
     if (progress == 0 || progress == 1) {
         [m_totalProgressBar setIndeterminate:YES];
         [m_totalProgressBar startAnimation:self];
+		[self updateDockIcon:0];
     }
     else {
         [m_totalProgressBar stopAnimation:self];
@@ -261,56 +264,35 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
         overallProgress *= m_currentEncodedFileSize / m_totalEncodedFileSize;
         overallProgress += m_finishedEncodedFileSize / m_totalEncodedFileSize;
         [m_totalProgressBar setDoubleValue: overallProgress];
-		[self UpdateDockIcon:(float)progress];
+		[self updateDockIcon:(float)progress];
         
         if (!timeRemainingString) {
             // compute time remaining
             double estimatedTotalTime = timeSoFar / progress;
+            m_totalTimeEstimaes += estimatedTotalTime;
             
-            // if we are just starting, get an initial total time estimate
-            if (m_numInitialTotalTimeEstimates <= NUM_INITIAL_TOTAL_TIME_ESTIMATES) {
-                if (m_numInitialTotalTimeEstimates++ < NUM_INITIAL_TOTAL_TIME_ESTIMATES) {
-                    m_initialTotalTimeEstimaes += estimatedTotalTime;
-                    estimatedTotalTime = -1;
-                }
-                else {
-                    // we have our first estimate, save it
-                    m_savedTotalTimeEstimatesIndex = 0;
-                    for (int i = 0; i < NUM_SAVED_TOTAL_TIME_ESTIMATES; ++i)
-                        m_savedTotalTimeEstimates[i] = -1;
-                    estimatedTotalTime = m_initialTotalTimeEstimaes / NUM_INITIAL_TOTAL_TIME_ESTIMATES;
-                }
-            }
+            if (m_numTotalTimeEstimates++ >= NUM_TOTAL_TIME_ESTIMATES) {
+                m_numTotalTimeEstimates = 0;
+                estimatedTotalTime = m_totalTimeEstimaes / NUM_TOTAL_TIME_ESTIMATES;
+                m_totalTimeEstimaes = 0;
                 
-            if (estimatedTotalTime > 0) {
-                // compute average estimated time
-                m_savedTotalTimeEstimates[m_savedTotalTimeEstimatesIndex++] = estimatedTotalTime;
-                if (m_savedTotalTimeEstimatesIndex >= NUM_SAVED_TOTAL_TIME_ESTIMATES)
-                    m_savedTotalTimeEstimatesIndex = 0;
-                
-                double total = 0;
-                int num = 0;
-                for (int i = 0; i < NUM_SAVED_TOTAL_TIME_ESTIMATES; ++i) {
-                    if (m_savedTotalTimeEstimates[i] > 0) {
-                        total += m_savedTotalTimeEstimates[i];
-                        num++;
-                    }
-                }
-                
-                estimatedTotalTime = total / num;
-                int minutesRemaining = (int) floor((estimatedTotalTime - timeSoFar) / 60 + 0.5);
-                
-                if (minutesRemaining > 0) {
-                    if (minutesRemaining == 1)
-                        timeRemainingString = @"About a minute remaining for";
-                    else
-                        timeRemainingString = [NSString stringWithFormat:@"About %d minutes remaining for", minutesRemaining];
-                }
+                // If this is the first time estimate, ignore it
+                if (m_firstTimeEstimate)
+                    m_firstTimeEstimate = NO;
                 else
-                    timeRemainingString = @"Less than a minute remaining for";
+                    m_lastMinutesRemaining = (int) floor((estimatedTotalTime - timeSoFar) / 60 + 0.5);
+            }
+            
+            if (m_lastMinutesRemaining < 0)
+                timeRemainingString = @"Estimating time remaining for";
+            else if (m_lastMinutesRemaining > 0) {
+                if (m_lastMinutesRemaining == 1)
+                    timeRemainingString = @"About a minute remaining for";
+                else
+                    timeRemainingString = [NSString stringWithFormat:@"About %d minutes remaining for", m_lastMinutesRemaining];
             }
             else
-                timeRemainingString = @"Estimating time remaining for";
+                timeRemainingString = @"Less than a minute remaining for";
         }
     }
     
@@ -330,7 +312,7 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
 }
 
 // Icon Progress bar
-- (void) UpdateDockIcon: (float) progress
+- (void) updateDockIcon: (float) progress
 {
     NSData * tiff;
     NSBitmapImageRep * bmp;

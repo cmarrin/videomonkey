@@ -19,8 +19,7 @@ typedef enum { RS_STOPPED, RS_RUNNING, RS_PAUSED } RunStateType;
 
 // Progress Special Values
 #define DELAY_FOR_PROGRESS_RESPONSE 5   // in seconds
-#define NUM_INITIAL_TOTAL_TIME_ESTIMATES 10
-#define NUM_SAVED_TOTAL_TIME_ESTIMATES 10
+#define NUM_TOTAL_TIME_ESTIMATES 20
 
 // Workaround to get an event when a file is selected from NSPathCell
 @interface MyPathCell : NSPathCell { } - (void)setURL:(NSURL *)url; @end
@@ -62,11 +61,11 @@ typedef enum { RS_STOPPED, RS_RUNNING, RS_PAUSED } RunStateType;
     NSArray* m_fileList;
 
     // encoding progress displays
+    BOOL m_firstTimeEstimate;
     double m_currentEncodingStartTime;
-    int m_numInitialTotalTimeEstimates;
-    double m_initialTotalTimeEstimaes;
-    int m_savedTotalTimeEstimatesIndex;
-    double m_savedTotalTimeEstimates[NUM_SAVED_TOTAL_TIME_ESTIMATES];
+    int m_numTotalTimeEstimates;
+    double m_totalTimeEstimaes;
+    int m_lastMinutesRemaining;
     double m_totalEncodedFileSize;
     double m_currentEncodedFileSize;
     double m_finishedEncodedFileSize;
@@ -97,7 +96,7 @@ typedef enum { RS_STOPPED, RS_RUNNING, RS_PAUSED } RunStateType;
 
 -(void) setProgressFor: (Transcoder*) transcoder to: (double) progress;
 -(void) encodeFinished: (Transcoder*) transcoder withStatus:(int) status;
--(void) UpdateDockIcon: (float) progress;
+-(void) updateDockIcon: (float) progress;
 
 -(void) log: (NSString*) format, ...;
 
