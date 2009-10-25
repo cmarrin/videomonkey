@@ -84,6 +84,8 @@
 
 static BOOL isValidInteger(NSString* s)
 {
+    if ([s length] == 0)
+        return false;
     return [[s stringByTrimmingCharactersInSet:[NSCharacterSet decimalDigitCharacterSet]] length] == 0;
 }
 
@@ -134,15 +136,11 @@ static BOOL isValidInteger(NSString* s)
         NSArray* seasonEpisode = [item componentsSeparatedByString:@"x"];
         if ([seasonEpisode count] == 2) {
             // see if this is of the form <number>x<number>
-            NSRange range = [[seasonEpisode objectAtIndex:0] rangeOfCharacterFromSet:[[NSCharacterSet decimalDigitCharacterSet] invertedSet]];
-            if (range.location == NSNotFound) {
-                range = [[seasonEpisode objectAtIndex:1] rangeOfCharacterFromSet:[[NSCharacterSet decimalDigitCharacterSet] invertedSet]];
-                if (range.location == NSNotFound) {
-                    // we have a season/episode
-                    *season = [[seasonEpisode objectAtIndex:0] intValue];
-                    *episode = [[seasonEpisode objectAtIndex:1] intValue];
-                    continue;
-                }
+            if (isValidInteger([seasonEpisode objectAtIndex:0]) && isValidInteger([seasonEpisode objectAtIndex:1])) {
+                // we have a season/episode
+                *season = [[seasonEpisode objectAtIndex:0] intValue];
+                *episode = [[seasonEpisode objectAtIndex:1] intValue];
+                continue;
             }
         }
                 
