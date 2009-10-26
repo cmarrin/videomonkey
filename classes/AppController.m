@@ -162,47 +162,46 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
 
 - (IBAction)startEncode:(id)sender
 {
-    [self setProgressFor:nil to:0];
-    m_isTerminated = NO;
+    if (m_runState != RS_PAUSED) {
+        [self setProgressFor:nil to:0];
+        m_isTerminated = NO;
     
-    // reset the status for anything we're about to encode
-    m_numFilesToConvert = 0;
-    m_totalEncodedFileSize = 0;
-    m_finishedEncodedFileSize = 0;
-    m_currentEncodedFileSize = 0;
+        // reset the status for anything we're about to encode
+        m_numFilesToConvert = 0;
+        m_totalEncodedFileSize = 0;
+        m_finishedEncodedFileSize = 0;
+        m_currentEncodedFileSize = 0;
     
-    for (Transcoder* transcoder in m_fileList) {
-        if ([transcoder enabled]) {
-            m_numFilesToConvert++;
-            m_totalEncodedFileSize += transcoder.outputFileInfo.fileSize;
-            [transcoder resetStatus];
+        for (Transcoder* transcoder in m_fileList) {
+            if ([transcoder enabled]) {
+                m_numFilesToConvert++;
+                m_totalEncodedFileSize += transcoder.outputFileInfo.fileSize;
+                [transcoder resetStatus];
+            }
         }
-    }
     
-    if (!m_numFilesToConvert) {
-        NSBeginAlertSheet(@"No Files To Encode", nil, nil, nil, [[NSApplication sharedApplication] mainWindow], 
-                          nil, nil, nil, nil, 
-                          @"None of the files in the list are selected for encoding. Either "
-                          "select the check box on some files or drag more files into the list.");
-        return;
-    }
+        if (!m_numFilesToConvert) {
+            NSBeginAlertSheet(@"No Files To Encode", nil, nil, nil, [[NSApplication sharedApplication] mainWindow], 
+                            nil, nil, nil, nil, 
+                            @"None of the files in the list are selected for encoding. Either "
+                            "select the check box on some files or drag more files into the list.");
+            return;
+        }
     
-    m_fileConvertingIndex = -1;
-    m_someFilesFailed = NO;
+        m_fileConvertingIndex = -1;
+        m_someFilesFailed = NO;
 
-    [m_progressText setStringValue:@""];
-    [m_fileNumberText setStringValue:@""];
+        [m_progressText setStringValue:@""];
+        [m_fileNumberText setStringValue:@""];
 
-    if (m_runState == RS_PAUSED) {
-        [[m_fileList objectAtIndex: m_currentEncoding] resumeEncode];
-        m_runState = RS_RUNNING;
-    }
-    else {
         [self setOutputFileName];
         m_runState = RS_RUNNING;
-    
         m_currentEncoding = -1;
         [self startNextEncode];
+    }
+    else {
+        m_runState = RS_RUNNING;
+        [[m_fileList objectAtIndex: m_currentEncoding] resumeEncode];
     }
 }
 

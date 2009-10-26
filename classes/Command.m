@@ -70,7 +70,7 @@
 
 -(void) suspend
 {
-    if (!m_isPaused) {
+    if (!m_isPaused && [m_task isRunning]) {
         [m_task suspend];
         m_isPaused = YES;
     }
