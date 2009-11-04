@@ -382,18 +382,18 @@ static NSImage* getFileStatusImage(FileStatus status)
     self.outputFileInfo.videoFrameSize = frameSize;
     self.outputFileInfo.videoAspectRatio = (double) width / (double) height;
     
-    self.outputFileInfo.format = [[m_appController deviceController] paramForKey:@"output_format"];
+    self.outputFileInfo.format = [[m_appController deviceController] paramForKey:@"output_format_name"];
 
-    self.outputFileInfo.videoCodec = [[m_appController deviceController] paramForKey:@"output_video_codec"];
-    NSString* profile = [[m_appController deviceController] paramForKey:@"output_video_profile"];
-    int level = [[[m_appController deviceController] paramForKey:@"output_video_level"] intValue];
+    self.outputFileInfo.videoCodec = [[m_appController deviceController] paramForKey:@"output_video_codec_name"];
+    NSString* profile = [[m_appController deviceController] paramForKey:@"output_video_profile_name"];
+    int level = [[[m_appController deviceController] paramForKey:@"output_video_level_name"] intValue];
     self.outputFileInfo.videoProfile = [NSString stringWithFormat:@"%@@%d.%d", profile, level/10, level%10];
     self.outputFileInfo.videoFrameRate = [[[m_appController deviceController] paramForKey:@"output_video_frame_rate"] floatValue];
     self.outputFileInfo.videoBitrate = [[[m_appController deviceController] paramForKey:@"output_video_bitrate"] floatValue];
     
     m_audioQuality = [[m_appController deviceController] paramForKey:@"audio_quality"];
 
-    self.outputFileInfo.audioCodec = [[m_appController deviceController] paramForKey:@"output_audio_codec"];
+    self.outputFileInfo.audioCodec = [[m_appController deviceController] paramForKey:@"output_audio_codec_name"];
     self.outputFileInfo.audioBitrate = [[[m_appController deviceController] paramForKey:@"output_audio_bitrate"] floatValue];
     self.outputFileInfo.audioSampleRate = [[[m_appController deviceController] paramForKey:@"output_audio_sample_rate"] floatValue];
     self.outputFileInfo.audioChannels = [[[m_appController deviceController] paramForKey:@"output_audio_channels"] intValue];

@@ -122,16 +122,17 @@ output_video_width      Width, in pixels, of the output file
 output_video_height     Height, in pixels, of the output file
 audio_quality           A string indicating the audio quality of the output file (usually "low", "medium" or "high")
 output_video_bitrate    Approximate bitrate of the output video
-output_format           Format of the container
-output_video_codec      Video codec
-output_video_profile    Profile of the video
-output_video_level      Level of this video
+
+output_format_name      Displayed format of the container
+output_video_codec_name Displayed video codec
+output_video_profile_name Displayed profile of the video
+output_video_level_name Displayed level of this video
 output_video_frame_rate Framerate of the output file (actual frame rate in fps * 1000)
 
-output_audio_codec      Audio codec
-output_audio_bitrate
-output_audio_sample_rate
-output_audio_channels
+output_audio_codec_name Displayed audio codec
+output_audio_bitrate    Audio bitrate
+output_audio_sample_rate Sample rate of audio
+output_audio_channels   Number of channels of audio
 
 The recipe is used for the actual encoding, the others are used to update the file entries.
 
@@ -185,6 +186,36 @@ A property name is anything from the character after the '$' to the next whitesp
 
 <videomonkey>
     <default_device>
+        <command id="ffmpeg_normal"> $ffmpeg -threads $num_cpus -y -i "$input_file" </command>
+        <command id="yuv_to_ffmpeg_av"> $ffmpeg -threads $num_cpus -y -i - -i "$tmp_audio_file" </command>
+        <command id="yuv_to_ffmpeg_v"> $ffmpeg -threads $num_cpus -y -i - </command>
+        <command id="quicktime_av_single_pass">
+            $quicktime_to_yuv | $yuv_to_ffmpeg_av $ffmpeg_options $ffmpeg_single_pass_options "$output_file"
+        </command>
+        <command id="quicktime_av_pass1"> 
+            $quicktime_to_yuv | $yuv_to_ffmpeg_av $ffmpeg_options $ffmpeg_pass1_options "$output_file" 
+        </command>
+        <command id="quicktime_av_pass2">
+            $quicktime_to_yuv | $yuv_to_ffmpeg_av $ffmpeg_options $ffmpeg_pass2_options "$output_file"
+        </command>
+        <command id="quicktime_v_single_pass"> 
+            $quicktime_to_yuv | $yuv_to_ffmpeg_v $ffmpeg_options $ffmpeg_single_pass_options "$output_file"
+        </command>
+        <command id="quicktime_v_pass1">
+            $quicktime_to_yuv | $yuv_to_ffmpeg_v $ffmpeg_options $ffmpeg_pass1_options "$output_file"
+        </command>
+        <command id="quicktime_v_pass2">
+            $quicktime_to_yuv | $yuv_to_ffmpeg_v $ffmpeg_options $ffmpeg_pass2_options "$output_file"
+        </command>
+        <command id="normal_pass1">
+            $ffmpeg_normal $ffmpeg_options $ffmpeg_pass1_options "$output_file"
+        </command>
+        <command id="normal_pass2">
+            $ffmpeg_normal $ffmpeg_options $ffmpeg_pass2_options "$output_file"
+        </command>
+        <command id="normal_single_pass">
+            $ffmpeg_normal $ffmpeg_options $ffmpeg_single_pass_options "$output_file"
+        </command>
         <script>
             <![CDATA[
             
@@ -411,9 +442,9 @@ A property name is anything from the character after the '$' to the next whitesp
                     }
                 }
 
-                params.ffmpeg_vcodec = bool(params.h264) ? "libx264" : "mpeg4";
-                params.output_video_codec = bool(params.h264) ? "H.264" : "mpeg4"
-                params.output_audio_codec = "AAC";
+                //params.ffmpeg_vcodec = bool(params.h264) ? "libx264" : "mpeg4";
+                params.output_video_codec_name = bool(params.h264) ? "H.264" : "MPEG-4"
+                params.output_audio_codec_name = "AAC";
                 
                 
                 // adjust vpre for baseline if needed
@@ -510,36 +541,6 @@ A property name is anything from the character after the '$' to the next whitesp
                     $movtoy4m -f -w $input_video_width -h $input_video_height -F $(output_video_frame_rate) 
                         -a $(output_video_width):$(output_video_height) "$input_file" | $correct_yuv 
                 </command>
-                <command id="yuv_to_ffmpeg_av"> $ffmpeg -threads $num_cpus -y -i - -i "$tmp_audio_file" </command>
-                <command id="yuv_to_ffmpeg_v"> $ffmpeg -threads $num_cpus -y -i - </command>
-                <command id="ffmpeg_normal"> $ffmpeg -threads $num_cpus -y -i "$input_file" </command>
-                <command id="quicktime_av_single_pass">
-                    $quicktime_to_yuv | $yuv_to_ffmpeg_av $ffmpeg_options $ffmpeg_single_pass_options "$output_file"
-                </command>
-                <command id="quicktime_av_pass1"> 
-                    $quicktime_to_yuv | $yuv_to_ffmpeg_av $ffmpeg_options $ffmpeg_pass1_options "$output_file" 
-                </command>
-                <command id="quicktime_av_pass2">
-                    $quicktime_to_yuv | $yuv_to_ffmpeg_av $ffmpeg_options $ffmpeg_pass2_options "$output_file"
-                </command>
-                <command id="quicktime_v_single_pass"> 
-                    $quicktime_to_yuv | $yuv_to_ffmpeg_v $ffmpeg_options $ffmpeg_single_pass_options "$output_file"
-                </command>
-                <command id="quicktime_v_pass1">
-                    $quicktime_to_yuv | $yuv_to_ffmpeg_v $ffmpeg_options $ffmpeg_pass1_options "$output_file"
-                </command>
-                <command id="quicktime_v_pass2">
-                    $quicktime_to_yuv | $yuv_to_ffmpeg_v $ffmpeg_options $ffmpeg_pass2_options "$output_file"
-                </command>
-                <command id="normal_pass1">
-                    $ffmpeg_normal $ffmpeg_options $ffmpeg_pass1_options "$output_file"
-                </command>
-                <command id="normal_pass2">
-                    $ffmpeg_normal $ffmpeg_options $ffmpeg_pass2_options "$output_file"
-                </command>
-                <command id="normal_single_pass">
-                    $ffmpeg_normal $ffmpeg_options $ffmpeg_single_pass_options "$output_file"
-                </command>
                 <script>
                     <![CDATA[
     
@@ -555,7 +556,7 @@ A property name is anything from the character after the '$' to the next whitesp
                     // (h264, forTV), we determine the actual frame size using these as maximum values, taking
                     // into account aspect ratio.
                     
-                    params.output_format = "MPEG-4";
+                    params.output_format_name = "MPEG-4";
                     
                     var frameSizes = {
                         "tiny":  [  192,  144 ],
@@ -660,8 +661,8 @@ A property name is anything from the character after the '$' to the next whitesp
                     audio(audioQualityMap[title][qualityStop]);
                         
                     // The level is not necessarily accurate
-                    params.output_video_profile = (title != "Apple TV") ? "baseline" : "main";
-                    params.output_video_level = levelMap[title][qualityStop];
+                    params.output_video_profile_name = (title != "Apple TV") ? "baseline" : "main";
+                    params.output_video_level_name = levelMap[title][qualityStop];
 
                     // construct the recipe
                     if (     !bool(params.special_qt) && !bool(params.has_audio) && !bool(params.is_2_pass))
@@ -831,37 +832,7 @@ A property name is anything from the character after the '$' to the next whitesp
                     $movtoy4m -f -w $input_video_width -h $input_video_height -F $(output_video_frame_rate) 
                         -a $(output_video_width):$(output_video_height) "$input_file" | $correct_yuv 
                 </command>
-                <command id="yuv_to_ffmpeg_av"> $ffmpeg -y -i - -i "$tmp_audio_file" </command>
-                <command id="yuv_to_ffmpeg_v"> $ffmpeg -y -i - </command>
-                <command id="ffmpeg_normal"> $ffmpeg -y -i "$input_file" </command>
-                <command id="quicktime_av_single_pass">
-                    $quicktime_to_yuv | $yuv_to_ffmpeg_av $ffmpeg_options $ffmpeg_single_pass_options "$output_file"
-                </command>
-                <command id="quicktime_av_pass1"> 
-                    $quicktime_to_yuv | $yuv_to_ffmpeg_av $ffmpeg_options $ffmpeg_pass1_options "$output_file" 
-                </command>
-                <command id="quicktime_av_pass2">
-                    $quicktime_to_yuv | $yuv_to_ffmpeg_av $ffmpeg_options $ffmpeg_pass2_options "$output_file"
-                </command>
-                <command id="quicktime_v_single_pass"> 
-                    $quicktime_to_yuv | $yuv_to_ffmpeg_v $ffmpeg_options $ffmpeg_single_pass_options "$output_file"
-                </command>
-                <command id="quicktime_v_pass1">
-                    $quicktime_to_yuv | $yuv_to_ffmpeg_v $ffmpeg_options $ffmpeg_pass1_options "$output_file"
-                </command>
-                <command id="quicktime_v_pass2">
-                    $quicktime_to_yuv | $yuv_to_ffmpeg_v $ffmpeg_options $ffmpeg_pass2_options "$output_file"
-                </command>
-                <command id="normal_pass1">
-                    $ffmpeg_normal $ffmpeg_options $ffmpeg_pass1_options "$output_file"
-                </command>
-                <command id="normal_pass2">
-                    $ffmpeg_normal $ffmpeg_options $ffmpeg_pass2_options "$output_file"
-                </command>
-                <command id="normal_single_pass">
-                    $ffmpeg_normal $ffmpeg_options $ffmpeg_single_pass_options "$output_file"
-                </command>
-                <script>
+                 <script>
                     <![CDATA[
     
                     // At this point, we know what 2 quality stops we are between (params.quality_stop and params.quality_stop+1)
@@ -873,9 +844,6 @@ A property name is anything from the character after the '$' to the next whitesp
                     // We support a number of standard frame sizes. After adjusting these sizes according to the flags
                     // (h264, forTV), we determine the actual frame size using these as maximum values, taking
                     // into account aspect ratio.
-                    
-                    params.output_format = "DV";
-                    
                     var frameSizes = {
                         "tiny":  [  192,  144 ],
                         "small": [  320,  240 ],
@@ -924,11 +892,11 @@ A property name is anything from the character after the '$' to the next whitesp
                     // set endoder
                     
                     params.ffmpeg_vcodec = "dvvideo";
-                    params.output_video_codec = "DV"
+                    params.output_video_codec_name = "DV"
                         
                     // The level is not necessarily accurate
-                    params.output_video_profile = (title != "Apple TV") ? "baseline" : "main";
-                    params.output_video_level = levelMap[title][qualityStop];
+                    params.output_video_profile_name = (title != "Apple TV") ? "baseline" : "main";
+                    params.output_video_level_name = levelMap[title][qualityStop];
 
                     // construct the recipe
                     if (     !bool(params.special_qt) && !bool(params.has_audio) && !bool(params.is_2_pass))
@@ -956,12 +924,13 @@ A property name is anything from the character after the '$' to the next whitesp
                 <param id="ffmpeg_acodec" value="pcm_s16le" />
                 <param id="output_audio_channels" value="2" />
                 <param id="ffmpeg_vcodec" value="dvvideo" />
+                <param id="output_format_name" value="DV" />
                 <param id="output_video_width" value="$input_video_width" />
                 <param id="output_video_heigth" value="$input_video_heigth" />
                 <param id="output_audio_bitrate" value="48000" />
                 <param id="video_suffix" value="dv" />
-                <param id="output_video_codec" value="DV" />
-                <param id="output_audio_codec" value="PCM" />
+                <param id="output_video_codec_name" value="DV" />
+                <param id="output_audio_codec_name" value="PCM" />
                 <checkbox which="0" title="Force Anamorphic 16:9">
                     <checked_item>
                         <param id="aspect" value="-aspect 16:9" />
@@ -1109,42 +1078,6 @@ A property name is anything from the character after the '$' to the next whitesp
                     $movtoy4m -f -w $input_video_width -h $input_video_height -F $(output_video_frame_rate) 
                         -a $(output_video_width):$(output_video_height) "$input_file" | $correct_yuv 
                 </command>
-                <command id="yuv_to_ffmpeg_av"> $ffmpeg -y -i - -i "$tmp_audio_file" </command>
-                <command id="yuv_to_ffmpeg_v"> $ffmpeg -y -i - </command>
-                <command id="ffmpeg_normal"> $ffmpeg -y -i "$input_file" </command>
-                <command id="quicktime_av_single_pass">
-                    $quicktime_to_yuv | $yuv_to_ffmpeg_av $ffmpeg_options $ffmpeg_single_pass_options "$output_file"
-                </command>
-                <command id="quicktime_av_pass1"> 
-                    $quicktime_to_yuv | $yuv_to_ffmpeg_av $ffmpeg_options $ffmpeg_pass1_options "$output_file" 
-                </command>
-                <command id="quicktime_av_pass2">
-                    $quicktime_to_yuv | $yuv_to_ffmpeg_av $ffmpeg_options $ffmpeg_pass2_options "$output_file"
-                </command>
-                <command id="quicktime_v_single_pass"> 
-                    $quicktime_to_yuv | $yuv_to_ffmpeg_v $ffmpeg_options $ffmpeg_single_pass_options "$output_file"
-                </command>
-                <command id="quicktime_v_pass1">
-                    $quicktime_to_yuv | $yuv_to_ffmpeg_v $ffmpeg_options $ffmpeg_pass1_options "$output_file"
-                </command>
-                <command id="quicktime_v_pass2">
-                    $quicktime_to_yuv | $yuv_to_ffmpeg_v $ffmpeg_options $ffmpeg_pass2_options "$output_file"
-                </command>
-                <command id="normal_pass1">
-                    $ffmpeg_normal $ffmpeg_options $ffmpeg_pass1_options "$output_file"
-                </command>
-                <command id="normal_pass2">
-                    $ffmpeg_normal $ffmpeg_options $ffmpeg_pass2_options "$output_file"
-                </command>
-                <command id="normal_single_pass">
-                    $ffmpeg_normal $ffmpeg_options $ffmpeg_single_pass_options "$output_file"
-                </command>
-                <command id="thumbnail">
-                    -an -s 72x54 -ss 50 -vframes 1 -f image2 
-                </command>
-                <command id="createthumbnail">
-                    $ffmpeg_normal $thumbnail "$output_jpeg"
-                </command>
                 <script>
                     <![CDATA[
     
@@ -1158,9 +1091,6 @@ A property name is anything from the character after the '$' to the next whitesp
                     // We support a number of standard frame sizes. After adjusting these sizes according to the flags
                     // (h264, forTV), we determine the actual frame size using these as maximum values, taking
                     // into account aspect ratio.
-                    
-                    params.output_format = "MPEG-4";
-                    
                     var frameSizes = {
                         "tiny":  [  192,  144 ],
                         "small": [  320,  240 ],
@@ -1312,8 +1242,8 @@ A property name is anything from the character after the '$' to the next whitesp
                     // set endoder
                         
                     // The level is not necessarily accurate
-                    params.output_video_profile = (title != "Apple TV") ? "baseline" : "main";
-                    params.output_video_level = levelMap[title][qualityStop];
+                    params.output_video_profile_name = (title != "Apple TV") ? "baseline" : "main";
+                    params.output_video_level_name = levelMap[title][qualityStop];
 
                     // construct the recipe
                     if( bool(params.thumb)){
@@ -1382,13 +1312,13 @@ A property name is anything from the character after the '$' to the next whitesp
                         <param id="ffmpeg_vcodec" value="libx264" />
                         <param id="extras" value="-sc_threshold 40 -partitions partp4x4 -rc_eq 'blurCplx^(1-qComp)' -refs 1 -coder 1 -level 21 -qmax 51 -bf 1" />
                         <param id="h264" value="true" />
-                        <param id="output_video_codec" value="H264" />
+                        <param id="output_video_codec_name" value="H.264" />
                     </checked_item>
                     <unchecked_item>
                         <param id="ffmpeg_vcodec" value="mpeg4" />
                         <params id="extras" value="" />
                         <param id="h264" value="false" />
-                        <param id="output_video_codec" value="MPEG-4" />
+                        <param id="output_video_codec_name" value="MPEG-4" />
                     </unchecked_item>
                 </checkbox>
                 <menu which="0" title="Revision:">
@@ -1399,11 +1329,12 @@ A property name is anything from the character after the '$' to the next whitesp
                         <param id="FW3" value="true" />
                     </menu_item>
                 </menu>
+                <param id="output_format_name" value="MPEG-4" />
                 <param id="video_frame_rate" value="ntsc" />
                 <param id="forceFormat" value="-f psp" />
                 <param id="gop_size" value="-g 300" />
                 <param id="ffmpeg_acodec" value="libfaac" />
-                <param id="output_audio_codec" value="AAC" />
+                <param id="output_audio_codec_name" value="AAC" />
             </device>
             
             <!-- Playstation 3 -->
@@ -1479,36 +1410,6 @@ A property name is anything from the character after the '$' to the next whitesp
                     $movtoy4m -f -w $input_video_width -h $input_video_height -F $(output_video_frame_rate) 
                         -a $(output_video_width):$(output_video_height) "$input_file" | $correct_yuv 
                 </command>
-                <command id="yuv_to_ffmpeg_av"> $ffmpeg -y -i - -i "$tmp_audio_file" </command>
-                <command id="yuv_to_ffmpeg_v"> $ffmpeg -y -i - </command>
-                <command id="ffmpeg_normal"> $ffmpeg -y -i "$input_file" </command>
-                <command id="quicktime_av_single_pass">
-                    $quicktime_to_yuv | $yuv_to_ffmpeg_av $ffmpeg_options $ffmpeg_single_pass_options "$output_file"
-                </command>
-                <command id="quicktime_av_pass1"> 
-                    $quicktime_to_yuv | $yuv_to_ffmpeg_av $ffmpeg_options $ffmpeg_pass1_options "$output_file" 
-                </command>
-                <command id="quicktime_av_pass2">
-                    $quicktime_to_yuv | $yuv_to_ffmpeg_av $ffmpeg_options $ffmpeg_pass2_options "$output_file"
-                </command>
-                <command id="quicktime_v_single_pass"> 
-                    $quicktime_to_yuv | $yuv_to_ffmpeg_v $ffmpeg_options $ffmpeg_single_pass_options "$output_file"
-                </command>
-                <command id="quicktime_v_pass1">
-                    $quicktime_to_yuv | $yuv_to_ffmpeg_v $ffmpeg_options $ffmpeg_pass1_options "$output_file"
-                </command>
-                <command id="quicktime_v_pass2">
-                    $quicktime_to_yuv | $yuv_to_ffmpeg_v $ffmpeg_options $ffmpeg_pass2_options "$output_file"
-                </command>
-                <command id="normal_pass1">
-                    $ffmpeg_normal $ffmpeg_options $ffmpeg_pass1_options "$output_file"
-                </command>
-                <command id="normal_pass2">
-                    $ffmpeg_normal $ffmpeg_options $ffmpeg_pass2_options "$output_file"
-                </command>
-                <command id="normal_single_pass">
-                    $ffmpeg_normal $ffmpeg_options $ffmpeg_single_pass_options "$output_file"
-                </command>
                 <script>
                     <![CDATA[
     
@@ -1521,9 +1422,6 @@ A property name is anything from the character after the '$' to the next whitesp
                     // We support a number of standard frame sizes. After adjusting these sizes according to the flags
                     // (h264, forTV), we determine the actual frame size using these as maximum values, taking
                     // into account aspect ratio.
-                    
-                    params.output_format = "MPEG-4";
-                    
                     var frameSizes = {
                         "tiny":  [  240,  180 ],
                         "small": [  720,  480 ],
@@ -1542,7 +1440,8 @@ A property name is anything from the character after the '$' to the next whitesp
                     
                     var bitrateQualityMap = {
                         "AVI":                  [ [  987, 1382, 2304, 3456,  3800 ], [ 219,  307,  512,  768, 1536 ] ],
-                        "MP4":                  [ [   32, 1728, 2304, 3456,  6912 ], [  32, 1382, 1728, 2304, 3456 ], [ 32, 384, 512, 768, 1536 ], [ 32, 307, 384, 512, 768 ] ],
+                        "MP4":                  [ [   32, 1728, 2304, 3456,  6912 ], [  32, 1382, 1728, 2304, 3456 ], 
+                                                  [   32,  384,  512,  768,  1536 ], [  32,  307,  384,  512,  768 ] ],
                         "WMV":                  [ [   20, 1440, 1975, 2880,  5760 ], [  20,  320,  439,  640, 1280 ] ],
                         "MPEG":                 [ [ 1382, 2304, 3456, 4937, 11520 ], [  20,  320,  439,  640, 1280 ] ]
                     };
@@ -1677,7 +1576,8 @@ A property name is anything from the character after the '$' to the next whitesp
                         params.qmin = "-qmin " + (qminn);
                         }
                     }else if(title == "MPEG") {
-                        if(qualityStop == "4" && params.profile == "none" || params.profile == "svcd" || params.profile == "cvd" || params.profile == "tivo" || params.profile == "ts") {
+                        if(qualityStop == "4" && params.profile == "none" || params.profile == "svcd" || 
+                                params.profile == "cvd" || params.profile == "tivo" || params.profile == "ts") {
                             params.qmin = "-bf 2";
                         }else if(params.profile == "vcd") {
                             params.qmin = "-qmin 5 -bf 2";
@@ -1970,13 +1870,13 @@ A property name is anything from the character after the '$' to the next whitesp
                             if(bool(params.mpeg2)) {
                                 params.extras = "";
                                 params.ffmpeg_vcodec = "mpeg2video";
-                                params.output_video_codec = "MPEG-2";
+                                params.output_video_codec_name = "MPEG-2";
                             }else{
                                 var ratemax = mpegMaxrateMap["mpeg"][qualityStop];
                                 var bufsize = mpegbufsizeMap["mpeg"][qualityStop];
                                 params.extras = "-maxrate " + ratemax + " -bufsize " + bufsize;
                                 params.ffmpeg_vcodec = "mpeg1video";
-                                params.output_video_codec = params.top_crop;
+                                params.output_video_codec_name = "MPEG-1";
                             }
                         }
                     }
@@ -1991,8 +1891,8 @@ A property name is anything from the character after the '$' to the next whitesp
                     }
                         
                     // The level is not necessarily accurate
-                    params.output_video_profile = (title != "Apple TV") ? "baseline" : "main";
-                    //params.output_video_level = levelMap[title][qualityStop];
+                    params.output_video_profile_name = (title != "Apple TV") ? "baseline" : "main";
+                    //params.output_video_level_name = levelMap[title][qualityStop];
 
                     // construct the recipe
                     if (     !bool(params.special_qt) && !bool(params.has_audio) && !bool(params.is_2_pass))
@@ -2036,8 +1936,9 @@ A property name is anything from the character after the '$' to the next whitesp
                 <param id="extras" value="" />
                 <param id="tag" value="-vtag DX50" />
                 <param id="pixfmt" value="" />
-                <param id="output_video_codec" value="MPEG4" />
-                <param id="output_audio_codec" value="MP3" />
+                <param id="output_format_name" value="AVI" />
+                <param id="output_video_codec_name" value="MPEG-4" />
+                <param id="output_audio_codec_name" value="MP3" />
                 <param id="vob" value="" />
                 <param id="fps" value="ntsc" />
                 <param id="dashb" value="-b" />
@@ -2051,14 +1952,14 @@ A property name is anything from the character after the '$' to the next whitesp
                 <checkbox which="0" title="H.264 Video">
                     <checked_item>
                         <param id="ffmpeg_vcodec" value="libx264" />
-                        <param id="output_video_codec" value="H.264" />
+                        <param id="output_video_codec_name" value="H.264" />
                         <param id="extras" 
                             value="-bf 1 -level 41 -sc_threshold 40 -partitions partp4x4 -rc_eq 'blurCplx^(1-qComp)' -refs 3  -qmax 51" />
                         <param id="h264" value="true" />
                     </checked_item>
                     <unchecked_item>
                         <param id="ffmpeg_vcodec" value="mpeg4" />
-                        <param id="output_video_codec" value="MPEG4" />
+                        <param id="output_video_codec_name" value="MPEG-4" />
                         <param id="extras" value="" />
                         <param id="h264" value="false" />
                     </unchecked_item>
@@ -2081,7 +1982,8 @@ A property name is anything from the character after the '$' to the next whitesp
                 </checkbox>
                 <param id="tag" value="" />
                 <param id="pixfmt" value="" />
-                <param id="output_audio_codec" value="MP3" />
+                <param id="output_format_name" value="MPEG-4" />
+                <param id="output_audio_codec_name" value="MP3" />
                 <param id="vob" value="" />
                 <param id="dashb" value="-b" />
                 <param id="target" value="" />
@@ -2126,8 +2028,9 @@ A property name is anything from the character after the '$' to the next whitesp
                 <param id="tag" value="" />
                 <param id="pixfmt" value="-pix_fmt yuv420p" />
                 <param id="video_suffix" value="wmv" />
-                <param id="output_video_codec" value="WMV" />
-                <param id="output_audio_codec" value="WMA" />
+                <param id="output_format_name" value="ASF" />
+                <param id="output_video_codec_name" value="WMV" />
+                <param id="output_audio_codec_name" value="WMA" />
                 <param id="vob" value="" />
                 <param id="dashb" value="-b" />
                 <param id="target" value="" />
@@ -2196,14 +2099,14 @@ A property name is anything from the character after the '$' to the next whitesp
                         <param id="dashv" value="-vcodec" />
                         <param id="video_suffix" value="mpg" />
                         <param id="ffmpeg_acodec" value="mp2" />
-                        <param id="output_audio_codec" value="MP2" />
+                        <param id="output_audio_codec_name" value="MP2" />
                     </menu_item>
                     <menu_item title="VCD">
                         <param id="profile" value="vcd" />
                         <param id="ffmpeg_acodec" value="mp2" />
                         <param id="ffmpeg_vcodec" value="" />
-                        <param id="output_video_codec" value="Dont Worry About It!" />
-                        <param id="output_audio_codec" value="MP2" />
+                        <param id="output_video_codec_name" value="MPEG-1" />
+                        <param id="output_audio_codec_name" value="MP2" />
                         <param id="dashv" value="" />
                         <param id="video_suffix" value="mpg" />
                     </menu_item>
@@ -2211,8 +2114,8 @@ A property name is anything from the character after the '$' to the next whitesp
                         <param id="profile" value="svcd" />
                         <param id="ffmpeg_acodec" value="mp2" />
                         <param id="ffmpeg_vcodec" value="" />
-                        <param id="output_video_codec" value="Dont Worry About It!" />
-                        <param id="output_audio_codec" value="MP2" />
+                        <param id="output_video_codec_name" value="MPEG-2" />
+                        <param id="output_audio_codec_name" value="MP2" />
                         <param id="dashv" value="" />
                         <param id="video_suffix" value="mpg" />
                     </menu_item>
@@ -2220,8 +2123,8 @@ A property name is anything from the character after the '$' to the next whitesp
                         <param id="profile" value="cvd" />
                         <param id="ffmpeg_acodec" value="mp2" />
                         <param id="ffmpeg_vcodec" value="mpeg2video" />
-                        <param id="output_video_codec" value="MPEG-2" />
-                        <param id="output_audio_codec" value="MP2" />
+                        <param id="output_video_codec_name" value="MPEG-2" />
+                        <param id="output_audio_codec_name" value="MP2" />
                         <param id="dashv" value="-vcodec" />
                         <param id="video_suffix" value="mpg" />
                     </menu_item>
@@ -2229,8 +2132,8 @@ A property name is anything from the character after the '$' to the next whitesp
                         <param id="profile" value="tivo" />
                         <param id="ffmpeg_acodec" value="mp2" />
                         <param id="ffmpeg_vcodec" value="mpeg2video" />
-                        <param id="output_video_codec" value="MPEG-2" />
-                        <param id="output_audio_codec" value="MP2" />
+                        <param id="output_video_codec_name" value="MPEG-2" />
+                        <param id="output_audio_codec_name" value="MP2" />
                         <param id="dashv" value="-vcodec" />
                         <param id="video_suffix" value="mpg" />
                     </menu_item>
@@ -2239,8 +2142,8 @@ A property name is anything from the character after the '$' to the next whitesp
                         <param id="ffmpeg_acodec" value="ac3" />
                         <param id="video_suffix" value="ts" />
                         <param id="ffmpeg_vcodec" value="mpeg2video" />
-                        <param id="output_video_codec" value="MPEG-2" />
-                        <param id="output_audio_codec" value="AC3" />
+                        <param id="output_video_codec_name" value="MPEG-2" />
+                        <param id="output_audio_codec_name" value="AC3" />
                         <param id="dashv" value="-vcodec" />
                     </menu_item>
                     <menu_item title="720p">
@@ -2249,8 +2152,8 @@ A property name is anything from the character after the '$' to the next whitesp
                         <param id="ffmpeg_acodec" value="ac3" />
                         <param id="video_suffix" value="m2t" />
                         <param id="ffmpeg_vcodec" value="mpeg2video" />
-                        <param id="output_video_codec" value="MPEG-2" />
-                        <param id="output_audio_codec" value="AC3" />
+                        <param id="output_video_codec_name" value="MPEG-2" />
+                        <param id="output_audio_codec_name" value="AC3" />
                         <param id="dashv" value="-vcodec" />
                     </menu_item>
                     <menu_item title="1080i">
@@ -2259,11 +2162,12 @@ A property name is anything from the character after the '$' to the next whitesp
                         <param id="ffmpeg_acodec" value="ac3" />
                         <param id="video_suffix" value="m2t" />
                         <param id="ffmpeg_vcodec" value="mpeg2video" />
-                        <param id="output_video_codec" value="MPEG-2" />
-                        <param id="output_audio_codec" value="AC3" />
+                        <param id="output_video_codec_name" value="MPEG-2" />
+                        <param id="output_audio_codec_name" value="AC3" />
                         <param id="dashv" value="-vcodec" />
                     </menu_item>
                 </menu>
+                <param id="output_format_name" value="MPEG-2" />
                 <param id="gop_size" value="-g 15" />
                 <param id="pixfmt" value="" />
                 <param id="tag" value="" />
