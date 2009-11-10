@@ -25,7 +25,6 @@
     IBOutlet NSPopUpButton* m_currentSearcher;
     
     BOOL m_isVisible;
-    BOOL m_autoSearch;
 }
 
 @property(readonly) NSArray* artworkList;
@@ -38,6 +37,6 @@
 -(IBAction)searchBoxSelected:(id)sender;
 -(IBAction)useThisValueForAllFiles:(id)sender;
 -(IBAction)searchAllFiles:(id)sender;
--(IBAction)searchCurrentFile:(id)sender;
+-(IBAction)searchSelectedFiles:(id)sender;
 
 @end

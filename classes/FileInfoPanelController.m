@@ -7,6 +7,7 @@
 //
 
 #import "FileInfoPanelController.h"
+#import "FileListController.h"
 #import "Metadata.h"
 #import "Transcoder.h"
 
@@ -14,7 +15,16 @@
 
 @synthesize fileListController = m_fileListController;
 @synthesize metadataPanel = m_metadataPanel;
-@synthesize autoSearch = m_autoSearch;
+
+-(BOOL) autoSearch
+{
+    return [[[[NSUserDefaultsController sharedUserDefaultsController] values] valueForKey:@"autoSearch"] boolValue];    
+}
+
+-(void) setAutoSearch:(BOOL) value
+{
+    [[[NSUserDefaultsController sharedUserDefaultsController] values] setValue:[NSNumber numberWithBool:value] forKey:@"autoSearch"];
+}
 
 -(NSArray*) artworkList
 {
@@ -109,12 +119,12 @@
 
 -(IBAction)searchAllFiles:(id)sender
 {
-    printf("autoSearch=%s\n", m_autoSearch ? "YES" : "NO");
+    [m_fileListController searchAllFiles];
 }
 
--(IBAction)searchCurrentFile:(id)sender
+-(IBAction)searchSelectedFiles:(id)sender
 {
-    printf("*****\n");
+    [m_fileListController searchSelectedFiles];
 }
 
 -(id) selection

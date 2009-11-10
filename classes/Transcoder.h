@@ -115,7 +115,7 @@ typedef enum FileStatus { FS_INVALID, FS_VALID, FS_ENCODING, FS_PAUSED, FS_FAILE
 
 @property (readonly) TranscoderFileInfo* inputFileInfo;
 @property (readonly) TranscoderFileInfo* outputFileInfo;
-@property (readonly) Metadata* metadata;
+@property (retain) Metadata* metadata;
 @property (readonly) MetadataPanel* metadataPanel;
 
 +(Transcoder*) transcoderWithController: (AppController*) controller;
@@ -148,6 +148,7 @@ typedef enum FileStatus { FS_INVALID, FS_VALID, FS_ENCODING, FS_PAUSED, FS_FAILE
 -(BOOL) stopEncode;
 
 -(BOOL) addToMediaLibrary:(NSString*) filename;
+-(void) createMetadata:(BOOL) autoSearch;
 
 -(void) setProgressForCommand: (Command*) command to: (double) value;
 -(void) commandFinished: (Command*) command status: (int) status;

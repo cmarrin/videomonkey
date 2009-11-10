@@ -13,6 +13,7 @@
 #import "AppController.h"
 #import "Command.h"
 #import "DeviceController.h"
+#import "FileInfoPanelController.h"
 #import "Metadata.h"
 
 FrameSize makeFrameSize(int width, int height) { return ((uint32_t) width << 16) | ((uint32_t) height & 0xffff); }
@@ -232,6 +233,11 @@ static NSImage* getFileStatusImage(FileStatus status)
     [super dealloc];
 }
     
+-(void) createMetadata:(BOOL) autoSearch
+{
+    [self setMetadata:[Metadata metadataWithTranscoder:self search:autoSearch]];
+}
+
 - (int) addInputFile: (NSString*) filename
 {
     TranscoderFileInfo* file = [[TranscoderFileInfo alloc] init];
@@ -251,8 +257,7 @@ static NSImage* getFileStatusImage(FileStatus status)
     [m_statusImageView setImage: getFileStatusImage(m_fileStatus)];
     
     // read the metadata
-    [m_metadata release];
-    m_metadata = [Metadata metadataWithTranscoder:self];
+    [self createMetadata:[[m_appController fileInfoPanelController] autoSearch]];
     
     return [m_inputFiles count] - 1;    
 }
@@ -449,7 +454,7 @@ static NSImage* getFileStatusImage(FileStatus status)
             tag:nil];
             
     // In case metadata was written, cleanup after it
-    [m_metadata cleanupAfterMetadataWrite];
+    [[self metadata] cleanupAfterMetadataWrite];
 }
 
 -(void) startNextCommands
@@ -563,11 +568,11 @@ static NSImage* getFileStatusImage(FileStatus status)
         
         if (![[m_appController deviceController] shouldEncode]) {
             if ([[m_appController deviceController] shouldWriteMetadataToOutputFile]) {
-                if (![m_metadata canWriteMetadataToOutputFile])
+                if (![[self metadata] canWriteMetadataToOutputFile])
                     canWrite = false;
             }
             else {
-                if (![m_metadata canWriteMetadataToInputFile])
+                if (![[self metadata] canWriteMetadataToInputFile])
                     canWrite = false;
             }
         }
@@ -575,7 +580,7 @@ static NSImage* getFileStatusImage(FileStatus status)
         NSString* filename = [[m_appController deviceController] shouldWriteMetadataToOutputFile] ?
                                 self.outputFileInfo.filename :
                                 self.inputFileInfo.filename;
-        NSString* metadataCommand = [m_metadata metadataCommand:filename];
+        NSString* metadataCommand = [[self metadata] metadataCommand:filename];
                                 
         if ([metadataCommand length] > 0) {
             if (canWrite) {

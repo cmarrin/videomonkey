@@ -34,6 +34,20 @@
     [m_fileListView reloadData];
 }
 
+-(void) searchSelectedFiles
+{
+    NSArray* array = [self selectedObjects];
+    for (Transcoder* transcoder in array)
+        [transcoder createMetadata:YES];
+}
+
+-(void) searchAllFiles
+{
+    NSArray* array = [self arrangedObjects];
+    for (Transcoder* transcoder in array)
+        [transcoder createMetadata:YES];
+}
+
 - (void)rearrangeObjects
 {
 	// Remember the selection because rearrange loses it on SnowLeopard

@@ -36,7 +36,7 @@
 @property(assign) BOOL isMetadataBusy;
 @property(retain) NSString* metadataStatus;
 
-+(Metadata*) metadataWithTranscoder: (Transcoder*) transcoder;
++(Metadata*) metadataWithTranscoder: (Transcoder*) transcoder search:(BOOL) search;
 
 -(id) createArtwork:(NSImage*) image;
 

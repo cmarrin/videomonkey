@@ -18,6 +18,8 @@
 }
 
 -(void) reloadData;
+-(void) searchSelectedFiles;
+-(void) searchAllFiles;
 
 -(void) addFile:(NSString*) filename;
 

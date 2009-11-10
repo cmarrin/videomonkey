@@ -558,7 +558,7 @@ static NSDictionary* g_tagMap = nil;
     [m_transcoder updateFileInfo];
 }
 
-+(Metadata*) metadataWithTranscoder: (Transcoder*) transcoder
++(Metadata*) metadataWithTranscoder: (Transcoder*) transcoder search:(BOOL) search
 {
     // init the tag map, if needed
     if (!g_tagMap)
@@ -612,11 +612,12 @@ static NSDictionary* g_tagMap = nil;
     // setup the bindings to the metadata panel
     [[metadata->m_transcoder metadataPanel] setupMetadataPanelBindings];
     
-    // Search for metadata
-    metadata->m_search = [MetadataSearch metadataSearch:metadata];
+    if (search) {
+        // Search for metadata
+        metadata->m_search = [MetadataSearch metadataSearch:metadata];
+        [metadata searchAgain];
+    }
     
-    [metadata searchAgain];
-
     return metadata;
 }
 
