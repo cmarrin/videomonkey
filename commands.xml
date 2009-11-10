@@ -186,6 +186,15 @@ A property name is anything from the character after the '$' to the next whitesp
 
 <videomonkey>
     <default_device>
+        <command id="ffmpeg_single_pass_options">
+            -vpre $ffmpeg_vpre $ffmpeg_profile
+        </command>
+        <command id="ffmpeg_pass1_options">
+            -vpre $ffmpeg_vpre_pass1 -pass 1 -passlogfile "$pass_log_file" $ffmpeg_profile
+        </command>
+        <command id="ffmpeg_pass2_options">
+            -vpre $ffmpeg_vpre -pass 2 -passlogfile "$pass_log_file" $ffmpeg_profile
+        </command>
         <command id="ffmpeg_normal"> $ffmpeg -threads $num_cpus -y -i "$input_file" </command>
         <command id="yuv_to_ffmpeg_av"> $ffmpeg -threads $num_cpus -y -i - -i "$tmp_audio_file" </command>
         <command id="yuv_to_ffmpeg_v"> $ffmpeg -threads $num_cpus -y -i - </command>
@@ -516,15 +525,6 @@ A property name is anything from the character after the '$' to the next whitesp
         -->
         <device_group title="iTunes">
             <common_device>
-                <command id="ffmpeg_single_pass_options">
-                    -vpre $ffmpeg_vpre $ffmpeg_profile
-                </command>
-                <command id="ffmpeg_pass1_options">
-                    -vpre $ffmpeg_vpre_pass1 -pass 1 -passlogfile "$pass_log_file" $ffmpeg_profile
-                </command>
-                <command id="ffmpeg_pass2_options">
-                    -vpre $ffmpeg_vpre -pass 2 -passlogfile "$pass_log_file" $ffmpeg_profile
-                </command>
                 <command id="ffmpeg_options">
                     -vcodec $ffmpeg_vcodec -b $output_video_bitrate -s $(output_video_width)x$(output_video_height) 
                         -aspect $(output_video_width):$(output_video_height) -r $(output_video_frame_rate)
@@ -808,18 +808,9 @@ A property name is anything from the character after the '$' to the next whitesp
         -->
         <device_group title="Video Devices">
             <common_device>
-                <command id="ffmpeg_single_pass_options">
-                    -vpre $ffmpeg_vpre $ffmpeg_profile
-                </command>
-                <command id="ffmpeg_pass1_options">
-                    -vpre $ffmpeg_vpre_pass1 -pass 1 -passlogfile "$pass_log_file" $ffmpeg_profile
-                </command>
-                <command id="ffmpeg_pass2_options">
-                    -vpre $ffmpeg_vpre -pass 2 -passlogfile "$pass_log_file" $ffmpeg_profile
-                </command>
                 <command id="ffmpeg_options">
                     -ar $output_audio_sample_rate -vcodec $ffmpeg_vcodec  -r $(video_frame_rate)
-                    -s (72)x$(output_video_height) $aspect  $pix_fmt  -async 50
+                    -s $(output_video_width)x$(output_video_height) $aspect  $pix_fmt  -async 50
                     -acodec $ffmpeg_acodec $forceFormat
                 </command>
                 <command id="quicktime_to_audio_file">
@@ -920,7 +911,7 @@ A property name is anything from the character after the '$' to the next whitesp
                 </script>
             </common_device>
             <!-- DV -->
-            <device title="DV" icon="dv" enabled="true">
+            <device title="DV" icon="dv" enabled="false">
                 <param id="ffmpeg_acodec" value="pcm_s16le" />
                 <param id="output_audio_channels" value="2" />
                 <param id="ffmpeg_vcodec" value="dvvideo" />
@@ -1077,6 +1068,12 @@ A property name is anything from the character after the '$' to the next whitesp
                 <command id="quicktime_to_yuv">
                     $movtoy4m -f -w $input_video_width -h $input_video_height -F $(output_video_frame_rate) 
                         -a $(output_video_width):$(output_video_height) "$input_file" | $correct_yuv 
+                </command>
+                <command id="thumbnail">
+                    -an -s 72x54 -ss 50 -vframes 1 -f image2 
+                </command>
+                <command id="createthumbnail">
+                    $ffmpeg_normal $thumbnail
                 </command>
                 <script>
                     <![CDATA[
@@ -1298,7 +1295,7 @@ A property name is anything from the character after the '$' to the next whitesp
             </device>
             
             <!-- PSP -->
-            <device title="PSP" icon="psp" enabled="true">
+            <device title="PSP" icon="psp" enabled="false">
                 <checkbox which="0" title="Make Thumbnail">
                     <checked_item>
                         <param id="thumb" value="true" />
@@ -1917,7 +1914,7 @@ A property name is anything from the character after the '$' to the next whitesp
             </common_device>
             <!-- AVI -->
             <!-- AVI -->
-            <device title="AVI" icon="file" enabled="true">
+            <device title="AVI" icon="file" enabled="false">
                 <checkbox which="0" title="320 Pixels Wide">
                     <checked_item>
                         <param id="wide" value="true" />
@@ -1948,7 +1945,7 @@ A property name is anything from the character after the '$' to the next whitesp
             </device>
             
             <!-- MP4 -->
-            <device title="MP4" icon="file" enabled="true">
+            <device title="MP4" icon="file" enabled="false">
                 <checkbox which="0" title="H.264 Video">
                     <checked_item>
                         <param id="ffmpeg_vcodec" value="libx264" />
@@ -2012,7 +2009,7 @@ A property name is anything from the character after the '$' to the next whitesp
             </device>
             
             <!-- WMV -->
-            <device title="WMV" icon="wma" enabled="true">
+            <device title="WMV" icon="wma" enabled="false">
                 <checkbox which="0" title="320 Pixels Wide">
                     <checked_item>
                         <param id="wide" value="true" />
@@ -2041,7 +2038,7 @@ A property name is anything from the character after the '$' to the next whitesp
             </device>
 
             <!-- Flash -->
-            <device title="Flash" icon="flash" enabled="true">
+            <device title="Flash" icon="flash" enabled="false">
                 <checkbox which="0" title="320 Pixels Wide">
                     <checked_item>
                         <param id="wide" value="true" />
@@ -2074,7 +2071,7 @@ A property name is anything from the character after the '$' to the next whitesp
             </device>
             
             <!-- MPEG -->
-            <device title="MPEG" icon="file" enabled="true">
+            <device title="MPEG" icon="file" enabled="false">
                  <checkbox which="0" title="MPEG-2">
                     <checked_item>
                         <param id="vob" value="-f vob" />
