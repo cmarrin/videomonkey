@@ -14,6 +14,7 @@
 
 @synthesize fileListController = m_fileListController;
 @synthesize metadataPanel = m_metadataPanel;
+@synthesize autoSearch = m_autoSearch;
 
 -(NSArray*) artworkList
 {
@@ -104,6 +105,16 @@
 -(IBAction)useThisValueForAllFiles:(id)sender
 {
     printf("***\n");
+}
+
+-(IBAction)searchAllFiles:(id)sender
+{
+    printf("autoSearch=%s\n", m_autoSearch ? "YES" : "NO");
+}
+
+-(IBAction)searchCurrentFile:(id)sender
+{
+    printf("*****\n");
 }
 
 -(id) selection

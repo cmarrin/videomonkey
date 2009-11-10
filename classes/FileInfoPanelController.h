@@ -25,15 +25,19 @@
     IBOutlet NSPopUpButton* m_currentSearcher;
     
     BOOL m_isVisible;
+    BOOL m_autoSearch;
 }
 
 @property(readonly) NSArray* artworkList;
 @property(readonly) FileListController* fileListController;
 @property(readonly) MetadataPanel* metadataPanel;
 @property(assign) NSImage* primaryArtwork;
+@property(assign) BOOL autoSearch;
 
 -(IBAction)artworkCheckedStateChanged:(id)sender;
 -(IBAction)searchBoxSelected:(id)sender;
 -(IBAction)useThisValueForAllFiles:(id)sender;
+-(IBAction)searchAllFiles:(id)sender;
+-(IBAction)searchCurrentFile:(id)sender;
 
 @end
