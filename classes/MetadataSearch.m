@@ -30,7 +30,6 @@
 @synthesize foundSeasons = m_foundSeasons;
 @synthesize foundEpisodes = m_foundEpisodes;
 @synthesize currentShowName = m_currentShowName;
-@synthesize currentSearcher = m_currentSearcher;
 
 -(NSString*) currentSearcher
 {
@@ -78,7 +77,7 @@
     metadataSearch->m_metadata = metadata;
     metadataSearch->m_season = -1;
     metadataSearch->m_episode = -1;
-    [metadataSearch setCurrentSearcher: @"thetvdb.com"];
+    [metadataSearch setCurrentSearcher: [[[NSUserDefaultsController sharedUserDefaultsController] values] valueForKey:@"defaultMetadataSearch"]];
     return metadataSearch;
 }
 

@@ -612,9 +612,10 @@ static NSDictionary* g_tagMap = nil;
     // setup the bindings to the metadata panel
     [[metadata->m_transcoder metadataPanel] setupMetadataPanelBindings];
     
+    metadata->m_search = [MetadataSearch metadataSearch:metadata];
+    
     if (search) {
         // Search for metadata
-        metadata->m_search = [MetadataSearch metadataSearch:metadata];
         [metadata searchAgain];
     }
     

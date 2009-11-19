@@ -35,6 +35,46 @@
 @synthesize limitParams = m_limitParams;
 @synthesize numCPUs = m_numCPUs;
 
+-(NSString*) maxCPU
+{
+    NSString* s = [[[NSUserDefaultsController sharedUserDefaultsController] values] valueForKey:@"maxCPU"];
+    return ([s length] == 0) ? @"Auto" : s;
+    
+}
+
+-(void) setMaxCPU:(NSString*) s
+{
+    // get the number of CPUs
+    if ([s isEqualToString:@"Auto"]) {
+        size_t size = sizeof(m_numCPUs);
+        m_numCPUs = 2;
+        if (sysctlbyname("hw.ncpu", &m_numCPUs, &size, NULL, 0))
+            m_numCPUs = 2;
+    }
+    else
+        m_numCPUs = [s intValue];
+        
+    if (m_numCPUs < 1 || m_numCPUs > 16)
+        m_numCPUs = 2;
+        
+    // Make sure we put a rational value into defaults
+    if ([s isEqualToString:@"Auto"])
+        [[[NSUserDefaultsController sharedUserDefaultsController] values] setValue:@"Auto" forKey:@"maxCPU"];
+    else
+        [[[NSUserDefaultsController sharedUserDefaultsController] values] setValue:[[NSNumber numberWithInt:m_numCPUs] stringValue] forKey:@"maxCPU"];
+}
+
+-(NSString*) defaultMetadataSearch
+{
+    NSString* s = [[[NSUserDefaultsController sharedUserDefaultsController] values] valueForKey:@"defaultMetadataSearch"];
+    return ([s length] == 0) ? @"thetvdb.com" : s;
+}
+
+-(void) setDefaultMetadataSearch:(NSString*) s
+{
+    [[[NSUserDefaultsController sharedUserDefaultsController] values] setValue:s forKey:@"defaultMetadataSearch"];
+}
+
 -(double) currentTime
 {
     return (double) [[NSDate date] timeIntervalSince1970];
@@ -83,7 +123,13 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
     m_fileList = [[NSMutableArray alloc] init];
     
     m_applicationIcon = [[[NSApplication sharedApplication] applicationIconImage] copy];
-	
+
+    // Set the number of CPUs
+    [self setMaxCPU: [self maxCPU]];
+
+    // Make sure the defaultMetadataSearch value is rational
+    if ([[self defaultMetadataSearch] length] == 0)
+        [self setDefaultMetadataSearch:@"thetvdb.com"];
     return self;
 }
 
@@ -115,14 +161,6 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
     [m_savePathControl setURL: [NSURL fileURLWithPath:m_savePath ? m_savePath : @""]];
 
     m_limitParams = [[[[NSUserDefaultsController sharedUserDefaultsController] values] valueForKey:@"limitOutputParams"] boolValue];
-
-    // get the number of CPUs
-    size_t size = sizeof(m_numCPUs);
-    m_numCPUs = 2;
-    if (sysctlbyname("hw.ncpu", &m_numCPUs, &size, NULL, 0))
-        m_numCPUs = 2;
-    else if (m_numCPUs < 1)
-        m_numCPUs = 2;
 }
 
 // Main Encoding Functions

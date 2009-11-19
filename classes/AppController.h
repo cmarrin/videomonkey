@@ -76,6 +76,8 @@ typedef enum { RS_STOPPED, RS_RUNNING, RS_PAUSED } RunStateType;
 @property (readonly) FileInfoPanelController* fileInfoPanelController;
 @property (readonly) BOOL limitParams;
 @property (readonly) int numCPUs;
+@property (retain) NSString* maxCPU;
+@property (retain) NSString* defaultMetadataSearch;
 
 -(IBAction)startEncode:(id)sender;
 -(IBAction)pauseEncode:(id)sender;
