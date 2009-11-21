@@ -12,15 +12,16 @@
 
 @implementation MoviePanelController
 
-- (void)awakeFromNib {
+- (void)awakeFromNib
+{
+    [[m_movieView window] setExcludedFromWindowsMenu:YES];
+    
     m_isVisible = NO;
     m_movieIsSet = NO;
     m_extraContentWidth = [[[m_movieView window] contentView] frame].size.width - [m_movieView frame].size.width;
     m_extraContentHeight = [[[m_movieView window] contentView] frame].size.height - [m_movieView frame].size.height;
     m_extraFrameWidth = [[m_movieView window] frame].size.width - [m_movieView frame].size.width;
     m_extraFrameHeight = [[m_movieView window] frame].size.height - [m_movieView frame].size.height;
-
-
 
     m_selectionStart = -1;
     m_selectionEnd = -1;

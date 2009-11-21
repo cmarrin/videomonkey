@@ -42,7 +42,10 @@
     [m_artworkListController insertObject:item atArrangedObjectIndex:0];
 }
 
-- (void)awakeFromNib {
+- (void)awakeFromNib
+{
+    [m_fileInfoWindow setExcludedFromWindowsMenu:YES];
+    
     [m_artworkTable setRowHeight:[[[m_artworkTable tableColumns] objectAtIndex:2] width]];
     
     // scroll to top of metadata
