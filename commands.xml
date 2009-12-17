@@ -112,6 +112,8 @@ title                   Title of the currently selected device
 
 limit_output_params     "true" if output params should be limited to be no larger than input
 
+num_cpus                Number of CPUs to use during encoding
+
 After executing all the scripts (see Execution) the system expects the following properties to be set in the 'params' property:
 
 Param Name              Value
