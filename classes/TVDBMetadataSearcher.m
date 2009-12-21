@@ -77,7 +77,7 @@ static NSDictionary* g_tvdbSeriesMap = nil;
     NSString* urlString = [NSString stringWithFormat:@"http://www.thetvdb.com/api/GetSeries.php?seriesname=%@", searchString];
     urlString = [urlString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     NSURL* url = [NSURL URLWithString:urlString];
-    MyXMLDocument* doc = [MyXMLDocument xmlDocumentWithContentsOfURL:url];
+    XMLDocument* doc = [XMLDocument xmlDocumentWithContentsOfURL:url];
     
     if (![[[doc rootElement] name] isEqualToString:@"Data"])
         return NO;
@@ -89,7 +89,7 @@ static NSDictionary* g_tvdbSeriesMap = nil;
     NSMutableArray* foundShowNames = [[NSMutableArray alloc] init];
     NSMutableArray* foundShowIds = [[NSMutableArray alloc] init];
 
-    for (MyXMLElement* element in series) {
+    for (XMLElement* element in series) {
         NSString* name = [[element lastElementForName:@"SeriesName"] content];
         NSString* seriesidString = [[element lastElementForName:@"seriesid"] content];
         int seriesid = (seriesidString && [seriesidString length] > 0) ? [seriesidString intValue] : -1;
@@ -113,7 +113,7 @@ static NSDictionary* g_tvdbSeriesMap = nil;
 
 -(void) collectArtwork:(NSArray*) fromArray toArray:(NSMutableArray*) toArray
 {
-    for (MyXMLElement* element in fromArray) {
+    for (XMLElement* element in fromArray) {
         NSString* s = [element content];
         if (s && [s length] > 0)
             [toArray addObject:[NSString stringWithFormat:@"http://www.thetvdb.com/banners/%@", s]];
@@ -152,7 +152,7 @@ static NSArray* numericallySortedArray(NSArray* array)
     return [array sortedArrayUsingFunction:intSort context:nil];
 }
 
--(void) _addEpisode:(MyXMLElement*) episodeElement forSeries:(MyXMLElement*) series
+-(void) _addEpisode:(XMLElement*) episodeElement forSeries:(XMLElement*) series
 {
     NSString* s = episodeElement ? [[episodeElement lastElementForName:@"SeasonNumber"] content] : nil;
     NSString* e = episodeElement ? [[episodeElement lastElementForName:@"EpisodeNumber"] content] : nil;
@@ -226,13 +226,13 @@ static NSArray* numericallySortedArray(NSArray* array)
         if ([show intValue] == showId) {
             NSString* urlString = [NSString stringWithFormat:@"http://www.thetvdb.com/data/series/%d/all/", showId];
             NSURL* url = [NSURL URLWithString:urlString];
-            MyXMLDocument* doc = [MyXMLDocument xmlDocumentWithContentsOfURL:url];
+            XMLDocument* doc = [XMLDocument xmlDocumentWithContentsOfURL:url];
             
             if (![[[doc rootElement] name] isEqualToString:@"Data"])
                 return;
         
             // find the season and episode
-            MyXMLElement* series = [[doc rootElement] lastElementForName:@"Series"];
+            XMLElement* series = [[doc rootElement] lastElementForName:@"Series"];
             NSArray* episodes = [[doc rootElement] elementsForName:@"Episode"];
 
             // We found our show. Fill in the details
@@ -243,7 +243,7 @@ static NSArray* numericallySortedArray(NSArray* array)
             m_seasons = [[NSMutableDictionary alloc] init];
                 
             if (episodes && [episodes count] > 0)
-                for (MyXMLElement* episodeElement in episodes)
+                for (XMLElement* episodeElement in episodes)
                     [self _addEpisode:episodeElement forSeries:series];
             else
                 [self _addEpisode:nil forSeries:series];

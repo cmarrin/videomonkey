@@ -9,7 +9,7 @@
 #import <Cocoa/Cocoa.h>
 
 
-@interface MyXMLElement : NSObject {
+@interface XMLElement : NSObject {
     NSArray* m_children;
     NSDictionary* m_attributes;
     NSString* m_name;
@@ -22,16 +22,16 @@
 -(NSString*) name;
 
 -(NSArray*) elementsForName:(NSString*) name;
--(MyXMLElement*) lastElementForName:(NSString*) name;
+-(XMLElement*) lastElementForName:(NSString*) name;
 
 @end
 
-@interface MyXMLDocument : NSObject {
-    MyXMLElement* m_rootElement;
+@interface XMLDocument : NSObject {
+    XMLElement* m_rootElement;
 }
 
-+(MyXMLDocument*) xmlDocumentWithContentsOfURL: (NSURL*) url;
++(XMLDocument*) xmlDocumentWithContentsOfURL: (NSURL*) url;
 
--(MyXMLElement*) rootElement;
+-(XMLElement*) rootElement;
 
 @end

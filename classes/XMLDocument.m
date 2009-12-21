@@ -8,11 +8,11 @@
 
 #import "XMLDocument.h"
 
-@implementation MyXMLElement
+@implementation XMLElement
 
-+(MyXMLElement*) elementWithNSXMLElement:(NSXMLElement*) e
++(XMLElement*) elementWithNSXMLElement:(NSXMLElement*) e
 {
-    MyXMLElement* element = [[MyXMLElement alloc] init];
+    XMLElement* element = [[XMLElement alloc] init];
     
     // Set name
     element->m_name = [[e name] retain];
@@ -25,7 +25,7 @@
         if ([node kind] == NSXMLTextKind)
             [children addObject:[node stringValue]];
         else if ([node kind] == NSXMLElementKind)
-            [children addObject:[MyXMLElement elementWithNSXMLElement:(NSXMLElement*) node]];
+            [children addObject:[XMLElement elementWithNSXMLElement:(NSXMLElement*) node]];
     }
     
     element->m_children = children;
@@ -82,20 +82,20 @@
     NSMutableArray* array = [[NSMutableArray alloc] init];
     
     for (id child in m_children) {
-        if ([child isKindOfClass:[MyXMLElement class]] && [[child name] isEqualToString:name])
+        if ([child isKindOfClass:[XMLElement class]] && [[child name] isEqualToString:name])
             [array addObject:child];
     }
     
     return array;
 }
 
--(MyXMLElement*) lastElementForName:(NSString*) name;
+-(XMLElement*) lastElementForName:(NSString*) name;
 {
-    MyXMLElement* foundChild = nil;
+    XMLElement* foundChild = nil;
     
     for (id child in m_children) {
-        if ([child isKindOfClass:[MyXMLElement class]] && [[child name] isEqualToString:name])
-            foundChild = (MyXMLElement*) child;
+        if ([child isKindOfClass:[XMLElement class]] && [[child name] isEqualToString:name])
+            foundChild = (XMLElement*) child;
     }
     
     return foundChild;
@@ -103,9 +103,9 @@
 
 @end
 
-@implementation MyXMLDocument
+@implementation XMLDocument
 
-+(MyXMLDocument*) xmlDocumentWithContentsOfURL: (NSURL*) url
++(XMLDocument*) xmlDocumentWithContentsOfURL: (NSURL*) url
 {
     NSError* error;
     NSXMLDocument* document = [[NSXMLDocument alloc] initWithContentsOfURL:url options:0 error:&error];
@@ -117,12 +117,12 @@
         return nil;
     }
     
-	MyXMLDocument* doc = [[MyXMLDocument alloc] init];
-    doc->m_rootElement = [MyXMLElement elementWithNSXMLElement: [document rootElement]];
+	XMLDocument* doc = [[XMLDocument alloc] init];
+    doc->m_rootElement = [XMLElement elementWithNSXMLElement: [document rootElement]];
     return doc;
 }
 
--(MyXMLElement*) rootElement
+-(XMLElement*) rootElement
 {
     return m_rootElement;
 }

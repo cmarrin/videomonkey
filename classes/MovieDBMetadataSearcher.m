@@ -42,12 +42,12 @@ static NSDictionary* g_moviedbMap = nil;
     NSString* urlString = [NSString stringWithFormat:@"http://api.themoviedb.org/2.0/Movie.search?title=%@&api_key=ae6c3dcf41e60014a3d0508e7f650884", searchString];
     urlString = [urlString stringByAddingPercentEscapesUsingEncoding:NSASCIIStringEncoding];
     NSURL* url = [NSURL URLWithString:urlString];
-    MyXMLDocument* doc = [MyXMLDocument xmlDocumentWithContentsOfURL:url];
+    XMLDocument* doc = [XMLDocument xmlDocumentWithContentsOfURL:url];
     
     if (![[[doc rootElement] name] isEqualToString:@"results"])
         return NO;
         
-    MyXMLElement* matches = [[doc rootElement] lastElementForName:@"moviematches"];
+    XMLElement* matches = [[doc rootElement] lastElementForName:@"moviematches"];
     if (!matches)
         return NO;
         
@@ -58,7 +58,7 @@ static NSDictionary* g_moviedbMap = nil;
     NSMutableArray* foundShowNames = [[NSMutableArray alloc] init];
     NSMutableArray* foundShowIds = [[NSMutableArray alloc] init];
 
-    for (MyXMLElement* element in movies) {
+    for (XMLElement* element in movies) {
         NSString* name = [[element lastElementForName:@"title"] content];
         NSString* idString = [[element lastElementForName:@"id"] content];
         int id = (idString && [idString length] > 0) ? [idString intValue] : -1;
@@ -82,7 +82,7 @@ static NSDictionary* g_moviedbMap = nil;
 
 -(void) collectArtwork:(NSArray*) fromArray toArray:(NSMutableArray*) toArray
 {
-    for (MyXMLElement* element in fromArray) {
+    for (XMLElement* element in fromArray) {
         if ([[element stringAttribute:@"size"] isEqualToString:@"original"]) {
             NSString* s = [element content];
             if (s && [s length] > 0)
@@ -99,16 +99,16 @@ static NSDictionary* g_moviedbMap = nil;
     
     NSString* urlString = [NSString stringWithFormat:@"http://api.themoviedb.org/2.0/Movie.getInfo?id=%d&api_key=ae6c3dcf41e60014a3d0508e7f650884", showId];
     NSURL* url = [NSURL URLWithString:urlString];
-    MyXMLDocument* doc = [MyXMLDocument xmlDocumentWithContentsOfURL:url];
+    XMLDocument* doc = [XMLDocument xmlDocumentWithContentsOfURL:url];
             
     if (![[[doc rootElement] name] isEqualToString:@"results"])
         return;
         
-    MyXMLElement* matches = [[doc rootElement] lastElementForName:@"moviematches"];
+    XMLElement* matches = [[doc rootElement] lastElementForName:@"moviematches"];
     if (!matches)
         return;
         
-    MyXMLElement* movie = [matches lastElementForName:@"movie"];
+    XMLElement* movie = [matches lastElementForName:@"movie"];
     if (!movie)
         return;
         

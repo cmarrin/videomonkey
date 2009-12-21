@@ -4,6 +4,4 @@
 
 #ifdef __OBJC__
     #import <Cocoa/Cocoa.h>
-    #import <Quartz/Quartz.h>
-    #import <QTKit/QTKit.h>
 #endif
