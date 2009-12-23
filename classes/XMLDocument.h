@@ -26,11 +26,27 @@
 
 @end
 
+@class XMLDocument;
+
+@interface AsyncXMLDelegate : NSObject {
+}
+
+-(void) xmlDocumentComplete:(XMLDocument*) document withStatus:(NSError*) status;
+@end
+
 @interface XMLDocument : NSObject {
     XMLElement* m_rootElement;
+    NSURLConnection* m_connection;
+    AsyncXMLDelegate* m_delegate;
+    NSURL* m_url;
+    NSMutableData* m_response;
 }
 
 +(XMLDocument*) xmlDocumentWithContentsOfURL: (NSURL*) url;
+
+// When the request is complete, the delegate is sent the xmlDocumentComplete:withStatus:
+// message. The first param is the XMLDocument and the second is an NSError status code (nil for ok).
++(XMLDocument*) xmlDocumentWithContentsOfURLAsync: (NSURL*) url delegate:(id) delegate;
 
 -(XMLElement*) rootElement;
 
