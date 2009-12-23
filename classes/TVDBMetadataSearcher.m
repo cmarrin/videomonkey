@@ -271,12 +271,8 @@ static NSArray* numericallySortedArray(NSArray* array)
 -(NSDictionary*) detailsForShow:(int) showId season:(int*) season episode:(int*) episode
 {
     if (showId != m_loadedShowId) {
-        // if we are switching from one show to another, clear the season and episode
-        if (m_loadedShowId >= 0) {
-            *season = -1;
-            *episode = -1;
-        }
-        
+        // Even if we are switching shows, the passed season/episode might be correct for
+        // the new show. So only clear it if the it doesn't exist
         [self loadDetailsForShow:showId];
     }
 
