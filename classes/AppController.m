@@ -35,16 +35,12 @@
 @synthesize limitParams = m_limitParams;
 @synthesize numCPUs = m_numCPUs;
 
+static AppController *g_appController;
+
 +(AppController *) instance 
 {
-    static AppController *instance;
-
-    @synchronized(self) {
-        if(!instance)
-            instance = [[AppController alloc] init];
-    }
-
-    return instance;
+    assert(g_appController);
+    return g_appController;
 }
 
 -(NSString*) maxCPU
@@ -131,7 +127,11 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
 
 - (id)init
 {
+    assert(!g_appController);
+    
     self = [super init];
+    g_appController = self;
+    
     m_fileList = [[NSMutableArray alloc] init];
     
     m_applicationIcon = [[[NSApplication sharedApplication] applicationIconImage] copy];
