@@ -12,7 +12,6 @@
 
 @interface FileListController : NSArrayController {
     IBOutlet NSTableView* m_fileListView;
-    IBOutlet AppController* m_appController;
 
     int m_draggedRow;
 }

@@ -7,6 +7,7 @@
 //
 
 #import "XMLDocument.h"
+#import "AppController.h"
 
 @implementation XMLElement
 
@@ -105,7 +106,10 @@
 
 @implementation XMLDocument
 
-+(XMLDocument*) xmlDocumentWithContentsOfURL: (NSURL*) url
+@synthesize rootElement = m_rootElement;
+@synthesize target = m_target;
+
+-(BOOL) loadDocument:(NSURL*) url withInfo:(NSString*) info
 {
     NSError* error;
     NSXMLDocument* document = [[NSXMLDocument alloc] initWithContentsOfURL:url options:0 error:&error];
@@ -113,74 +117,43 @@
     NSString* desc = [error localizedDescription];
     
     if ([desc length] != 0) {
-        NSRunAlertPanel([NSString stringWithFormat:@"Error parsing %@", url], desc, nil, nil, nil);
-        return nil;
+        [[AppController instance] log:@"ERROR parsing XML document: %@. %@\n", info, desc];
+        return NO;
     }
     
-	XMLDocument* doc = [[XMLDocument alloc] init];
-    doc->m_rootElement = [XMLElement elementWithNSXMLElement: [document rootElement]];
-    return doc;
+    self.rootElement = [XMLElement elementWithNSXMLElement: [document rootElement]];
+    return YES;
 }
 
-+(XMLDocument*) xmlDocumentWithContentsOfURLAsync: (NSURL*) url delegate:(id) delegate
++(XMLDocument*) xmlDocumentWithContentsOfURL: (NSURL*) url withInfo:(NSString*) info
 {
 	XMLDocument* doc = [[XMLDocument alloc] init];
-    doc->m_connection = [NSURLConnection connectionWithRequest:[NSURLRequest requestWithURL:url] delegate:self];
-    doc->m_delegate = [delegate retain];
-    doc->m_url = [url retain];
-    doc->m_response = [[NSMutableData alloc] init];
+    return [doc loadDocument:url withInfo:info] ? doc : nil;
+}
+
+-(void) loadDocumentThread:(NSArray*) array
+{
+    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+    NSURL* url = [array objectAtIndex:0];
+    NSString* info = [array objectAtIndex:1];
+    [self.target performSelectorOnMainThread:m_selector withObject:[self loadDocument:url withInfo:info] ? self : nil waitUntilDone:NO];
+    [pool release];
+}
+
++(XMLDocument*) xmlDocumentWithContentsOfURL: (NSURL*) url  withInfo:(NSString*) info target:(id) target selector:(SEL) selector;
+{
+	XMLDocument* doc = [[[XMLDocument alloc] init] retain];
+    doc.target = target;
+    doc->m_selector = selector;
+    
+    NSArray* array = [NSArray arrayWithObjects:url, info, nil];
+    [NSThread detachNewThreadSelector:@selector(loadDocumentThread:) toTarget:doc withObject:array];
     return doc;
 }
 
 -(XMLElement*) rootElement
 {
     return m_rootElement;
-}
-
--(void) connection:(NSURLConnection *)connection didReceiveData:(NSData *)data
-{
-    [m_response appendData:data];
-}
-
--(void) connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
-{
-    assert(connection == m_connection);
-
-    NSRunAlertPanel([NSString stringWithFormat:@"Error loading %@", m_url], [error localizedDescription], nil, nil, nil);
-    [m_delegate xmlDocumentComplete:self withStatus: error];
-    [m_delegate release];
-    m_delegate = 0;
-    [m_url release];
-    m_url = 0;
-    [m_response release];
-    m_response = 0;
-}
-
--(void) connectionDidFinishLoading:(NSURLConnection *)connection
-{
-    assert(connection == m_connection);
-    
-    // Parse
-    NSError* error;
-    NSXMLDocument* document = [[NSXMLDocument alloc] initWithData:m_response options:0 error:&error];
-    NSString* desc = [error localizedDescription];
-    
-    if ([desc length] != 0) {
-        NSRunAlertPanel([NSString stringWithFormat:@"Error parsing %@", m_url], desc, nil, nil, nil);
-        [m_delegate xmlDocumentComplete:self withStatus: error];
-    }
-    else {
-        XMLDocument* doc = [[XMLDocument alloc] init];
-        doc->m_rootElement = [XMLElement elementWithNSXMLElement: [document rootElement]];
-        [m_delegate xmlDocumentComplete:self withStatus: 0];
-    }
-    
-    [m_delegate release];
-    m_delegate = 0;
-    [m_url release];
-    m_url = 0;
-    [m_response release];
-    m_response = 0;
 }
 
 @end

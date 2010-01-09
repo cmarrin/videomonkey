@@ -35,6 +35,18 @@
 @synthesize limitParams = m_limitParams;
 @synthesize numCPUs = m_numCPUs;
 
++(AppController *) instance 
+{
+    static AppController *instance;
+
+    @synchronized(self) {
+        if(!instance)
+            instance = [[AppController alloc] init];
+    }
+
+    return instance;
+}
+
 -(NSString*) maxCPU
 {
     NSString* s = [[[NSUserDefaultsController sharedUserDefaultsController] values] valueForKey:@"maxCPU"];
@@ -440,7 +452,7 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
 
 -(Transcoder*) transcoderForFileName:(NSString*) fileName
 {
-    Transcoder* transcoder = [Transcoder transcoderWithController:self];
+    Transcoder* transcoder = [Transcoder transcoder];
     [transcoder addInputFile: fileName];
     [transcoder addOutputFile: getOutputFileName(fileName, m_savePath, [m_deviceController fileSuffix])];
     transcoder.outputFileInfo.duration = transcoder.inputFileInfo.duration;

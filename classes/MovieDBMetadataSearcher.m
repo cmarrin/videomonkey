@@ -14,40 +14,24 @@ static NSDictionary* g_moviedbMap = nil;
 
 @implementation MovieDBMetadataSearcher
 
--(id) init
++(MetadataSearcher*) metadataSearcher:(MetadataSearch*) metadataSearch
 {
-    // init the tag map, if needed
-    if (!g_moviedbMap) {
-        g_moviedbMap = [[NSDictionary dictionaryWithObjectsAndKeys:
-            @"title",       	@"title", 
-            @"description", 	@"short_overview", 
-            @"year",        	@"release",
-            nil ] retain];
-    }
-    
-    return self;
+    MetadataSearcher* searcher = [[MovieDBMetadataSearcher alloc] init];
+    [searcher initWithMetadataSearch:metadataSearch];
+    return searcher;
 }
 
--(BOOL) searchForShow:(NSString*) searchString
+-(NSString*) makeSearchURLString:(NSString*) searchString
 {
-    [m_foundShowNames release];
-    m_foundShowNames = nil;
-    [m_foundShowIds release];
-    m_foundShowIds = nil;
-    [m_foundSeasons release];
-    m_foundSeasons = nil;
-    [m_foundEpisodes release];
-    m_foundEpisodes = nil;
+    return [NSString stringWithFormat:@"http://api.themoviedb.org/2.0/Movie.search?title=%@&api_key=ae6c3dcf41e60014a3d0508e7f650884", searchString];
+}
 
-    NSString* urlString = [NSString stringWithFormat:@"http://api.themoviedb.org/2.0/Movie.search?title=%@&api_key=ae6c3dcf41e60014a3d0508e7f650884", searchString];
-    urlString = [urlString stringByAddingPercentEscapesUsingEncoding:NSASCIIStringEncoding];
-    NSURL* url = [NSURL URLWithString:urlString];
-    XMLDocument* doc = [XMLDocument xmlDocumentWithContentsOfURL:url];
-    
-    if (![[[doc rootElement] name] isEqualToString:@"results"])
+-(BOOL) loadShowData:(XMLDocument*) document
+{
+    if (![[[document rootElement] name] isEqualToString:@"results"])
         return NO;
         
-    XMLElement* matches = [[doc rootElement] lastElementForName:@"moviematches"];
+    XMLElement* matches = [[document rootElement] lastElementForName:@"moviematches"];
     if (!matches)
         return NO;
         
@@ -80,6 +64,20 @@ static NSDictionary* g_moviedbMap = nil;
     return YES;
 }
 
+-(id) init
+{
+    // init the tag map, if needed
+    if (!g_moviedbMap) {
+        g_moviedbMap = [[NSDictionary dictionaryWithObjectsAndKeys:
+            @"title",       	@"title", 
+            @"description", 	@"short_overview", 
+            @"year",        	@"release",
+            nil ] retain];
+    }
+    
+    return self;
+}
+
 -(void) collectArtwork:(NSArray*) fromArray toArray:(NSMutableArray*) toArray
 {
     for (XMLElement* element in fromArray) {
@@ -91,55 +89,50 @@ static NSDictionary* g_moviedbMap = nil;
     }
 }
 
--(void) loadDetailsForShow:(int) showId
+-(void) loadDetailsCallback:(XMLDocument*) document
 {
-    [m_dictionary release];
-    m_dictionary = [[NSMutableDictionary alloc] init];
-    m_loadedShowId = -1;
-    
-    NSString* urlString = [NSString stringWithFormat:@"http://api.themoviedb.org/2.0/Movie.getInfo?id=%d&api_key=ae6c3dcf41e60014a3d0508e7f650884", showId];
-    NSURL* url = [NSURL URLWithString:urlString];
-    XMLDocument* doc = [XMLDocument xmlDocumentWithContentsOfURL:url];
-            
-    if (![[[doc rootElement] name] isEqualToString:@"results"])
-        return;
-        
-    XMLElement* matches = [[doc rootElement] lastElementForName:@"moviematches"];
-    if (!matches)
-        return;
-        
-    XMLElement* movie = [matches lastElementForName:@"movie"];
-    if (!movie)
-        return;
-        
-    // we have our movie
-    m_loadedShowId = showId;
-        
-    // this is a movie
-    [m_dictionary setValue:@"Movie" forKey:@"stik"];
-    
-    NSString* value;
-    
-    // get the movie info
-    for (NSString* key in g_moviedbMap) {
-        NSString* dictionaryKey = [g_moviedbMap valueForKey:key];
-        value = [[movie lastElementForName:key] content];
-        if (value)
-            [m_dictionary setValue:value forKey:dictionaryKey];
+    if (document && ![[[document rootElement] name] isEqualToString:@"results"]) {
+        XMLElement* matches = [[document rootElement] lastElementForName:@"moviematches"];
+        if (matches) {
+            XMLElement* movie = [matches lastElementForName:@"movie"];
+            if (movie) {
+                // this is a movie
+                [m_dictionary setValue:@"Movie" forKey:@"stik"];
+                
+                NSString* value;
+                
+                // get the movie info
+                for (NSString* key in g_moviedbMap) {
+                    NSString* dictionaryKey = [g_moviedbMap valueForKey:key];
+                    value = [[movie lastElementForName:key] content];
+                    if (value)
+                        [m_dictionary setValue:value forKey:dictionaryKey];
+                }
+                
+                // collect the artwork
+                NSMutableArray* artwork = [[NSMutableArray alloc] init];
+                [self collectArtwork: [movie elementsForName:@"poster"] toArray:artwork];
+                [m_dictionary setValue:artwork forKey:@"artwork"];
+            }
+        }
     }
-    
-    // collect the artwork
-    NSMutableArray* artwork = [[NSMutableArray alloc] init];
-    [self collectArtwork: [movie elementsForName:@"poster"] toArray:artwork];
-    [m_dictionary setValue:artwork forKey:@"artwork"];
+
+    [m_metadataSearch detailsLoaded:m_dictionary];
 }
 
--(NSDictionary*) detailsForShow:(int) showId season:(int*) season episode:(int*) episode
+-(void) detailsForShow:(int) showId season:(int) season episode:(int) episode
 {
-    if (showId != m_loadedShowId)
-        [self loadDetailsForShow:showId];
-
-    return m_dictionary;
+    if (showId != m_loadedShowId) {
+        [m_dictionary release];
+        m_dictionary = [[NSMutableDictionary alloc] init];
+        m_loadedShowId = showId;
+        
+        NSString* urlString = [NSString stringWithFormat:@"http://api.themoviedb.org/2.0/Movie.getInfo?id=%d&api_key=ae6c3dcf41e60014a3d0508e7f650884", showId];
+        NSURL* url = [NSURL URLWithString:urlString];
+        [XMLDocument xmlDocumentWithContentsOfURL:url
+                        withInfo:[NSString stringWithFormat:@"searching for movie with ID %d", showId] 
+                        target:self selector:@selector(loadDetailsCallback:)];
+    }
 }
 
 @end

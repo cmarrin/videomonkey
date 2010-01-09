@@ -15,6 +15,7 @@
 
 @synthesize fileListController = m_fileListController;
 @synthesize metadataPanel = m_metadataPanel;
+@synthesize metadataStatus = m_metadataStatus;
 
 -(BOOL) autoSearch
 {
@@ -122,12 +123,39 @@
 
 -(IBAction)searchAllFiles:(id)sender
 {
+    m_metadataSearchCount = 0;
+    m_errorsOnMetadataSearch = NO;
     [m_fileListController searchAllFiles];
 }
 
 -(IBAction)searchSelectedFiles:(id)sender
 {
+    m_metadataSearchCount = 0;
+    m_errorsOnMetadataSearch = NO;
     [m_fileListController searchSelectedFiles];
+}
+
+-(void) startMetadataSearch
+{
+    if (++m_metadataSearchCount == 1) {
+        [self.metadataPanel setMetadataSearchSpinner:YES];
+        self.metadataStatus = @"Searching for metadata...";
+    }
+}
+
+-(void) finishMetadataSearch:(BOOL) success
+{
+    if (!success)
+        m_errorsOnMetadataSearch = YES;
+        
+    if (--m_metadataSearchCount <= 0) {
+        [self.metadataPanel setMetadataSearchSpinner:NO];
+        self.metadataStatus = @"";
+        
+    if (m_errorsOnMetadataSearch)
+        NSRunAlertPanel(@"Error in one or more metadata searches", @"See console for more information", nil, nil, nil);
+        
+    }
 }
 
 -(id) selection

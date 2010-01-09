@@ -77,7 +77,7 @@
     [pboard declareTypes: [NSArray arrayWithObjects: NSFilenamesPboardType, FileListItemType, nil] owner: self];
     
     // put the string value into the paste board
-    [pboard setString: [[[m_appController fileList] objectAtIndex: m_draggedRow] inputFileInfo].filename forType: FileListItemType];
+    [pboard setString: [[[[AppController instance] fileList] objectAtIndex: m_draggedRow] inputFileInfo].filename forType: FileListItemType];
     
     return YES;
 }
@@ -111,12 +111,12 @@
         if (aString) {
             // handle move of an item in the table
             // remove the index that got dragged, now that we are accepting the dragging
-            id obj = [[m_appController fileList] objectAtIndex: m_draggedRow];
+            id obj = [[[AppController instance] fileList] objectAtIndex: m_draggedRow];
             [obj retain];
             [self removeObjectAtArrangedObjectIndex: m_draggedRow];
             
             // insert the new string (same one that got dragger) into the array
-            if (row > [[m_appController fileList] count])
+            if (row > [[[AppController instance] fileList] count])
                 [self addObject: obj];
             else
                 [self insertObject: obj atArrangedObjectIndex: (row > m_draggedRow) ? (row-1) : row];
@@ -137,7 +137,7 @@
             
             if (filenames) {
                 for (NSString* filename in filenames) {
-                    Transcoder* transcoder = [m_appController transcoderForFileName: filename];
+                    Transcoder* transcoder = [[AppController instance] transcoderForFileName: filename];
                     [transcoders addObject: transcoder];
                     [transcoder release];
                     [self addObject:transcoder];
@@ -147,7 +147,7 @@
                 //for (Transcoder* transcoder in transcoders)
                 //    [self addObject:transcoder];
                         
-                [m_appController uiChanged];    
+                [[AppController instance] uiChanged];    
             }
             
             [transcoders release];
@@ -160,7 +160,7 @@
 - (void)tableViewSelectionDidChange:(NSNotification *)aNotification
 {
     // If we have only one item selected, set it otherwise set nothing
-    [m_appController setSelectedFile: ([m_fileListView numberOfSelectedRows] != 1) ? -1 :
+    [[AppController instance] setSelectedFile: ([m_fileListView numberOfSelectedRows] != 1) ? -1 :
                                         [m_fileListView selectedRow]];
 }
 
@@ -168,10 +168,10 @@
 
 -(void) addFile:(NSString*) filename
 {
-    Transcoder* transcoder = [m_appController transcoderForFileName: filename];
+    Transcoder* transcoder = [[AppController instance] transcoderForFileName: filename];
     [self addObject:transcoder];
     [transcoder release];
-    [m_appController uiChanged];    
+    [[AppController instance] uiChanged];    
 }
 
 -(IBAction)addFiles:(id)sender

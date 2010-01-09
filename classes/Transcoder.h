@@ -16,7 +16,7 @@
 @class AppController;
 @class Command;
 @class Metadata;
-@class MetadataPanel;
+@class FileInfoPanelController;
 
 // FrameSize is a 32 bit integer with upper 16 bits width and lower 16 bits height
 typedef uint32_t FrameSize;
@@ -93,7 +93,6 @@ typedef enum FileStatus { FS_INVALID, FS_VALID, FS_ENCODING, FS_PAUSED, FS_FAILE
     double m_progress;
     BOOL m_enabled;
     FileStatus m_fileStatus;
-    AppController* m_appController;
     
     NSTask* m_task;
     NSPipe* m_pipe;
@@ -116,9 +115,9 @@ typedef enum FileStatus { FS_INVALID, FS_VALID, FS_ENCODING, FS_PAUSED, FS_FAILE
 @property (readonly) TranscoderFileInfo* inputFileInfo;
 @property (readonly) TranscoderFileInfo* outputFileInfo;
 @property (retain) Metadata* metadata;
-@property (readonly) MetadataPanel* metadataPanel;
+@property (readonly) FileInfoPanelController* fileInfoPanelController;
 
-+(Transcoder*) transcoderWithController: (AppController*) controller;
++(Transcoder*) transcoder;
 
 -(int) addInputFile: (NSString*) filename;
 -(int) addOutputFile: (NSString*) filename;

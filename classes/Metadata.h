@@ -24,8 +24,6 @@
     int m_numArtwork;
     MetadataSearch* m_search;
     NSString* m_rootFilename;
-    BOOL m_isMetadataBusy;
-    NSString* m_metadataStatus;
 }
 
 @property(retain) NSMutableArray* artworkList;
@@ -33,8 +31,6 @@
 @property(assign) NSImage* primaryArtwork;
 @property(retain) MetadataSearch* search;
 @property(readonly) NSString* rootFilename;
-@property(assign) BOOL isMetadataBusy;
-@property(retain) NSString* metadataStatus;
 
 +(Metadata*) metadataWithTranscoder: (Transcoder*) transcoder search:(BOOL) search;
 
@@ -46,8 +42,9 @@
 -(void) cleanupAfterMetadataWrite;
 -(void) setMetadataSource:(TagType) type;
 
--(BOOL) searchWithString:(NSString*) string;
--(void) searchMetadataChanged;
+-(void) loadSearchMetadata:(NSDictionary*) dictionary;
+
+-(void) searchWithString:(NSString*) string;
 -(void) searchAgain;
 
 @end

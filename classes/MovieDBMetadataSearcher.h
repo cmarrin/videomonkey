@@ -13,4 +13,6 @@
     NSMutableDictionary* m_dictionary;
 }
 
++(MetadataSearcher*) metadataSearcher:(MetadataSearch*) metadataSearch;
+
 @end

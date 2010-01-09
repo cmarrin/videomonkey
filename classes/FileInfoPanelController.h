@@ -8,6 +8,7 @@
 
 #import <Cocoa/Cocoa.h>
 
+@class AppController;
 @class FileListController;
 @class MetadataPanel;
 
@@ -25,6 +26,9 @@
     IBOutlet NSPopUpButton* m_currentSearcher;
     
     BOOL m_isVisible;
+    NSString* m_metadataStatus;
+    int m_metadataSearchCount;
+    BOOL m_errorsOnMetadataSearch;
 }
 
 @property(readonly) NSArray* artworkList;
@@ -32,11 +36,15 @@
 @property(readonly) MetadataPanel* metadataPanel;
 @property(assign) NSImage* primaryArtwork;
 @property(assign) BOOL autoSearch;
+@property(retain) NSString* metadataStatus;
 
 -(IBAction)artworkCheckedStateChanged:(id)sender;
 -(IBAction)searchBoxSelected:(id)sender;
 -(IBAction)useThisValueForAllFiles:(id)sender;
 -(IBAction)searchAllFiles:(id)sender;
 -(IBAction)searchSelectedFiles:(id)sender;
+
+-(void) startMetadataSearch;
+-(void) finishMetadataSearch:(BOOL) success;
 
 @end

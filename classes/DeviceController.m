@@ -63,7 +63,7 @@ static void addMenuSeparator(NSPopUpButton* button)
 -(void) initCommands
 {
     NSURL* url = [NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"commands" ofType:@"xml"]];
-    XMLDocument* doc = [XMLDocument xmlDocumentWithContentsOfURL:url];
+    XMLDocument* doc = [XMLDocument xmlDocumentWithContentsOfURL:url withInfo:@"loading commands.xml"];
 
     // extract the defaults
     m_defaultDevice = [DeviceEntry deviceEntryWithElement: [[doc rootElement] lastElementForName:@"default_device"] inGroup: nil withDefaults: nil];

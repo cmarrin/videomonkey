@@ -10,6 +10,9 @@
 #import "Metadata.h"
 #import "MovieDBMetadataSearcher.h"
 #import "TVDBMetadataSearcher.h"
+#import "XMLDocument.h"
+
+@class XMLDocument;
 
 @implementation MetadataSearcher
 
@@ -18,13 +21,47 @@
 @synthesize foundSeasons = m_foundSeasons;
 @synthesize foundEpisodes = m_foundEpisodes;
 
--(BOOL) searchForShow:(NSString*) searchString { return NO; }
--(NSDictionary*) detailsForShow:(int) showId season:(int*) season episode:(int*) episode { return nil; }
+-(void) initWithMetadataSearch:(MetadataSearch*) metadataSearch
+{
+    [super init];
+    m_metadataSearch = metadataSearch;
+}
+
+-(NSString*) makeSearchURLString:(NSString*) searchString { return nil; }
+-(BOOL) loadShowData:(XMLDocument*) document { return NO; }
+
+-(void) searchForShowCallback:(XMLDocument*) document
+{
+    BOOL success = document != nil;
+    if (success)
+        [self loadShowData:document];
+        
+    [m_metadataSearch searchForShowsComplete:success];
+}
+
+-(void) searchForShow:(NSString*) searchString
+{
+    self.foundShowNames = nil;
+    self.foundShowIds = nil;
+    self.foundSeasons = nil;
+    self.foundEpisodes = nil;
+
+    NSString* urlString = [self makeSearchURLString:searchString];
+    urlString = [urlString stringByAddingPercentEscapesUsingEncoding:NSASCIIStringEncoding];
+    NSURL* url = [NSURL URLWithString:urlString];
+    
+    [XMLDocument xmlDocumentWithContentsOfURL:url 
+                    withInfo:[NSString stringWithFormat:@"searching for \"%@\"", searchString] 
+                    target:self selector:@selector(searchForShowCallback:)];
+}
+
+-(void) detailsForShow:(int) showId season:(int) season episode:(int) episode { }
 
 @end
 
 @implementation MetadataSearch
 
+@synthesize foundSearcher = m_foundSearcher;
 @synthesize foundShowNames = m_foundShowNames;
 @synthesize foundShowIds = m_foundShowIds;
 @synthesize foundSeasons = m_foundSeasons;
@@ -53,7 +90,7 @@
 -(void) setCurrentSeason:(NSString*) value
 {
     m_season = [value isEqualToString:@"--"] ? -1 : [value intValue];
-    [m_metadata searchMetadataChanged];
+    [self details];
 }
 
 -(NSString*) currentEpisode
@@ -64,20 +101,20 @@
 -(void) setCurrentEpisode:(NSString*) value
 {
     m_episode = [value isEqualToString:@"--"] ? -1 : [value intValue];
-    [m_metadata searchMetadataChanged];
+    [self details];
 }
 
 +(MetadataSearch*) metadataSearch:(Metadata*) metadata
 {
     MetadataSearch* metadataSearch = [[MetadataSearch alloc] init];
     metadataSearch->m_searchers = [[NSDictionary dictionaryWithObjectsAndKeys:
-                                    [[TVDBMetadataSearcher alloc] init], @"thetvdb.com",
-                                    [[MovieDBMetadataSearcher alloc] init], @"themoviedb.org",
+                                    [TVDBMetadataSearcher metadataSearcher:metadataSearch], @"thetvdb.com",
+                                    [MovieDBMetadataSearcher metadataSearcher:metadataSearch], @"themoviedb.org",
                                     nil] retain];
     metadataSearch->m_metadata = metadata;
     metadataSearch->m_season = -1;
     metadataSearch->m_episode = -1;
-    [metadataSearch setCurrentSearcher: [[[NSUserDefaultsController sharedUserDefaultsController] values] valueForKey:@"defaultMetadataSearch"]];
+    metadataSearch->m_currentSearcher = [[[NSUserDefaultsController sharedUserDefaultsController] values] valueForKey:@"defaultMetadataSearch"];
     return metadataSearch;
 }
 
@@ -88,20 +125,32 @@ static BOOL isValidInteger(NSString* s)
     return [[s stringByTrimmingCharactersInSet:[NSCharacterSet decimalDigitCharacterSet]] length] == 0;
 }
 
--(BOOL) _searchForShows:(NSString*) searchString
+-(void) searchForShowsComplete:(BOOL) success
 {
-    m_foundSearcher = [m_searchers valueForKey:[self currentSearcher]];
-    if (!m_foundSearcher)
-        return NO;
-        
-    if ([m_foundSearcher searchForShow:searchString]) {
-        self.foundShowNames = m_foundSearcher.foundShowNames;
-        self.foundShowIds = m_foundSearcher.foundShowIds;
-        [m_foundSearcher retain];
-        return YES;
+    if (success) {
+        self.foundShowNames = self.foundSearcher.foundShowNames;
+        self.foundShowIds = self.foundSearcher.foundShowIds;
+
+        // make the first thing found the current
+        self.currentShowName = [m_foundShowNames objectAtIndex:0];
+        m_showId = [[m_foundShowIds objectAtIndex:0] intValue];
     }
-    m_foundSearcher = nil;
-    return NO;
+    else
+        self.foundSearcher = nil;
+
+    [self performSelector:m_searchForShowsSelector withObject:[NSNumber numberWithBool:success]];
+}
+
+-(void) _searchForShows:(NSString*) searchString withSelector:(SEL) selector
+{
+    self.foundSearcher = [m_searchers valueForKey:[self currentSearcher]];
+    if (!self.foundSearcher) {
+        [self performSelector:selector withObject:[NSNumber numberWithBool:NO]];
+        return;
+    }
+    
+    m_searchForShowsSelector = selector;
+    [self.foundSearcher searchForShow:searchString];
 }
 
 // This function not only returns the found season/episode, but also returns a new string with
@@ -154,7 +203,15 @@ static BOOL isValidInteger(NSString* s)
     return outputString;
 }
 
--(BOOL) searchWithString:(NSString*) string
+-(void) searchWithStringComplete:(NSNumber*) success
+{
+    if ([success boolValue])
+        [self details];
+    else
+        [m_metadata loadSearchMetadata:0];
+}
+
+-(void) searchWithString:(NSString*) string
 {
     // sometimes a show name has the season/episode encoded into it. See if it does and remove it if so
     int season;
@@ -173,7 +230,8 @@ static BOOL isValidInteger(NSString* s)
         if ([string isEqualToString:name]) {
             self.currentShowName = [m_foundShowNames objectAtIndex:i];
             m_showId = [[m_foundShowIds objectAtIndex:i] intValue];
-            return YES;
+            [self details];
+            return;
         }
         
         i++;
@@ -182,28 +240,35 @@ static BOOL isValidInteger(NSString* s)
     // not found, we need to do a full search
     self.foundShowNames = nil;
     self.foundShowIds = nil;
-    [m_foundSearcher release];
-    m_foundSearcher = nil;
+    self.foundSearcher = nil;
     
     m_season = (season >= 0) ? season : -1;
     m_episode = (episode >= 0) ? episode : -1;
     
-    if ([self _searchForShows: newString]) {
-        // make the first thing found the current
-        self.currentShowName = [m_foundShowNames objectAtIndex:0];
-        m_showId = [[m_foundShowIds objectAtIndex:0] intValue];
-        return YES;
-    }
-    
-    return NO;
+    [self _searchForShows: newString withSelector:@selector(searchWithStringComplete:)];
 }
 
--(BOOL) searchWithFilename:(NSString*) filename
+-(void) searchWithFilenameCallback:(NSNumber*) success
+{
+    [m_searchWithFilenameArray removeLastObject];
+    
+    if ([success boolValue] || ![m_searchWithFilenameArray count]) {
+        if ([success boolValue])
+            [self details];
+        else
+            [m_metadata loadSearchMetadata:0];
+        [m_searchWithFilenameArray release];
+        return;
+    }
+        
+    [self _searchForShows: [m_searchWithFilenameArray componentsJoinedByString:@" "] withSelector:@selector(searchWithFilenameCallback:)];
+}
+
+-(void) searchWithFilename:(NSString*) filename
 {
     self.foundShowNames = nil;
     self.foundShowIds = nil;
-    [m_foundSearcher release];
-    m_foundSearcher = nil;
+    self.foundSearcher = nil;
     
     // Format the filename into something that we can search with.
     // Toss the prefix and suffix
@@ -212,34 +277,21 @@ static BOOL isValidInteger(NSString* s)
      // See if anything looks like SxxEyy
     searchString = [self checkString:searchString forSeason:&m_season episode:&m_episode];
         
-    NSMutableArray* array = [[NSMutableArray arrayWithArray: [searchString componentsSeparatedByString:@" "]] retain];
+    m_searchWithFilenameArray = [[NSMutableArray arrayWithArray: [searchString componentsSeparatedByString:@" "]] retain];
     
-    // search until we find something
-    while ([array count]) {
-        if ([self _searchForShows: [array componentsJoinedByString:@" "]]) {
-            // make the first thing found the current
-            [m_currentShowName release];
-            m_currentShowName = nil;
-            [self setCurrentShowName:[m_foundShowNames objectAtIndex:0]];
-            m_showId = [[m_foundShowIds objectAtIndex:0] intValue];
-            return YES;
-        }
-        
-        // remove the last component
-        [array removeLastObject];
-    }
-    
-    [array release];
-    
-    return NO;
+    [self _searchForShows: [m_searchWithFilenameArray componentsJoinedByString:@" "] withSelector:@selector(searchWithFilenameCallback:)];
 }
 
--(NSDictionary*) details
+-(void) detailsLoaded:(NSDictionary*) dictionary
 {
-    NSDictionary* details = [m_foundSearcher detailsForShow:m_showId season:&m_season episode:&m_episode];
-    self.foundSeasons = m_foundSearcher.foundSeasons;
-    self.foundEpisodes = m_foundSearcher.foundEpisodes;
-    return details;
+    self.foundSeasons = self.foundSearcher.foundSeasons;
+    self.foundEpisodes = self.foundSearcher.foundEpisodes;
+    [m_metadata loadSearchMetadata:dictionary];
+}
+
+-(void) details
+{
+    [self.foundSearcher detailsForShow:m_showId season:m_season episode:m_episode];
 }
 
 - (id)valueForUndefinedKey:(NSString *)key

@@ -79,6 +79,8 @@ typedef enum { RS_STOPPED, RS_RUNNING, RS_PAUSED } RunStateType;
 @property (retain) NSString* maxCPU;
 @property (retain) NSString* defaultMetadataSearch;
 
++(AppController *) instance;
+
 -(IBAction)startEncode:(id)sender;
 -(IBAction)pauseEncode:(id)sender;
 -(IBAction)stopEncode:(id)sender;

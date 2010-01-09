@@ -63,6 +63,7 @@ typedef enum { INPUT_TAG, SEARCH_TAG, USER_TAG, OUTPUT_TAG } TagType;
     IBOutlet FileListController* m_fileListController;
     IBOutlet NSTextField* m_artworkTitle;
     IBOutlet NSImageView* m_artworkImageWell;
+    IBOutlet NSProgressIndicator* m_metadataSearchSpinner;
 }
 
 @property (readonly) FileListController* fileListController;
@@ -75,5 +76,7 @@ typedef enum { INPUT_TAG, SEARCH_TAG, USER_TAG, OUTPUT_TAG } TagType;
 -(IBAction)useAllUserValuesForAllFiles:(id)sender;
 
 -(void) setupMetadataPanelBindings;
+
+-(void) setMetadataSearchSpinner:(BOOL) spinning;
 
 @end

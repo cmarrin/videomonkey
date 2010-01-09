@@ -79,7 +79,10 @@ int heightFromFrameSize(FrameSize f) { return f & 0xffff; }
 @synthesize enabled = m_enabled;
 @synthesize metadata = m_metadata;
 
--(MetadataPanel*) metadataPanel { return [[m_appController fileInfoPanelController] metadataPanel]; }
+-(FileInfoPanelController*) fileInfoPanelController
+{
+    return [[AppController instance] fileInfoPanelController];
+}
 
 -(BOOL) _validateInputFile: (TranscoderFileInfo*) info
 {
@@ -198,10 +201,9 @@ static NSImage* getFileStatusImage(FileStatus status)
     return [[NSImage alloc] initWithContentsOfFile:path]; 
 }
 
-+(Transcoder*) transcoderWithController: (AppController*) controller;
++(Transcoder*) transcoder
 {
     Transcoder* transcoder = [[Transcoder alloc] init];
-    transcoder->m_appController = controller;
     transcoder->m_inputFiles = [[NSMutableArray alloc] init];
     transcoder->m_outputFiles = [[NSMutableArray alloc] init];
     transcoder->m_fileStatus = FS_INVALID;
@@ -235,7 +237,7 @@ static NSImage* getFileStatusImage(FileStatus status)
     
 -(void) createMetadata:(BOOL) autoSearch
 {
-    [self setMetadata:[Metadata metadataWithTranscoder:self search:autoSearch]];
+    self.metadata = [Metadata metadataWithTranscoder:self search:autoSearch];
 }
 
 - (int) addInputFile: (NSString*) filename
@@ -257,7 +259,7 @@ static NSImage* getFileStatusImage(FileStatus status)
     [m_statusImageView setImage: getFileStatusImage(m_fileStatus)];
     
     // read the metadata
-    [self createMetadata:[[m_appController fileInfoPanelController] autoSearch]];
+    [self createMetadata:[[[AppController instance] fileInfoPanelController] autoSearch]];
     
     return [m_inputFiles count] - 1;    
 }
@@ -365,19 +367,19 @@ static NSImage* getFileStatusImage(FileStatus status)
     
     [env setValue: ([self isInputQuicktime] ? @"true" : @"false") forKey: @"is_quicktime"];
     [env setValue: ([self hasInputAudio] ? @"true" : @"false") forKey: @"has_audio"];
-    [env setValue: ([m_appController limitParams] ? @"true" : @"false") forKey: @"limit_output_params"];
+    [env setValue: ([[AppController instance] limitParams] ? @"true" : @"false") forKey: @"limit_output_params"];
     
     // set the number of CPUs
-    [env setValue: [[NSNumber numberWithInt: [m_appController numCPUs]] stringValue] forKey: @"num_cpus"];
+    [env setValue: [[NSNumber numberWithInt: [[AppController instance] numCPUs]] stringValue] forKey: @"num_cpus"];
 
     [env setValue: self.inputFileInfo.videoCodec forKey: @"input_video_codec"];
 
     // set the params
-    [[m_appController deviceController] setCurrentParamsWithEnvironment:env];
+    [[[AppController instance] deviceController] setCurrentParamsWithEnvironment:env];
     
     // save some of the values
-    int width = [[[m_appController deviceController] paramForKey:@"output_video_width"] intValue];
-    int height = [[[m_appController deviceController] paramForKey:@"output_video_height"] intValue];
+    int width = [[[[AppController instance] deviceController] paramForKey:@"output_video_width"] intValue];
+    int height = [[[[AppController instance] deviceController] paramForKey:@"output_video_height"] intValue];
     if (width > 32767)
         width = 32767;
     if (height > 32767)
@@ -387,21 +389,21 @@ static NSImage* getFileStatusImage(FileStatus status)
     self.outputFileInfo.videoFrameSize = frameSize;
     self.outputFileInfo.videoAspectRatio = (double) width / (double) height;
     
-    self.outputFileInfo.format = [[m_appController deviceController] paramForKey:@"output_format_name"];
+    self.outputFileInfo.format = [[[AppController instance] deviceController] paramForKey:@"output_format_name"];
 
-    self.outputFileInfo.videoCodec = [[m_appController deviceController] paramForKey:@"output_video_codec_name"];
-    NSString* profile = [[m_appController deviceController] paramForKey:@"output_video_profile_name"];
-    int level = [[[m_appController deviceController] paramForKey:@"output_video_level_name"] intValue];
+    self.outputFileInfo.videoCodec = [[[AppController instance] deviceController] paramForKey:@"output_video_codec_name"];
+    NSString* profile = [[[AppController instance] deviceController] paramForKey:@"output_video_profile_name"];
+    int level = [[[[AppController instance] deviceController] paramForKey:@"output_video_level_name"] intValue];
     self.outputFileInfo.videoProfile = [NSString stringWithFormat:@"%@@%d.%d", profile, level/10, level%10];
-    self.outputFileInfo.videoFrameRate = [[[m_appController deviceController] paramForKey:@"output_video_frame_rate"] floatValue];
-    self.outputFileInfo.videoBitrate = [[[m_appController deviceController] paramForKey:@"output_video_bitrate"] floatValue];
+    self.outputFileInfo.videoFrameRate = [[[[AppController instance] deviceController] paramForKey:@"output_video_frame_rate"] floatValue];
+    self.outputFileInfo.videoBitrate = [[[[AppController instance] deviceController] paramForKey:@"output_video_bitrate"] floatValue];
     
-    m_audioQuality = [[m_appController deviceController] paramForKey:@"audio_quality"];
+    m_audioQuality = [[[AppController instance] deviceController] paramForKey:@"audio_quality"];
 
-    self.outputFileInfo.audioCodec = [[m_appController deviceController] paramForKey:@"output_audio_codec_name"];
-    self.outputFileInfo.audioBitrate = [[[m_appController deviceController] paramForKey:@"output_audio_bitrate"] floatValue];
-    self.outputFileInfo.audioSampleRate = [[[m_appController deviceController] paramForKey:@"output_audio_sample_rate"] floatValue];
-    self.outputFileInfo.audioChannels = [[[m_appController deviceController] paramForKey:@"output_audio_channels"] intValue];
+    self.outputFileInfo.audioCodec = [[[AppController instance] deviceController] paramForKey:@"output_audio_codec_name"];
+    self.outputFileInfo.audioBitrate = [[[[AppController instance] deviceController] paramForKey:@"output_audio_bitrate"] floatValue];
+    self.outputFileInfo.audioSampleRate = [[[[AppController instance] deviceController] paramForKey:@"output_audio_sample_rate"] floatValue];
+    self.outputFileInfo.audioChannels = [[[[AppController instance] deviceController] paramForKey:@"output_audio_channels"] intValue];
 
     self.outputFileInfo.bitrate = self.outputFileInfo.videoBitrate + self.outputFileInfo.audioBitrate;
     self.outputFileInfo.fileSize = self.outputFileInfo.duration * self.outputFileInfo.bitrate / 8;
@@ -415,21 +417,21 @@ static NSImage* getFileStatusImage(FileStatus status)
     m_fileStatus = (status == 0) ? FS_SUCCEEDED : (status == 255) ? FS_VALID : FS_FAILED;
     
     if (status == 0) {
-        [m_appController log: @"Succeeded!\n"];
+        [[AppController instance] log: @"Succeeded!\n"];
         
-        if ([m_appController addToMediaLibrary]) {
-            NSString* filename = [[m_appController deviceController] shouldWriteMetadataToInputFile] ?
+        if ([[AppController instance] addToMediaLibrary]) {
+            NSString* filename = [[[AppController instance] deviceController] shouldWriteMetadataToInputFile] ?
                                 self.inputFileInfo.filename : self.outputFileInfo.filename;
             if (![self addToMediaLibrary: filename]) {
                 m_fileStatus = FS_FAILED;
             }
-            else if ([m_appController deleteFromDestination] && ![[m_appController deviceController] shouldWriteMetadataToInputFile])
+            else if ([[AppController instance] deleteFromDestination] && ![[[AppController instance] deviceController] shouldWriteMetadataToInputFile])
                 moveOutputFileToTrash = YES;
         }
     }
     else {
         deleteOutputFile = YES;
-        [m_appController log: @"FAILED with error code: %d\n", status];
+        [[AppController instance] log: @"FAILED with error code: %d\n", status];
     }
         
     [m_statusImageView setImage: getFileStatusImage(m_fileStatus)];
@@ -437,7 +439,7 @@ static NSImage* getFileStatusImage(FileStatus status)
         m_enabled = false;
     m_progress = (status == 0) ? 1 : 0;
     [m_progressIndicator setDoubleValue: m_progress];
-    [m_appController encodeFinished:self withStatus:status];
+    [[AppController instance] encodeFinished:self withStatus:status];
     [m_logFile closeFile];
     [m_logFile release];
     m_logFile = nil;
@@ -454,7 +456,7 @@ static NSImage* getFileStatusImage(FileStatus status)
             tag:nil];
             
     // In case metadata was written, cleanup after it
-    [[self metadata] cleanupAfterMetadataWrite];
+    [self.metadata cleanupAfterMetadataWrite];
 }
 
 -(void) startNextCommands
@@ -497,8 +499,8 @@ static NSImage* getFileStatusImage(FileStatus status)
         [m_logFile release];
     }
     
-    [m_appController log: @"============================================================================\n"];
-    [m_appController log: @"Begin transcode: %@ --> %@\n", [self.inputFileInfo.filename lastPathComponent], [self.outputFileInfo.filename lastPathComponent]];
+    [[AppController instance] log: @"============================================================================\n"];
+    [[AppController instance] log: @"Begin transcode: %@ --> %@\n", [self.inputFileInfo.filename lastPathComponent], [self.outputFileInfo.filename lastPathComponent]];
     
     // Make sure path exists
     NSString* logFilePath = [LOG_FILE_PATH stringByStandardizingPath];
@@ -519,10 +521,10 @@ static NSImage* getFileStatusImage(FileStatus status)
     [self setParams];
 
     // get recipe
-    NSString* recipe = [[m_appController deviceController] recipe];
+    NSString* recipe = [[[AppController instance] deviceController] recipe];
 
     if ([recipe length] == 0) {
-        [m_appController log:@"*** ERROR: No recipe returned, probably due to a previous JavaScript error\n"];
+        [[AppController instance] log:@"*** ERROR: No recipe returned, probably due to a previous JavaScript error\n"];
         [self finish: -1];
         return NO;
     }
@@ -536,7 +538,7 @@ static NSImage* getFileStatusImage(FileStatus status)
     int commandId = 0;
     int index = 0;
     
-    if ([[m_appController deviceController] shouldEncode]) {
+    if ([[[AppController instance] deviceController] shouldEncode]) {
         while (s = (NSString*) [enumerator nextObject]) {
             CommandOutputType type = OT_NONE;
             
@@ -562,25 +564,25 @@ static NSImage* getFileStatusImage(FileStatus status)
         }
     }
     
-    if ([[m_appController deviceController] shouldWriteMetadata]) {
+    if ([[[AppController instance] deviceController] shouldWriteMetadata]) {
         // Before writing metadata, make sure it can be done
         BOOL canWrite = true;
         
-        if (![[m_appController deviceController] shouldEncode]) {
-            if ([[m_appController deviceController] shouldWriteMetadataToOutputFile]) {
-                if (![[self metadata] canWriteMetadataToOutputFile])
+        if (![[[AppController instance] deviceController] shouldEncode]) {
+            if ([[[AppController instance] deviceController] shouldWriteMetadataToOutputFile]) {
+                if (![self.metadata canWriteMetadataToOutputFile])
                     canWrite = false;
             }
             else {
-                if (![[self metadata] canWriteMetadataToInputFile])
+                if (![self.metadata canWriteMetadataToInputFile])
                     canWrite = false;
             }
         }
         
-        NSString* filename = [[m_appController deviceController] shouldWriteMetadataToOutputFile] ?
+        NSString* filename = [[[AppController instance] deviceController] shouldWriteMetadataToOutputFile] ?
                                 self.outputFileInfo.filename :
                                 self.inputFileInfo.filename;
-        NSString* metadataCommand = [[self metadata] metadataCommand:filename];
+        NSString* metadataCommand = [self.metadata metadataCommand:filename];
                                 
         if ([metadataCommand length] > 0) {
             if (canWrite) {
@@ -590,12 +592,12 @@ static NSImage* getFileStatusImage(FileStatus status)
             }
             else {
                 // Can't write metadata to this type of file
-                if ([[m_appController deviceController] shouldWriteMetadataToOutputFile])
-                    [m_appController log: @"WARNING! Unable to write metadata to output file. "
+                if ([[[AppController instance] deviceController] shouldWriteMetadataToOutputFile])
+                    [[AppController instance] log: @"WARNING! Unable to write metadata to output file. "
                                         "Either you haven't yet encoded it and the file doesn't exist, "
                                         "or this file format does not support metadata.\n"];
                 else
-                    [m_appController log: @"WARNING! Unable to write metadata to input file. "
+                    [[AppController instance] log: @"WARNING! Unable to write metadata to input file. "
                                         "This file format probably does not support metadata.\n"];
             }
         }
@@ -671,12 +673,12 @@ static NSImage* getFileStatusImage(FileStatus status)
     }
     
     if (!errorString) {
-        [m_appController log: @"Copy to iTunes succeeded!\n"];
+        [[AppController instance] log: @"Copy to iTunes succeeded!\n"];
         return YES;
     }
     
     // Error
-    [m_appController log: @"Copy to iTunes FAILED with error: %@\n", errorString];
+    [[AppController instance] log: @"Copy to iTunes FAILED with error: %@\n", errorString];
     return NO;
 }
 
@@ -685,7 +687,7 @@ static NSImage* getFileStatusImage(FileStatus status)
     // TODO: need to give each command a percentage of the progress
     m_progress = value;
     [m_progressIndicator setDoubleValue: m_progress];
-    [m_appController setProgressFor: self to: m_progress];
+    [[AppController instance] setProgressFor: self to: m_progress];
 }
 
 -(void) commandFinished: (Command*) command status: (int) status
@@ -698,7 +700,7 @@ static NSImage* getFileStatusImage(FileStatus status)
 
 -(void) updateFileInfo
 {
-    [m_appController updateFileInfo];
+    [[AppController instance] updateFileInfo];
 }
 
 -(void) logToFile: (NSString*) string
@@ -713,7 +715,7 @@ static NSImage* getFileStatusImage(FileStatus status)
     va_list args;
     va_start(args, format);
     NSString* string = [[NSString alloc] initWithFormat:format arguments:args];
-    [m_appController log: @"    [Command %@] %@\n", commandId, string];
+    [[AppController instance] log: @"    [Command %@] %@\n", commandId, string];
 }
 
 -(void) log: (NSString*) format, ...
@@ -721,7 +723,7 @@ static NSImage* getFileStatusImage(FileStatus status)
     va_list args;
     va_start(args, format);
     NSString* s = [[NSString alloc] initWithFormat:format arguments: args];
-    [m_appController log: s];
+    [[AppController instance] log: s];
 }
 
 - (id)valueForUndefinedKey:(NSString *)key

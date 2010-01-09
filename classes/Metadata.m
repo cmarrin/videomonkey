@@ -10,6 +10,7 @@
 
 #import "Metadata.h"
 #import "MetadataSearch.h"
+#import "FileInfoPanelController.h"
 #import "Transcoder.h"
 
 // Artwork source icons
@@ -226,8 +227,6 @@ static NSDictionary* g_tagMap = nil;
 @synthesize tags = m_tagDictionary;
 @synthesize search = m_search;
 @synthesize rootFilename = m_rootFilename;
-@synthesize isMetadataBusy = m_isMetadataBusy;
-@synthesize metadataStatus = m_metadataStatus;
 
 -(BOOL) canWriteMetadataToInputFile
 {
@@ -243,7 +242,7 @@ static NSDictionary* g_tagMap = nil;
 
 -(BOOL) canWriteMetadataForAllInputFiles
 {
-    for (Transcoder* transcoder in [[[m_transcoder metadataPanel] fileListController] arrangedObjects])
+    for (Transcoder* transcoder in [m_transcoder.fileInfoPanelController.fileListController arrangedObjects])
         if (![[transcoder metadata] canWriteMetadataToInputFile])
             return NO;
     return YES;
@@ -251,7 +250,7 @@ static NSDictionary* g_tagMap = nil;
 
 -(BOOL) canWriteMetadataForAllOutputFiles
 {
-    for (Transcoder* transcoder in [[[m_transcoder metadataPanel] fileListController] arrangedObjects])
+    for (Transcoder* transcoder in [m_transcoder.fileInfoPanelController.fileListController arrangedObjects])
         if (![[transcoder metadata] canWriteMetadataToOutputFile])
             return NO;
     return YES;
@@ -514,10 +513,11 @@ static NSDictionary* g_tagMap = nil;
         [[m_tagDictionary valueForKey:key] setCurrentSourceIfExists:type];
 }
 
--(void) loadSearchMetadata
+-(void) loadSearchMetadata:(NSDictionary*) dictionary
 {
-    NSDictionary* dictionary = [m_search details];
-    
+    // Tell the FileInfoPanelController we've finished a search
+    [[m_transcoder fileInfoPanelController] finishMetadataSearch:dictionary != nil];
+
     if (!dictionary)
         return;
         
@@ -610,46 +610,42 @@ static NSDictionary* g_tagMap = nil;
     [metadata readMetadata: transcoder.inputFileInfo.filename];
     
     // setup the bindings to the metadata panel
-    [[metadata->m_transcoder metadataPanel] setupMetadataPanelBindings];
-    
-    metadata->m_search = [MetadataSearch metadataSearch:metadata];
-    
+    [metadata->m_transcoder.fileInfoPanelController.metadataPanel setupMetadataPanelBindings];
+
     if (search) {
         // Search for metadata
+        metadata->m_search = [MetadataSearch metadataSearch:metadata];
         [metadata searchAgain];
     }
     
     return metadata;
 }
 
--(BOOL) searchWithString:(NSString*) string
+-(void) searchWithString:(NSString*) string
 {
-    self.isMetadataBusy = YES;
-    self.metadataStatus = @"Searching for metadata...";
-    if ([m_search searchWithString:string])
-        [self loadSearchMetadata];
-    self.isMetadataBusy = NO;
-    self.metadataStatus = @"";
-    return YES;
+    [m_search searchWithString:string];
 }
 
 -(void) searchAgain
 {
-    self.isMetadataBusy = YES;
-    self.metadataStatus = @"Searching for metadata...";
+    // Tell the FileInfoPanelController we've started a search
+    [[m_transcoder fileInfoPanelController] startMetadataSearch];
     
     // If we have a TVShowName or title, use that for the search, otherwise use the filename
     NSString* value = [[m_tagDictionary valueForKey:@"TVShowName"] valueForSource:INPUT_TAG];
+    
     if (value && [value length] > 0)
         [m_search searchWithString:value];
     else {
         value = [[m_tagDictionary valueForKey:@"title"] valueForSource:INPUT_TAG];
         if (value && [value length] > 0)
             [m_search searchWithString:value];
-        else
+        else {
             [m_search searchWithFilename:m_transcoder.inputFileInfo.filename];
+        }
     }
 
+    /*
     // if the season and episode were in the input metadata, set them
     value = [[m_tagDictionary valueForKey:@"TVSeasonNum"] valueForSource:INPUT_TAG];
     if (value && [value length] > 0)
@@ -658,16 +654,7 @@ static NSDictionary* g_tagMap = nil;
     value = [[m_tagDictionary valueForKey:@"TVEpisodeNum"] valueForSource:INPUT_TAG];
     if (value && [value length] > 0)
         m_search.currentEpisode = [[NSNumber numberWithInt:[value intValue]] stringValue];
-    
-    [self loadSearchMetadata];
-
-    self.isMetadataBusy = NO;
-    self.metadataStatus = @"";
-}
-
--(void) searchMetadataChanged
-{
-    [self loadSearchMetadata];
+    */
 }
 
 - (id)valueForUndefinedKey:(NSString *)key

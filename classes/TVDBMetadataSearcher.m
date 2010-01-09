@@ -15,6 +15,54 @@ static NSDictionary* g_tvdbSeriesMap = nil;
 
 @implementation TVDBMetadataSearcher
 
+@synthesize seasons = m_seasons;
+
++(MetadataSearcher*) metadataSearcher:(MetadataSearch*) metadataSearch
+{
+    MetadataSearcher* searcher = [[TVDBMetadataSearcher alloc] init];
+    [searcher initWithMetadataSearch:metadataSearch];
+    return searcher;
+}
+
+-(NSString*) makeSearchURLString:(NSString*) searchString
+{
+    return [NSString stringWithFormat:@"http://www.thetvdb.com/api/GetSeries.php?seriesname=%@", searchString];
+}
+
+-(BOOL) loadShowData:(XMLDocument*) document
+{
+    if (![[[document rootElement] name] isEqualToString:@"Data"])
+        return NO;
+        
+    NSArray* series = [[document rootElement] elementsForName:@"Series"];
+    if ([series count] == 0)
+        return NO;
+        
+    NSMutableArray* foundShowNames = [[NSMutableArray alloc] init];
+    NSMutableArray* foundShowIds = [[NSMutableArray alloc] init];
+
+    for (XMLElement* element in series) {
+        NSString* name = [[element lastElementForName:@"SeriesName"] content];
+        NSString* seriesidString = [[element lastElementForName:@"seriesid"] content];
+        int seriesid = (seriesidString && [seriesidString length] > 0) ? [seriesidString intValue] : -1;
+        if (name && [name length] > 0 && seriesid >= 0) {
+            [foundShowNames addObject:name];
+            [foundShowIds addObject:[NSNumber numberWithInt:seriesid]];
+        }
+    }
+    
+    if ([foundShowNames count] == 0) {
+        [foundShowNames release];
+        [foundShowIds release];
+        return NO;
+    }
+    
+    m_foundShowNames = foundShowNames;
+    m_foundShowIds = foundShowIds;
+    
+    return YES;
+}
+
 -(id) init
 {
     m_loadedShowId = -1;
@@ -61,54 +109,6 @@ static NSDictionary* g_tvdbSeriesMap = nil;
     }
     
     return self;
-}
-
--(BOOL) searchForShow:(NSString*) searchString
-{
-    [m_foundShowNames release];
-    m_foundShowNames = nil;
-    [m_foundShowIds release];
-    m_foundShowIds = nil;
-    [m_foundSeasons release];
-    m_foundSeasons = nil;
-    [m_foundEpisodes release];
-    m_foundEpisodes = nil;
-
-    NSString* urlString = [NSString stringWithFormat:@"http://www.thetvdb.com/api/GetSeries.php?seriesname=%@", searchString];
-    urlString = [urlString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-    NSURL* url = [NSURL URLWithString:urlString];
-    XMLDocument* doc = [XMLDocument xmlDocumentWithContentsOfURL:url];
-    
-    if (![[[doc rootElement] name] isEqualToString:@"Data"])
-        return NO;
-        
-    NSArray* series = [[doc rootElement] elementsForName:@"Series"];
-    if ([series count] == 0)
-        return NO;
-        
-    NSMutableArray* foundShowNames = [[NSMutableArray alloc] init];
-    NSMutableArray* foundShowIds = [[NSMutableArray alloc] init];
-
-    for (XMLElement* element in series) {
-        NSString* name = [[element lastElementForName:@"SeriesName"] content];
-        NSString* seriesidString = [[element lastElementForName:@"seriesid"] content];
-        int seriesid = (seriesidString && [seriesidString length] > 0) ? [seriesidString intValue] : -1;
-        if (name && [name length] > 0 && seriesid >= 0) {
-            [foundShowNames addObject:name];
-            [foundShowIds addObject:[NSNumber numberWithInt:seriesid]];
-        }
-    }
-    
-    if ([foundShowNames count] == 0) {
-        [foundShowNames release];
-        [foundShowIds release];
-        return NO;
-    }
-    
-    m_foundShowNames = foundShowNames;
-    m_foundShowIds = foundShowIds;
-    
-    return YES;
 }
 
 -(void) collectArtwork:(NSArray*) fromArray toArray:(NSMutableArray*) toArray
@@ -214,50 +214,6 @@ static NSArray* numericallySortedArray(NSArray* array)
     [dictionary setValue:artwork forKey:@"artwork"];
 }
 
--(void) loadDetailsForShow:(int) showId
-{
-    [m_seasons release];
-    m_seasons = nil;
-    m_loadedShowId = -1;
-    
-    for (NSNumber* show in m_foundShowIds)
-    {
-        // validate show id
-        if ([show intValue] == showId) {
-            NSString* urlString = [NSString stringWithFormat:@"http://www.thetvdb.com/data/series/%d/all/", showId];
-            NSURL* url = [NSURL URLWithString:urlString];
-            XMLDocument* doc = [XMLDocument xmlDocumentWithContentsOfURL:url];
-            
-            if (![[[doc rootElement] name] isEqualToString:@"Data"])
-                return;
-        
-            // find the season and episode
-            XMLElement* series = [[doc rootElement] lastElementForName:@"Series"];
-            NSArray* episodes = [[doc rootElement] elementsForName:@"Episode"];
-
-            // We found our show. Fill in the details
-            m_loadedShowId = showId;
-                
-            // This show may have no episodes, in which case we will fake an array with
-            // season 0, episode 0 (we can still fill in the series info)
-            m_seasons = [[NSMutableDictionary alloc] init];
-                
-            if (episodes && [episodes count] > 0)
-                for (XMLElement* episodeElement in episodes)
-                    [self _addEpisode:episodeElement forSeries:series];
-            else
-                [self _addEpisode:nil forSeries:series];
-            
-            // load up the m_foundSeasons array
-            [m_foundSeasons release];
-            NSMutableArray* foundSeasons = [[NSMutableArray alloc] init];
-            for (NSString* key in m_seasons)
-                [foundSeasons addObject: key];
-            m_foundSeasons = [numericallySortedArray(foundSeasons) retain];
-        }
-    }
-}
-
 -(int) seasonOrEpisodeAsInt:(NSString*) value
 {
     return [value isEqualToString:@"--"] ? -1 : [value intValue];
@@ -268,33 +224,84 @@ static NSArray* numericallySortedArray(NSArray* array)
     return (value < 0) ? @"--" : [[NSNumber numberWithInt:value] stringValue];
 }
 
--(NSDictionary*) detailsForShow:(int) showId season:(int*) season episode:(int*) episode
+-(void) completeLoadDetails:(BOOL) success
 {
-    if (showId != m_loadedShowId) {
-        // Even if we are switching shows, the passed season/episode might be correct for
-        // the new show. So only clear it if the it doesn't exist
-        [self loadDetailsForShow:showId];
+    NSDictionary* dictionary = nil;
+    
+    if (success) {
+        if (m_season < 0 && [m_foundSeasons count] > 0)
+            m_season = [self seasonOrEpisodeAsInt:[m_foundSeasons objectAtIndex:0]];
+            
+        NSDictionary* episodes = [m_seasons valueForKey:[self seasonOrEpisodeAsString:m_season]];
+        
+        if (episodes) {
+            // load up the m_foundEpisodes array
+            [m_foundEpisodes release];
+            NSMutableArray* foundEpisodes = [[NSMutableArray alloc] init];
+            for (NSString* key in episodes)
+                [foundEpisodes addObject: key];
+            m_foundEpisodes = [numericallySortedArray(foundEpisodes) retain];
+
+            if (m_episode < 0 && [m_foundEpisodes count] > 0)
+                m_episode = [self seasonOrEpisodeAsInt:[m_foundEpisodes objectAtIndex:0]];
+
+            dictionary = [episodes valueForKey:[self seasonOrEpisodeAsString:m_episode]];
+        }
+    }
+    
+    [m_metadataSearch detailsLoaded:dictionary];
+}
+
+-(void) loadDetailsCallback:(XMLDocument*) document
+{
+    if (!document || ![[[document rootElement] name] isEqualToString:@"Data"]) {
+        [self completeLoadDetails:NO];
+        return;
     }
 
-    if (*season < 0 && [m_foundSeasons count] > 0)
-        *season = [self seasonOrEpisodeAsInt:[m_foundSeasons objectAtIndex:0]];
+    // find the season and episode
+    XMLElement* series = [[document rootElement] lastElementForName:@"Series"];
+    NSArray* episodes = [[document rootElement] elementsForName:@"Episode"];
+
+    // We found our show. Fill in the details
+    // This show may have no episodes, in which case we will fake an array with
+    // season 0, episode 0 (we can still fill in the series info)
+    self.seasons = [[NSMutableDictionary alloc] init];
         
-    NSDictionary* episodes = [m_seasons valueForKey:[self seasonOrEpisodeAsString:*season]];
+    if (episodes && [episodes count] > 0)
+        for (XMLElement* episodeElement in episodes)
+            [self _addEpisode:episodeElement forSeries:series];
+    else
+        [self _addEpisode:nil forSeries:series];
     
-    if (!episodes)
-        return nil;
+    // load up the m_foundSeasons array
+    [m_foundSeasons release];
+    NSMutableArray* foundSeasons = [[NSMutableArray alloc] init];
+    for (NSString* key in m_seasons)
+        [foundSeasons addObject: key];
+    m_foundSeasons = [numericallySortedArray(foundSeasons) retain];
 
-    // load up the m_foundEpisodes array
-    [m_foundEpisodes release];
-    NSMutableArray* foundEpisodes = [[NSMutableArray alloc] init];
-    for (NSString* key in episodes)
-        [foundEpisodes addObject: key];
-    m_foundEpisodes = [numericallySortedArray(foundEpisodes) retain];
+    [self completeLoadDetails:YES];
+}
 
-    if (*episode < 0 && [m_foundEpisodes count] > 0)
-        *episode = [self seasonOrEpisodeAsInt:[m_foundEpisodes objectAtIndex:0]];
-
-    return [episodes valueForKey:[self seasonOrEpisodeAsString:*episode]];
+-(void) detailsForShow:(int) showId season:(int) season episode:(int) episode
+{
+    m_episode = episode;
+    m_season = season;
+    
+    if (showId == m_loadedShowId) {
+        [self completeLoadDetails:YES];
+        return;
+    }
+    
+    self.seasons = nil;
+    m_loadedShowId = showId;
+        
+    NSString* urlString = [NSString stringWithFormat:@"http://www.thetvdb.com/data/series/%d/all/", showId];
+    NSURL* url = [NSURL URLWithString:urlString];
+    [XMLDocument xmlDocumentWithContentsOfURL:url
+                    withInfo:[NSString stringWithFormat:@"searching for TV show ID %d", showId] 
+                    target:self selector:@selector(loadDetailsCallback:)];
 }
 
 @end

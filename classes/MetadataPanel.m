@@ -420,7 +420,18 @@
                                         action:@selector(addThisImageToAllFiles:) 
                                         keyEquivalent:@""]];
     [m_artworkTitle setMenu:menu];
-    
+}
+
+-(void) setMetadataSearchSpinner:(BOOL) spinning
+{
+    if (spinning) {
+        [m_metadataSearchSpinner setHidden:NO];
+        [m_metadataSearchSpinner startAnimation:self];
+    }
+    else {
+        [m_metadataSearchSpinner setHidden:YES];
+        [m_metadataSearchSpinner stopAnimation:self];
+    }
 }
 
 @end
