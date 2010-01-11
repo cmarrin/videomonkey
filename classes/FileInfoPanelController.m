@@ -17,7 +17,6 @@
 @synthesize metadataPanel = m_metadataPanel;
 @synthesize metadataStatus = m_metadataStatus;
 @synthesize searcherStrings = m_searcherStrings;
-@synthesize currentSearcher = m_currentSearcher;
 
 -(BOOL) autoSearch
 {
@@ -27,6 +26,17 @@
 -(void) setAutoSearch:(BOOL) value
 {
     [[[NSUserDefaultsController sharedUserDefaultsController] values] setValue:[NSNumber numberWithBool:value] forKey:@"autoSearch"];
+}
+
+-(NSString*) currentSearcher
+{
+    NSString* s = [[[NSUserDefaultsController sharedUserDefaultsController] values] valueForKey:@"defaultMetadataSearch"];
+    return ([s length] == 0) ? @"thetvdb.com" : s;
+}
+
+-(void) setCurrentSearcher:(NSString*) s
+{
+    [[[NSUserDefaultsController sharedUserDefaultsController] values] setValue:s forKey:@"defaultMetadataSearch"];
 }
 
 -(NSArray*) artworkList
@@ -61,7 +71,6 @@
     // Fill in the searchers
     self.searcherStrings = [NSArray arrayWithObjects:@"thetvdb.com", @"themoviedb.org", nil];
     self.currentSearcher = [[[NSUserDefaultsController sharedUserDefaultsController] values] valueForKey:@"defaultMetadataSearch"];
-    
 }
 
 -(IBAction)droppedInImage:(id)sender

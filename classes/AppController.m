@@ -16,6 +16,8 @@
 #import <sys/types.h>
 #import <sys/sysctl.h>
 
+#define MAX_CPUS 8
+
 @implementation MyPathCell
 -(void)setURL:(NSURL *)url
 {
@@ -33,7 +35,6 @@
 @synthesize deviceController = m_deviceController;
 @synthesize fileInfoPanelController = m_fileInfoPanelController;
 @synthesize limitParams = m_limitParams;
-@synthesize numCPUs = m_numCPUs;
 
 static AppController *g_appController;
 
@@ -50,37 +51,26 @@ static AppController *g_appController;
     
 }
 
--(void) setMaxCPU:(NSString*) s
+-(int) numCPUs
 {
+    int n = 2;
+    
     // get the number of CPUs
+    NSString* s = [[[NSUserDefaultsController sharedUserDefaultsController] values] valueForKey:@"maxCPU"];
     if ([s isEqualToString:@"Auto"]) {
-        size_t size = sizeof(m_numCPUs);
-        m_numCPUs = 2;
-        if (sysctlbyname("hw.ncpu", &m_numCPUs, &size, NULL, 0))
-            m_numCPUs = 2;
+        size_t size = sizeof(n);
+        if (sysctlbyname("hw.ncpu", &n, &size, NULL, 0))
+            n = 2;
     }
     else
-        m_numCPUs = [s intValue];
+        n = [s intValue];
         
-    if (m_numCPUs < 1 || m_numCPUs > 16)
-        m_numCPUs = 2;
+    if (n < 1)
+        n = 2;
+    else if (n > MAX_CPUS)
+        n = MAX_CPUS;
         
-    // Make sure we put a rational value into defaults
-    if ([s isEqualToString:@"Auto"])
-        [[[NSUserDefaultsController sharedUserDefaultsController] values] setValue:@"Auto" forKey:@"maxCPU"];
-    else
-        [[[NSUserDefaultsController sharedUserDefaultsController] values] setValue:[[NSNumber numberWithInt:m_numCPUs] stringValue] forKey:@"maxCPU"];
-}
-
--(NSString*) defaultMetadataSearch
-{
-    NSString* s = [[[NSUserDefaultsController sharedUserDefaultsController] values] valueForKey:@"defaultMetadataSearch"];
-    return ([s length] == 0) ? @"thetvdb.com" : s;
-}
-
--(void) setDefaultMetadataSearch:(NSString*) s
-{
-    [[[NSUserDefaultsController sharedUserDefaultsController] values] setValue:s forKey:@"defaultMetadataSearch"];
+    return n;
 }
 
 -(double) currentTime
@@ -135,13 +125,15 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
     m_fileList = [[NSMutableArray alloc] init];
     
     m_applicationIcon = [[[NSApplication sharedApplication] applicationIconImage] copy];
-
-    // Set the number of CPUs
-    [self setMaxCPU: [self maxCPU]];
+    
+    // Make sure the maxCPU value is rational
+    if ([[[[NSUserDefaultsController sharedUserDefaultsController] values] valueForKey:@"maxCPU"] length] == 0)
+        [[[NSUserDefaultsController sharedUserDefaultsController] values] setValue:@"Auto" forKey:@"maxCPU"];    
 
     // Make sure the defaultMetadataSearch value is rational
-    if ([[self defaultMetadataSearch] length] == 0)
-        [self setDefaultMetadataSearch:@"thetvdb.com"];
+    if ([[[[NSUserDefaultsController sharedUserDefaultsController] values] valueForKey:@"defaultMetadataSearch"] length] == 0)
+        [[[NSUserDefaultsController sharedUserDefaultsController] values] setValue:@"thetvdb.com" forKey:@"defaultMetadataSearch"];
+
     return self;
 }
 

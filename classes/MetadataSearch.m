@@ -70,18 +70,6 @@
 @synthesize foundEpisodes = m_foundEpisodes;
 @synthesize currentShowName = m_currentShowName;
 
-/*
--(void) setCurrentSearcher:(NSString*) string
-{
-    if (m_currentSearcher == string)
-        return;
-        
-    m_currentSearcher = string;
-    if ([m_metadata autoSearch])
-        [m_metadata searchAgain];
-}
-*/
-
 -(NSString*) currentSeason
 {
     return (m_season >= 0) ? [[NSNumber numberWithInt:m_season] stringValue] : @"--";
