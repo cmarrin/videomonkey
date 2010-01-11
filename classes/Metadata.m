@@ -613,10 +613,10 @@ static NSDictionary* g_tagMap = nil;
     
     // setup the bindings to the metadata panel
     [metadata->m_transcoder.fileInfoPanelController.metadataPanel setupMetadataPanelBindings];
+    metadata->m_search = [MetadataSearch metadataSearch:metadata];
 
     if (search) {
         // Search for metadata
-        metadata->m_search = [MetadataSearch metadataSearch:metadata];
         [metadata searchAgain];
     }
     
@@ -625,6 +625,9 @@ static NSDictionary* g_tagMap = nil;
 
 -(void) searchWithString:(NSString*) string
 {
+    // Tell the FileInfoPanelController we've started a search
+    [[m_transcoder fileInfoPanelController] startMetadataSearch];
+    
     [m_search searchWithString:string];
 }
 

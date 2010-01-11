@@ -91,7 +91,7 @@ static NSDictionary* g_moviedbMap = nil;
 
 -(void) loadDetailsCallback:(XMLDocument*) document
 {
-    if (document && ![[[document rootElement] name] isEqualToString:@"results"]) {
+    if (document && [[[document rootElement] name] isEqualToString:@"results"]) {
         XMLElement* matches = [[document rootElement] lastElementForName:@"moviematches"];
         if (matches) {
             XMLElement* movie = [matches lastElementForName:@"movie"];
