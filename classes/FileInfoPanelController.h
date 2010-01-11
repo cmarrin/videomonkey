@@ -23,12 +23,14 @@
     IBOutlet NSScrollView* m_metadataScrollView;
     IBOutlet NSComboBox* m_searchField;
     IBOutlet MetadataPanel* m_metadataPanel;
-    IBOutlet NSPopUpButton* m_currentSearcher;
+    IBOutlet NSPopUpButton* m_searcher;
     
     BOOL m_isVisible;
     NSString* m_metadataStatus;
     int m_metadataSearchCount;
     BOOL m_errorsOnMetadataSearch;
+    NSArray* m_searcherStrings;
+    NSString* m_currentSearcher;
 }
 
 @property(readonly) NSArray* artworkList;
@@ -37,6 +39,8 @@
 @property(assign) NSImage* primaryArtwork;
 @property(assign) BOOL autoSearch;
 @property(retain) NSString* metadataStatus;
+@property(readwrite,retain) NSArray* searcherStrings;
+@property(readwrite,retain) NSString* currentSearcher;
 
 -(IBAction)artworkCheckedStateChanged:(id)sender;
 -(IBAction)searchBoxSelected:(id)sender;

@@ -227,6 +227,7 @@ static NSDictionary* g_tagMap = nil;
 @synthesize tags = m_tagDictionary;
 @synthesize search = m_search;
 @synthesize rootFilename = m_rootFilename;
+@synthesize autoSearch = m_autoSearch;
 
 -(BOOL) canWriteMetadataToInputFile
 {
@@ -599,6 +600,7 @@ static NSDictionary* g_tagMap = nil;
     
     Metadata* metadata = [[Metadata alloc] init];
     metadata->m_transcoder = transcoder;
+    metadata->m_autoSearch = search;
     metadata->m_buffer = [[NSMutableString alloc] init];
     metadata->m_task = [[NSTask alloc] init];
     metadata->m_messagePipe = [NSPipe pipe];

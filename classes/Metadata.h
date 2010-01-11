@@ -24,6 +24,7 @@
     int m_numArtwork;
     MetadataSearch* m_search;
     NSString* m_rootFilename;
+    BOOL m_autoSearch;
 }
 
 @property(retain) NSMutableArray* artworkList;
@@ -31,6 +32,7 @@
 @property(assign) NSImage* primaryArtwork;
 @property(retain) MetadataSearch* search;
 @property(readonly) NSString* rootFilename;
+@property(readonly) BOOL autoSearch;
 
 +(Metadata*) metadataWithTranscoder: (Transcoder*) transcoder search:(BOOL) search;
 

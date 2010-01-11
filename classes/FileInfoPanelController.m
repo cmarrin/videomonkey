@@ -16,6 +16,8 @@
 @synthesize fileListController = m_fileListController;
 @synthesize metadataPanel = m_metadataPanel;
 @synthesize metadataStatus = m_metadataStatus;
+@synthesize searcherStrings = m_searcherStrings;
+@synthesize currentSearcher = m_currentSearcher;
 
 -(BOOL) autoSearch
 {
@@ -55,6 +57,11 @@
     
     // make the search box selected
     [m_searchField becomeFirstResponder];
+    
+    // Fill in the searchers
+    self.searcherStrings = [NSArray arrayWithObjects:@"thetvdb.com", @"themoviedb.org", nil];
+    self.currentSearcher = [[[NSUserDefaultsController sharedUserDefaultsController] values] valueForKey:@"defaultMetadataSearch"];
+    
 }
 
 -(IBAction)droppedInImage:(id)sender

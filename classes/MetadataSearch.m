@@ -7,6 +7,8 @@
 //
 
 #import "MetadataSearch.h"
+#import "AppController.h"
+#import "FileInfoPanelController.h"
 #import "Metadata.h"
 #import "MovieDBMetadataSearcher.h"
 #import "TVDBMetadataSearcher.h"
@@ -68,19 +70,17 @@
 @synthesize foundEpisodes = m_foundEpisodes;
 @synthesize currentShowName = m_currentShowName;
 
--(NSString*) currentSearcher
-{
-    return m_currentSearcher;
-}
-
+/*
 -(void) setCurrentSearcher:(NSString*) string
 {
     if (m_currentSearcher == string)
         return;
         
     m_currentSearcher = string;
-    [m_metadata searchAgain];
+    if ([m_metadata autoSearch])
+        [m_metadata searchAgain];
 }
+*/
 
 -(NSString*) currentSeason
 {
@@ -114,7 +114,7 @@
     metadataSearch->m_metadata = metadata;
     metadataSearch->m_season = -1;
     metadataSearch->m_episode = -1;
-    metadataSearch->m_currentSearcher = [[[NSUserDefaultsController sharedUserDefaultsController] values] valueForKey:@"defaultMetadataSearch"];
+    
     return metadataSearch;
 }
 
@@ -143,7 +143,7 @@ static BOOL isValidInteger(NSString* s)
 
 -(void) _searchForShows:(NSString*) searchString withSelector:(SEL) selector
 {
-    self.foundSearcher = [m_searchers valueForKey:[self currentSearcher]];
+    self.foundSearcher = [m_searchers valueForKey:[[[AppController instance] fileInfoPanelController] currentSearcher]];
     if (!self.foundSearcher) {
         [self performSelector:selector withObject:[NSNumber numberWithBool:NO]];
         return;
