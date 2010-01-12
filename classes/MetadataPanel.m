@@ -8,6 +8,7 @@
 
 #import "MetadataPanel.h"
 #import "FileInfoPanelController.h"
+#import "Metadata.h"
 #import "Transcoder.h"
 
 #define MAIN_TEXTFIELD 10
@@ -405,6 +406,15 @@
     [[self fileListController] reloadData];
 }
 
+-(IBAction)uncheckAllArtworkOnAllFiles:(id)sender
+{
+    NSArray* array = [[self fileListController] arrangedObjects];
+    for (Transcoder* transcoder in array)
+        [[transcoder metadata] uncheckAllArtwork];
+    
+    [[self fileListController] reloadData];
+}
+
 -(void) setupMetadataPanelBindings
 {
     for (MetadataPanelItem* item in [[self contentView] subviews]) {
@@ -418,6 +428,9 @@
     NSMenu* menu = [[NSMenu alloc]init];
     [menu addItem:[[NSMenuItem alloc] initWithTitle:@"Add this image to all files" 
                                         action:@selector(addThisImageToAllFiles:) 
+                                        keyEquivalent:@""]];
+    [menu addItem:[[NSMenuItem alloc] initWithTitle:@"Uncheck all artwork on all files" 
+                                        action:@selector(uncheckAllArtworkOnAllFiles:) 
                                         keyEquivalent:@""]];
     [m_artworkTitle setMenu:menu];
 }

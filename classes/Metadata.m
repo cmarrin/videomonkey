@@ -278,6 +278,13 @@ static NSDictionary* g_tagMap = nil;
     [m_transcoder updateFileInfo];
 }
 
+-(void) uncheckAllArtwork
+{
+    for (ArtworkItem* item in m_artworkList)
+        item.checked = NO;
+    [m_transcoder updateFileInfo];
+}
+
 -(id) createArtwork:(NSImage*) image
 {
     return [ArtworkItem artworkItemWithImage:image sourceIcon:g_sourceUserIcon checked:YES];

@@ -36,7 +36,7 @@
 {
     BOOL success = document != nil;
     if (success)
-        [self loadShowData:document];
+        success = [self loadShowData:document];
         
     [m_metadataSearch searchForShowsComplete:success];
 }

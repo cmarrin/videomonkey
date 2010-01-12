@@ -49,4 +49,6 @@
 -(void) searchWithString:(NSString*) string;
 -(void) searchAgain;
 
+-(void) uncheckAllArtwork;
+
 @end

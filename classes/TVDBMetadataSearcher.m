@@ -229,6 +229,13 @@ static NSArray* numericallySortedArray(NSArray* array)
     NSDictionary* dictionary = nil;
     
     if (success) {
+        // load up the m_foundSeasons array
+        [m_foundSeasons release];
+        NSMutableArray* foundSeasons = [[NSMutableArray alloc] init];
+        for (NSString* key in m_seasons)
+            [foundSeasons addObject: key];
+        m_foundSeasons = [numericallySortedArray(foundSeasons) retain];
+
         if (m_season < 0 && [m_foundSeasons count] > 0)
             m_season = [self seasonOrEpisodeAsInt:[m_foundSeasons objectAtIndex:0]];
             
@@ -273,13 +280,6 @@ static NSArray* numericallySortedArray(NSArray* array)
             [self _addEpisode:episodeElement forSeries:series];
     else
         [self _addEpisode:nil forSeries:series];
-    
-    // load up the m_foundSeasons array
-    [m_foundSeasons release];
-    NSMutableArray* foundSeasons = [[NSMutableArray alloc] init];
-    for (NSString* key in m_seasons)
-        [foundSeasons addObject: key];
-    m_foundSeasons = [numericallySortedArray(foundSeasons) retain];
 
     [self completeLoadDetails:YES];
 }
