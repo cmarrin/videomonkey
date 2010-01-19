@@ -167,20 +167,6 @@
     [m_transcoder commandFinished: self status: status];
 }
 
-static NSDictionary* makeDictionary(NSString* s)
-{
-    NSMutableDictionary* dictionary = [[NSMutableDictionary alloc] init];
-    NSArray* elements = [s componentsSeparatedByString:@";"];
-    for (int i = 0; i < [elements count]; ++i) {
-        NSArray* values = [[elements objectAtIndex:i] componentsSeparatedByString:@":"];
-        if ([values count] != 2)
-            continue;
-        [dictionary setValue: [values objectAtIndex:1] forKey: [values objectAtIndex:0]];
-    }
-    
-    return dictionary;
-}
-
 -(void) processRead: (NSNotification*) note
 {
     if (![[note name] isEqualToString:NSFileHandleReadCompletionNotification])

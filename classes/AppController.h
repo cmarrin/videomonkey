@@ -21,6 +21,20 @@ typedef enum { RS_STOPPED, RS_RUNNING, RS_PAUSED } RunStateType;
 #define DELAY_FOR_PROGRESS_RESPONSE 5   // in seconds
 #define NUM_TOTAL_TIME_ESTIMATES 20
 
+@interface MyDockTileView : NSView {
+    float m_progress;
+    int m_totalFiles, m_currentFile;
+    NSImage* m_icon;
+}
+
+@property(assign) float progress;
+@property(assign) int totalFiles;
+@property(assign) int currentFile;
+
+-(id) initWithIcon:(NSImage*) icon;
+
+@end
+
 // Workaround to get an event when a file is selected from NSPathCell
 @interface MyPathCell : NSPathCell { } - (void)setURL:(NSURL *)url; @end
 
@@ -44,6 +58,7 @@ typedef enum { RS_STOPPED, RS_RUNNING, RS_PAUSED } RunStateType;
     IBOutlet NSPathControl* m_savePathControl;
 	
 	NSImage* m_applicationIcon;
+    MyDockTileView* m_dockTileView;
     
     NSString* m_savePath;
     int m_currentEncoding;
@@ -97,7 +112,6 @@ typedef enum { RS_STOPPED, RS_RUNNING, RS_PAUSED } RunStateType;
 
 -(void) setProgressFor: (Transcoder*) transcoder to: (double) progress;
 -(void) encodeFinished: (Transcoder*) transcoder withStatus:(int) status;
--(void) updateDockIcon: (float) progress;
 
 -(void) log: (NSString*) format, ...;
 

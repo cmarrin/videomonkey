@@ -261,27 +261,31 @@ static NSArray* numericallySortedArray(NSArray* array)
 
 -(void) loadDetailsCallback:(XMLDocument*) document
 {
-    if (!document || ![[[document rootElement] name] isEqualToString:@"Data"]) {
-        [self completeLoadDetails:NO];
-        return;
-    }
-
-    // find the season and episode
-    XMLElement* series = [[document rootElement] lastElementForName:@"Series"];
-    NSArray* episodes = [[document rootElement] elementsForName:@"Episode"];
-
-    // We found our show. Fill in the details
-    // This show may have no episodes, in which case we will fake an array with
-    // season 0, episode 0 (we can still fill in the series info)
-    self.seasons = [[NSMutableDictionary alloc] init];
+    BOOL success = document && [[[document rootElement] name] isEqualToString:@"Data"];
+    
+    if (success) {
+        assert(document == m_currentSearchDocument);
         
-    if (episodes && [episodes count] > 0)
-        for (XMLElement* episodeElement in episodes)
-            [self _addEpisode:episodeElement forSeries:series];
-    else
-        [self _addEpisode:nil forSeries:series];
+        // find the season and episode
+        XMLElement* series = [[document rootElement] lastElementForName:@"Series"];
+        NSArray* episodes = [[document rootElement] elementsForName:@"Episode"];
 
-    [self completeLoadDetails:YES];
+        // We found our show. Fill in the details
+        // This show may have no episodes, in which case we will fake an array with
+        // season 0, episode 0 (we can still fill in the series info)
+        self.seasons = [[NSMutableDictionary alloc] init];
+            
+        if (episodes && [episodes count] > 0)
+            for (XMLElement* episodeElement in episodes)
+                [self _addEpisode:episodeElement forSeries:series];
+        else
+            [self _addEpisode:nil forSeries:series];
+    }
+    
+    [m_currentSearchDocument release];
+    m_currentSearchDocument = nil;
+    
+    [self completeLoadDetails:success];
 }
 
 -(void) detailsForShow:(int) showId season:(int) season episode:(int) episode
@@ -299,9 +303,10 @@ static NSArray* numericallySortedArray(NSArray* array)
         
     NSString* urlString = [NSString stringWithFormat:@"http://www.thetvdb.com/data/series/%d/all/", showId];
     NSURL* url = [NSURL URLWithString:urlString];
-    [XMLDocument xmlDocumentWithContentsOfURL:url
+    assert(!m_currentSearchDocument);
+    m_currentSearchDocument = [[XMLDocument xmlDocumentWithContentsOfURL:url
                     withInfo:[NSString stringWithFormat:@"searching for TV show ID %d", showId] 
-                    target:self selector:@selector(loadDetailsCallback:)];
+                    target:self selector:@selector(loadDetailsCallback:)] retain];
 }
 
 @end

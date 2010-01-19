@@ -29,6 +29,8 @@
 	JSObjectRef m_jsObject;
 }
 
+@property(retain) JavaScriptContext* context;
+
 +(JavaScriptObject*) javaScriptObject: (JavaScriptContext*) ctx withJSObject:(JSObjectRef) obj;
 - (void)dealloc;
 
@@ -40,6 +42,8 @@
 	JSGlobalContextRef m_jsContext;
     JavaScriptObject* m_globalObject;
 }
+
+@property(retain) JavaScriptObject* globalObject;
 
 -(id)init;
 -(void)dealloc;

@@ -46,16 +46,18 @@
 
 @implementation JavaScriptObject
 
+@synthesize context = m_context;
+
 +(JavaScriptObject*) javaScriptObject: (JavaScriptContext*) ctx withJSObject:(JSObjectRef) obj;
 {
-    JavaScriptObject* ret = [[JavaScriptObject alloc] init];
-    ret->m_context = [ctx retain];
+    JavaScriptObject* ret = [[[JavaScriptObject alloc] init] autorelease];
+    ret.context = ctx;
     
     if (!obj)
-        obj = JSContextGetGlobalObject([ret->m_context jsContext]);
+        obj = JSContextGetGlobalObject([ret.context jsContext]);
         
     ret->m_jsObject = obj;
-    JSValueProtect([ret->m_context jsContext], ret->m_jsObject);
+    JSValueProtect([ret.context jsContext], ret->m_jsObject);
     
     return ret;
 }
@@ -68,7 +70,6 @@
 - (void)dealloc
 {
     JSValueUnprotect([m_context jsContext], m_jsObject);
-    [m_context release];
     [super dealloc];
 }
 
@@ -81,12 +82,14 @@
 
 @implementation JavaScriptContext
 
+@synthesize globalObject = m_globalObject;
+
 - (id)init
 {
 	if ((self = [super init]) != nil) {
 		m_jsContext = JSGlobalContextCreate(NULL);
         
-        m_globalObject = [JavaScriptObject javaScriptObject: self withJSObject:JSContextGetGlobalObject(m_jsContext)];
+        self.globalObject = [JavaScriptObject javaScriptObject: self withJSObject:JSContextGetGlobalObject(m_jsContext)];
     
         // add param object
         [self evaluateJavaScript:@"params = { }"];

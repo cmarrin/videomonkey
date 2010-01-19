@@ -17,6 +17,7 @@
     NSArray* m_foundSeasons;
     NSArray* m_foundEpisodes;
     MetadataSearch* m_metadataSearch;
+    XMLDocument* m_currentSearchDocument;
 }
 
 @property(readwrite,retain) NSArray* foundShowNames;

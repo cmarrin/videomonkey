@@ -35,9 +35,13 @@
 -(void) searchForShowCallback:(XMLDocument*) document
 {
     BOOL success = document != nil;
-    if (success)
+    if (success) {
+        assert(document == m_currentSearchDocument);
         success = [self loadShowData:document];
-        
+    }
+    
+    [m_currentSearchDocument release];
+    m_currentSearchDocument = nil;
     [m_metadataSearch searchForShowsComplete:success];
 }
 
@@ -52,9 +56,10 @@
     urlString = [urlString stringByAddingPercentEscapesUsingEncoding:NSASCIIStringEncoding];
     NSURL* url = [NSURL URLWithString:urlString];
     
-    [XMLDocument xmlDocumentWithContentsOfURL:url 
+    assert(!m_currentSearchDocument);
+    m_currentSearchDocument = [[XMLDocument xmlDocumentWithContentsOfURL:url 
                     withInfo:[NSString stringWithFormat:@"searching for \"%@\"", searchString] 
-                    target:self selector:@selector(searchForShowCallback:)];
+                    target:self selector:@selector(searchForShowCallback:)] retain];
 }
 
 -(void) detailsForShow:(int) showId season:(int) season episode:(int) episode { }

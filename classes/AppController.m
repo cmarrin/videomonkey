@@ -18,6 +18,90 @@
 
 #define MAX_CPUS 8
 
+@implementation MyDockTileView
+
+@synthesize progress = m_progress;
+@synthesize currentFile = m_currentFile;
+@synthesize totalFiles = m_totalFiles;
+
+-(id) initWithIcon:(NSImage*) icon
+{
+    m_icon = [icon retain];
+    [super init];
+    return self;
+}
+
+-(void) drawRect:(NSRect)dirtyRect
+{
+    const NSRect k_progressBarRect = NSMakeRect(0.05, 0.05, 0.9, 0.2);
+    const NSRect k_textRect = NSMakeRect(0.2, 0.65, 0.8, 0.3);
+    
+    
+    // Draw the icon
+    [m_icon drawAtPoint:NSMakePoint(0.0, 0.0) fromRect: dirtyRect operation: NSCompositeSourceOver fraction: 1.0];
+    
+    if (m_progress > 0 && m_progress < 1) {
+        [[NSGraphicsContext currentContext] saveGraphicsState];
+        // Create the rounded rect for the progress bar
+        NSRect progressBarRect = NSMakeRect(dirtyRect.size.width * k_progressBarRect.origin.x, 
+                                            dirtyRect.size.height * k_progressBarRect.origin.y,
+                                            dirtyRect.size.width * k_progressBarRect.size.width, 
+                                            dirtyRect.size.height * k_progressBarRect.size.height);
+        float radius = progressBarRect.size.height / 2;
+                                            
+        NSBezierPath* path = [NSBezierPath bezierPathWithRoundedRect:progressBarRect xRadius:radius yRadius:radius];
+        [path setClip];
+        
+        // Draw the progress bar background
+        [[NSColor whiteColor] setFill];
+        [[NSBezierPath bezierPathWithRect:progressBarRect] fill];
+        
+        // Fill in the progress
+        progressBarRect.size.width *= m_progress;
+        [[NSColor colorWithDeviceRed:0.4 green:0.6 blue:0.9 alpha:1] setFill];
+        [[NSBezierPath bezierPathWithRect:progressBarRect] fill];
+        
+        [[NSGraphicsContext currentContext] restoreGraphicsState];
+        
+        // Outline the progress bar
+        [[NSColor blackColor] setStroke];
+        [path setLineWidth:2];
+        [path stroke];
+        
+        // Only draw file count if number of files is less than 100. Otherwise
+        // it doesn't fit
+        if (m_totalFiles < 100) {
+        // Draw text background
+            NSRect textRect = NSMakeRect(dirtyRect.size.width * k_textRect.origin.x, 
+                                                dirtyRect.size.height * k_textRect.origin.y,
+                                                dirtyRect.size.width * k_textRect.size.width, 
+                                                dirtyRect.size.height * k_textRect.size.height);
+            radius = textRect.size.height / 2;
+            [[NSColor colorWithDeviceRed:0 green:0.75 blue:0 alpha:1] setFill];
+            [[NSColor whiteColor] setStroke];
+            path = [NSBezierPath bezierPathWithRoundedRect:textRect xRadius:radius yRadius:radius];
+            [path fill];
+            
+            // Draw the text
+            NSString* text = [NSString stringWithFormat:@"%d/%d", m_currentFile + 1, m_totalFiles];
+            NSFont* font = [NSFont fontWithName:@"Helvetica" size:textRect.size.height];
+            NSDictionary* attributes = [NSDictionary dictionaryWithObjectsAndKeys: 
+                                            font, NSFontAttributeName,
+                                            [NSColor whiteColor], NSForegroundColorAttributeName,
+                                            nil];
+            
+            NSSize size = [text sizeWithAttributes:attributes];
+            float offset = (textRect.size.width - size.width) / 2;
+            NSPoint textPoint = NSMakePoint(textRect.origin.x + offset, textRect.origin.y * 0.96);
+            [text drawAtPoint:textPoint withAttributes:attributes];
+            
+            [path stroke];
+        }
+    }
+}
+
+@end
+
 @implementation MyPathCell
 -(void)setURL:(NSURL *)url
 {
@@ -115,6 +199,20 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
     }
 }
 
+- (void) updateDockIcon
+{
+    m_dockTileView.progress = 0;
+    [[NSApp dockTile] display];
+}
+
+- (void) updateDockIcon:(float) progress currentFile:(int) currentFile totalFiles:(int) totalFiles
+{
+    m_dockTileView.progress = progress;
+    m_dockTileView.currentFile = currentFile;
+    m_dockTileView.totalFiles = totalFiles;
+    [[NSApp dockTile] display];
+}
+
 - (id)init
 {
     assert(!g_appController);
@@ -124,7 +222,13 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
     
     m_fileList = [[NSMutableArray alloc] init];
     
+    // Save a copy of the app icon
     m_applicationIcon = [[[NSApplication sharedApplication] applicationIconImage] copy];
+    
+    // Make a view to use to draw the dock tile
+    m_dockTileView = [[MyDockTileView alloc] initWithIcon:m_applicationIcon];
+    [[NSApp dockTile] setContentView:m_dockTileView];
+    [self updateDockIcon];
     
     // Make sure the maxCPU value is rational
     if ([[[[NSUserDefaultsController sharedUserDefaultsController] values] valueForKey:@"maxCPU"] length] == 0)
@@ -140,6 +244,8 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
 - (void)dealloc
 {
     [m_fileList release];
+    [[NSApp dockTile] setContentView:nil];
+    [m_dockTileView release];
     [super dealloc];
 }
 
@@ -270,7 +376,7 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
         [m_totalProgressBar startAnimation:self];
         [m_progressText setStringValue:@"Press start to encode"];
         [m_fileNumberText setStringValue:@""];
-		[self updateDockIcon:0.0];
+		[self updateDockIcon];
         return;
     }
     
@@ -292,7 +398,7 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
     if (progress == 0 || progress == 1) {
         [m_totalProgressBar setIndeterminate:YES];
         [m_totalProgressBar startAnimation:self];
-		[self updateDockIcon:0];
+		[self updateDockIcon];
     }
     else {
         [m_totalProgressBar stopAnimation:self];
@@ -305,7 +411,7 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
         overallProgress *= m_currentEncodedFileSize / m_totalEncodedFileSize;
         overallProgress += m_finishedEncodedFileSize / m_totalEncodedFileSize;
         [m_totalProgressBar setDoubleValue: overallProgress];
-		[self updateDockIcon:(float)progress];
+		[self updateDockIcon:(float)progress currentFile:m_fileConvertingIndex totalFiles:m_numFilesToConvert];
         
         if (!timeRemainingString) {
             // compute time remaining
@@ -350,79 +456,6 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
     [m_progressText setStringValue:@""];
     [m_fileListController reloadData];
     [self startNextEncode];
-}
-
-// Icon Progress bar
-- (void) updateDockIcon: (float) progress
-{
-    NSData * tiff;
-    NSBitmapImageRep * bmp;
-    uint32_t * pen;
-    uint32_t black = htonl( 0x000000FF );
-    uint32_t blue   = htonl( 0x4682B4FF );
-    uint32_t white = htonl( 0xFFFFFFFF );
-    int row_start, row_end;
-    int i, j;
-	
-    if( progress <= 0 || progress >= 1 )
-    {
-        [NSApp setApplicationIconImage: m_applicationIcon];
-        return;
-    }
-	
-    /* Get it in a raw bitmap form */
-    tiff = [m_applicationIcon TIFFRepresentationUsingCompression:
-            NSTIFFCompressionNone factor: 1.0];
-    bmp = [NSBitmapImageRep imageRepWithData: tiff];
-    
-    /* Draw the progression bar */
-    /* It's pretty simple (ugly?) now, but I'm no designer */
-	
-    row_start = 3 * (int) [bmp size].height / 4;
-    row_end   = 7 * (int) [bmp size].height / 8;
-	
-    for( i = row_start; i < row_start + 2; i++ )
-    {
-        pen = (uint32_t *) ( [bmp bitmapData] + i * [bmp bytesPerRow] );
-        for( j = 0; j < (int) [bmp size].width; j++ )
-        {
-            pen[j] = black;
-        }
-    }
-    for( i = row_start + 2; i < row_end - 2; i++ )
-    {
-        pen = (uint32_t *) ( [bmp bitmapData] + i * [bmp bytesPerRow] );
-        pen[0] = black;
-        pen[1] = black;
-        for( j = 2; j < (int) [bmp size].width - 2; j++ )
-        {
-            if( j < 2 + (int) ( ( [bmp size].width - 4.0 ) * progress ) )
-            {
-                pen[j] = blue;
-            }
-            else
-            {
-                pen[j] = white;
-            }
-        }
-        pen[j]   = black;
-        pen[j+1] = black;
-    }
-    for( i = row_end - 2; i < row_end; i++ )
-    {
-        pen = (uint32_t *) ( [bmp bitmapData] + i * [bmp bytesPerRow] );
-        for( j = 0; j < (int) [bmp size].width; j++ )
-        {
-            pen[j] = black;
-        }
-    }
-	
-    /* Now update the dock icon */
-    tiff = [bmp TIFFRepresentationUsingCompression:
-            NSTIFFCompressionNone factor: 1.0];
-    NSImage* icon = [[NSImage alloc] initWithData: tiff];
-    [NSApp setApplicationIconImage: icon];
-    [icon release];
 }
 
 // Toolbar delegate method

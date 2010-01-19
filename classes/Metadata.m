@@ -65,7 +65,9 @@ static NSDictionary* g_tagMap = nil;
     // toss image file
     [[NSFileManager defaultManager] removeFileAtPath:realPath handler:nil];
 
-    return [ArtworkItem artworkItemWithImage:image sourceIcon:icon checked:checked];
+    ArtworkItem* item = [ArtworkItem artworkItemWithImage:image sourceIcon:icon checked:checked];
+    [image release];
+    return item;
 }
 
 +(ArtworkItem*) artworkItemWithURL:(NSURL*) url sourceIcon:(NSImage*) icon checked:(BOOL) checked
@@ -74,7 +76,9 @@ static NSDictionary* g_tagMap = nil;
     if (!image)
         return nil;
         
-    return [ArtworkItem artworkItemWithImage:image sourceIcon:icon checked:checked];
+    ArtworkItem* item = [ArtworkItem artworkItemWithImage:image sourceIcon:icon checked:checked];
+    [image release];
+    return item;
 }
 
 +(ArtworkItem*) artworkItemWithImage:(NSImage*) image sourceIcon:(NSImage*) icon checked:(BOOL) checked
@@ -494,8 +498,10 @@ static NSDictionary* g_tagMap = nil;
     int i = 0;
 
     for (ArtworkItem* artwork in m_artworkList) {
-        NSString* filename = [NSString stringWithFormat:@"%@_%d.jpg", tmpArtworkPath, i++];
-        [[NSFileManager defaultManager] removeFileAtPath:filename handler:nil];
+        if ([artwork checked]) {
+            NSString* filename = [NSString stringWithFormat:@"%@_%d.jpg", tmpArtworkPath, i++];
+            [[NSFileManager defaultManager] removeFileAtPath:filename handler:nil];
+        }
     }
 }
 

@@ -34,9 +34,6 @@
     SEL m_selector;
 }
 
-@property(readwrite,retain) XMLElement* rootElement;
-@property(readwrite,retain) id target;
-
 +(XMLDocument*) xmlDocumentWithContentsOfURL: (NSURL*) url withInfo:(NSString*) info;
 
 +(XMLDocument*) xmlDocumentWithContentsOfURL: (NSURL*) url  withInfo:(NSString*) info target:(id) target selector:(SEL) selector;

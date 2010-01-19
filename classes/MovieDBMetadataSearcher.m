@@ -92,6 +92,8 @@ static NSDictionary* g_moviedbMap = nil;
 -(void) loadDetailsCallback:(XMLDocument*) document
 {
     if (document && [[[document rootElement] name] isEqualToString:@"results"]) {
+        assert(document == m_currentSearchDocument);
+    
         XMLElement* matches = [[document rootElement] lastElementForName:@"moviematches"];
         if (matches) {
             XMLElement* movie = [matches lastElementForName:@"movie"];
@@ -117,6 +119,9 @@ static NSDictionary* g_moviedbMap = nil;
         }
     }
 
+    [m_currentSearchDocument release];
+    m_currentSearchDocument = nil;
+    
     [m_metadataSearch detailsLoaded:m_dictionary];
 }
 
@@ -129,9 +134,10 @@ static NSDictionary* g_moviedbMap = nil;
         
         NSString* urlString = [NSString stringWithFormat:@"http://api.themoviedb.org/2.0/Movie.getInfo?id=%d&api_key=ae6c3dcf41e60014a3d0508e7f650884", showId];
         NSURL* url = [NSURL URLWithString:urlString];
-        [XMLDocument xmlDocumentWithContentsOfURL:url
+        assert(!m_currentSearchDocument);
+        m_currentSearchDocument = [[XMLDocument xmlDocumentWithContentsOfURL:url
                         withInfo:[NSString stringWithFormat:@"searching for movie with ID %d", showId] 
-                        target:self selector:@selector(loadDetailsCallback:)];
+                        target:self selector:@selector(loadDetailsCallback:)] retain];
     }
 }
 

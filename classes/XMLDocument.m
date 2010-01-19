@@ -11,36 +11,44 @@
 
 @implementation XMLElement
 
-+(XMLElement*) elementWithNSXMLElement:(NSXMLElement*) e
+-(void) dealloc
 {
-    XMLElement* element = [[XMLElement alloc] init];
-    
+    [m_children release];
+    [m_attributes release];
+    [m_name release];
+    [super dealloc];
+}
+
+-(XMLElement*) initWithNSXMLElement:(NSXMLElement*) e
+{
     // Set name
-    element->m_name = [[e name] retain];
+    m_name = [[e name] retain];
     
     // Add the elements and content, in order
     NSArray* kids = [e children];
     NSMutableArray* children = [[NSMutableArray alloc] init];
+    m_children = children;
     
     for (NSXMLNode* node in kids) {
         if ([node kind] == NSXMLTextKind)
             [children addObject:[node stringValue]];
-        else if ([node kind] == NSXMLElementKind)
-            [children addObject:[XMLElement elementWithNSXMLElement:(NSXMLElement*) node]];
+        else if ([node kind] == NSXMLElementKind) {
+            XMLElement* element = [[XMLElement alloc] initWithNSXMLElement:(NSXMLElement*) node];
+            [children addObject:element];
+            [element release];
+        }
     }
     
-    element->m_children = children;
     
     // Add the attributes
     NSArray* a = [e attributes];
     NSMutableDictionary* attributes = [[NSMutableDictionary alloc] init];
+    m_attributes = attributes;
     
     for (NSXMLNode* node in a)
         [attributes setValue:[node stringValue] forKey:[node name]];
         
-    element->m_attributes = attributes;
-    
-    return element;
+    return self;
 }
 
 -(NSString*) stringAttribute:(NSString*) name;
@@ -106,9 +114,6 @@
 
 @implementation XMLDocument
 
-@synthesize rootElement = m_rootElement;
-@synthesize target = m_target;
-
 -(BOOL) loadDocument:(NSURL*) url withInfo:(NSString*) info
 {
     NSError* error;
@@ -118,16 +123,25 @@
     
     if ([desc length] != 0) {
         [[AppController instance] log:@"ERROR parsing XML document: %@. %@\n", info, desc];
+        [document release];
         return NO;
     }
     
-    self.rootElement = [XMLElement elementWithNSXMLElement: [document rootElement]];
+    m_rootElement = [[XMLElement alloc] initWithNSXMLElement: [document rootElement]];
+    [document release];
     return YES;
+}
+
+-(void) dealloc
+{
+    [m_rootElement release];
+    [m_target release];
+    [super dealloc];
 }
 
 +(XMLDocument*) xmlDocumentWithContentsOfURL: (NSURL*) url withInfo:(NSString*) info
 {
-	XMLDocument* doc = [[XMLDocument alloc] init];
+	XMLDocument* doc = [[[XMLDocument alloc] init] autorelease];
     return [doc loadDocument:url withInfo:info] ? doc : nil;
 }
 
@@ -136,14 +150,14 @@
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
     NSURL* url = [array objectAtIndex:0];
     NSString* info = [array objectAtIndex:1];
-    [self.target performSelectorOnMainThread:m_selector withObject:[self loadDocument:url withInfo:info] ? self : nil waitUntilDone:NO];
+    [m_target performSelectorOnMainThread:m_selector withObject:[self loadDocument:url withInfo:info] ? self : nil waitUntilDone:NO];
     [pool release];
 }
 
 +(XMLDocument*) xmlDocumentWithContentsOfURL: (NSURL*) url  withInfo:(NSString*) info target:(id) target selector:(SEL) selector;
 {
-	XMLDocument* doc = [[[XMLDocument alloc] init] retain];
-    doc.target = target;
+	XMLDocument* doc = [[[XMLDocument alloc] init] autorelease];
+    doc->m_target = [target retain];
     doc->m_selector = selector;
     
     NSArray* array = [NSArray arrayWithObjects:url, info, nil];
