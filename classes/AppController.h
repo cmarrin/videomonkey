@@ -118,6 +118,7 @@ typedef enum { RS_STOPPED, RS_RUNNING, RS_PAUSED } RunStateType;
 -(void) setSelectedFile: (int) index;
 
 -(void) updateFileInfo;
+-(void) updateEncodingInfo;
 
 // delegate method
 -(void) uiChanged;

@@ -21,7 +21,21 @@
 // FrameSize is a 32 bit integer with upper 16 bits width and lower 16 bits height
 typedef uint32_t FrameSize;
 
-typedef enum FileStatus { FS_INVALID, FS_VALID, FS_ENCODING, FS_PAUSED, FS_FAILED, FS_SUCCEEDED } FileStatus;
+    //
+    //  FS_INVALID      - File is invalid, we can't encode this file
+    //  FS_VALID        - File is waiting to be encoded
+    //  FS_ENCODING     - File is in the process of being encoded
+    //  FS_PAUSED       - File is being encoded but is currently paused
+    //  FS_FAILED       - An attempt was made to encode the file, but it failed
+    //  FS_SUCCEEDED    - File was successfully encoded
+    //
+typedef enum FileStatus {   FS_INVALID,     // File is invalid, we can't encode this file
+                            FS_VALID,       // File is waiting to be encoded
+                            FS_ENCODING,    // File is in the process of being encoded
+                            FS_PAUSED,      // File is being encoded but is currently paused
+                            FS_FAILED,      // An attempt was made to encode the file, but it failed
+                            FS_SUCCEEDED    // File was successfully encoded
+                        } FileStatus;
 
 @interface TranscoderFileInfo : NSObject {
     // General
@@ -111,6 +125,7 @@ typedef enum FileStatus { FS_INVALID, FS_VALID, FS_ENCODING, FS_PAUSED, FS_FAILE
 
 @property (readwrite) BOOL enabled;
 @property (readonly) double progress;
+@property (readonly) FileStatus fileStatus;
 
 @property (readonly) TranscoderFileInfo* inputFileInfo;
 @property (readonly) TranscoderFileInfo* outputFileInfo;
@@ -129,8 +144,6 @@ typedef enum FileStatus { FS_INVALID, FS_VALID, FS_ENCODING, FS_PAUSED, FS_FAILE
 -(void) resetStatus;
 -(NSProgressIndicator*) progressIndicator;
 -(NSImageView*) statusImageView;
-
--(FileStatus) inputFileStatus;
 
 -(BOOL) isInputQuicktime;
 -(BOOL) hasInputAudio;

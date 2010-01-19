@@ -36,15 +36,15 @@
 
 -(void) searchSelectedFiles
 {
-    NSArray* array = [self selectedObjects];
-    for (Transcoder* transcoder in array)
+    NSArray* selectedObjects = [self selectedObjects];
+    for (Transcoder* transcoder in selectedObjects)
         [transcoder createMetadata:YES];
 }
 
 -(void) searchAllFiles
 {
-    NSArray* array = [self arrangedObjects];
-    for (Transcoder* transcoder in array)
+    NSArray* arrangedObjects = [self arrangedObjects];
+    for (Transcoder* transcoder in arrangedObjects)
         [transcoder createMetadata:YES];
 }
 
@@ -148,6 +148,7 @@
                 //    [self addObject:transcoder];
                         
                 [[AppController instance] uiChanged];    
+                [[AppController instance] updateEncodingInfo];    
             }
             
             [transcoders release];
@@ -172,6 +173,7 @@
     [self addObject:transcoder];
     [transcoder release];
     [[AppController instance] uiChanged];    
+    [[AppController instance] updateEncodingInfo];    
 }
 
 -(IBAction)addFiles:(id)sender
@@ -187,6 +189,23 @@
     if ([panel runModalForTypes: nil] == NSOKButton) {
         for (NSString* filename in [panel filenames])
             [self addFile:filename];
+    }
+}
+
+- (void)remove:(id)sender
+{
+    NSArray* selectedObjects = [self selectedObjects];
+    for (Transcoder* transcoder in selectedObjects) {
+        if ([transcoder fileStatus] == FS_ENCODING || [transcoder fileStatus] == FS_PAUSED) {
+            NSString* filename = [[[transcoder inputFileInfo] filename] lastPathComponent];
+            NSBeginAlertSheet([NSString stringWithFormat:@"Unable to remove %@", filename], nil, nil, nil, [[NSApplication sharedApplication] mainWindow], 
+                            nil, nil, nil, nil, 
+                            @"File is being encoded. Stop encoding then try again.");
+        }
+        else {
+            [self removeObject:transcoder];
+            [[AppController instance] updateEncodingInfo];
+        }
     }
 }
 

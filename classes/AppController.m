@@ -273,6 +273,32 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
     m_limitParams = [[[[NSUserDefaultsController sharedUserDefaultsController] values] valueForKey:@"limitOutputParams"] boolValue];
 }
 
+// This is called to update the info used while encoding is running. It allows
+// files to be added or removed from the list while encoding
+-(void) updateEncodingInfo
+{
+    m_numFilesToConvert = 0;
+    m_totalEncodedFileSize = 0;
+    int numNotYetConverted = 0;
+
+    for (Transcoder* transcoder in m_fileList) {
+        FileStatus status = [transcoder fileStatus];
+        if ([transcoder enabled] || status == FS_FAILED || status == FS_SUCCEEDED) {
+            m_numFilesToConvert++;
+            m_totalEncodedFileSize += transcoder.outputFileInfo.fileSize;
+            
+            BOOL needsConvert = [transcoder enabled] && !(status == FS_ENCODING || status == FS_PAUSED);
+            if (needsConvert)
+                numNotYetConverted++;
+            
+            if (m_runState == RS_STOPPED || needsConvert)
+                [transcoder resetStatus];
+        }
+    }
+
+    m_fileConvertingIndex = m_numFilesToConvert - numNotYetConverted - 1;
+}
+
 // Main Encoding Functions
 -(void) startNextEncode
 {
@@ -315,8 +341,6 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
         m_isTerminated = NO;
     
         // reset the status for anything we're about to encode
-        m_numFilesToConvert = 0;
-        m_totalEncodedFileSize = 0;
         m_finishedEncodedFileSize = 0;
         m_currentEncodedFileSize = 0;
     
@@ -327,6 +351,8 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
                 [transcoder resetStatus];
             }
         }
+        
+        [self updateEncodingInfo];
     
         if (!m_numFilesToConvert) {
             NSBeginAlertSheet(@"No Files To Encode", nil, nil, nil, [[NSApplication sharedApplication] mainWindow], 
@@ -336,7 +362,6 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
             return;
         }
     
-        m_fileConvertingIndex = -1;
         m_someFilesFailed = NO;
 
         [m_progressText setStringValue:@""];

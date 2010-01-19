@@ -28,8 +28,8 @@
     [[tr progressIndicator] removeFromSuperview];
     
     // now add the appropriate one
-    id obj = ([tr inputFileStatus] == FS_ENCODING) ? (id) [tr progressIndicator] : (id) [tr statusImageView];
-    if ([tr inputFileStatus] == FS_ENCODING) {
+    id obj = ([tr fileStatus] == FS_ENCODING) ? (id) [tr progressIndicator] : (id) [tr statusImageView];
+    if ([tr fileStatus] == FS_ENCODING) {
         // Make the indicator a bit smaller. The setControlSize method
         // doesn’t work in this scenario.
         cellFrame.origin.y += cellFrame.size.height / 4;

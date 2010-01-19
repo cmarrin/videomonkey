@@ -78,6 +78,26 @@ int heightFromFrameSize(FrameSize f) { return f & 0xffff; }
 @synthesize progress = m_progress;
 @synthesize enabled = m_enabled;
 @synthesize metadata = m_metadata;
+@synthesize fileStatus = m_fileStatus;
+
+-(BOOL) enabled
+{
+    return m_enabled;    
+}
+
+-(void) setEnabled:(BOOL) enabled
+{
+    if (m_fileStatus == FS_ENCODING || m_fileStatus == FS_PAUSED) {
+        NSBeginAlertSheet([NSString stringWithFormat:@"Unable to disable %@", [self.inputFileInfo.filename lastPathComponent]], 
+                            nil, nil, nil, [[NSApplication sharedApplication] mainWindow], 
+                            nil, nil, nil, nil, 
+                            @"File is being encoded. Stop encoding then try again.");
+        return;
+    }
+    
+    m_enabled = enabled;
+    [[AppController instance] updateEncodingInfo];    
+}
 
 -(FileInfoPanelController*) fileInfoPanelController
 {
@@ -304,7 +324,7 @@ static NSImage* getFileStatusImage(FileStatus status)
     return m_statusImageView;
 }
 
--(FileStatus) inputFileStatus
+-(FileStatus) fileStatus
 {
     return m_fileStatus;
 }
