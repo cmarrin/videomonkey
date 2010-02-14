@@ -1,5 +1,20 @@
 Notes About Encoding
 
+Stitching together files
+
+mkfifo intermediate1.mpg
+mkfifo intermediate2.mpg
+ffmpeg -i input1.avi -sameq -y intermediate1.mpg < /dev/null &
+ffmpeg -i input2.avi -sameq -y intermediate2.mpg < /dev/null &
+cat intermediate1.mpg intermediate2.mpg |\
+ffmpeg -f mpeg -i - -sameq -vcodec mpeg4 -acodec libmp3lame output.avi
+
+The above will stitch together files of any format by first converting to mpeg (at the same quality), outputting the result into a pipe and then catting the piped data and feeding it into the final ffmpeg conversion. This requires 2 conversions per movie. We can skip the conversion to mpg if the input movie is already mpg.
+
+DV files can be catted without feeding into ffmpeg. So you can convert to DV, then cat directly to the output DV file.
+
+
+
 Recipes
 
 for iPod Touch
