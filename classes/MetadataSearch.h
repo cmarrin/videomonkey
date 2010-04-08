@@ -74,19 +74,20 @@
     SEL m_searchForShowsSelector;
 }
 
-@property(readwrite,retain) NSString* currentShowName;
-@property(readwrite,retain) NSString* currentSeason;
-@property(readwrite,retain) NSString* currentEpisode;
-@property(readwrite,retain) MetadataSearcher* foundSearcher;
-@property(readwrite,retain) NSArray* foundShowNames;
-@property(readwrite,retain) NSArray* foundShowIds;
-@property(readwrite,retain) NSArray* foundSeasons;
-@property(readwrite,retain) NSArray* foundEpisodes;
+@property(retain) NSString* currentShowName;
+@property(readonly) BOOL currentSeasonIsValid;
+@property(retain) NSString* currentSeason;
+@property(retain) NSString* currentEpisode;
+@property(retain) MetadataSearcher* foundSearcher;
+@property(retain) NSArray* foundShowNames;
+@property(retain) NSArray* foundShowIds;
+@property(retain) NSArray* foundSeasons;
+@property(retain) NSArray* foundEpisodes;
 
 +(MetadataSearch*) metadataSearch:(Metadata*) metadata;
 
 -(void) searchForShowsComplete:(BOOL) success;
--(void) searchWithString:(NSString*) string;
+-(void) searchWithString:(NSString*) string filename:(NSString*) filename;
 -(void) searchWithFilename:(NSString*) filename;
 
 -(void) detailsLoaded:(NSDictionary*) dictionary;

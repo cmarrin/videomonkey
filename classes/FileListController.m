@@ -9,6 +9,7 @@
 #import "FileListController.h"
 #import "AppController.h"
 #import "ProgressCell.h"
+#import "Metadata.h"
 #import "Transcoder.h"
 
 #define FileListItemType @"FileListItemType"
@@ -38,14 +39,21 @@
 {
     NSArray* selectedObjects = [self selectedObjects];
     for (Transcoder* transcoder in selectedObjects)
-        [transcoder createMetadata:YES];
+        [transcoder.metadata searchAgain];
 }
 
 -(void) searchAllFiles
 {
     NSArray* arrangedObjects = [self arrangedObjects];
     for (Transcoder* transcoder in arrangedObjects)
-        [transcoder createMetadata:YES];
+        [transcoder.metadata searchAgain];
+}
+
+-(void) searchSelectedFilesForString:(NSString*) searchString
+{
+    NSArray* selectedObjects = [self selectedObjects];
+    for (Transcoder* transcoder in selectedObjects)
+        [[transcoder metadata] searchWithString:searchString];
 }
 
 - (void)rearrangeObjects

@@ -255,9 +255,9 @@ static NSImage* getFileStatusImage(FileStatus status)
     [super dealloc];
 }
     
--(void) createMetadata:(BOOL) autoSearch
+-(void) createMetadata
 {
-    self.metadata = [Metadata metadataWithTranscoder:self search:autoSearch];
+    self.metadata = [Metadata metadataWithTranscoder:self];
 }
 
 - (int) addInputFile: (NSString*) filename
@@ -279,7 +279,9 @@ static NSImage* getFileStatusImage(FileStatus status)
     [m_statusImageView setImage: getFileStatusImage(m_fileStatus)];
     
     // read the metadata
-    [self createMetadata:[[[AppController instance] fileInfoPanelController] autoSearch]];
+    [self createMetadata];
+    if ([[[AppController instance] fileInfoPanelController] autoSearch])
+        [self.metadata searchAgain];
     
     return [m_inputFiles count] - 1;    
 }

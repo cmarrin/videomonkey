@@ -9,6 +9,7 @@
 #import <Quartz/Quartz.h>
 
 #import "Metadata.h"
+#import "AppController.h"
 #import "MetadataSearch.h"
 #import "FileInfoPanelController.h"
 #import "Transcoder.h"
@@ -231,7 +232,6 @@ static NSDictionary* g_tagMap = nil;
 @synthesize tags = m_tagDictionary;
 @synthesize search = m_search;
 @synthesize rootFilename = m_rootFilename;
-@synthesize autoSearch = m_autoSearch;
 
 -(BOOL) canWriteMetadataToInputFile
 {
@@ -307,9 +307,7 @@ static NSDictionary* g_tagMap = nil;
 
 -(void) processFinishReadMetadata: (NSNotification*) note
 {
-    int status = [m_task terminationStatus];
-    if (status)
-        [m_transcoder log: @"Unable to read metadata for %@\n", m_rootFilename];
+    m_searchSucceeded = [m_task terminationStatus] == 0;
 }
 
 -(NSString*) handleTrackOrDisk:(NSString*) value totalKey:(NSString*) totalKey
@@ -424,6 +422,7 @@ static NSDictionary* g_tagMap = nil;
     
     m_task = [[NSTask alloc] init];
     m_messagePipe = [NSPipe pipe];
+    m_searchSucceeded = YES;
     
     // execute the command
     [m_task setArguments: args];
@@ -435,14 +434,16 @@ static NSDictionary* g_tagMap = nil;
     
     [m_task launch];
     [m_task waitUntilExit];
-    NSData* data = [[m_messagePipe fileHandleForReading] availableData];
-    [self processData:data];
-    
-    // get artwork
-    for (int i = 0; i < m_numArtwork; ++i) {
-        ArtworkItem* item = [ArtworkItem artworkItemWithPath:[NSString stringWithFormat:@"%@_artwork_%d", tmpArtworkPath, i+1] sourceIcon:g_sourceInputIcon checked:YES];
-        if (item)
-            [m_artworkList addObject:item];
+    if (m_searchSucceeded) {
+        NSData* data = [[m_messagePipe fileHandleForReading] availableData];
+        [self processData:data];
+        
+        // get artwork
+        for (int i = 0; i < m_numArtwork; ++i) {
+            ArtworkItem* item = [ArtworkItem artworkItemWithPath:[NSString stringWithFormat:@"%@_artwork_%d", tmpArtworkPath, i+1] sourceIcon:g_sourceInputIcon checked:YES];
+            if (item)
+                [m_artworkList addObject:item];
+        }
     }
 
     // All the keys in g_tagMap need to be filled in so the user can modify them.
@@ -530,11 +531,14 @@ static NSDictionary* g_tagMap = nil;
 -(void) loadSearchMetadata:(NSDictionary*) dictionary
 {
     // Tell the FileInfoPanelController we've finished a search
-    [[m_transcoder fileInfoPanelController] finishMetadataSearch:dictionary != nil];
+    [[m_transcoder fileInfoPanelController] finishMetadataSearch:dictionary != 0];
 
-    if (!dictionary)
+    // If the dictionary is nil, the loaded metadata probably didn't have the requested season or episode
+    if (!dictionary) {
+        [[AppController instance] log: [NSString stringWithFormat:@"WARNING:No appropriate metadata found for '%@'\n", m_rootFilename]];
         return;
-        
+    }
+
     // clear all existing search metadata
     for (NSString* key in m_tagDictionary) 
         [[m_tagDictionary valueForKey:key] setValue:nil tag:nil type:SEARCH_TAG];
@@ -572,7 +576,7 @@ static NSDictionary* g_tagMap = nil;
     [m_transcoder updateFileInfo];
 }
 
-+(Metadata*) metadataWithTranscoder: (Transcoder*) transcoder search:(BOOL) search
++(Metadata*) metadataWithTranscoder: (Transcoder*) transcoder
 {
     // init the tag map, if needed
     if (!g_tagMap)
@@ -613,7 +617,6 @@ static NSDictionary* g_tagMap = nil;
     
     Metadata* metadata = [[Metadata alloc] init];
     metadata->m_transcoder = transcoder;
-    metadata->m_autoSearch = search;
     metadata->m_buffer = [[NSMutableString alloc] init];
     metadata->m_task = [[NSTask alloc] init];
     metadata->m_messagePipe = [NSPipe pipe];
@@ -627,11 +630,6 @@ static NSDictionary* g_tagMap = nil;
     // setup the bindings to the metadata panel
     [metadata->m_transcoder.fileInfoPanelController.metadataPanel setupMetadataPanelBindings];
     metadata->m_search = [MetadataSearch metadataSearch:metadata];
-
-    if (search) {
-        // Search for metadata
-        [metadata searchAgain];
-    }
     
     return metadata;
 }
@@ -641,7 +639,7 @@ static NSDictionary* g_tagMap = nil;
     // Tell the FileInfoPanelController we've started a search
     [[m_transcoder fileInfoPanelController] startMetadataSearch];
     
-    [m_search searchWithString:string];
+    [m_search searchWithString:string filename:m_rootFilename];
 }
 
 -(void) searchAgain
@@ -653,26 +651,15 @@ static NSDictionary* g_tagMap = nil;
     NSString* value = [[m_tagDictionary valueForKey:@"TVShowName"] valueForSource:INPUT_TAG];
     
     if (value && [value length] > 0)
-        [m_search searchWithString:value];
+        [m_search searchWithString:value filename:m_rootFilename];
     else {
         value = [[m_tagDictionary valueForKey:@"title"] valueForSource:INPUT_TAG];
         if (value && [value length] > 0)
-            [m_search searchWithString:value];
+            [m_search searchWithString:value filename:m_rootFilename];
         else {
             [m_search searchWithFilename:m_transcoder.inputFileInfo.filename];
         }
     }
-
-    /*
-    // if the season and episode were in the input metadata, set them
-    value = [[m_tagDictionary valueForKey:@"TVSeasonNum"] valueForSource:INPUT_TAG];
-    if (value && [value length] > 0)
-        m_search.currentSeason = [[NSNumber numberWithInt:[value intValue]] stringValue];
-    
-    value = [[m_tagDictionary valueForKey:@"TVEpisodeNum"] valueForSource:INPUT_TAG];
-    if (value && [value length] > 0)
-        m_search.currentEpisode = [[NSNumber numberWithInt:[value intValue]] stringValue];
-    */
 }
 
 - (id)valueForUndefinedKey:(NSString *)key

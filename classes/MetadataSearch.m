@@ -75,25 +75,32 @@
 @synthesize foundEpisodes = m_foundEpisodes;
 @synthesize currentShowName = m_currentShowName;
 
--(NSString*) currentSeason
+- (BOOL)currentSeasonIsValid
 {
-    return (m_season >= 0) ? [[NSNumber numberWithInt:m_season] stringValue] : @"--";
+    return m_season >= 0;
 }
 
--(void) setCurrentSeason:(NSString*) value
+- (NSString*)currentSeason
 {
-    m_season = [value isEqualToString:@"--"] ? -1 : [value intValue];
+    return (m_season >= 0) ? [[NSNumber numberWithInt:m_season] stringValue] :
+        (([m_foundSeasons count] > 0) ? [m_foundSeasons objectAtIndex:0] : @"--");
+}
+
+- (void)setCurrentSeason:(NSString*) season
+{
+    m_season = [season isEqualToString:@"--"] ? -1 : [season intValue];
     [self details];
 }
 
--(NSString*) currentEpisode
+- (NSString*)currentEpisode
 {
-    return (m_episode >= 0) ? [[NSNumber numberWithInt:m_episode] stringValue] : @"--";
+    return (m_episode >= 0) ? [[NSNumber numberWithInt:m_episode] stringValue] :
+        (([m_foundEpisodes count] > 0) ? [m_foundEpisodes objectAtIndex:0] : @"--");
 }
 
--(void) setCurrentEpisode:(NSString*) value
+- (void)setCurrentEpisode:(NSString*) episode
 {
-    m_episode = [value isEqualToString:@"--"] ? -1 : [value intValue];
+    m_episode = [episode isEqualToString:@"--"] ? -1 : [episode intValue];
     [self details];
 }
 
@@ -160,9 +167,12 @@ static BOOL isValidInteger(NSString* s)
     NSMutableString* outputString = [[NSMutableString alloc] init];
 
     BOOL firstTime = YES;
+    int maybeEpisode = -1;
     
     for (NSString* item in array) {
         item = [item lowercaseString];
+
+        // see if this is of the form s<number>e<number>
         if ([item hasPrefix:@"s"]) {
             NSArray* seArray = [[item substringFromIndex: 1] componentsSeparatedByString:@"e"];
             if ([seArray count] == 2 && isValidInteger([seArray objectAtIndex:0]) && isValidInteger([seArray objectAtIndex:1])) {
@@ -174,9 +184,9 @@ static BOOL isValidInteger(NSString* s)
             }
         }
         
+        // see if this is of the form <number>x<number>
         NSArray* seasonEpisode = [item componentsSeparatedByString:@"x"];
         if ([seasonEpisode count] == 2) {
-            // see if this is of the form <number>x<number>
             if (isValidInteger([seasonEpisode objectAtIndex:0]) && isValidInteger([seasonEpisode objectAtIndex:1])) {
                 // we have a season/episode
                 *season = [[seasonEpisode objectAtIndex:0] intValue];
@@ -184,6 +194,10 @@ static BOOL isValidInteger(NSString* s)
                 continue;
             }
         }
+        
+        // As a last ditch effort, if it's a bare number, set the episode to that.
+        if (isValidInteger(item))
+            maybeEpisode = [item intValue];
                 
         if (!firstTime)
             [outputString appendString:@" "];
@@ -192,6 +206,9 @@ static BOOL isValidInteger(NSString* s)
 
         [outputString appendString:item];
     }
+    
+    if (maybeEpisode >= 1 && maybeEpisode <= 99 && *episode < 0)
+        *episode = maybeEpisode;
     
     return outputString;
 }
@@ -204,17 +221,22 @@ static BOOL isValidInteger(NSString* s)
         [m_metadata loadSearchMetadata:0];
 }
 
--(void) searchWithString:(NSString*) string
+-(void) searchWithString:(NSString*) string filename:(NSString*) filename
 {
-    // sometimes a show name has the season/episode encoded into it. See if it does and remove it if so
+    if (m_season < 0 || m_episode < 0) {
+        // Get the season and episode from the filename
+        [self checkString:filename forSeason:&m_season episode:&m_episode];
+    }
+    
+    // Get the season and episode out of the string and use it if needed
     int season;
     int episode;
     NSString* newString = [self checkString:string forSeason:&season episode:&episode];
     
-    if (season >= 0 && m_season < 0)
+    if (m_season < 0 && season >= 0)
         m_season = season;
         
-    if (episode >= 0 && m_episode < 0)
+    if (m_episode < 0 && episode >= 0)
         m_episode = episode;
         
     // see if the search string in in our list already
@@ -234,9 +256,6 @@ static BOOL isValidInteger(NSString* s)
     self.foundShowNames = nil;
     self.foundShowIds = nil;
     self.foundSearcher = nil;
-    
-    m_season = (season >= 0) ? season : -1;
-    m_episode = (episode >= 0) ? episode : -1;
     
     [self _searchForShows: newString withSelector:@selector(searchWithStringComplete:)];
 }

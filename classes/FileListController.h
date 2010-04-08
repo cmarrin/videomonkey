@@ -16,14 +16,15 @@
     int m_draggedRow;
 }
 
--(void) reloadData;
--(void) searchSelectedFiles;
--(void) searchAllFiles;
+- (void)reloadData;
+- (void)searchSelectedFiles;
+- (void)searchAllFiles;
+- (void)searchSelectedFilesForString:(NSString*) searchString;
 
--(void) addFile:(NSString*) filename;
+- (void)addFile:(NSString*) filename;
 
--(IBAction)addFiles:(id)sender;
--(IBAction)clearAll:(id)sender;
--(IBAction)selectAll:(id)sender;
+- (IBAction)addFiles:(id)sender;
+- (IBAction)clearAll:(id)sender;
+- (IBAction)selectAll:(id)sender;
 
 @end

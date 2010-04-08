@@ -160,7 +160,7 @@ typedef enum FileStatus {   FS_INVALID,     // File is invalid, we can't encode 
 -(BOOL) stopEncode;
 
 -(BOOL) addToMediaLibrary:(NSString*) filename;
--(void) createMetadata:(BOOL) autoSearch;
+-(void) createMetadata;
 
 -(void) setProgressForCommand: (Command*) command to: (double) value;
 -(void) commandFinished: (Command*) command status: (int) status;

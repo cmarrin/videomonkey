@@ -171,6 +171,7 @@
                                         action:@selector(useThisValueForAllFiles:) 
                                         keyEquivalent:@""]];
     [m_title setMenu:menu];
+    [menu release];
 
     // bind value
     NSString* keyPath = [NSString stringWithFormat:@"selection.metadata.tags.%@.displayValue", [self key]];

@@ -28,9 +28,9 @@
     BOOL m_isVisible;
     NSString* m_metadataStatus;
     int m_metadataSearchCount;
-    BOOL m_errorsOnMetadataSearch;
     NSArray* m_searcherStrings;
     NSString* m_currentSearcher;
+    BOOL m_metadataSearchSucceeded;
 }
 
 @property(readonly) NSArray* artworkList;
@@ -44,7 +44,7 @@
 
 -(IBAction)artworkCheckedStateChanged:(id)sender;
 -(IBAction)searchBoxSelected:(id)sender;
--(IBAction)useThisValueForAllFiles:(id)sender;
+-(IBAction)useSeasonValueForAllFiles:(id)sender;
 -(IBAction)searchAllFiles:(id)sender;
 -(IBAction)searchSelectedFiles:(id)sender;
 

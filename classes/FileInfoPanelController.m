@@ -9,6 +9,7 @@
 #import "FileInfoPanelController.h"
 #import "FileListController.h"
 #import "Metadata.h"
+#import "MetadataSearch.h"
 #import "Transcoder.h"
 
 @implementation FileInfoPanelController
@@ -129,25 +130,34 @@
 -(IBAction)searchBoxSelected:(id)sender
 {
     NSString* searchString = [sender stringValue];
-    [[(Transcoder*)[m_fileListController selection] metadata] searchWithString:searchString];
+    m_metadataSearchCount = 0;
+    m_metadataSearchSucceeded = YES;
+    [m_fileListController searchSelectedFilesForString:searchString];
 }
 
--(IBAction)useThisValueForAllFiles:(id)sender
+-(IBAction)useSeasonValueForAllFiles:(id)sender
 {
-    printf("***\n");
+    if ([m_fileListController selection]) {
+        Transcoder* selectedTranscoder = [m_fileListController selection];
+        NSString* season = selectedTranscoder.metadata.search.currentSeason;
+        NSArray* arrangedObjects = [m_fileListController arrangedObjects];
+        
+        for (Transcoder* transcoder in arrangedObjects)
+            transcoder.metadata.search.currentSeason = season;
+    }
 }
 
 -(IBAction)searchAllFiles:(id)sender
 {
     m_metadataSearchCount = 0;
-    m_errorsOnMetadataSearch = NO;
+    m_metadataSearchSucceeded = YES;
     [m_fileListController searchAllFiles];
 }
 
 -(IBAction)searchSelectedFiles:(id)sender
 {
     m_metadataSearchCount = 0;
-    m_errorsOnMetadataSearch = NO;
+    m_metadataSearchSucceeded = YES;
     [m_fileListController searchSelectedFiles];
 }
 
@@ -162,15 +172,16 @@
 -(void) finishMetadataSearch:(BOOL) success
 {
     if (!success)
-        m_errorsOnMetadataSearch = YES;
-        
+        m_metadataSearchSucceeded = NO;
+
     if (--m_metadataSearchCount <= 0) {
         [self.metadataPanel setMetadataSearchSpinner:NO];
         self.metadataStatus = @"";
         
-    if (m_errorsOnMetadataSearch)
-        NSRunAlertPanel(@"Error in one or more metadata searches", @"See console for more information", nil, nil, nil);
-        
+        if (!m_metadataSearchSucceeded) {
+            // If we failed, show an alert
+            NSRunAlertPanel(@"One or more metadata searches failed", @"See console for more information", nil, nil, nil);
+        }
     }
 }
 
