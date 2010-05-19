@@ -390,15 +390,16 @@ A property name is anything from the character after the '$' to the next whitesp
                 }
                 
                 // Adjust frame rate and frame size based on format_limits for Apple TV
-                if (params.title == "Apple TV" && params.output_video_frame_rate > 24 && 
-                                (params.frame_width > 960 || params.frame_height > 540)) {
+                if (params.title == "Apple TV") {
                     if (params.format_limits == "24fps") {
-                        if (params.output_video_frame_rate > 24)
-                            params.output_video_frame_rate = 24;
-                        if (params.frame_width > 1280)
-                            params.frame_width = 1280;
-                        if (params.frame_height > 1024)
-                            params.frame_height = 1024;
+                        if (params.frame_width > 960 || params.frame_height > 540) {
+                            if (params.output_video_frame_rate > 24)
+                                params.output_video_frame_rate = 24;
+                            if (params.frame_width > 1280)
+                                params.frame_width = 1280;
+                            if (params.frame_height > 1024)
+                                params.frame_height = 1024;
+                        }
                     }
                     else {
                         if (params.output_video_frame_rate > 30)

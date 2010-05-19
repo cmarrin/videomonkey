@@ -455,6 +455,12 @@ static NSDictionary* g_tagMap = nil;
     }
 }
 
+- (NSString*) utf8ToASCII:(NSString*) utf8
+{
+    NSData* asciiData = [utf8 dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:YES];
+    return [[[NSString alloc] initWithData:asciiData encoding:NSASCIIStringEncoding] autorelease];
+}
+
 -(NSString*) atomicParsleyParams
 {
     NSMutableString* params = [[NSMutableString alloc] init];
@@ -469,6 +475,9 @@ static NSDictionary* g_tagMap = nil;
             
         // escape all the quotes
         value = value ? [value stringByReplacingOccurrencesOfString:@"\"" withString:@"\\\""] : @"";
+        
+        // Get rid of all non-ascii
+        value = [self utf8ToASCII:value];
         [params appendString:[NSString stringWithFormat:@" --%@ \"%@\"", param, value]];
     }
     
@@ -528,13 +537,13 @@ static NSDictionary* g_tagMap = nil;
         [[m_tagDictionary valueForKey:key] setCurrentSourceIfExists:type];
 }
 
--(void) loadSearchMetadata:(NSDictionary*) dictionary
+-(void) loadSearchMetadata:(NSDictionary*) dictionary success:(BOOL) success
 {
     // Tell the FileInfoPanelController we've finished a search
-    [[m_transcoder fileInfoPanelController] finishMetadataSearch:dictionary != 0];
+    [[m_transcoder fileInfoPanelController] finishMetadataSearch:success];
 
     // If the dictionary is nil, the loaded metadata probably didn't have the requested season or episode
-    if (!dictionary) {
+    if (!dictionary && !success) {
         [[AppController instance] log: [NSString stringWithFormat:@"WARNING:No appropriate metadata found for '%@'\n", m_rootFilename]];
         return;
     }

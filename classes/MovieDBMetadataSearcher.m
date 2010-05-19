@@ -91,6 +91,8 @@ static NSDictionary* g_moviedbMap = nil;
 
 -(void) loadDetailsCallback:(XMLDocument*) document
 {
+    BOOL success = NO;
+    
     if (document && [[[document rootElement] name] isEqualToString:@"results"]) {
         assert(document == m_currentSearchDocument);
     
@@ -115,6 +117,8 @@ static NSDictionary* g_moviedbMap = nil;
                 NSMutableArray* artwork = [[NSMutableArray alloc] init];
                 [self collectArtwork: [movie elementsForName:@"poster"] toArray:artwork];
                 [m_dictionary setValue:artwork forKey:@"artwork"];
+                
+                success = YES;
             }
         }
     }
@@ -122,7 +126,7 @@ static NSDictionary* g_moviedbMap = nil;
     [m_currentSearchDocument release];
     m_currentSearchDocument = nil;
     
-    [m_metadataSearch detailsLoaded:m_dictionary];
+    [m_metadataSearch detailsLoaded:m_dictionary success:success];
 }
 
 -(void) detailsForShow:(int) showId season:(int) season episode:(int) episode

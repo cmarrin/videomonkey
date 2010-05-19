@@ -67,6 +67,7 @@
     [[m_metadataScrollView documentView] scrollPoint:pt];
     
     // make the search box selected
+    [m_searchField setDelegate:self];
     [m_searchField becomeFirstResponder];
     
     // Fill in the searchers
@@ -130,6 +131,18 @@
 -(IBAction)searchBoxSelected:(id)sender
 {
     NSString* searchString = [sender stringValue];
+    if (m_lastSearchString) {
+        if ([m_lastSearchString isEqualToString:searchString])
+            return;
+    }
+    
+    [searchString retain];
+    [m_lastSearchString release];
+    m_lastSearchString = searchString;
+    
+    if ([searchString length] == 0)
+        return;
+        
     m_metadataSearchCount = 0;
     m_metadataSearchSucceeded = YES;
     [m_fileListController searchSelectedFilesForString:searchString];
@@ -195,6 +208,22 @@
 {
     NSLog(@"*** FileInfoPanelController::valueForUndefinedKey:%@\n", key);
     return nil;
+}
+
+// NSTextField delegate methods for searchField
+- (void)controlTextDidBeginEditing:(NSNotification *)aNotification
+{
+    m_searchFieldIsEditing = YES;
+}
+
+- (void)controlTextDidChange:(NSNotification *)aNotification
+{
+    //NSLog(@"textDidChange\n");
+}
+
+- (void)controlTextDidEndEditing:(NSNotification *)aNotification
+{
+    m_searchFieldIsEditing = NO;
 }
 
 @end

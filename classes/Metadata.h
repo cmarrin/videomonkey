@@ -43,7 +43,7 @@
 -(void) cleanupAfterMetadataWrite;
 -(void) setMetadataSource:(TagType) type;
 
--(void) loadSearchMetadata:(NSDictionary*) dictionary;
+-(void) loadSearchMetadata:(NSDictionary*) dictionary success:(BOOL) success;
 
 -(void) searchWithString:(NSString*) string;
 -(void) searchAgain;

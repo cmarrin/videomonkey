@@ -82,8 +82,15 @@
 
 - (NSString*)currentSeason
 {
-    return (m_season >= 0) ? [[NSNumber numberWithInt:m_season] stringValue] :
-        (([m_foundSeasons count] > 0) ? [m_foundSeasons objectAtIndex:0] : @"--");
+    if (m_season >= 0)
+        return [[NSNumber numberWithInt:m_season] stringValue];
+        
+    // If possible return season 1, otherwise, return the first on in the list
+    for (NSString* s in m_foundSeasons)
+        if ([s isEqualToString:@"1"])
+            return s;
+    
+    return (([m_foundSeasons count] > 0) ? [m_foundSeasons objectAtIndex:0] : @"--");
 }
 
 - (void)setCurrentSeason:(NSString*) season
@@ -94,8 +101,15 @@
 
 - (NSString*)currentEpisode
 {
-    return (m_episode >= 0) ? [[NSNumber numberWithInt:m_episode] stringValue] :
-        (([m_foundEpisodes count] > 0) ? [m_foundEpisodes objectAtIndex:0] : @"--");
+    if (m_episode >= 0)
+        return [[NSNumber numberWithInt:m_episode] stringValue];
+        
+    // If possible return season 1, otherwise, return the first on in the list
+    for (NSString* s in m_foundEpisodes)
+        if ([s isEqualToString:@"1"])
+            return s;
+    
+    return (([m_foundEpisodes count] > 0) ? [m_foundEpisodes objectAtIndex:0] : @"--");
 }
 
 - (void)setCurrentEpisode:(NSString*) episode
@@ -218,7 +232,7 @@ static BOOL isValidInteger(NSString* s)
     if ([success boolValue])
         [self details];
     else
-        [m_metadata loadSearchMetadata:0];
+        [m_metadata loadSearchMetadata:0 success:NO];
 }
 
 -(void) searchWithString:(NSString*) string filename:(NSString*) filename
@@ -268,7 +282,7 @@ static BOOL isValidInteger(NSString* s)
         if ([success boolValue])
             [self details];
         else
-            [m_metadata loadSearchMetadata:0];
+            [m_metadata loadSearchMetadata:0 success:NO];
         [m_searchWithFilenameArray release];
         return;
     }
@@ -294,11 +308,11 @@ static BOOL isValidInteger(NSString* s)
     [self _searchForShows: [m_searchWithFilenameArray componentsJoinedByString:@" "] withSelector:@selector(searchWithFilenameCallback:)];
 }
 
--(void) detailsLoaded:(NSDictionary*) dictionary
+-(void) detailsLoaded:(NSDictionary*) dictionary success:(BOOL) success
 {
     self.foundSeasons = self.foundSearcher.foundSeasons;
     self.foundEpisodes = self.foundSearcher.foundEpisodes;
-    [m_metadata loadSearchMetadata:dictionary];
+    [m_metadata loadSearchMetadata:dictionary success:success];
 }
 
 -(void) details

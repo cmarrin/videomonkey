@@ -31,6 +31,8 @@
     NSArray* m_searcherStrings;
     NSString* m_currentSearcher;
     BOOL m_metadataSearchSucceeded;
+    NSString* m_lastSearchString;
+    BOOL m_searchFieldIsEditing;
 }
 
 @property(readonly) NSArray* artworkList;

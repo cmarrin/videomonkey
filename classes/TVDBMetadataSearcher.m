@@ -236,8 +236,15 @@ static NSArray* numericallySortedArray(NSArray* array)
             [foundSeasons addObject: key];
         m_foundSeasons = [numericallySortedArray(foundSeasons) retain];
 
-        if (m_season < 0 && [m_foundSeasons count] > 0)
-            m_season = [self seasonOrEpisodeAsInt:[m_foundSeasons objectAtIndex:0]];
+        if (m_season < 0 && [m_foundSeasons count] > 0) {
+            // If possible return season 1, otherwise, return the first one in the list
+            for (NSString* s in m_foundSeasons)
+                if ([s isEqualToString:@"1"])
+                    m_season = 1;
+
+            if (m_season < 0)
+                m_season = [self seasonOrEpisodeAsInt:[m_foundSeasons objectAtIndex:0]];
+        }
             
         NSDictionary* episodes = [m_seasons valueForKey:[self seasonOrEpisodeAsString:m_season]];
         
@@ -249,14 +256,20 @@ static NSArray* numericallySortedArray(NSArray* array)
                 [foundEpisodes addObject: key];
             m_foundEpisodes = [numericallySortedArray(foundEpisodes) retain];
 
-            if (m_episode < 0 && [m_foundEpisodes count] > 0)
-                m_episode = [self seasonOrEpisodeAsInt:[m_foundEpisodes objectAtIndex:0]];
+            if (m_episode < 0 && [m_foundEpisodes count] > 0) {
+                // If possible return episode 1, otherwise, return the first one in the list
+                for (NSString* s in m_foundEpisodes)
+                    if ([s isEqualToString:@"1"])
+                        m_episode = 1;
 
+                if (m_episode < 0)
+                    m_episode = [self seasonOrEpisodeAsInt:[m_foundEpisodes objectAtIndex:0]];
+            }
             dictionary = [episodes valueForKey:[self seasonOrEpisodeAsString:m_episode]];
         }
     }
     
-    [m_metadataSearch detailsLoaded:dictionary];
+    [m_metadataSearch detailsLoaded:dictionary success:success];
 }
 
 -(void) loadDetailsCallback:(XMLDocument*) document

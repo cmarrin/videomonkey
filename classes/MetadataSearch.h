@@ -90,7 +90,7 @@
 -(void) searchWithString:(NSString*) string filename:(NSString*) filename;
 -(void) searchWithFilename:(NSString*) filename;
 
--(void) detailsLoaded:(NSDictionary*) dictionary;
+-(void) detailsLoaded:(NSDictionary*) dictionary success:(BOOL) success;
 -(void) details;
 
 @end
