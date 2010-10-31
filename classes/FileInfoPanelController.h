@@ -43,13 +43,14 @@
 @property(readwrite,retain) NSArray* searcherStrings;
 @property(readwrite,retain) NSString* currentSearcher;
 
--(IBAction)artworkCheckedStateChanged:(id)sender;
--(IBAction)searchBoxSelected:(id)sender;
--(IBAction)useSeasonValueForAllFiles:(id)sender;
--(IBAction)searchAllFiles:(id)sender;
--(IBAction)searchSelectedFiles:(id)sender;
+- (IBAction)artworkCheckedStateChanged:(id)sender;
+- (IBAction)searchBoxSelected:(id)sender;
+- (IBAction)useSeasonValueForAllFiles:(id)sender;
+- (IBAction)searchAllFiles:(id)sender;
+- (IBAction)searchSelectedFiles:(id)sender;
 
--(void) startMetadataSearch;
--(void) finishMetadataSearch:(BOOL) success;
+- (void)initializeMetadataSearch;
+- (void)startMetadataSearch;
+- (void)finishMetadataSearch:(BOOL) success;
 
 @end

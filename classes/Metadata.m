@@ -648,6 +648,7 @@ static NSDictionary* g_tagMap = nil;
 -(void) searchWithString:(NSString*) string
 {
     // Tell the FileInfoPanelController we've started a search
+    [[m_transcoder fileInfoPanelController] initializeMetadataSearch];
     [[m_transcoder fileInfoPanelController] startMetadataSearch];
     
     [m_search searchWithString:string filename:m_rootFilename];
@@ -656,6 +657,7 @@ static NSDictionary* g_tagMap = nil;
 -(void) searchAgain
 {
     // Tell the FileInfoPanelController we've started a search
+    [[m_transcoder fileInfoPanelController] initializeMetadataSearch];
     [[m_transcoder fileInfoPanelController] startMetadataSearch];
     
     // If we have a TVShowName or title, use that for the search, otherwise use the filename

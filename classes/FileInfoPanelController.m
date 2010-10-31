@@ -141,7 +141,7 @@
     [searchString release];
 }
 
--(IBAction)useSeasonValueForAllFiles:(id)sender
+- (IBAction)useSeasonValueForAllFiles:(id)sender
 {
     if ([m_fileListController selection]) {
         Transcoder* selectedTranscoder = [m_fileListController selection];
@@ -153,21 +153,27 @@
     }
 }
 
--(IBAction)searchAllFiles:(id)sender
+- (IBAction)searchAllFiles:(id)sender
 {
     m_metadataSearchCount = 0;
     m_metadataSearchSucceeded = YES;
     [m_fileListController searchAllFiles];
 }
 
--(IBAction)searchSelectedFiles:(id)sender
+- (IBAction)searchSelectedFiles:(id)sender
 {
     m_metadataSearchCount = 0;
     m_metadataSearchSucceeded = YES;
     [m_fileListController searchSelectedFiles];
 }
 
--(void) startMetadataSearch
+- (void)initializeMetadataSearch
+{
+    m_metadataSearchCount = 0;
+    m_metadataSearchSucceeded = YES;
+}    
+
+- (void) startMetadataSearch
 {
     if (++m_metadataSearchCount == 1) {
         [self.metadataPanel setMetadataSearchSpinner:YES];
@@ -175,7 +181,7 @@
     }
 }
 
--(void) finishMetadataSearch:(BOOL) success
+- (void) finishMetadataSearch:(BOOL) success
 {
     if (!success)
         m_metadataSearchSucceeded = NO;
