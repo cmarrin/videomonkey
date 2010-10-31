@@ -14,8 +14,14 @@
     IBOutlet NSTableView* m_fileListView;
 
     int m_draggedRow;
+    NSArray* m_lastFoundShowNames;
+    NSString* m_lastShowName;
 }
 
+@property(retain) NSArray* lastFoundShowNames;
+@property(retain) NSString* lastShowName;
+
+- (void)setSearchBox;
 - (void)reloadData;
 - (void)searchSelectedFiles;
 - (void)searchAllFiles;

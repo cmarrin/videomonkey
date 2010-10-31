@@ -10,11 +10,15 @@
 #import "AppController.h"
 #import "ProgressCell.h"
 #import "Metadata.h"
+#import "MetadataSearch.h"
 #import "Transcoder.h"
 
 #define FileListItemType @"FileListItemType"
 
 @implementation FileListController
+
+@synthesize lastFoundShowNames = m_lastFoundShowNames;
+@synthesize lastShowName = m_lastShowName;
 
 - (void) awakeFromNib
 {
@@ -35,11 +39,27 @@
     [m_fileListView reloadData];
 }
 
+-(void)setSearchBox
+{
+    if ([[self selectionIndexes] count] == 0) {
+        self.lastFoundShowNames = nil;
+        self.lastShowName = nil;
+        return;
+    }
+    
+    Transcoder* transcoder = [[self arrangedObjects] objectAtIndex:[self selectionIndex]];
+    self.lastFoundShowNames = [[[transcoder metadata] search] foundShowNames];
+    self.lastShowName = [[[transcoder metadata] search] currentShowName];
+}
+
 -(void) searchSelectedFiles
 {
     NSArray* selectedObjects = [self selectedObjects];
-    for (Transcoder* transcoder in selectedObjects)
+    Transcoder* lastTranscoder = nil;
+    for (Transcoder* transcoder in selectedObjects) {
+        lastTranscoder = transcoder;
         [transcoder.metadata searchAgain];
+    }
 }
 
 -(void) searchAllFiles
@@ -47,6 +67,7 @@
     NSArray* arrangedObjects = [self arrangedObjects];
     for (Transcoder* transcoder in arrangedObjects)
         [transcoder.metadata searchAgain];
+    [self setSearchBox];
 }
 
 -(void) searchSelectedFilesForString:(NSString*) searchString
@@ -54,6 +75,7 @@
     NSArray* selectedObjects = [self selectedObjects];
     for (Transcoder* transcoder in selectedObjects)
         [[transcoder metadata] searchWithString:searchString];
+    [self setSearchBox];
 }
 
 - (void)rearrangeObjects
@@ -221,18 +243,21 @@
 {
     [self selectAll:sender];
     [self remove:sender];
+    [self setSearchBox];
 }
 
 -(IBAction)selectAll:(id)sender
 {
     [self setSelectedObjects:[self arrangedObjects]];
+    [self setSearchBox];
 }
 
 -(id) selection
 {
-    if ([[self selectionIndexes] count] != 1)
+    if ([[self selectionIndexes] count] != 1) 
         return nil;
         
+    [self setSearchBox];
     return [[self arrangedObjects] objectAtIndex:[self selectionIndex]];
 }
 
@@ -244,6 +269,7 @@
         [self setSelectionIndex:[self selectionIndex]];
     else
         [super selectNext:sender];
+    [self setSearchBox];
 }
 
 - (void)selectPrevious:(id)sender
@@ -254,6 +280,7 @@
         [self setSelectionIndex:[[self selectionIndexes] lastIndex]];
     else
         [super selectPrevious:sender];
+    [self setSearchBox];
 }
 
 - (id)valueForUndefinedKey:(NSString *)key

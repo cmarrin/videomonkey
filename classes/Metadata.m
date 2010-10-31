@@ -544,7 +544,9 @@ static NSDictionary* g_tagMap = nil;
 
     // If the dictionary is nil, the loaded metadata probably didn't have the requested season or episode
     if (!dictionary && !success) {
-        [[AppController instance] log: [NSString stringWithFormat:@"WARNING:No appropriate metadata found for '%@'\n", m_rootFilename]];
+        [[AppController instance] log: 
+            [NSString stringWithFormat:@"WARNING:No appropriate metadata found for '%@'\n", 
+                [m_search currentShowName] ? [m_search currentShowName] : m_rootFilename]];
         return;
     }
 

@@ -130,15 +130,7 @@
 
 -(IBAction)searchBoxSelected:(id)sender
 {
-    NSString* searchString = [sender stringValue];
-    if (m_lastSearchString) {
-        if ([m_lastSearchString isEqualToString:searchString])
-            return;
-    }
-    
-    [searchString retain];
-    [m_lastSearchString release];
-    m_lastSearchString = searchString;
+    NSString* searchString = [[sender stringValue] retain];
     
     if ([searchString length] == 0)
         return;
@@ -146,6 +138,7 @@
     m_metadataSearchCount = 0;
     m_metadataSearchSucceeded = YES;
     [m_fileListController searchSelectedFilesForString:searchString];
+    [searchString release];
 }
 
 -(IBAction)useSeasonValueForAllFiles:(id)sender
@@ -190,6 +183,8 @@
     if (--m_metadataSearchCount <= 0) {
         [self.metadataPanel setMetadataSearchSpinner:NO];
         self.metadataStatus = @"";
+        
+        [m_fileListController setSearchBox];
         
         if (!m_metadataSearchSucceeded) {
             // If we failed, show an alert
