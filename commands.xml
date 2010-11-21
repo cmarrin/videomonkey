@@ -197,9 +197,9 @@ A property name is anything from the character after the '$' to the next whitesp
         <command id="ffmpeg_pass2_options">
             -vpre $ffmpeg_vpre -pass 2 -passlogfile "$pass_log_file" $ffmpeg_profile
         </command>
-        <command id="ffmpeg_normal"> $ffmpeg -threads $num_cpus -y -i "$input_file" </command>
-        <command id="yuv_to_ffmpeg_av"> $ffmpeg -threads $num_cpus -y -i - -i "$tmp_audio_file" </command>
-        <command id="yuv_to_ffmpeg_v"> $ffmpeg -threads $num_cpus -y -i - </command>
+        <command id="ffmpeg_normal"> "$ffmpeg" -threads $num_cpus -y -i "$input_file" </command>
+        <command id="yuv_to_ffmpeg_av"> "$ffmpeg" -threads $num_cpus -y -i - -i "$tmp_audio_file" </command>
+        <command id="yuv_to_ffmpeg_v"> "$ffmpeg" -threads $num_cpus -y -i - </command>
         <command id="quicktime_av_single_pass">
             $quicktime_to_yuv | $yuv_to_ffmpeg_av $ffmpeg_options $ffmpeg_single_pass_options "$output_file"
         </command>

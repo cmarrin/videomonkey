@@ -498,6 +498,16 @@ static NSImage* getFileStatusImage(FileStatus status)
     }
 }
 
+static void addCommandElement(NSMutableArray* elements, NSString* command, NSString* recipe)
+{
+    NSDictionary* entry = [NSDictionary dictionaryWithObjectsAndKeys:
+        command, @"command",
+        recipe, @"recipe",
+        nil];
+    
+    [elements addObject:entry];
+}
+
 - (BOOL) startEncode
 {
     if ([m_outputFiles count] == 0 || !m_enabled)
@@ -551,39 +561,76 @@ static NSImage* getFileStatusImage(FileStatus status)
         return NO;
     }
     
-    // split out each command separately
-    NSArray* elements = [recipe componentsSeparatedByCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@";&|"]];
-    
-    m_commands = [[NSMutableArray alloc] init];
-    NSEnumerator* enumerator = [elements objectEnumerator];
-    NSString* s;
     int commandId = 0;
-    int index = 0;
     
     if ([[[AppController instance] deviceController] shouldEncode]) {
-        while (s = (NSString*) [enumerator nextObject]) {
+        // Split out each command. Commands go into the 'elements' array. Each entry is a dictionary with
+        // two entries:
+        //      'command' - Single character command (';', '&', '|')
+        //      'recipe' - Command string to execute
+        //
+        // Go through each character, looking for a command character. Ignore command chars
+        // if they are inside single or double quotes.
+        NSMutableArray* elements = [[NSMutableArray alloc] init];
+        int stringIndex = 0;
+        BOOL done = NO;
+        
+        while (!done) {
+            NSMutableString* s = [NSMutableString string];
+            BOOL inSingleQuotes = NO;
+            BOOL inDoubleQuotes = NO;
+            
+            while (1) {
+                if (stringIndex >= [recipe length]) {
+                    addCommandElement(elements, @";", s);
+                    done = YES;
+                    break;
+                }
+                    
+                unichar c = [recipe characterAtIndex:stringIndex++];
+                char cs[2];
+                cs[0] = (char) c;
+                cs[1] = '\0';
+                NSString* charString = [NSString stringWithCString:cs encoding:NSASCIIStringEncoding];
+                
+                if (c == '\'')
+                    inSingleQuotes = !inSingleQuotes;
+                else if (c == '"')
+                    inDoubleQuotes = !inDoubleQuotes;
+                else if ((c == '|' || c == '&' || c == ';') && (!inSingleQuotes && !inDoubleQuotes)) {
+                    // we're at a command boundary
+                    addCommandElement(elements, charString, s);
+                    s = [NSMutableString string];
+                    continue;
+                }
+                
+                [s appendString:charString];
+            }
+        }
+
+        m_commands = [[NSMutableArray alloc] init];
+    
+        for (NSDictionary* entry in elements) {
             CommandOutputType type = OT_NONE;
             
-            // in splitting the commands, we've lost it's separator, so we have to reconstruct it from the original string
-            index += [s length];
-            unichar sep = (index < [recipe length]) ? [recipe characterAtIndex:index] : ';';
-            index++;
+            // determine type of command
+            if ([[entry objectForKey:@"command"] isEqualToString:@";"])
+                type = OT_WAIT;
+            else if ([[entry objectForKey:@"command"] isEqualToString:@"|"])
+                type = OT_PIPE;
+            else if ([[entry objectForKey:@"command"] isEqualToString:@"&"])
+                type = OT_CONTINUE;
+            else
+                type = OT_NONE;
             
-            switch(sep)
-            {
-                case ';': type = OT_WAIT; break;
-                case '|': type = OT_PIPE; break;
-                case '&': type = OT_CONTINUE; break;
-            }
-            
-            s = [s stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
-            if (![s length])
-                continue;
-
             // make a Command object for this command
-            [m_commands addObject:[[Command alloc] initWithTranscoder:self command:s 
-                                outputType:type identifier:[[NSNumber numberWithInt:commandId++] stringValue]]];
+            [m_commands addObject:[Command commandWithTranscoder:self 
+                                command:[entry objectForKey:@"recipe"]
+                                outputType:type 
+                                identifier:[[NSNumber numberWithInt:commandId++] stringValue]]];
         }
+        
+        [elements release];
     }
     
     if ([[[AppController instance] deviceController] shouldWriteMetadata]) {
@@ -609,7 +656,7 @@ static NSImage* getFileStatusImage(FileStatus status)
         if ([metadataCommand length] > 0) {
             if (canWrite) {
                 // Add command for writing metadata
-                [m_commands addObject:[[Command alloc] initWithTranscoder:self command:metadataCommand
+                [m_commands addObject:[Command commandWithTranscoder:self command:metadataCommand
                             outputType:OT_WAIT identifier:[[NSNumber numberWithInt:commandId] stringValue]]];
             }
             else {

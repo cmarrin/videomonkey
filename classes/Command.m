@@ -11,23 +11,24 @@
 
 @implementation Command
 
--(Transcoder*) initWithTranscoder: (Transcoder*) transcoder command: (NSString*) command outputType: (CommandOutputType) type identifier: (NSString*) id
++(Command*) commandWithTranscoder: (Transcoder*) transcoder command: (NSString*) command outputType: (CommandOutputType) type identifier: (NSString*) id
 {
-    self = [super init];
-    if (self) {
-        m_transcoder = transcoder;
-        m_outputType = type;
-        m_command = [command retain];
-        m_id = [id retain];
-        m_buffer = [[NSMutableString alloc] init];
+    Command* thisCommand = [[[Command alloc] init] autorelease];
+    
+    if (thisCommand) {
+        thisCommand->m_transcoder = transcoder;
+        thisCommand->m_outputType = type;
+        thisCommand->m_command = [command retain];
+        thisCommand->m_id = [id retain];
+        thisCommand->m_buffer = [[NSMutableString alloc] init];
         
-        m_task = [[NSTask alloc] init];
-        m_messagePipe = [[NSPipe pipe] retain];
+        thisCommand->m_task = [[NSTask alloc] init];
+        thisCommand->m_messagePipe = [[NSPipe pipe] retain];
         
-        if (m_outputType == OT_PIPE)
-            m_outputPipe = [NSPipe pipe];
+        if (thisCommand->m_outputType == OT_PIPE)
+            thisCommand->m_outputPipe = [NSPipe pipe];
     }
-    return (Transcoder*) self;
+    return thisCommand;
 }
 
 -(void) execute: (Command*) nextCommand
