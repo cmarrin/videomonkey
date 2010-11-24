@@ -12,6 +12,69 @@
 
 @implementation MoviePanelController
 
+@synthesize avOffset = m_avOffset;
+
+- (void)updateAvOffset
+{
+    if (!m_movieIsSet)
+        return;
+    
+    // Get the track to modify
+    QTMovie* movie = [m_movieView movie];
+    NSArray* tracks = [movie tracks];
+    
+    // create a QTTimeRange for the offset
+    QTTimeRange offset = QTMakeTimeRange(QTMakeTimeWithTimeInterval(0), 
+                        QTMakeTimeWithTimeInterval(fabs(m_avOffset)));
+    
+    // Look for the first 'vide' or 'soun' track
+    for (QTTrack* track in tracks) {
+        if ((m_avOffset > 0 && [[track attributeForKey:@"QTTrackMediaTypeAttribute"] isEqualToString:@"vide"]) ||
+            (m_avOffset < 0 && [[track attributeForKey:@"QTTrackMediaTypeAttribute"] isEqualToString:@"soun"])) {
+            [track insertEmptySegmentAt:offset];
+            break;
+        }
+    }
+}
+
+- (void)removeAvOffset
+{
+    if (!m_movieIsSet)
+        return;
+    
+    // Get the track to modify
+    QTMovie* movie = [m_movieView movie];
+    NSArray* tracks = [movie tracks];
+    
+    // create a QTTimeRange for the offset
+    QTTimeRange offset = QTMakeTimeRange(QTMakeTimeWithTimeInterval(0), 
+                         QTMakeTimeWithTimeInterval(fabs(m_avOffset)));
+    
+    // Look for the first 'vide' or 'soun' track
+    for (QTTrack* track in tracks) {
+        if ((m_avOffset > 0 && [[track attributeForKey:@"QTTrackMediaTypeAttribute"] isEqualToString:@"vide"]) ||
+            (m_avOffset < 0 && [[track attributeForKey:@"QTTrackMediaTypeAttribute"] isEqualToString:@"soun"])) {
+            [track deleteSegment:offset];
+            break;
+        }
+    }
+}
+
+- (void)setAvOffset:(CGFloat) value
+{
+    // remove any previously inserted segments
+    [self removeAvOffset];
+    
+    m_avOffset = value;
+        
+    [self updateAvOffset];
+}
+
+- (CGFloat) avOffset
+{
+    return m_avOffset;
+}
+
 - (void)awakeFromNib
 {
     [[m_movieView window] setExcludedFromWindowsMenu:YES];

@@ -9,11 +9,10 @@
 #import <Cocoa/Cocoa.h>
 #import <QTKit/QTKit.h>
 
-@interface MoviePanelController : NSObject {
-@private
+@interface MoviePanelController : NSObjectController {
     IBOutlet QTMovieView* m_movieView;
-    IBOutlet NSProgressIndicator* m_progress;
     
+@private
     BOOL m_isVisible;
     BOOL m_movieIsSet;
     NSMutableString* m_filename;
@@ -23,9 +22,12 @@
     int m_extraFrameHeight;
     NSTimeInterval m_selectionStart;
     NSTimeInterval m_selectionEnd;
+    CGFloat m_avOffset;
     
     NSMutableDictionary* m_currentTimeDictionary;
 }
+
+@property(assign) CGFloat avOffset;
 
 -(IBAction)startSelection:(id)sender;
 -(IBAction)endSelection:(id)sender;
