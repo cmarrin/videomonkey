@@ -102,6 +102,8 @@ input_frame_rate        Frame rate, in fps, of the input file
 input_video_bitrate     Bitrate of the video in the input file
 input_video_aspect      Video aspect ratio (may be different from width/height for non-square pixels)
 input_video_codec       Name of the video codec of the input file
+audio_offset            Offset to apply to audio, in seconds.
+video_offset            Offset to apply to video, in seconds.
 
 is_quicktime            "true" if the input file is quicktime
 has_audio               "true" if the input file contains an audio track
@@ -188,6 +190,7 @@ A property name is anything from the character after the '$' to the next whitesp
 
 <videomonkey>
     <default_device>
+        <!-- Composite options -->
         <command id="ffmpeg_single_pass_options">
             -vpre $ffmpeg_vpre $ffmpeg_profile
         </command>
@@ -197,9 +200,19 @@ A property name is anything from the character after the '$' to the next whitesp
         <command id="ffmpeg_pass2_options">
             -vpre $ffmpeg_vpre -pass 2 -passlogfile "$pass_log_file" $ffmpeg_profile
         </command>
-        <command id="ffmpeg_normal"> "$ffmpeg" -threads $num_cpus -y -i "$input_file" </command>
-        <command id="yuv_to_ffmpeg_av"> "$ffmpeg" -threads $num_cpus -y -i - -i "$tmp_audio_file" </command>
-        <command id="yuv_to_ffmpeg_v"> "$ffmpeg" -threads $num_cpus -y -i - </command>
+        
+        <!-- Raw encoding commands -->
+        <command id="quicktime_to_yuv">
+            $movtoy4m -f -w $input_video_width -h $input_video_height -F $(output_video_frame_rate) 
+                -a $(output_video_width):$(output_video_height) "$input_file" | $correct_yuv 
+        </command>
+        <command id="ffmpeg_normal">     "$ffmpeg" -threads $num_cpus -y -itsoffset $video_offset -i "$input_file"  
+                                                                         -itsoffset $audio_offset -i "$input_file" -map 0:0 -map 1:1 </command>
+        <command id="yuv_to_ffmpeg_av">  "$ffmpeg" -threads $num_cpus -y -itsoffset $video_offset -i - 
+                                                                         -itsoffset 0 -i "$tmp_audio_file" -map 0:0 -map 1:1 </command>
+        <command id="yuv_to_ffmpeg_v">  " $ffmpeg" -threads $num_cpus -y -i - </command>
+        
+        <!-- complete encoding commands -->
         <command id="quicktime_av_single_pass">
             $quicktime_to_yuv | $yuv_to_ffmpeg_av $ffmpeg_options $ffmpeg_single_pass_options "$output_file"
         </command>
@@ -540,10 +553,6 @@ A property name is anything from the character after the '$' to the next whitesp
                 <command id="correct_yuv">
                     $yuvcorrect -v 0 -Y LUMINANCE_1.20_0_255_0_255 -Y CHROMINANCE_0_1.04_128_1.04_128_0_255
                 </command>
-                <command id="quicktime_to_yuv">
-                    $movtoy4m -f -w $input_video_width -h $input_video_height -F $(output_video_frame_rate) 
-                        -a $(output_video_width):$(output_video_height) "$input_file" | $correct_yuv 
-                </command>
                 <script>
                     <![CDATA[
     
@@ -668,7 +677,7 @@ A property name is anything from the character after the '$' to the next whitesp
                     params.output_video_level_name = levelMap[title][qualityStop];
 
                     // construct the recipe
-                    if (     !bool(params.special_qt) && !bool(params.has_audio) && !bool(params.is_2_pass))
+                    if (!bool(params.special_qt) && !bool(params.has_audio) && !bool(params.is_2_pass))
                         params.recipe = "$normal_single_pass";
                     else if (!bool(params.special_qt) && !bool(params.has_audio) && bool(params.is_2_pass))
                         params.recipe = "$normal_pass1 ; $normal_pass2";
@@ -821,10 +830,6 @@ A property name is anything from the character after the '$' to the next whitesp
                 </command>
                 <command id="correct_yuv">
                     $yuvcorrect -v 0 -Y LUMINANCE_1.20_0_255_0_255 -Y CHROMINANCE_0_1.04_128_1.04_128_0_255
-                </command>
-                <command id="quicktime_to_yuv">
-                    $movtoy4m -f -w $input_video_width -h $input_video_height -F $(output_video_frame_rate) 
-                        -a $(output_video_width):$(output_video_height) "$input_file" | $correct_yuv 
                 </command>
                  <script>
                     <![CDATA[
@@ -1067,10 +1072,6 @@ A property name is anything from the character after the '$' to the next whitesp
                 </command>
                 <command id="correct_yuv">
                     $yuvcorrect -v 0 -Y LUMINANCE_1.20_0_255_0_255 -Y CHROMINANCE_0_1.04_128_1.04_128_0_255
-                </command>
-                <command id="quicktime_to_yuv">
-                    $movtoy4m -f -w $input_video_width -h $input_video_height -F $(output_video_frame_rate) 
-                        -a $(output_video_width):$(output_video_height) "$input_file" | $correct_yuv 
                 </command>
                 <command id="thumbnail">
                     -an -s 72x54 -ss 50 -vframes 1 -f image2 
@@ -1405,10 +1406,6 @@ A property name is anything from the character after the '$' to the next whitesp
                 </command>
                 <command id="correct_yuv">
                     $yuvcorrect -v 0 -Y LUMINANCE_1.20_0_255_0_255 -Y CHROMINANCE_0_1.04_128_1.04_128_0_255
-                </command>
-                <command id="quicktime_to_yuv">
-                    $movtoy4m -f -w $input_video_width -h $input_video_height -F $(output_video_frame_rate) 
-                        -a $(output_video_width):$(output_video_height) "$input_file" | $correct_yuv 
                 </command>
                 <script>
                     <![CDATA[

@@ -21,11 +21,11 @@
 		</object>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
-			<integer value="5392"/>
-			<integer value="1015"/>
 			<integer value="371"/>
 			<integer value="2937"/>
+			<integer value="1015"/>
 			<integer value="5279"/>
+			<integer value="5392"/>
 			<integer value="29"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
@@ -11935,14 +11935,6 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBOutletConnection" key="connection">
-						<string key="label">m_moviePanel</string>
-						<reference key="source" ref="98230273"/>
-						<reference key="destination" ref="179961847"/>
-					</object>
-					<int key="connectionID">2033</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBOutletConnection" key="connection">
 						<string key="label">delegate</string>
 						<reference key="source" ref="461588446"/>
 						<reference key="destination" ref="179961847"/>
@@ -14477,6 +14469,14 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 						</object>
 					</object>
 					<int key="connectionID">5448</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">m_moviePanelController</string>
+						<reference key="source" ref="98230273"/>
+						<reference key="destination" ref="179961847"/>
+					</object>
+					<int key="connectionID">5449</int>
 				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -23395,7 +23395,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">5448</int>
+			<int key="maxID">5449</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -23440,7 +23440,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 							<string>m_fileInfoPanelController</string>
 							<string>m_fileListController</string>
 							<string>m_fileNumberText</string>
-							<string>m_moviePanel</string>
+							<string>m_moviePanelController</string>
 							<string>m_pauseEncodeItem</string>
 							<string>m_progressText</string>
 							<string>m_savePathControl</string>

@@ -118,6 +118,7 @@
 @synthesize fileList = m_fileList;
 @synthesize deviceController = m_deviceController;
 @synthesize fileInfoPanelController = m_fileInfoPanelController;
+@synthesize moviePanelController = m_moviePanelController;
 @synthesize limitParams = m_limitParams;
 
 static AppController *g_appController;
@@ -642,7 +643,7 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
 
 -(void) setSelectedFile: (int) index
 {
-    [m_moviePanel setMovie: (index < 0) ? nil : [[m_fileList objectAtIndex:index] inputFileInfo].filename];
+    [m_moviePanelController setMovie: (index < 0) ? nil : [[m_fileList objectAtIndex:index] inputFileInfo].filename];
 }
 
 -(void) uiChanged

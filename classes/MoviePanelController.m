@@ -29,8 +29,8 @@
     
     // Look for the first 'vide' or 'soun' track
     for (QTTrack* track in tracks) {
-        if ((m_avOffset > 0 && [[track attributeForKey:@"QTTrackMediaTypeAttribute"] isEqualToString:@"vide"]) ||
-            (m_avOffset < 0 && [[track attributeForKey:@"QTTrackMediaTypeAttribute"] isEqualToString:@"soun"])) {
+        if ((m_avOffset > 0 && [[track attributeForKey:QTTrackMediaTypeAttribute] isEqualToString:@"vide"]) ||
+            (m_avOffset < 0 && [[track attributeForKey:QTTrackMediaTypeAttribute] isEqualToString:@"soun"])) {
             [track insertEmptySegmentAt:offset];
             break;
         }
@@ -52,8 +52,8 @@
     
     // Look for the first 'vide' or 'soun' track
     for (QTTrack* track in tracks) {
-        if ((m_avOffset > 0 && [[track attributeForKey:@"QTTrackMediaTypeAttribute"] isEqualToString:@"vide"]) ||
-            (m_avOffset < 0 && [[track attributeForKey:@"QTTrackMediaTypeAttribute"] isEqualToString:@"soun"])) {
+        if ((m_avOffset > 0 && [[track attributeForKey:QTTrackMediaTypeAttribute] isEqualToString:@"vide"]) ||
+            (m_avOffset < 0 && [[track attributeForKey:QTTrackMediaTypeAttribute] isEqualToString:@"soun"])) {
             [track deleteSegment:offset];
             break;
         }
@@ -159,6 +159,8 @@
     
     [m_filename release];
     m_filename = [filename retain];
+    
+    self.avOffset = 0;
     
     // add it to the dictionary if needed
     NSNumber* ct = nil;

@@ -14,6 +14,7 @@
 #import "Command.h"
 #import "DeviceController.h"
 #import "FileInfoPanelController.h"
+#import "MoviePanelController.h"
 #import "Metadata.h"
 
 FrameSize makeFrameSize(int width, int height) { return ((uint32_t) width << 16) | ((uint32_t) height & 0xffff); }
@@ -386,6 +387,13 @@ static NSImage* getFileStatusImage(FileStatus status)
     [env setValue: [[NSNumber numberWithDouble: self.inputFileInfo.videoFrameRate] stringValue] forKey: @"input_frame_rate"];
     [env setValue: [[NSNumber numberWithDouble: self.inputFileInfo.videoAspectRatio] stringValue] forKey: @"input_video_aspect"];
     [env setValue: [[NSNumber numberWithInt: self.inputFileInfo.videoBitrate] stringValue] forKey: @"input_video_bitrate"];
+
+    // Set the AV offsets. Positive offsets delay video
+    float avOffset = [[[AppController instance] moviePanelController] avOffset];
+    float audioOffset = (avOffset > 0) ? -avOffset : 0;
+    float viddoOffset = (avOffset < 0) ? avOffset : 0;
+    [env setValue: [[NSNumber numberWithDouble: audioOffset] stringValue] forKey: @"audio_offset"];
+    [env setValue: [[NSNumber numberWithDouble: viddoOffset] stringValue] forKey: @"video_offset"];
     
     [env setValue: ([self isInputQuicktime] ? @"true" : @"false") forKey: @"is_quicktime"];
     [env setValue: ([self hasInputAudio] ? @"true" : @"false") forKey: @"has_audio"];

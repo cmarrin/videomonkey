@@ -49,7 +49,7 @@ typedef enum { RS_STOPPED, RS_RUNNING, RS_PAUSED } RunStateType;
     IBOutlet NSToolbarItem* m_stopEncodeItem;
     IBOutlet DeviceController* m_deviceController;
     IBOutlet FileInfoPanelController* m_fileInfoPanelController;
-    IBOutlet MoviePanelController* m_moviePanel;
+    IBOutlet MoviePanelController* m_moviePanelController;
     IBOutlet NSDrawer* m_consoleDrawer;
     IBOutlet NSTextView* m_consoleView;
     IBOutlet FileListController* m_fileListController;
@@ -88,6 +88,7 @@ typedef enum { RS_STOPPED, RS_RUNNING, RS_PAUSED } RunStateType;
 @property (retain) NSArray* fileList;
 @property (readonly) DeviceController* deviceController;
 @property (readonly) FileInfoPanelController* fileInfoPanelController;
+@property (readonly) MoviePanelController* moviePanelController;
 @property (readonly) BOOL limitParams;
 @property (readonly) int numCPUs;
 
