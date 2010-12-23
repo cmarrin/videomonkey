@@ -47,7 +47,7 @@ typedef enum FileStatus {   FS_INVALID,     // File is invalid, we can't encode 
     double fileSize;
     
     // Video
-    int videaStreamKind;
+    int videoStreamKind;
     int videoTrack;
     NSString* videoLanguage;
     NSString* videoCodec;
@@ -77,7 +77,7 @@ typedef enum FileStatus {   FS_INVALID,     // File is invalid, we can't encode 
 @property(assign) double fileSize;
 
 // Video
-@property(assign) int videaStreamKind;
+@property(assign) int videoStreamKind;
 @property(assign) int videoTrack;
 @property(retain) NSString* videoLanguage;
 @property(retain) NSString* videoCodec;

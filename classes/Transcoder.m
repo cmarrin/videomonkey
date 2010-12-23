@@ -32,7 +32,7 @@ int heightFromFrameSize(FrameSize f) { return f & 0xffff; }
 @synthesize fileSize;
 
 // Video
-@synthesize videaStreamKind;
+@synthesize videoStreamKind;
 @synthesize videoTrack;
 @synthesize videoLanguage;
 @synthesize videoCodec;
@@ -158,7 +158,7 @@ int heightFromFrameSize(FrameSize f) { return f & 0xffff; }
         if ([video count] != 14)
             return NO;
             
-        info.videaStreamKind = [[video objectAtIndex:1] intValue];
+        info.videoStreamKind = [[video objectAtIndex:1] intValue];
         info.videoTrack = [[video objectAtIndex:2] intValue];
         info.videoLanguage = [[video objectAtIndex:3] retain];
         info.videoCodec = [[video objectAtIndex:4] retain];
