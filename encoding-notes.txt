@@ -236,3 +236,72 @@ All Devices - Go Nuts - h.264:	-s 1440x1080 -aspect 1440:1080   -r pal   -vcodec
 iPod 5G - Tiny - h.264:		-s 1440x1080 -aspect 1440:1080   -r pal   -vcodec h264  -g 150  -qmin 29  -b 150k  -level 13 -loop 1 -sc_threshold 40 -partp4x4 1 -rc_eq 'blurCplx^(1-qComp)' -refs 3  -qmax 51 -maxrate 700k -keyint_min 40    -async 50  -acodec libfaac  -ar 11025 -ac 1 -ab 16k
 
 
+
+
+
+These parameters are optionally included by modifying the 'ffmpeg_params' object:
+=================================================================================
+-bf                     The number following is the number of bframes to use, 0 for baseline. All presets set it to 4.
+                        iPods need it set to 0?
+-coder                  Disable (0) or enable (1) CABAC coder. Can improve encoding with a small time penalty when on. (x264 only)
+-flags {+/-}loop        Enable or disable loop filter. All presets enable it.
+-flags2 {+/-}wpred      Enable or disable predictive encoding, usually enable. Normal and hq presets enable, the rest disable.
+-flags2 {+/-}dct8x8     Enable or disable 8x8 or 4x4 frequency transform size. Required for i8x8 partitions. All presets disable it.
+                        Turn off unless encoding to High Profile.
+-flags2 {+/-}bpyramid   Add b-frames to reference list. Disabling might help compatibility. All presets disable it.
+-flags2 {+/-}fastpskip  Enabling skips encoding of some frames. But disabling can give slight quality boost. All presets enable it.
+-flags2 {+/-}mixed_refs Enabling allows p8x8 blocks to select different references. Normal-pass1 and hq-pass1 turn it off.
+                        The rest use the default.
+-vcodec                 Video codec. One of: libx264, mpeg2video, mpeg1video, mpeg4, wmv1, or dvvideo. Stored in $ffmpeg_vcodec
+-b                      Video bitrate. Stored in $output_video_bitrate 
+-s                      Video output size. Use: $(output_video_width)x$(output_video_height) 
+-aspect                 Video aspect ratio. Use: $(output_video_width):$(output_video_height).
+-r                      Video frame rate. Stored in: $(output_video_frame_rate). Can also be 'ntsc' or 'pal'
+-async                  Amount of audio sync adjustment. Always set to 50 
+-acodec                 Audio codec. One of: libfaac, libmp3lame, wmav2, mp2, ac3 or pcm_s16le. Stored in $ffmpeg_acodec 
+-ab                     Audio bitrate. Stored in: $output_audio_bitrate 
+-ar                     Audio sample rate. Stored in: $output_audio_sample_rate 
+-ac                     Audio channels. Stored in: $output_audio_channels
+-target                 Target file type. Automatically sets format options. Set to: ntsc-vcd or pal-vcd. Only used for MPEG
+-padtop                 Amount of padding to add to the top
+-padbotton              Amount of padding to add to the bottom
+-padleft                Amount of padding to add to the left
+-padright               Amount of padding to add to the right
+-pix_fmt                Video pixel format. Set to: yuv420p or yuv411p. Used by WMV and DV formats.
+-vtag                   Forces the fourcc video tag. Set to: DX50. Used by AVI
+-g                      Video group of pictures size. Set to: 15, 30, 50, 200, 300, or ntsc All presets set this to 250
+-maxrate                Video max video bitrate. Set to { 40k, 24k, 34k }. Requires -bufsize to be set.
+-bufsize                Video buffer verifier buffer size. Set to: 5k
+-level                  ???. Set to 41
+-sc_threshold           Adjusts the sensitivity of x264's scenecut detection. Rarely needs to be adjusted. Set to 40
+-partitions             Sets inter and intra partitions (says you should stay away from partp4x4). Set to partp4x4.
+                        Default, hq and normal presets set this to '-parti8x8+parti4x4+partp8x8+partb8x8'
+                        Fastest, hq-pass1 and normal-pass1 presets set this to '-parti8x8-parti4x4-partp8x8-partp4x4-partb8x8'
+-rc_eq                  Rate control equation. Set to: 'blurCplx^(1-qComp)' (which is recommended)
+-refs                   How many reference frames to examine, max 16. Set to 3. (recommends 6)
+                        Fastest, hq-pass1 and normal-pass1 presets set this to 1. Hq preset sets it to 4 and Normal sets it to 2.
+-me_method              Motion estimation method. Default and normal presets set this to 'hex'
+                        Fastest, hq-pass1 and normal-pass1 presets set this to 'epzs'
+                        Hq preset sets this to 'umh'
+                        'epzs' is fastest, 'umh' is slowest, 'hex' is in-between.
+-me_range               Max range of motion estimation search. All presets use 16, which is the default.
+-subq                   Algorithm for motion estimation.
+                            Presets:
+                                default: 6
+                                fastest: 1
+                                hq-pass1:1
+                                hq: 8 (best quality, worst speed)
+                                normal-pass1: 1
+                                normal: 6
+-keyint_min             Minimum GOP length. All presets set this to 25, the default.
+-i_qfactor              Qscale difference between I-frames and P-frames. Set to 0.71
+-b_strategy             Number of B-frames to use. All presets but hq set this to 1, which is the recommended value.
+                        Hq sets this to 2, which is slower but better. Recommended -bf setting of 3 or lower (hq set it to 4)
+-qcomp                  QP curve compression. Recommend 0.60, which all presets use.                        
+-qmin                   Video minimum video quantizer scale. Set to 10, which all presets do.
+-qmax                   Maximum quantizer. Set to 51 (which is recommended)
+-qdiff                  Max QP step. Set to 4
+-trellis                Chooses the optimal rounding choices. 0 - disable, 1 - final encode, 2 - all modes.
+                        All presets but hq set this to 0, which sets it to 1.
+-->
+
