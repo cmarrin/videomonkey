@@ -11,6 +11,8 @@
 
 @implementation Command
 
+@synthesize encodingStartDate;
+
 +(Command*) commandWithTranscoder: (Transcoder*) transcoder command: (NSString*) command outputType: (CommandOutputType) type identifier: (NSString*) id
 {
     Command* thisCommand = [[[Command alloc] init] autorelease];
@@ -66,6 +68,7 @@
 
     [[m_messagePipe fileHandleForReading] readInBackgroundAndNotify];
     
+    encodingStartDate = [NSDate date];
     [m_task launch];
 }
 
@@ -162,6 +165,23 @@
 
 -(void) processFinishEncode: (NSNotification*) note
 {
+    NSTimeInterval totalTime = -[encodingStartDate timeIntervalSinceNow];
+    [m_transcoder logCommand: m_id withFormat:@"=============================="];
+    int min = (int)((totalTime + 30) / 60);
+    int sec = (int)(totalTime - min*60 + 0.5);
+    
+    if (min == 0)
+        [m_transcoder logCommand: m_id withFormat:@"| Command ran in %d seconds", sec];
+    else if (min <= 10)
+        [m_transcoder logCommand: m_id withFormat:@" | Command ran in %d min %d sec", min, sec];
+    else {
+        if (sec >= 30)
+            min += 1;
+        [m_transcoder logCommand: m_id withFormat:@"| Command ran in %d minutes", min];
+    }
+        
+    [m_transcoder logCommand: m_id withFormat:@"=============================="];
+
     int status = [m_task terminationStatus];
     
     // notify the Transcoder we're done

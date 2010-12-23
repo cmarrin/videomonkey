@@ -23,7 +23,10 @@ typedef enum { OT_NONE, OT_WAIT, OT_CONTINUE, OT_PIPE } CommandOutputType;
     NSString* m_id;
     NSMutableString* m_buffer;
     BOOL m_isPaused;
+    NSDate* encodingStartDate;
 }
+
+@property (retain) NSDate* encodingStartDate;
 
 +(Command*) commandWithTranscoder: (Transcoder*) transcoder command: (NSString*) command outputType: (CommandOutputType) type identifier: (NSString*) id;
 -(void) execute: (Command*) nextCommand;
