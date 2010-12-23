@@ -46,11 +46,12 @@
     // log the command
     [m_transcoder logCommand: m_id withFormat:@""];
     [m_transcoder logCommand: m_id withFormat:@"Command to execute:"];
-    [m_transcoder logCommand: m_id withFormat:@"    %@ %@", [launchPath lastPathComponent], [args componentsJoinedByString: @" "]];
+    [m_transcoder logCommand: m_id withFormat:@"    %@ %@", launchPath, [args componentsJoinedByString: @" "]];
     [m_transcoder logCommand: m_id withFormat:@""];
     
     // execute the command
     [m_task setArguments: [NSArray arrayWithObjects: @"-c", m_command, nil]];
+    [m_task setEnvironment:[NSDictionary dictionaryWithObjectsAndKeys:[[NSBundle mainBundle] resourcePath], @"FFMPEG_DATADIR", nil]];
     [m_task setLaunchPath: @"/bin/sh"];
     [m_task setStandardError: [m_messagePipe fileHandleForWriting]];
     [m_task setStandardOutput: [m_messagePipe fileHandleForWriting]];
@@ -68,7 +69,7 @@
 
     [[m_messagePipe fileHandleForReading] readInBackgroundAndNotify];
     
-    encodingStartDate = [NSDate date];
+    self.encodingStartDate = [NSDate date];
     [m_task launch];
 }
 
@@ -129,7 +130,6 @@
     }
     else if ([response length] > 0)
         [m_transcoder logCommand: m_id withFormat:@"--> %@", response];
-    
 }
 
 -(void) processData:(NSData*) data
@@ -193,7 +193,7 @@
     if (![[note name] isEqualToString:NSFileHandleReadCompletionNotification])
         return;
 
-	NSData	*data = [[note userInfo] objectForKey:NSFileHandleNotificationDataItem];
+	NSData* data = [[note userInfo] objectForKey:NSFileHandleNotificationDataItem];
 	
     [self processData:data];
 	if([data length]) {

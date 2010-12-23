@@ -367,12 +367,7 @@ static NSImage* getFileStatusImage(FileStatus status)
 
     // fill in the environment
     NSString* cmdPath = [NSString stringWithString: [[NSBundle mainBundle] resourcePath]];
-    [env setValue: [cmdPath stringByAppendingPathComponent: @"bin/ffmpeg"] forKey: @"ffmpeg"];
-    [env setValue: [cmdPath stringByAppendingPathComponent: @"bin/qt_export"] forKey: @"qt_export"];
-    [env setValue: [cmdPath stringByAppendingPathComponent: @"bin/movtoy4m"] forKey: @"movtoy4m"];
-    [env setValue: [cmdPath stringByAppendingPathComponent: @"bin/yuvadjust"] forKey: @"yuvadjust"];
-    [env setValue: [cmdPath stringByAppendingPathComponent: @"bin/yuvcorrect"] forKey: @"yuvcorrect"];
-    [env setValue: [cmdPath stringByAppendingPathComponent: @"bin/AtomicParsley"] forKey: @"AtomicParsley"];
+    [env setValue: cmdPath forKey: @"app_resource_path"];
 
     // fill in the filenames
     [env setValue: self.inputFileInfo.filename forKey: @"input_file"];
