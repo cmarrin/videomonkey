@@ -323,6 +323,27 @@
 	}
 }
 
+- (void)addObject:(NSString *)objectName toObject:(JavaScriptObject*) object
+{
+    JSClassDefinition definition = kJSClassDefinitionEmpty;
+    JSClassRef theClass = JSClassCreate(&definition);
+
+    // create a new object of the given class
+	JSObjectRef theObject = JSObjectMake(m_jsContext, theClass, NULL);
+	if (theObject != NULL) {
+        // protect the value so it isn't eligible for garbage collection
+		JSValueProtect(m_jsContext, theObject);
+		
+        // convert the name to a JavaScript string */
+		JSStringRef objectJSName = [objectName jsStringValue];
+		if (objectJSName != NULL) {
+            // add the object as a property of the passed object */
+            JSObjectSetProperty(m_jsContext, [object jsObject], objectJSName, theObject, kJSPropertyAttributeNone, NULL);
+            JSStringRelease(objectJSName);
+        }
+	}
+}
+
 	/* -addGlobalFunctionProperty:withCallback: adds a function with the given name to the
 	global object of the JavaScriptContext.  After this call, scripts running in
 	the context will be able to call the function using the name. */
@@ -347,12 +368,10 @@
 	}
 }
 
-
-
-	/* -evaluateJavaScript: evaluates a string containing a JavaScript in the
-	JavaScriptCore context and returns the result as a string.  If an error
-	occurs or the result returned by the script cannot be converted into a 
-	string, then nil is returned. */
+// -evaluateJavaScript: evaluates a string containing a JavaScript in the
+// JavaScriptCore context and returns the result as a string.  If an error
+// occurs or the result returned by the script cannot be converted into a 
+// string, then nil is returned. */
 - (NSString *) evaluateJavaScript:(NSString *)theJavaScript {
 
 	NSString *resultString = nil;
@@ -395,6 +414,17 @@
 
     JSStringRelease(jskey);
     return jsValue;
+}
+
+-(BOOL) jsHasValuePropertyInObject: (JavaScriptObject*) obj forKey:(NSString*) key
+{
+    if (!obj)
+        obj = m_globalObject;
+        
+	JSStringRef jskey = [key jsStringValue];    
+    BOOL result = JSObjectHasProperty(m_jsContext, [obj jsObject], jskey);
+    JSStringRelease(jskey);
+    return result;
 }
 
 -(JavaScriptObject*) objectPropertyInObject: (JavaScriptObject*) obj forKey:(NSString*) key
@@ -447,6 +477,25 @@
 -(void)setStringParam:(NSString*) string forKey:(NSString*)key
 {
     JavaScriptObject* params = [self objectPropertyInObject: nil forKey: @"params"];
+
+    // handle key path
+    NSArray* array = [key componentsSeparatedByString:@"."];
+    
+    size_t arrayLength = [array count];
+    if (arrayLength > 1) {
+        for (int i = 0; i < arrayLength - 1; ++i) {
+            // Get the parent object
+            if (![self jsHasValuePropertyInObject:params forKey:[array objectAtIndex:i]]) {
+                // create the container
+                [self addObject:[array objectAtIndex:i] toObject:params];
+            }
+
+            params = [self objectPropertyInObject:params forKey:[array objectAtIndex:i]];
+        }
+        
+        key = [array objectAtIndex:arrayLength - 1];
+    }
+
     [self setPropertyInObject: params forKey: key toString:string];
 }
 
