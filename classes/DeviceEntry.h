@@ -8,10 +8,8 @@
 
 #import <Cocoa/Cocoa.h>
 
-#define MAX_CHECKBOXES 4
-#define MAX_MENUS 4
-#define MAX_RADIOS 4
-#define MAX_POPUPS 2
+#define MAX_CHECKBOXES 3
+#define MAX_MENUS 2
 
 @class DeviceController;
 @class JavaScriptContext;
