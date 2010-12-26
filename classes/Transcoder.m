@@ -565,6 +565,7 @@ static void addCommandElement(NSMutableArray* elements, NSString* command, NSStr
     }
     
     int commandId = 0;
+    m_commands = [[NSMutableArray alloc] init];
     
     if ([[[AppController instance] deviceController] shouldEncode]) {
         // Split out each command. Commands go into the 'elements' array. Each entry is a dictionary with
@@ -610,8 +611,6 @@ static void addCommandElement(NSMutableArray* elements, NSString* command, NSStr
                 [s appendString:charString];
             }
         }
-
-        m_commands = [[NSMutableArray alloc] init];
     
         for (NSDictionary* entry in elements) {
             CommandOutputType type = OT_NONE;
