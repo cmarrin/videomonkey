@@ -122,6 +122,7 @@ input_file                  Current input file path
 output_file                 Current output file path
 tmp_audio_file              Path to a temp file to which audio can be saved
 pass_log_file               Path to the ffmpeg pass log file, used for 2 pass encoding
+input_format                Container format of input file
 input_video_width           Width, in pixels, of the input file
 input_video_height          Height, in pixels, of the input file
 input_frame_rate            Frame rate, in fps, of the input file
@@ -130,8 +131,6 @@ input_video_aspect          Video aspect ratio (may be different from width/heig
 input_video_codec           Name of the video codec of the input file
 audio_offset                Offset to apply to audio, in seconds.
 video_offset                Offset to apply to video, in seconds.
-
-is_quicktime                "true" if the input file is quicktime
 has_audio                   "true" if the input file contains an audio track
 
 quality                     The current setting of the quality slider (0-1 between tick marks)
@@ -455,9 +454,7 @@ DTD
             }
             
             function adjustVideoParams(frameSizeLimited)
-            {
-                params.special_qt = params.is_quicktime == "true" && params.input_video_codec == "wmv3";
-            
+            {            
                 // set the frame rate
                 params.frame_rate = 1;
                 if (params.title != "Apple TV" && number(params.quality_stop) == 0)
@@ -747,7 +744,7 @@ DTD
                     
                     // construct the recipe
                     var recipeType = 
-                        (bool(params.special_qt) ? 4 : 0) |
+                        (bool(params.input_format == "Quicktime") ? 4 : 0) |
                         (bool(params.has_audio) ? 2 : 0) |
                         (bool(params.is_2_pass) ? 1 : 0);
                         
@@ -1397,21 +1394,21 @@ DTD
                     //params.output_video_level_name = levelMap[title][qualityStop];
 
                     // construct the recipe
-                    if (     !bool(params.special_qt) && !bool(params.has_audio) && !bool(params.is_2_pass))
+                    if (     !bool(params.input_format == "Quicktime") && !bool(params.has_audio) && !bool(params.is_2_pass))
                         params.recipe = "$normal_single_pass";
-                    else if (!bool(params.special_qt) && !bool(params.has_audio) && bool(params.is_2_pass))
+                    else if (!bool(params.input_format == "Quicktime") && !bool(params.has_audio) && bool(params.is_2_pass))
                         params.recipe = "$normal_pass1 ; $normal_pass2";
-                    else if (!bool(params.special_qt) && bool(params.has_audio) && !bool(params.is_2_pass))
+                    else if (!bool(params.input_format == "Quicktime") && bool(params.has_audio) && !bool(params.is_2_pass))
                         params.recipe = "$normal_single_pass";
-                    else if (!bool(params.special_qt) && bool(params.has_audio) && bool(params.is_2_pass))
+                    else if (!bool(params.input_format == "Quicktime") && bool(params.has_audio) && bool(params.is_2_pass))
                         params.recipe = "$normal_pass1 ; $normal_pass2";
-                    else if (bool(params.special_qt) && !bool(params.has_audio) && !bool(params.is_2_pass))
+                    else if (bool(params.input_format == "Quicktime") && !bool(params.has_audio) && !bool(params.is_2_pass))
                         params.recipe = "$quicktime_v_single_pass";
-                    else if (bool(params.special_qt) && !bool(params.has_audio) && bool(params.is_2_pass))
+                    else if (bool(params.input_format == "Quicktime") && !bool(params.has_audio) && bool(params.is_2_pass))
                         params.recipe = "$quicktime_v_pass1 ; $quicktime_v_pass2";
-                    else if (bool(params.special_qt) && bool(params.has_audio) && !bool(params.is_2_pass))
+                    else if (bool(params.input_format == "Quicktime") && bool(params.has_audio) && !bool(params.is_2_pass))
                         params.recipe = "$quicktime_to_audio_file ; $quicktime_av_single_pass";
-                    else if (bool(params.special_qt) && bool(params.has_audio) && bool(params.is_2_pass))
+                    else if (bool(params.input_format == "Quicktime") && bool(params.has_audio) && bool(params.is_2_pass))
                         params.recipe = "$quicktime_to_audio_file ; $quicktime_av_pass1 ; $quicktime_av_pass2";
 
                     ]]>
@@ -1807,21 +1804,21 @@ DTD
                     params.output_video_level_name = levelMap[title][qualityStop];
 
                     // construct the recipe
-                    if (     !bool(params.special_qt) && !bool(params.has_audio) && !bool(params.is_2_pass))
+                    if (     !bool(params.input_format == "Quicktime") && !bool(params.has_audio) && !bool(params.is_2_pass))
                         params.recipe = "$normal_single_pass";
-                    else if (!bool(params.special_qt) && !bool(params.has_audio) && bool(params.is_2_pass))
+                    else if (!bool(params.input_format == "Quicktime") && !bool(params.has_audio) && bool(params.is_2_pass))
                         params.recipe = "$normal_pass1 ; $normal_pass2";
-                    else if (!bool(params.special_qt) && bool(params.has_audio) && !bool(params.is_2_pass))
+                    else if (!bool(params.input_format == "Quicktime") && bool(params.has_audio) && !bool(params.is_2_pass))
                         params.recipe = "$normal_single_pass";
-                    else if (!bool(params.special_qt) && bool(params.has_audio) && bool(params.is_2_pass))
+                    else if (!bool(params.input_format == "Quicktime") && bool(params.has_audio) && bool(params.is_2_pass))
                         params.recipe = "$normal_pass1 ; $normal_pass2";
-                    else if (bool(params.special_qt) && !bool(params.has_audio) && !bool(params.is_2_pass))
+                    else if (bool(params.input_format == "Quicktime") && !bool(params.has_audio) && !bool(params.is_2_pass))
                         params.recipe = "$quicktime_v_single_pass";
-                    else if (bool(params.special_qt) && !bool(params.has_audio) && bool(params.is_2_pass))
+                    else if (bool(params.input_format == "Quicktime") && !bool(params.has_audio) && bool(params.is_2_pass))
                         params.recipe = "$quicktime_v_pass1 ; $quicktime_v_pass2";
-                    else if (bool(params.special_qt) && bool(params.has_audio) && !bool(params.is_2_pass))
+                    else if (bool(params.input_format == "Quicktime") && bool(params.has_audio) && !bool(params.is_2_pass))
                         params.recipe = "$quicktime_to_audio_file ; $quicktime_av_single_pass";
-                    else if (bool(params.special_qt) && bool(params.has_audio) && bool(params.is_2_pass))
+                    else if (bool(params.input_format == "Quicktime"t) && bool(params.has_audio) && bool(params.is_2_pass))
                         params.recipe = "$quicktime_to_audio_file ; $quicktime_av_pass1 ; $quicktime_av_pass2";
 
                     ]]>

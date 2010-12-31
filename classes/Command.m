@@ -12,6 +12,9 @@
 @implementation Command
 
 @synthesize encodingStartDate;
+@synthesize messagePipe;
+@synthesize outputPipe;
+@synthesize task;
 
 +(Command*) commandWithTranscoder: (Transcoder*) transcoder command: (NSString*) command outputType: (CommandOutputType) type identifier: (NSString*) id
 {
@@ -24,11 +27,11 @@
         thisCommand->m_id = [id retain];
         thisCommand->m_buffer = [[NSMutableString alloc] init];
         
-        thisCommand->m_task = [[NSTask alloc] init];
-        thisCommand->m_messagePipe = [[NSPipe pipe] retain];
+        thisCommand.task = [[NSTask alloc] init];
+        thisCommand.messagePipe = [[NSPipe pipe] retain];
         
         if (thisCommand->m_outputType == OT_PIPE)
-            thisCommand->m_outputPipe = [NSPipe pipe];
+            thisCommand.outputPipe = [NSPipe pipe];
     }
     return thisCommand;
 }
@@ -50,33 +53,33 @@
     [m_transcoder logCommand: m_id withFormat:@""];
     
     // execute the command
-    [m_task setArguments: [NSArray arrayWithObjects: @"-c", m_command, nil]];
-    [m_task setEnvironment:[NSDictionary dictionaryWithObjectsAndKeys:[[NSBundle mainBundle] resourcePath], @"FFMPEG_DATADIR", nil]];
-    [m_task setLaunchPath: @"/bin/sh"];
-    [m_task setStandardError: [m_messagePipe fileHandleForWriting]];
-    [m_task setStandardOutput: [m_messagePipe fileHandleForWriting]];
+    [self.task setArguments: [NSArray arrayWithObjects: @"-c", m_command, nil]];
+    [self.task setEnvironment:[NSDictionary dictionaryWithObjectsAndKeys:[[NSBundle mainBundle] resourcePath], @"FFMPEG_DATADIR", nil]];
+    [self.task setLaunchPath: @"/bin/sh"];
+    [self.task setStandardError: [self.messagePipe fileHandleForWriting]];
+    [self.task setStandardOutput: [self.messagePipe fileHandleForWriting]];
     
     if (m_outputType == OT_PIPE) {
-        [m_task setStandardOutput: m_outputPipe];
+        [self.task setStandardOutput: self.outputPipe];
         assert(nextCommand);
         if (nextCommand)
-            [nextCommand setInputPipe: m_outputPipe];
+            [nextCommand setInputPipe: self.outputPipe];
     }
         
     // add notifications
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(processFinishEncode:) name:NSTaskDidTerminateNotification object:m_task];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(processRead:) name:NSFileHandleReadCompletionNotification object:[m_messagePipe fileHandleForReading]];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(processFinishEncode:) name:NSTaskDidTerminateNotification object:self.task];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(processRead:) name:NSFileHandleReadCompletionNotification object:[self.messagePipe fileHandleForReading]];
 
-    [[m_messagePipe fileHandleForReading] readInBackgroundAndNotify];
+    [[self.messagePipe fileHandleForReading] readInBackgroundAndNotify];
     
     self.encodingStartDate = [NSDate date];
-    [m_task launch];
+    [self.task launch];
 }
 
 -(void) suspend
 {
-    if (!m_isPaused && [m_task isRunning]) {
-        [m_task suspend];
+    if (!m_isPaused && [self.task isRunning]) {
+        [self.task suspend];
         m_isPaused = YES;
     }
 }
@@ -84,20 +87,20 @@
 -(void) resume
 {
     if (m_isPaused) {
-        [m_task resume];
+        [self.task resume];
         m_isPaused = NO;
     }
 }
 
 -(void) terminate
 {
-    if (m_task && [m_task isRunning])
-        [m_task terminate];
+    if (self.task && [self.task isRunning])
+        [self.task terminate];
 }
 
 -(void) setInputPipe: (NSPipe*) pipe
 {
-    [m_task setStandardInput: [pipe fileHandleForReading]];
+    [self.task setStandardInput: [pipe fileHandleForReading]];
 }
 
 -(BOOL) needsToWait
@@ -182,7 +185,7 @@
         
     [m_transcoder logCommand: m_id withFormat:@"=============================="];
 
-    int status = [m_task terminationStatus];
+    int status = [self.task terminationStatus];
     
     // notify the Transcoder we're done
     [m_transcoder commandFinished: self status: status];

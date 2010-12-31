@@ -15,9 +15,9 @@ typedef enum { OT_NONE, OT_WAIT, OT_CONTINUE, OT_PIPE } CommandOutputType;
 @interface Command : NSObject {
 @private
     CommandOutputType m_outputType;
-    NSTask* m_task;
-    NSPipe* m_messagePipe;
-    NSPipe* m_outputPipe;
+    NSTask* task;
+    NSPipe* messagePipe;
+    NSPipe* outputPipe;
     Transcoder* m_transcoder;
     NSString* m_command;
     NSString* m_id;
@@ -27,6 +27,9 @@ typedef enum { OT_NONE, OT_WAIT, OT_CONTINUE, OT_PIPE } CommandOutputType;
 }
 
 @property (retain) NSDate* encodingStartDate;
+@property (retain) NSPipe* messagePipe;
+@property (retain) NSPipe* outputPipe;
+@property (retain) NSTask* task;
 
 +(Command*) commandWithTranscoder: (Transcoder*) transcoder command: (NSString*) command outputType: (CommandOutputType) type identifier: (NSString*) id;
 -(void) execute: (Command*) nextCommand;

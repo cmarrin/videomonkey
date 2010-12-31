@@ -301,7 +301,7 @@ static void addMenuSeparator(NSPopUpButton* button)
     [self uiChanged];
 }
 
-- (IBAction)selectPerformance:(id)sender
+- (IBAction)changeUI:(id)sender
 {
     [self uiChanged];
 }

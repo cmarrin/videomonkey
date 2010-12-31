@@ -23,7 +23,8 @@
     IBOutlet NSScrollView* m_metadataScrollView;
     IBOutlet NSComboBox* m_searchField;
     IBOutlet MetadataPanel* m_metadataPanel;
-    IBOutlet NSPopUpButton* m_searcher;
+    IBOutlet NSBox* m_metadataContainer;
+    IBOutlet NSTextField* m_metadataDisabledMessage;
     
     BOOL m_isVisible;
     NSString* m_metadataStatus;
@@ -52,5 +53,6 @@
 - (void)initializeMetadataSearch;
 - (void)startMetadataSearch;
 - (void)finishMetadataSearch:(BOOL) success;
+- (void)setMetadataDisabledFileType:(NSString*) fileType;
 
 @end

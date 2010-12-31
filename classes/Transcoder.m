@@ -28,7 +28,6 @@ int heightFromFrameSize(FrameSize f) { return f & 0xffff; }
 @synthesize format;
 @synthesize duration;
 @synthesize bitrate;
-@synthesize isQuicktime;
 @synthesize fileSize;
 
 // Video
@@ -139,8 +138,9 @@ int heightFromFrameSize(FrameSize f) { return f & 0xffff; }
     if ([general count] != 6)
         return NO;
         
-    [info setFormat: [general objectAtIndex:1]];
-    info.isQuicktime = [[general objectAtIndex:2] isEqualToString:@"QuickTime"];
+    info.format = [general objectAtIndex:1];
+    if ([[general objectAtIndex:2] isEqualToString:@"QuickTime"])
+        info.format = @"Quicktime";
     info.duration = [[general objectAtIndex:3] doubleValue] / 1000;
     info.fileSize = [[general objectAtIndex:5] doubleValue];
 
@@ -332,11 +332,6 @@ static NSImage* getFileStatusImage(FileStatus status)
     return m_fileStatus;
 }
 
--(BOOL) isInputQuicktime
-{
-    return [[self inputFileInfo] isQuicktime];
-}
-
 -(BOOL) hasInputAudio
 {
     return [[self inputFileInfo] audioSampleRate] != 0;
@@ -390,7 +385,7 @@ static NSImage* getFileStatusImage(FileStatus status)
     [env setValue: [[NSNumber numberWithDouble: audioOffset] stringValue] forKey: @"audio_offset"];
     [env setValue: [[NSNumber numberWithDouble: viddoOffset] stringValue] forKey: @"video_offset"];
     
-    [env setValue: ([self isInputQuicktime] ? @"true" : @"false") forKey: @"is_quicktime"];
+    [env setValue: self.inputFileInfo.format forKey: @"input_format"];
     [env setValue: ([self hasInputAudio] ? @"true" : @"false") forKey: @"has_audio"];
     [env setValue: ([[AppController instance] limitParams] ? @"true" : @"false") forKey: @"limit_output_params"];
     
@@ -441,7 +436,7 @@ static NSImage* getFileStatusImage(FileStatus status)
     
     m_fileStatus = (status == 0) ? FS_SUCCEEDED : (status == 255) ? FS_VALID : FS_FAILED;
     
-    if (status == 0) {
+    if (m_fileStatus == FS_SUCCEEDED) {
         [[AppController instance] log: @"Succeeded!\n"];
         
         if ([[AppController instance] addToMediaLibrary]) {
@@ -454,7 +449,7 @@ static NSImage* getFileStatusImage(FileStatus status)
                 moveOutputFileToTrash = YES;
         }
     }
-    else {
+    else if (m_fileStatus != FS_VALID) {
         deleteOutputFile = YES;
         [[AppController instance] log: @"FAILED with error code: %d\n", status];
     }
@@ -663,13 +658,23 @@ static void addCommandElement(NSMutableArray* elements, NSString* command, NSStr
             }
             else {
                 // Can't write metadata to this type of file
+                NSString* msg;
                 if ([[[AppController instance] deviceController] shouldWriteMetadataToOutputFile])
-                    [[AppController instance] log: @"WARNING! Unable to write metadata to output file. "
-                                        "Either you haven't yet encoded it and the file doesn't exist, "
-                                        "or this file format does not support metadata.\n"];
+                    msg = @"Unable to write metadata to output file. "
+                            "Either the path to the output file is not writable "
+                            "or this file format does not support metadata.\n";
                 else
-                    [[AppController instance] log: @"WARNING! Unable to write metadata to input file. "
-                                        "This file format probably does not support metadata.\n"];
+                    msg = @"Unable to write metadata to input file. "
+                            "Either the path to the input file is not writable "
+                            "or this file format does not support metadata.\n";
+                
+                [[AppController instance] log: msg];
+                [[AppController instance] log: @"Nothing to do.\n"];
+                NSBeginAlertSheet(@"Nothing to do", nil, nil, nil, [[NSApplication sharedApplication] mainWindow], 
+                            nil, nil, nil, nil, msg);
+
+                [self finish:255];
+                return YES;
             }
         }
     }

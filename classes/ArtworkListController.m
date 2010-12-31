@@ -127,9 +127,6 @@
 
 - (void)tableViewSelectionDidChange:(NSNotification *)aNotification
 {
-    // If we have only one item selected, set it otherwise set nothing
-    //[[AppController instance] setSelectedFile: ([m_fileListView numberOfSelectedRows] != 1) ? -1 :
-    //                                    [m_fileListView selectedRow]];
 }
 
 // End of delegation methods

@@ -8,6 +8,8 @@
 
 #import "FileListController.h"
 #import "AppController.h"
+#import "DeviceController.h"
+#import "FileInfoPanelController.h"
 #import "ProgressCell.h"
 #import "Metadata.h"
 #import "MetadataSearch.h"
@@ -281,6 +283,23 @@
     else
         [super selectPrevious:sender];
     [self setSearchBox];
+}
+
+-(void) updateMetadataPanelState
+{
+    Transcoder* transcoder = nil;
+    if ([m_fileListView numberOfSelectedRows] == 1)
+        transcoder = [[AppController instance].fileList objectAtIndex:[m_fileListView selectedRow]];
+    
+    // Enable or disable metadata panel based on file type
+    NSString* fileType = nil;
+    
+    if ([[[AppController instance] deviceController] shouldWriteMetadataToInputFile])
+        fileType = [transcoder inputFileInfo].format;
+    else if ([[[AppController instance] deviceController] shouldWriteMetadataToOutputFile])
+        fileType = [transcoder outputFileInfo].format;
+        
+    [[AppController instance].fileInfoPanelController setMetadataDisabledFileType:fileType];
 }
 
 - (id)valueForUndefinedKey:(NSString *)key

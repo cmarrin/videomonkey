@@ -43,7 +43,6 @@ typedef enum FileStatus {   FS_INVALID,     // File is invalid, we can't encode 
     NSString* format;
     double duration;
     double bitrate;
-    BOOL isQuicktime;
     double fileSize;
     
     // Video
@@ -73,7 +72,6 @@ typedef enum FileStatus {   FS_INVALID,     // File is invalid, we can't encode 
 @property(retain) NSString* format;
 @property(assign) double duration;
 @property(assign) double bitrate;
-@property(assign) BOOL isQuicktime;
 @property(assign) double fileSize;
 
 // Video
@@ -145,7 +143,6 @@ typedef enum FileStatus {   FS_INVALID,     // File is invalid, we can't encode 
 -(NSProgressIndicator*) progressIndicator;
 -(NSImageView*) statusImageView;
 
--(BOOL) isInputQuicktime;
 -(BOOL) hasInputAudio;
 -(NSString*) tempAudioFileName;
 -(NSString*) passLogFileName;

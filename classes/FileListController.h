@@ -33,4 +33,6 @@
 - (IBAction)clearAll:(id)sender;
 - (IBAction)selectAll:(id)sender;
 
+-(void) updateMetadataPanelState;
+
 @end

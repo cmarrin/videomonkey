@@ -34,7 +34,7 @@
 }
 
 -(IBAction)selectDevice:(id)sender;
--(IBAction)selectPerformance:(id)sender;
+-(IBAction)changeUI:(id)sender;
 
 -(NSString*) fileSuffix;
 

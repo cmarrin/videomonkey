@@ -73,6 +73,9 @@
     // Fill in the searchers
     self.searcherStrings = [NSArray arrayWithObjects:@"thetvdb.com", @"themoviedb.org", nil];
     self.currentSearcher = [[[NSUserDefaultsController sharedUserDefaultsController] values] valueForKey:@"defaultMetadataSearch"];
+    
+    // Initialize the metadata disabled status
+    [self setMetadataDisabledFileType:nil];
 }
 
 -(IBAction)droppedInImage:(id)sender
@@ -196,6 +199,24 @@
             // If we failed, show an alert
             NSRunAlertPanel(@"One or more metadata searches failed", @"See console for more information", nil, nil, nil);
         }
+    }
+}
+
+- (void)setMetadataDisabledFileType:(NSString*) fileType
+{
+    BOOL enabled = fileType && [fileType length];
+    
+    if (![fileType isEqualToString:@"MPEG-4"])
+        enabled = NO;
+    
+    [m_metadataContainer setHidden:!enabled];
+    [m_metadataDisabledMessage setHidden:enabled];
+    
+    if (!enabled) {
+        if (!fileType)
+            [m_metadataDisabledMessage setStringValue:[NSString stringWithFormat:@"No metadata compatible output file selected", fileType]];
+        else
+            [m_metadataDisabledMessage setStringValue:[NSString stringWithFormat:@"Metadata cannot be written to %@ files", fileType]];
     }
 }
 

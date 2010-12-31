@@ -8,6 +8,7 @@
 
 #import "AppController.h"
 #import "DeviceController.h"
+#import "FileInfoPanelController.h"
 #import "FileListController.h"
 #import "JavaScriptContext.h"
 #import "MoviePanelController.h"
@@ -643,16 +644,22 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
 
 -(void) setSelectedFile: (int) index
 {
-    [m_moviePanelController setMovie: (index < 0) ? nil : [[m_fileList objectAtIndex:index] inputFileInfo].filename];
+    // Set the current movie
+    [m_moviePanelController setMovie: [(index < 0) ? nil : [m_fileList objectAtIndex:index] inputFileInfo].filename];
+
+    // Update metadata panel
+    [m_fileListController updateMetadataPanelState];
 }
 
 -(void) uiChanged
 {
-    for (Transcoder* transcoder in m_fileList) {
+    for (Transcoder* transcoder in m_fileList)
         [transcoder setParams];
-    }
     
     [m_fileListController reloadData];
+
+    // Update metadata panel
+    [m_fileListController updateMetadataPanelState];
 }
 
 -(id) metadata
