@@ -196,7 +196,6 @@ These parameters are always included and never changed by these scripts:
 -i                          Precedes input file
 ffmpeg                      ffmpeg command path
 qt_export                   qt_export command path (used to extract audio from some file types)
-movtoy4m                    movtoy4m command path (used to extract video from some file types)
 yuvadjust                   yuvadjust command path (used to adjust video saturation, hue, etc.)
 yuvcorrect                  yuvcorrect command path (used to perform color correction on raw yuv data)
 
@@ -249,17 +248,20 @@ DTD
         <command id="qt_export">
             "$(app_resource_path)/bin/qt_export"
         </command>
-        <command id="movtoy4m">
-            "$(app_resource_path)/bin/movtoy4m"
-        </command>
         <command id="yuvadjust">
             "$(app_resource_path)/bin/yuvadjust"
         </command>
         <command id="yuvcorrect">
             "$(app_resource_path)/bin/yuvcorrect"
         </command>
-
+        
         <!-- Default params (sometimes overridden) -->
+        <command id="ffmpeg_options">
+            -vcodec $ffmpeg_vcodec -b $output_video_bitrate -s $(output_video_width)x$(output_video_height) 
+                -aspect $(output_video_width):$(output_video_height) -r $(output_video_frame_rate)
+            -async 50 -acodec $ffmpeg_acodec -ab $output_audio_bitrate -ar $output_audio_sample_rate 
+                -ac $output_audio_channels
+        </command>
         <param id="output_x264_profile" value="libx264-baseline" />
 
         <!-- Composite options -->
@@ -276,9 +278,14 @@ DTD
         </command>
         
         <!-- Raw encoding commands -->
+        <command id="quicktime_to_audio_file">
+            $qt_export "$input_file" --video=0 "$tmp_audio_file"
+        </command>
+        <command id="correct_yuv">
+            $yuvcorrect -v 0 -Y LUMINANCE_1.20_0_255_0_255 -Y CHROMINANCE_0_1.04_128_1.04_128_0_255
+        </command>
         <command id="quicktime_to_yuv">
-            $movtoy4m -f -w $input_video_width -h $input_video_height -F $(output_video_frame_rate) 
-                -a $(output_video_width):$(output_video_height) "$input_file" | $correct_yuv 
+            $ffmpeg -i "$input_file" -f yuv4mpegpipe - | $correct_yuv 
         </command>
         <command id="ffmpeg_normal_av">
             $ffmpeg -threads $num_cpus -y -itsoffset $video_offset -i "$input_file"  
@@ -288,8 +295,7 @@ DTD
             $ffmpeg -threads $num_cpus -i "$input_file"
         </command>
         <command id="yuv_to_ffmpeg_av">
-            $ffmpeg -threads $num_cpus -y -itsoffset $video_offset -i - 
-                                            -itsoffset 0 -i "$tmp_audio_file" -map 0:0 -map 1:1
+            $ffmpeg -threads $num_cpus -y -i - -i "$tmp_audio_file"
         </command>
         <command id="yuv_to_ffmpeg_v">
             $ffmpeg -threads $num_cpus -y -i -
@@ -607,18 +613,6 @@ DTD
         -->
         <device_group title="iTunes">
             <common_device>
-                <command id="ffmpeg_options">
-                    -vcodec $ffmpeg_vcodec -b $output_video_bitrate -s $(output_video_width)x$(output_video_height) 
-                        -aspect $(output_video_width):$(output_video_height) -r $(output_video_frame_rate)
-                    -async 50 -acodec $ffmpeg_acodec -ab $output_audio_bitrate -ar $output_audio_sample_rate 
-                        -ac $output_audio_channels
-                </command>
-                <command id="quicktime_to_audio_file">
-                    $qt_export "$input_file" --video=0 "$tmp_audio_file"
-                </command>
-                <command id="correct_yuv">
-                    $yuvcorrect -v 0 -Y LUMINANCE_1.20_0_255_0_255 -Y CHROMINANCE_0_1.04_128_1.04_128_0_255
-                </command>
                 <script>
                     <![CDATA[
     

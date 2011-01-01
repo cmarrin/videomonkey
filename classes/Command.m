@@ -15,8 +15,9 @@
 @synthesize messagePipe;
 @synthesize outputPipe;
 @synthesize task;
+@synthesize index;
 
-+(Command*) commandWithTranscoder: (Transcoder*) transcoder command: (NSString*) command outputType: (CommandOutputType) type identifier: (NSString*) id
++(Command*) commandWithTranscoder: (Transcoder*) transcoder command: (NSString*) command outputType: (CommandOutputType) type index: (int) index
 {
     Command* thisCommand = [[[Command alloc] init] autorelease];
     
@@ -24,7 +25,7 @@
         thisCommand->m_transcoder = transcoder;
         thisCommand->m_outputType = type;
         thisCommand->m_command = [command retain];
-        thisCommand->m_id = [id retain];
+        thisCommand->index = index;
         thisCommand->m_buffer = [[NSMutableString alloc] init];
         
         thisCommand.task = [[NSTask alloc] init];
@@ -47,10 +48,10 @@
     [args removeObjectAtIndex: 0];
     
     // log the command
-    [m_transcoder logCommand: m_id withFormat:@""];
-    [m_transcoder logCommand: m_id withFormat:@"Command to execute:"];
-    [m_transcoder logCommand: m_id withFormat:@"    %@ %@", launchPath, [args componentsJoinedByString: @" "]];
-    [m_transcoder logCommand: m_id withFormat:@""];
+    [m_transcoder logCommand: index withFormat:@""];
+    [m_transcoder logCommand: index withFormat:@"Command to execute:"];
+    [m_transcoder logCommand: index withFormat:@"    %@ %@", launchPath, [args componentsJoinedByString: @" "]];
+    [m_transcoder logCommand: index withFormat:@""];
     
     // execute the command
     [self.task setArguments: [NSArray arrayWithObjects: @"-c", m_command, nil]];
@@ -132,7 +133,7 @@
         [m_transcoder setProgressForCommand: self to: percentage];
     }
     else if ([response length] > 0)
-        [m_transcoder logCommand: m_id withFormat:@"--> %@", response];
+        [m_transcoder logCommand: index withFormat:@"--> %@", response];
 }
 
 -(void) processData:(NSData*) data
@@ -169,21 +170,21 @@
 -(void) processFinishEncode: (NSNotification*) note
 {
     NSTimeInterval totalTime = -[encodingStartDate timeIntervalSinceNow];
-    [m_transcoder logCommand: m_id withFormat:@"=============================="];
+    [m_transcoder logCommand: index withFormat:@"=============================="];
     int min = (int)((totalTime + 30) / 60);
     int sec = (int)(totalTime - min*60 + 0.5);
     
     if (min == 0)
-        [m_transcoder logCommand: m_id withFormat:@"| Command ran in %d seconds", sec];
+        [m_transcoder logCommand: index withFormat:@"| Command ran in %d seconds", sec];
     else if (min <= 10)
-        [m_transcoder logCommand: m_id withFormat:@" | Command ran in %d min %d sec", min, sec];
+        [m_transcoder logCommand: index withFormat:@" | Command ran in %d min %d sec", min, sec];
     else {
         if (sec >= 30)
             min += 1;
-        [m_transcoder logCommand: m_id withFormat:@"| Command ran in %d minutes", min];
+        [m_transcoder logCommand: index withFormat:@"| Command ran in %d minutes", min];
     }
         
-    [m_transcoder logCommand: m_id withFormat:@"=============================="];
+    [m_transcoder logCommand: index withFormat:@"=============================="];
 
     int status = [self.task terminationStatus];
     
@@ -199,7 +200,7 @@
 	NSData* data = [[note userInfo] objectForKey:NSFileHandleNotificationDataItem];
 	
     [self processData:data];
-	if([data length]) {
+	if ([data length]) {
         // read another buffer
 		[[note object] readInBackgroundAndNotify];
     }

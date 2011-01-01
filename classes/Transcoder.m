@@ -484,10 +484,7 @@ static NSImage* getFileStatusImage(FileStatus status)
     Command* command = [m_commands objectAtIndex:m_currentCommandIndex];
     
     while (1) {
-        if ([m_commands count]-1 == m_currentCommandIndex)
-            m_isLastCommandRunning = YES;
-            
-        Command* nextCommand = m_isLastCommandRunning ? nil : [m_commands objectAtIndex:m_currentCommandIndex+1];
+        Command* nextCommand = ([m_commands count]-1 == m_currentCommandIndex) ? nil : [m_commands objectAtIndex:m_currentCommandIndex+1];
         [command execute: nextCommand];
         m_currentCommandIndex++;
         if (!nextCommand || [command needsToWait])
@@ -559,7 +556,6 @@ static void addCommandElement(NSMutableArray* elements, NSString* command, NSStr
         return NO;
     }
     
-    int commandId = 0;
     m_commands = [[NSMutableArray alloc] init];
     
     if ([[[AppController instance] deviceController] shouldEncode]) {
@@ -624,7 +620,7 @@ static void addCommandElement(NSMutableArray* elements, NSString* command, NSStr
             [m_commands addObject:[Command commandWithTranscoder:self 
                                 command:[entry objectForKey:@"recipe"]
                                 outputType:type 
-                                identifier:[[NSNumber numberWithInt:commandId++] stringValue]]];
+                                index:[m_commands count]]];
         }
         
         [elements release];
@@ -654,7 +650,7 @@ static void addCommandElement(NSMutableArray* elements, NSString* command, NSStr
             if (canWrite) {
                 // Add command for writing metadata
                 [m_commands addObject:[Command commandWithTranscoder:self command:metadataCommand
-                            outputType:OT_WAIT identifier:[[NSNumber numberWithInt:commandId] stringValue]]];
+                            outputType:OT_WAIT index:[m_commands count]]];
             }
             else {
                 // Can't write metadata to this type of file
@@ -681,7 +677,6 @@ static void addCommandElement(NSMutableArray* elements, NSString* command, NSStr
     
     // execute each command in turn
     if ([m_commands count] > 0) {
-        m_isLastCommandRunning = NO;
         m_currentCommandIndex = 0;
         [self startNextCommands];
 
@@ -768,9 +763,11 @@ static void addCommandElement(NSMutableArray* elements, NSString* command, NSStr
 
 -(void) commandFinished: (Command*) command status: (int) status
 {
-    if (m_isLastCommandRunning)
+    // If this command is last in the list, finish up. 
+    // If it's the last currently executing command, fire off the next
+    if (command.index == [m_commands count] - 1)
         [self finish: status];
-    else
+    else if (command.index == m_currentCommandIndex - 1)
         [self startNextCommands];
 }
 
@@ -786,12 +783,12 @@ static void addCommandElement(NSMutableArray* elements, NSString* command, NSStr
         [m_logFile writeData:[string dataUsingEncoding:NSUTF8StringEncoding]];
 }
 
--(void) logCommand: (NSString*) commandId withFormat: (NSString*) format, ...
+-(void) logCommand: (int) index withFormat: (NSString*) format, ...
 {
     va_list args;
     va_start(args, format);
     NSString* string = [[NSString alloc] initWithFormat:format arguments:args];
-    [[AppController instance] log: @"    [Command %@] %@\n", commandId, string];
+    [[AppController instance] log: @"    [Command %@] %@\n", [[NSNumber numberWithInt:index] stringValue], string];
 }
 
 -(void) log: (NSString*) format, ...

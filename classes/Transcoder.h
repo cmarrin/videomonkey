@@ -112,7 +112,6 @@ typedef enum FileStatus {   FS_INVALID,     // File is invalid, we can't encode 
     int m_currentCommandIndex;
     NSProgressIndicator* m_progressIndicator;
     NSImageView* m_statusImageView;
-    BOOL m_isLastCommandRunning;
     BOOL m_wroteMetadata;
     
     NSFileHandle* m_logFile;
@@ -164,7 +163,7 @@ typedef enum FileStatus {   FS_INVALID,     // File is invalid, we can't encode 
 
 -(void) updateFileInfo;
 -(void) logToFile: (NSString*) string;
--(void) logCommand: (NSString*) commandId withFormat: (NSString*) format, ...;
+-(void) logCommand: (int) index withFormat: (NSString*) format, ...;
 -(void) log: (NSString*) format, ...;
 
 @end
