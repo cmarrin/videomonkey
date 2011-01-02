@@ -352,6 +352,12 @@ static NSImage* getFileStatusImage(FileStatus status)
     return m_audioQuality;
 }
 
+static NSString* escapePath(NSString* path)
+{
+    NSArray* array = [path componentsSeparatedByString:@"$"];
+    return [array componentsJoinedByString:@"$$"];
+}
+
 -(void) setParams
 {
     if ([m_outputFiles count] == 0)
@@ -362,11 +368,11 @@ static NSImage* getFileStatusImage(FileStatus status)
 
     // fill in the environment
     NSString* cmdPath = [NSString stringWithString: [[NSBundle mainBundle] resourcePath]];
-    [env setValue: cmdPath forKey: @"app_resource_path"];
+    [env setValue: escapePath(cmdPath) forKey: @"app_resource_path"];
 
     // fill in the filenames
-    [env setValue: self.inputFileInfo.filename forKey: @"input_file"];
-    [env setValue: self.outputFileInfo.filename forKey: @"output_file"];
+    [env setValue: escapePath(self.inputFileInfo.filename) forKey: @"input_file"];
+    [env setValue: escapePath(self.outputFileInfo.filename) forKey: @"output_file"];
     [env setValue: [self tempAudioFileName] forKey: @"tmp_audio_file"];
     [env setValue: [self passLogFileName] forKey: @"pass_log_file"];
     

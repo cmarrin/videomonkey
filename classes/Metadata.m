@@ -522,6 +522,10 @@ static NSDictionary* g_tagMap = nil;
     if (!atomicParsleyParams || [atomicParsleyParams length] == 0)
         return @"";
         
+    // escape any $ characters
+    NSArray* array = [filename componentsSeparatedByString:@"$"];
+    filename = [array componentsJoinedByString:@"\\$"];
+        
     // setup command
     NSString* cmdPath = [NSString stringWithString: [[NSBundle mainBundle] resourcePath]];
     NSString* command = [NSString stringWithFormat:@"%@ \"%@\" -W %@", 

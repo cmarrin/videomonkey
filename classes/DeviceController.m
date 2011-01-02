@@ -116,7 +116,7 @@ static void addMenuSeparator(NSPopUpButton* button)
     BOOL didSubstitute = YES;
     
     while (didSubstitute) {
-       didSubstitute = NO;
+        didSubstitute = NO;
        
         NSArray* array = [string componentsSeparatedByString:@"$"];
         [tmpString setString:[array objectAtIndex:0]];
@@ -142,6 +142,7 @@ static void addMenuSeparator(NSPopUpButton* button)
             if ([s length] == 0) {
                 skipNext = YES;
                 [tmpString appendString:@"$$"];
+                continue;
             }
             
             // pick out the param name
@@ -188,9 +189,9 @@ static void addMenuSeparator(NSPopUpButton* button)
         string = tmpString;
     }
     
-    // All done substituting, now replace $$ with $
+    // All done substituting, now replace $$ with \$
     NSArray* array = [string componentsSeparatedByString:@"$$"];
-    string = [array componentsJoinedByString:@"$"];
+    string = [array componentsJoinedByString:@"\\$"];
 
     // Finally, get rid of all '\n' chars and extra whitespace
     array = [string componentsSeparatedByString:@"\n"];
