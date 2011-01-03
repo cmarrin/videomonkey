@@ -7,6 +7,9 @@
 //
 
 #import "Command.h"
+
+#import "AppController.h"
+#import "DeviceController.h"
 #import "Transcoder.h"
 
 @implementation Command
@@ -111,29 +114,16 @@
 
 -(void) processResponse: (NSString*) response
 {
-    // FIXME: These should go into some sort of callback functions
-    if ([response hasPrefix:@"frame="]) {
-        // This looks like a progress line for ffmpeg, process it like that
-        // parse out the frame
-        NSRange range = [response rangeOfString: @"frame="];
-        NSString* s = [response substringFromIndex:(range.location + range.length)];
-        double frame = [s doubleValue];
-        double totalFrames = m_transcoder.outputFileInfo.duration * m_transcoder.outputFileInfo.videoFrameRate;
-        double percentage = frame / totalFrames;
-        
-        [m_transcoder setProgressForCommand: self to: percentage];
-    }
-    else if ([response hasPrefix:@" Progress: "]) {
-        // This looks like a progress line for AtomicParsley, process it like that
-        // parse out the progress
-        NSRange range = [response rangeOfCharacterFromSet:[NSCharacterSet decimalDigitCharacterSet]];
-        NSString* s = [response substringFromIndex:(range.location)];
-        double percentage = [s doubleValue] / 100;
-        
-        [m_transcoder setProgressForCommand: self to: percentage];
-    }
-    else if ([response length] > 0)
-        [m_transcoder logCommand: index withFormat:@"--> %@", response];
+    NSArray* array = [m_command componentsSeparatedByString:@"\""];
+    NSString* command = [[array objectAtIndex:1] lastPathComponent];
+    [[[AppController instance] deviceController] processResponse:response forCommand:command];
+
+    double progress = [[[[AppController instance] deviceController] paramForKey:@"processResponseProgress"] doubleValue];
+    NSString* messageString = [[[AppController instance] deviceController] paramForKey:@"processResponseMessage"];
+    if (progress >= 0)
+        [m_transcoder setProgressForCommand: self to: progress];
+    if ([messageString length] > 0)
+        [m_transcoder logCommand: index withFormat:@"--> %@", messageString];
 }
 
 -(void) processData:(NSData*) data

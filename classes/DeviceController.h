@@ -48,6 +48,8 @@
 -(BOOL) shouldWriteMetadataToInputFile;
 -(BOOL) shouldWriteMetadataToOutputFile;
 
+- (void)processResponse:(NSString*) response forCommand:(NSString*) command;
+
 -(void) uiChanged;
 
 @end

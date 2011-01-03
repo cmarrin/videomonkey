@@ -383,6 +383,7 @@ static NSString* escapePath(NSString* path)
     [env setValue: [[NSNumber numberWithDouble: self.inputFileInfo.videoFrameRate] stringValue] forKey: @"input_frame_rate"];
     [env setValue: [[NSNumber numberWithDouble: self.inputFileInfo.videoAspectRatio] stringValue] forKey: @"input_video_aspect"];
     [env setValue: [[NSNumber numberWithInt: self.inputFileInfo.videoBitrate] stringValue] forKey: @"input_video_bitrate"];
+    [env setValue: [[NSNumber numberWithDouble: self.inputFileInfo.duration] stringValue] forKey: @"duration"];
 
     // Set the AV offsets. Positive offsets delay video
     float avOffset = [[[AppController instance] moviePanelController] avOffset];
@@ -424,7 +425,7 @@ static NSString* escapePath(NSString* path)
     self.outputFileInfo.videoFrameRate = [[[[AppController instance] deviceController] paramForKey:@"output_video_frame_rate"] floatValue];
     self.outputFileInfo.videoBitrate = [[[[AppController instance] deviceController] paramForKey:@"output_video_bitrate"] floatValue];
     
-    m_audioQuality = [[[AppController instance] deviceController] paramForKey:@"audio_quality"];
+    m_audioQuality = [[[AppController instance] deviceController] paramForKey:@"output_audio_quality"];
 
     self.outputFileInfo.audioCodec = [[[AppController instance] deviceController] paramForKey:@"output_audio_codec_name"];
     self.outputFileInfo.audioBitrate = [[[[AppController instance] deviceController] paramForKey:@"output_audio_bitrate"] floatValue];

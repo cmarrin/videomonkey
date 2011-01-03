@@ -124,30 +124,29 @@
 }
 
 
-	/* -vsCallJSFunction:withParameters: is much like the vsprintf function in that
-	it receives a va_list rather than a variable length argument list.  This
-	is a simple utility for calling JavaScript functions in a JavaScriptContext
-	that is called by the other call*JSFunction methods in this file to do the
-	actual work.  The caller provides a function name and the parameter va_list,
-	and -vsCallJSFunction:withParameters: uses those to call the function in the
-	JavaScriptCore context.  Only NSString and NSNumber values can be provided
-	as parameters.  The result returned is the same as the value returned by
-	the function,  or NULL if an error occured.  */
+/* -vsCallJSFunction:withParameters: is much like the vsprintf function in that
+it receives a va_list rather than a variable length argument list.  This
+is a simple utility for calling JavaScript functions in a JavaScriptContext
+that is called by the other call*JSFunction methods in this file to do the
+actual work.  The caller provides a function name and the parameter va_list,
+and -vsCallJSFunction:withParameters: uses those to call the function in the
+JavaScriptCore context.  Only NSString and NSNumber values can be provided
+as parameters.  The result returned is the same as the value returned by
+the function,  or NULL if an error occured.  */
 - (JSValueRef)vsCallJSFunction:(NSString *)name withArg:(id)firstParameter andArgList:(va_list)args {
-
-		/* default result */
+    /* default result */
 	JSValueRef theResult = NULL;
 	
-			/* try to find the named function defined as a property on the global object */
+    /* try to find the named function defined as a property on the global object */
 	JSStringRef functionNameString = [name jsStringValue];
 	if ( functionNameString != NULL ) {
 
-			/* retrieve the function object from the global object. */
+        /* retrieve the function object from the global object. */
 		JSValueRef jsFunctionObject =
 				JSObjectGetProperty( m_jsContext,
 						JSContextGetGlobalObject( m_jsContext ), functionNameString, NULL );
 				
-			/* if we found a property, verify that it's a function */
+        /* if we found a property, verify that it's a function */
 		if ( ( jsFunctionObject != NULL ) && JSValueIsObject( m_jsContext, jsFunctionObject ) ) {
 			const size_t kMaxArgCount = 20;
 			id nthID;
@@ -160,10 +159,7 @@
 				
 				/* index through the parameters until we find a nil one,
 				or exceed our maximu argument count */
-			for ( nthID = firstParameter; 
-				argsOK && ( nthID != nil ) && ( argumentCount < kMaxArgCount );
-				nthID = va_arg( args, id ) ) {
-			
+			for (nthID = firstParameter; argsOK && (nthID != nil) && ( argumentCount < kMaxArgCount ); nthID = va_arg(args, id)) {
 				if ( [nthID isKindOfClass: [NSNumber class]] ) {
 				
 					arguments[argumentCount++] = JSValueMakeNumber( m_jsContext, [nthID doubleValue] );
@@ -226,8 +222,8 @@
 	BOOL theResult;
 	va_list args;
 
-		/* call the function */
-	va_start( args, firstParameter );
+    /* call the function */
+	va_start(args, firstParameter);
 	JSValueRef functionResult = [self vsCallJSFunction: name withArg: firstParameter andArgList: args];
 	va_end( args );
 

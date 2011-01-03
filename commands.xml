@@ -123,6 +123,7 @@ output_file                 Current output file path
 tmp_audio_file              Path to a temp file to which audio can be saved
 pass_log_file               Path to the ffmpeg pass log file, used for 2 pass encoding
 input_format                Container format of input file
+input_duration              Duration of input video
 input_video_width           Width, in pixels, of the input file
 input_video_height          Height, in pixels, of the input file
 input_frame_rate            Frame rate, in fps, of the input file
@@ -132,6 +133,8 @@ input_video_codec           Name of the video codec of the input file
 audio_offset                Offset to apply to audio, in seconds.
 video_offset                Offset to apply to video, in seconds.
 has_audio                   "true" if the input file contains an audio track
+
+duration                    Duration of video, in seconds
 
 quality                     The current setting of the quality slider (0-1 between tick marks)
 quality_stop                Which tick mark is currently to the left of the slider (0 to #ticks-1)
@@ -149,9 +152,8 @@ Param Name              Value
 recipe                      Recipe to use for the current encoding
 output_video_width          Width, in pixels, of the output file
 output_video_height         Height, in pixels, of the output file
-audio_quality               A string indicating the audio quality of the output file (usually "low", "medium" or "high")
+output_audio_quality               A string indicating the audio quality of the output file (usually "low", "medium" or "high")
 output_video_bitrate        Approximate bitrate of the output video
-
 output_format_name          Displayed format of the container
 output_video_codec_name     Displayed video codec
 output_video_profile_name   Displayed profile of the video
@@ -166,7 +168,28 @@ output_audio_bitrate        Audio bitrate
 output_audio_sample_rate    Sample rate of audio
 output_audio_channels       Number of channels of audio
 
-The recipe is used for the actual encoding, the others are used to update the file entries.
+processResponse             Global function that handles lines of stderr output from the executing commands (Do not change)
+processResponseCallbacks    An Array of functions called by processResponse()
+processResponseProgress     The current progress of the currently executing command, from 0 to 1
+processResponseMessage      String to be output to the error console.
+
+The recipe is used for the actual encoding, the others output values are used to update the file entries, and the
+processResponse values are used to process stderr responses from the executing command.
+
+processResponse
+===============
+
+The default script creates a processResponse function, which should not be changed by specific device scripts. It has
+the form:
+
+    function processResponse(command, response)
+    
+where command is the name of the executing command and response is the complete line that was sent to stderr.
+
+When a response is received, processResponse sends the response to each function in the processResponseCallbacks
+Array. Each function in this array has the same form as processResponse. The callback performs any processing
+required and then sets 2 param values, processResponseProgress and processResponseMessage. The callback must
+return true if the response was processed and false otherwise. If false, the next function in the Array is called.
 
 Recipes 
 =======
@@ -340,7 +363,64 @@ DTD
         </command>
         <script>
             <![CDATA[
+            
+            function addProcessResponseCallback(f)
+            {
+                if (!("processResponseCallbacks" in params))
+                    params.processResponseCallbacks = [ ];
+                params.processResponseCallbacks.push(f);
+            }
+            
+            function processResponse(command, response)
+            {
+                // Init response values
+                params.processResponseProgress = -1;
+                params.processResponseMessage = "";
+            
+                for (var i in params.processResponseCallbacks) {
+                    if (params.processResponseCallbacks[i](command, response))
+                        return;
+                }
+            
+                // Response not handled, just output it
+                params.processResponseMessage = response;
+            }
 
+            addProcessResponseCallback(function(command, response)
+            {
+                // Handle all common responses
+                if (command == "ffmpeg") {
+                    if (response.match(/^frame=/)) {
+                        // This looks like a progress line for ffmpeg
+                        var frame = number(response.replace(/^frame=/, ""));
+                        var totalFrames = params.duration * params.output_video_frame_rate;
+                        params.processResponseProgress = frame / totalFrames;
+                        return true;
+                    }
+                }
+                else if (command == "AtomicParsley") {
+                    if (response.match(/^ Progress:/)) {
+                        // This looks like a progress line for AtomicParsley
+                        var array = response.split(">");
+                        params.processResponseProgress = number(array[1]) / 100;
+log("    ****** progress(AtomicParsley): progress=", params.processResponseProgress);
+                        return true;
+                    }
+                }
+                else if (command == "qt_export") {
+                    if (response.match(/^# progress: (/)) {
+                        // This looks like a progress line for qt_export
+                        // Line is of the form: # progress: (<string>)   <number>% ...
+                        var array = progress.split(")");
+                        params.processResponseProgress = number(array[1]) / 100;
+log("    ****** progress(qt_export): ", params.processResponseProgress);
+                        return true;
+                    }
+                }
+
+                return false;
+            });
+            
             function caseInsensitiveCompare(a,b) { return a.toLowerCase() == b.toLowerCase() }
             
             function audio(type)
@@ -350,43 +430,43 @@ DTD
                         params.output_audio_bitrate =  16000;
                         params.output_audio_sample_rate = 11025;
                         params.output_audio_channels = 1;
-                        params.audio_quality = "Low";
+                        params.output_audio_quality = "Low";
                         break;
                     case "medium":
                         params.output_audio_bitrate =  32000;
                         params.output_audio_sample_rate = 22050;
                         params.output_audio_channels = 1;
-                        params.audio_quality = "Medium";
+                        params.output_audio_quality = "Medium";
                         break;
                     case "high":
                         params.output_audio_bitrate = 128000;
                         params.output_audio_sample_rate = 48000;
                         params.output_audio_channels = 2;
-                        params.audio_quality = "High";
+                        params.output_audio_quality = "High";
                         break;
                     case "avi":
                         params.output_audio_bitrate = 128000;
                         params.output_audio_sample_rate = 48000;
                         params.output_audio_channels = 2;
-                        params.audio_quality = "High";
+                        params.output_audio_quality = "High";
                         break;
                     case "mp4Low":
                         params.output_audio_bitrate =  12000;
                         params.output_audio_sample_rate = 11025;
                         params.output_audio_channels = 1;
-                        params.audio_quality = "Low";
+                        params.output_audio_quality = "Low";
                         break;
                     case "wmv":
                         params.output_audio_bitrate =  128000;
                         params.output_audio_sample_rate = 44100;
                         params.output_audio_channels = 2;
-                        params.audio_quality = "High";
+                        params.output_audio_quality = "High";
                         break;
                     case "wmvlow":
                         params.output_audio_bitrate =  24000;
                         params.output_audio_sample_rate = 11025;
                         params.output_audio_channels = 1;
-                        params.audio_quality = "Low";
+                        params.output_audio_quality = "Low";
                         break;
                 }
             }
@@ -399,31 +479,31 @@ DTD
                         params.output_audio_bitrate =  32000;
                         params.output_audio_sample_rate = 22050;
                         params.output_audio_channels = 1;
-                        params.audio_quality = "Low";
+                        params.output_audio_quality = "Low";
                         break;
                     case "high":
                         params.output_audio_bitrate =  128000;
                         params.output_audio_sample_rate = 48000;
                         params.output_audio_channels = 2;
-                        params.audio_quality = "High";
+                        params.output_audio_quality = "High";
                         break;
                     case "vcd":
                         params.output_audio_bitrate = 224000;
                         params.output_audio_sample_rate = 44100;
                         params.output_audio_channels = 2;
-                        params.audio_quality = "High";
+                        params.output_audio_quality = "High";
                         break;
                     case "svcd":
                         params.output_audio_bitrate = 224000;
                         params.output_audio_sample_rate = 48000;
                         params.output_audio_channels = 2;
-                        params.audio_quality = "High";
+                        params.output_audio_quality = "High";
                         break;
                     case "hd":
                         params.output_audio_bitrate = 192000;
                         params.output_audio_sample_rate = 48000;
                         params.output_audio_channels = 2;
-                        params.audio_quality = "High";
+                        params.output_audio_quality = "High";
                         break;
                 }
             }
@@ -621,7 +701,7 @@ DTD
                     // two we are (params.quality). We also which device we have selected 
                     // (params.title), whether we are doing h.264 or mpeg4 (params.h264), and whether 
                     // we want to optimize for TV or iPod (params.for_tv). From this we need to 
-                    // compute params.frame_width, params.frame_height, params.audio_quality and
+                    // compute params.frame_width, params.frame_height, params.output_audio_quality and
                     // params.output_video_bitrate.
                     
                     // We support a number of standard frame sizes. After adjusting these sizes according to the flags
@@ -906,7 +986,7 @@ DTD
                     // and we know what percentage of the way between the two we are (params.quality). We also which device we have 
                     // selected (params.title), whether we are doing h.264 or mpeg4 (params.h264), and whether we want to optimize 
                     // for TV or iPod (params.for_tv). From this we need to compute params.frame_width, params.frame_height,
-                    // params.audio_quality and params.output_video_bitrate.
+                    // params.output_audio_quality and params.output_video_bitrate.
                     
                     // We support a number of standard frame sizes. After adjusting these sizes according to the flags
                     // (h264, forTV), we determine the actual frame size using these as maximum values, taking
@@ -1738,7 +1818,7 @@ DTD
                     // and we know what percentage of the way between the two we are (params.quality). We also which device we have 
                     // selected (params.title), whether we are doing h.264 or mpeg4 (params.h264), and whether we want to optimize 
                     // for TV or iPod (params.for_tv). From this we need to compute params.frame_width, params.frame_height,
-                    // params.audio_quality and params.output_video_bitrate.
+                    // params.output_audio_quality and params.output_video_bitrate.
                     
                     // We support a number of standard frame sizes. After adjusting these sizes according to the flags
                     // (h264, forTV), we determine the actual frame size using these as maximum values, taking

@@ -364,6 +364,11 @@ static JSValueRef _jsLog(JSContextRef ctx, JSObjectRef function, JSObjectRef thi
     return [m_context stringParamForKey: key];
 }
 
+- (void)processResponse:(NSString*) response forCommand:(NSString*) command
+{
+    [m_context callBooleanFunction:@"processResponse" withParameters:command, response, nil];
+}
+
 -(void) uiChanged
 {
     [m_delegate uiChanged];

@@ -528,7 +528,7 @@ static NSDictionary* g_tagMap = nil;
         
     // setup command
     NSString* cmdPath = [NSString stringWithString: [[NSBundle mainBundle] resourcePath]];
-    NSString* command = [NSString stringWithFormat:@"%@ \"%@\" -W %@", 
+    NSString* command = [NSString stringWithFormat:@"\"%@\" \"%@\" -W %@", 
                             [cmdPath stringByAppendingPathComponent: @"bin/AtomicParsley"],
                             filename,
                             atomicParsleyParams];

@@ -314,7 +314,7 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
         if (++m_currentEncoding < [m_fileList count]) {
             if (![[m_fileList objectAtIndex: m_currentEncoding] startEncode])
                 [self startNextEncode];
-            else {
+            else if ([m_fileList count] > m_currentEncoding) {
                 m_fileConvertingIndex++;
                 m_finishedEncodedFileSize += m_currentEncodedFileSize;
                 m_currentEncodedFileSize = [[m_fileList objectAtIndex: m_currentEncoding] outputFileInfo].fileSize;
@@ -330,7 +330,7 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
             NSBeginAlertSheet(@"Encoding FAILED", nil, nil, nil, [[NSApplication sharedApplication] mainWindow], 
                             nil, nil, nil, nil, 
                             @"Some files had errors during encoding. See Console for details");
-        }
+    }
     
     m_runState =  RS_STOPPED;
     [self setProgressFor:nil to:0];
