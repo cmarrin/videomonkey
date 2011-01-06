@@ -18,6 +18,7 @@
 @interface DeviceController : NSObject {
     IBOutlet NSTabView* m_deviceControllerTabView;
     IBOutlet NSPopUpButton* m_deviceButton;
+    IBOutlet NSTextField* m_bewareMessage;
     IBOutlet NSPopUpButton* m_performanceButton;
     IBOutlet NSPopUpButton* m_actionButton;
     IBOutlet NSTextField* m_deviceName;

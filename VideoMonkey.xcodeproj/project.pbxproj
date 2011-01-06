@@ -108,6 +108,8 @@
 		49AADBE10F1E55C80098F087 /* DeviceController.m in Sources */ = {isa = PBXBuildFile; fileRef = 49AADBE00F1E55C80098F087 /* DeviceController.m */; };
 		49B007A50F6FD9C700D0EFF2 /* VideoMonkeyDevel.icns in Resources */ = {isa = PBXBuildFile; fileRef = 49B007A40F6FD9C700D0EFF2 /* VideoMonkeyDevel.icns */; };
 		49B007F20F7124D200D0EFF2 /* ScriptingBridge.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 49B007F10F7124D200D0EFF2 /* ScriptingBridge.framework */; };
+		49B00E7712D3609400ABAAB3 /* custom.png in Resources */ = {isa = PBXBuildFile; fileRef = 49B00E7512D3609400ABAAB3 /* custom.png */; };
+		49B00E7812D3609400ABAAB3 /* tinycustom.png in Resources */ = {isa = PBXBuildFile; fileRef = 49B00E7612D3609400ABAAB3 /* tinycustom.png */; };
 		49BC89A90ECD245F00027F1D /* MoviePanelController.m in Sources */ = {isa = PBXBuildFile; fileRef = 49BC89A70ECD245F00027F1D /* MoviePanelController.m */; };
 		49BC8CAA0ED6892400027F1D /* EncodeWorking0.png in Resources */ = {isa = PBXBuildFile; fileRef = 49BC8CA10ED6892400027F1D /* EncodeWorking0.png */; };
 		49BC8CAB0ED6892400027F1D /* EncodeWorking1.png in Resources */ = {isa = PBXBuildFile; fileRef = 49BC8CA20ED6892400027F1D /* EncodeWorking1.png */; };
@@ -269,6 +271,8 @@
 		49B007A40F6FD9C700D0EFF2 /* VideoMonkeyDevel.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = VideoMonkeyDevel.icns; path = icons/VideoMonkeyDevel.icns; sourceTree = "<group>"; };
 		49B007F10F7124D200D0EFF2 /* ScriptingBridge.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ScriptingBridge.framework; path = /System/Library/Frameworks/ScriptingBridge.framework; sourceTree = "<absolute>"; };
 		49B008190F712A2600D0EFF2 /* iTunes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iTunes.h; sourceTree = "<group>"; };
+		49B00E7512D3609400ABAAB3 /* custom.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = custom.png; path = images/custom.png; sourceTree = "<group>"; };
+		49B00E7612D3609400ABAAB3 /* tinycustom.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = tinycustom.png; path = images/tinycustom.png; sourceTree = "<group>"; };
 		49BC89A70ECD245F00027F1D /* MoviePanelController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MoviePanelController.m; path = classes/MoviePanelController.m; sourceTree = "<group>"; };
 		49BC89A80ECD245F00027F1D /* MoviePanelController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MoviePanelController.h; path = classes/MoviePanelController.h; sourceTree = "<group>"; };
 		49BC8CA10ED6892400027F1D /* EncodeWorking0.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = EncodeWorking0.png; path = icons/EncodeWorking0.png; sourceTree = "<group>"; };
@@ -448,6 +452,7 @@
 				4910FFAD0EC87BB3001B578B /* appletv.png */,
 				4910FFAE0EC87BB3001B578B /* burntbottom.png */,
 				4910FFAF0EC87BB3001B578B /* cd.png */,
+				49B00E7512D3609400ABAAB3 /* custom.png */,
 				4910FFB00EC87BB3001B578B /* dv.png */,
 				4910FFB10EC87BB3001B578B /* dvd.png */,
 				4910FFB30EC87BB3001B578B /* file.png */,
@@ -466,6 +471,7 @@
 				4910FFC30EC87BB3001B578B /* tiny3g.png */,
 				4910FFC40EC87BB3001B578B /* tinyappletv.png */,
 				4910FFC50EC87BB3001B578B /* tinycd.png */,
+				49B00E7612D3609400ABAAB3 /* tinycustom.png */,
 				4910FFC60EC87BB3001B578B /* tinydv.png */,
 				4910FFC70EC87BB3001B578B /* tinyfile.png */,
 				4910FFC80EC87BB3001B578B /* tinyflac.png */,
@@ -692,6 +698,8 @@
 				49B007A50F6FD9C700D0EFF2 /* VideoMonkeyDevel.icns in Resources */,
 				49DA64130F8D60FD004DDDD8 /* tinypencil.png in Resources */,
 				49DA64140F8D60FD004DDDD8 /* tinyspotlight.png in Resources */,
+				49B00E7712D3609400ABAAB3 /* custom.png in Resources */,
+				49B00E7812D3609400ABAAB3 /* tinycustom.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

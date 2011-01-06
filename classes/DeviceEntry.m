@@ -68,15 +68,74 @@ static NSString* parseScripts(XMLElement* element)
 
 //
 //
-// Device Tab interface
+// Device Tab Base interface
 //
 //
-@implementation DeviceTab
+@implementation DeviceTabBase
 
 -(NSString*) deviceName
 {
     return [self identifier];
 }
+
+-(void) setCheckboxes: (NSArray*) checkboxes
+{
+}
+
+-(void) setMenus: (NSArray*) menus
+{
+}
+
+-(void) setComboboxes: (NSArray*) comboboxes
+{
+}
+
+-(void) setQuality: (NSArray*) qualityStops
+{
+}
+
+-(int) checkboxState:(int) index
+{
+    return 0;
+}
+
+-(int) menuState:(int) index
+{
+    return 0;
+}
+
+-(int) comboboxState:(int) index
+{
+    return 0;
+}
+
+- (IBAction)sliderChanged:(id)sender {
+    double value = [sender doubleValue];
+    if (value != m_sliderValue) {
+        m_sliderValue = value;
+        [m_deviceController uiChanged];
+    }
+}
+
+-(IBAction)controlChanged:(id)sender
+{
+    [m_deviceController uiChanged];
+}
+
+-(double) sliderValue
+{
+    m_sliderValue = [m_slider doubleValue];
+    return m_sliderValue;
+}
+
+@end
+
+//
+//
+// Device Tab interface
+//
+//
+@implementation DeviceTab
 
 static void setButton(NSButton* button, MyButton* item)
 {
@@ -213,25 +272,71 @@ static void setButton(NSButton* button, MyButton* item)
     return button ? ([button isHidden] ? -1 : [button indexOfSelectedItem]) : -1;
 }
 
-- (IBAction)sliderChanged:(id)sender {
-    double value = [sender doubleValue];
-    if (value != m_sliderValue) {
-        m_sliderValue = value;
-        [m_deviceController uiChanged];
+@end
+
+//
+//
+// Custom Device Tab interface
+//
+//
+@implementation CustomDeviceTab
+
+-(void) setMenus: (NSArray*) menus
+{
+    int size = [menus count];
+
+    for (int i = 0; i < size; ++i) {
+        Menu* menu = [menus objectAtIndex:i];
+        NSPopUpButton* menuButton;
+        
+        switch(i) {
+            case 0: menuButton = m_containerFormatMenu; break;
+            case 1: menuButton = m_audioCodecMenu; break;
+            case 2: menuButton = m_videoCodecMenu; break;
+            case 3: menuButton = m_extrasMenu; break;
+            default: continue;
+        }
+        
+        // init menu
+        NSArray* itemTitles = [menu itemTitles];
+        for (int i = 0; i < [itemTitles count]; ++i) {
+            // If this is the extras menu, it's a pulldown, so indexing starts at 1
+            [menuButton addItemWithTitle:[itemTitles objectAtIndex:i]];
+        }
     }
 }
 
--(IBAction)controlChanged:(id)sender
+-(void) setComboboxes: (NSArray*) comboboxes
 {
-    [m_deviceController uiChanged];
+    int size = [comboboxes count];
+
+    for (int i = 0; i < size; ++i) {
+        Combobox* combobox = [comboboxes objectAtIndex:i];
+        NSComboBox* comboboxButton;
+        
+        switch(i) {
+            case 0: comboboxButton = m_audioBitrateComboBox; break;
+            case 1: comboboxButton = m_audioChannelsComboBox; break;
+            case 2: comboboxButton = m_audioSampleRateComboBox; break;
+            case 3: comboboxButton = m_frameSizeComboBox; break;
+            case 4: comboboxButton = m_frameRateComboBox; break;
+            case 5: comboboxButton = m_extraParamsComboBox; break;
+            default: continue;
+        }
+            
+        // init combobox
+    }
 }
 
--(double) sliderValue
+-(int) menuState:(int) index
 {
-    m_sliderValue = [m_slider doubleValue];
-    return m_sliderValue;
+    return 0;
 }
 
+-(int) comboboxState:(int) index
+{
+    return 0;
+}
 @end
 
 //
@@ -422,6 +527,38 @@ static void setButton(NSButton* button, MyButton* item)
 
 //
 //
+// Combobox interface
+//
+//
+@implementation Combobox
+
++(Combobox*) comboboxWithElement: (XMLElement*) element
+{
+    Combobox* obj = [[Combobox alloc] init];
+    [obj initWithElement: element];
+
+    obj->m_params = [[NSMutableDictionary alloc] init];
+    
+    parseParams(element, obj->m_params);
+    obj->m_script = parseScripts(element);
+
+    return obj;
+}
+
+-(NSDictionary*) params
+{
+    return m_params;
+}
+
+-(NSString*) script
+{
+    return m_script;
+}
+
+@end
+
+//
+//
 // DeviceEntry interface
 //
 //
@@ -454,7 +591,7 @@ static void setButton(NSButton* button, MyButton* item)
     for (int i = 0; i < [array count]; ++i) {
         XMLElement* element = (XMLElement*) [array objectAtIndex:i];
         int which = (int) [element doubleAttribute:@"which"];
-        if (which < 0 || which > MAX_CHECKBOXES)
+        if (which < 0)
             continue;
         [m_checkboxes insertObject:[Checkbox checkboxWithElement: element] atIndex:which];
     }
@@ -465,9 +602,20 @@ static void setButton(NSButton* button, MyButton* item)
     for (int i = 0; i < [array count]; ++i) {
         XMLElement* element = (XMLElement*) [array objectAtIndex:i];
         int which = (int) [element doubleAttribute:@"which"];
-        if (which < 0 || which > MAX_MENUS)
+        if (which < 0)
             continue;
         [m_menus insertObject:[Menu menuWithElement: element] atIndex:which];
+    }
+}
+
+-(void) parseComboboxes: (NSArray*) array
+{
+    for (int i = 0; i < [array count]; ++i) {
+        XMLElement* element = (XMLElement*) [array objectAtIndex:i];
+        int which = (int) [element doubleAttribute:@"which"];
+        if (which < 0)
+            continue;
+        [m_comboboxes insertObject:[Menu menuWithElement: element] atIndex:which];
     }
 }
 
@@ -509,8 +657,13 @@ static void setButton(NSButton* button, MyButton* item)
     // handle menus
     [self parseMenus:[element elementsForName:@"menu"]];
 	
+    // handle comboboxes
+    [self parseComboboxes:[element elementsForName:@"combobox"]];
+	
     // Set the device tab enum
-    if ([m_menus count] == 0)
+    if ([m_icon isEqualToString:@"custom"])
+        m_deviceTabName = DT_CUSTOM;
+    else if ([m_menus count] == 0)
         m_deviceTabName = DT_NO_MENUS;
     else
         m_deviceTabName = DT_RADIO_MENU;

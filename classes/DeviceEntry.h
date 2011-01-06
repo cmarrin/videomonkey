@@ -8,33 +8,12 @@
 
 #import <Cocoa/Cocoa.h>
 
-#define MAX_CHECKBOXES 3
-#define MAX_MENUS 2
-
 @class DeviceController;
 @class JavaScriptContext;
 @class XMLElement;
 
-@interface DeviceTab : NSTabViewItem {
-    IBOutlet NSButton* m_button0;
-    IBOutlet NSTextField* m_buttonLabel0;
-    IBOutlet NSButton* m_button1;
-    IBOutlet NSTextField* m_buttonLabel1;
-    IBOutlet NSButton* m_button2;          
-    IBOutlet NSTextField* m_buttonLabel2;
-    IBOutlet NSPopUpButton* m_menu;
-    IBOutlet NSTextField* m_menuLabel;
-    
-    IBOutlet NSMatrix* m_radio;
-    IBOutlet NSTextField* m_radioLabel;
-    
+@interface DeviceTabBase : NSTabViewItem {
     IBOutlet NSSlider* m_slider;
-    IBOutlet NSTextField* m_sliderLabel1;
-    IBOutlet NSTextField* m_sliderLabel2;
-    IBOutlet NSTextField* m_sliderLabel3;
-    IBOutlet NSTextField* m_sliderLabel4;
-    IBOutlet NSTextField* m_sliderLabel5;
-    
     IBOutlet DeviceController* m_deviceController;
     
     double m_sliderValue;
@@ -47,16 +26,72 @@
 
 -(void) setCheckboxes: (NSArray*) checkboxes;
 -(void) setMenus: (NSArray*) menus;
+-(void) setComboboxes: (NSArray*) comboboxes;
 -(void) setQuality: (NSArray*) qualityStops;
 
 -(int) checkboxState:(int) index;
 -(int) menuState:(int) index;
+-(int) comboboxState:(int) index;
 -(double) sliderValue;
+
+@end
+
+@interface DeviceTab : DeviceTabBase {
+    IBOutlet NSButton* m_button0;
+    IBOutlet NSTextField* m_buttonLabel0;
+    IBOutlet NSButton* m_button1;
+    IBOutlet NSTextField* m_buttonLabel1;
+    IBOutlet NSButton* m_button2;          
+    IBOutlet NSTextField* m_buttonLabel2;
+    IBOutlet NSPopUpButton* m_menu;
+    IBOutlet NSTextField* m_menuLabel;
+    
+    IBOutlet NSMatrix* m_radio;
+    IBOutlet NSTextField* m_radioLabel;
+    
+    IBOutlet NSTextField* m_sliderLabel1;
+    IBOutlet NSTextField* m_sliderLabel2;
+    IBOutlet NSTextField* m_sliderLabel3;
+    IBOutlet NSTextField* m_sliderLabel4;
+    IBOutlet NSTextField* m_sliderLabel5;
+}
+
+-(void) setCheckboxes: (NSArray*) checkboxes;
+-(void) setMenus: (NSArray*) menus;
+-(void) setQuality: (NSArray*) qualityStops;
+
+-(int) checkboxState:(int) index;
+-(int) menuState:(int) index;
+
+@end
+
+// Have a custom class for the custom tab since it is so different
+@interface CustomDeviceTab : DeviceTabBase {
+    IBOutlet NSPopUpButton* m_containerFormatMenu;
+    IBOutlet NSPopUpButton* m_videoCodecMenu;
+    IBOutlet NSPopUpButton* m_audioCodecMenu;
+    IBOutlet NSPopUpButton* m_extrasMenu;
+    IBOutlet NSComboBox* m_extraParamsComboBox;
+    IBOutlet NSComboBox* m_frameSizeComboBox;
+    IBOutlet NSComboBox* m_frameRateComboBox;
+    IBOutlet NSComboBox* m_audioSampleRateComboBox;
+    IBOutlet NSComboBox* m_audioBitrateComboBox;
+    IBOutlet NSComboBox* m_audioChannelsComboBox;
+
+    IBOutlet NSButton* m_sliderEnableButton;
+}
+
+- (void)setMenus: (NSArray*) menus;
+- (void)setComboboxes: (NSArray*) comboboxes;
+
+- (int)menuState:(int) index;
+- (int)comboboxState:(int) index;
 
 @end
 
 #define DT_NO_MENUS @"nomenus"
 #define DT_RADIO_MENU @"radiomenu"
+#define DT_CUSTOM @"custom"
 #define DT_DVD @"dvd"
 
 @interface QualityStop : NSObject {
@@ -125,6 +160,17 @@
 
 @end
 
+@interface Combobox : MyButton {
+    NSMutableDictionary* m_params;
+    NSString* m_script;
+}
+
++(Combobox*) comboboxWithElement: (XMLElement*) element;
+-(NSDictionary*) params;
+-(NSString*) script;
+
+@end
+
 @interface DeviceEntry : NSObject {
     NSString* m_icon;
     NSString* m_title;
@@ -134,7 +180,7 @@
     DeviceEntry* m_defaultDevice;
     
     NSString* m_deviceTabName;
-    DeviceTab* m_deviceTab;
+    DeviceTabBase* m_deviceTab;
     
     NSMutableArray* m_qualityStops;
     NSMutableArray* m_performanceItems;
@@ -143,6 +189,7 @@
     NSString* m_script;
     NSMutableArray* m_checkboxes;
     NSMutableArray* m_menus;
+    NSMutableArray* m_comboboxes;
     
     double m_minBitrate;
     double m_maxBitrate;
