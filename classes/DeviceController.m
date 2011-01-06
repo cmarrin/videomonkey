@@ -372,6 +372,7 @@ static JSValueRef _jsLog(JSContextRef ctx, JSObjectRef function, JSObjectRef thi
 -(void) uiChanged
 {
     [m_delegate uiChanged];
+    [m_currentDevice setCurrentParamsInJavaScriptContext:m_context performanceIndex:[m_performanceButton indexOfSelectedItem]];
 }
 
 -(BOOL) shouldEncode

@@ -21,10 +21,10 @@
 		</object>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
-			<integer value="29"/>
 			<integer value="5392"/>
-			<integer value="5530"/>
+			<integer value="5534"/>
 			<integer value="5461"/>
+			<integer value="29"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -15559,14 +15559,6 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 					<object class="IBActionConnection" key="connection">
 						<string key="label">controlChanged:</string>
 						<reference key="source" ref="1009138798"/>
-						<reference key="destination" ref="860545354"/>
-					</object>
-					<int key="connectionID">5657</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">controlChanged:</string>
-						<reference key="source" ref="1009138798"/>
 						<reference key="destination" ref="754113793"/>
 					</object>
 					<int key="connectionID">5658</int>
@@ -15650,6 +15642,14 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 						<reference key="destination" ref="705279298"/>
 					</object>
 					<int key="connectionID">5671</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">sliderEnableChanged:</string>
+						<reference key="source" ref="1009138798"/>
+						<reference key="destination" ref="860545354"/>
+					</object>
+					<int key="connectionID">5680</int>
 				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -23466,6 +23466,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 					<string>5640.IBPluginDependency</string>
 					<string>5641.IBPluginDependency</string>
 					<string>5644.IBPluginDependency</string>
+					<string>5644.IBViewBoundsToFrameTransform</string>
 					<string>5645.IBPluginDependency</string>
 					<string>565.IBPluginDependency</string>
 					<string>566.IBPluginDependency</string>
@@ -25244,6 +25245,9 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<object class="NSAffineTransform">
+						<bytes key="NSTransformStruct">P4AAAL+AAABCCAAAwbgAAA</bytes>
+					</object>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -25323,7 +25327,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">5671</int>
+			<int key="maxID">5680</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -25591,6 +25595,17 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 				<object class="IBPartialClassDescription">
 					<string key="className">CustomDeviceTab</string>
 					<string key="superclassName">DeviceTabBase</string>
+					<object class="NSMutableDictionary" key="actions">
+						<string key="NS.key.0">sliderEnableChanged:</string>
+						<string key="NS.object.0">id</string>
+					</object>
+					<object class="NSMutableDictionary" key="actionInfosByName">
+						<string key="NS.key.0">sliderEnableChanged:</string>
+						<object class="IBActionInfo" key="NS.object.0">
+							<string key="name">sliderEnableChanged:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+					</object>
 					<object class="NSMutableDictionary" key="outlets">
 						<bool key="EncodedWithXMLCoder">YES</bool>
 						<object class="NSArray" key="dict.sortedKeys">
@@ -25604,7 +25619,6 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 							<string>m_extrasMenu</string>
 							<string>m_frameRateComboBox</string>
 							<string>m_frameSizeComboBox</string>
-							<string>m_sliderEnableButton</string>
 							<string>m_videoCodecMenu</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
@@ -25618,7 +25632,6 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 							<string>NSPopUpButton</string>
 							<string>NSComboBox</string>
 							<string>NSComboBox</string>
-							<string>NSButton</string>
 							<string>NSPopUpButton</string>
 						</object>
 					</object>
@@ -25635,7 +25648,6 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 							<string>m_extrasMenu</string>
 							<string>m_frameRateComboBox</string>
 							<string>m_frameSizeComboBox</string>
-							<string>m_sliderEnableButton</string>
 							<string>m_videoCodecMenu</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
@@ -25675,10 +25687,6 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 							<object class="IBToOneOutletInfo">
 								<string key="name">m_frameSizeComboBox</string>
 								<string key="candidateClassName">NSComboBox</string>
-							</object>
-							<object class="IBToOneOutletInfo">
-								<string key="name">m_sliderEnableButton</string>
-								<string key="candidateClassName">NSButton</string>
 							</object>
 							<object class="IBToOneOutletInfo">
 								<string key="name">m_videoCodecMenu</string>

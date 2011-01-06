@@ -19,20 +19,22 @@
     double m_sliderValue;
 }
 
--(IBAction)sliderChanged:(id)sender;
--(IBAction)controlChanged:(id)sender;
+- (IBAction)sliderChanged:(id)sender;
+- (IBAction)controlChanged:(id)sender;
 
--(NSString*) deviceName;
+- (void)performCustomInitWithContext:(JavaScriptContext*) context;
 
--(void) setCheckboxes: (NSArray*) checkboxes;
--(void) setMenus: (NSArray*) menus;
--(void) setComboboxes: (NSArray*) comboboxes;
--(void) setQuality: (NSArray*) qualityStops;
+- (NSString*)deviceName;
 
--(int) checkboxState:(int) index;
--(int) menuState:(int) index;
--(int) comboboxState:(int) index;
--(double) sliderValue;
+- (void)setCheckboxes: (NSArray*) checkboxes;
+- (void)setMenus: (NSArray*) menus;
+- (void)setComboboxes: (NSArray*) comboboxes;
+- (void)setQuality: (NSArray*) qualityStops;
+
+- (int)checkboxState:(int) index;
+- (int)menuState:(int) index;
+- (int)comboboxState:(int) index;
+- (double)sliderValue;
 
 @end
 
@@ -80,6 +82,8 @@
 
     IBOutlet NSButton* m_sliderEnableButton;
 }
+
+-(IBAction)sliderEnableChanged:(id)sender;
 
 - (void)setMenus: (NSArray*) menus;
 - (void)setComboboxes: (NSArray*) comboboxes;

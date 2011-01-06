@@ -1792,7 +1792,7 @@ DTD
         <device_group title="Advanced">
             <!-- Custom Encoding -->
             <device title="Custom Encoding" icon="custom" enabled="true">
-                <menu which="0">
+                <menu which="0"> <!-- Container Format -->
                     <menu_item title="MPEG-4">
                     </menu_item>
                     <menu_item title="AVI">
@@ -1810,10 +1810,14 @@ DTD
                     <menu_item title="SWF">
                     </menu_item>
                 </menu>
-                <menu which="1">
+                <menu which="1"> <!-- Video Codec -->
                     <menu_item title="MPEG-4">
                     </menu_item>
                     <menu_item title="H.264">
+                    </menu_item>
+                    <menu_item title="MPEG-2">
+                    </menu_item>
+                    <menu_item title="MPEG-1">
                     </menu_item>
                     <menu_item title="DV">
                     </menu_item>
@@ -1822,7 +1826,7 @@ DTD
                     <menu_item title="FLV">
                     </menu_item>
                 </menu>
-                <menu which="2">
+                <menu which="2"> <!-- Audio Codec -->
                     <menu_item title="MP3">
                     </menu_item>
                      <menu_item title="AAC">
@@ -1834,7 +1838,7 @@ DTD
                      <menu_item title="FLV">
                     </menu_item>
                 </menu>
-                <menu which="3">
+                <menu which="3"> <!-- Extras -->
                     <menu_item title="-vtag">
                     </menu_item>
                     <menu_item title="-target">

@@ -73,6 +73,10 @@ static NSString* parseScripts(XMLElement* element)
 //
 @implementation DeviceTabBase
 
+- (void)performCustomInitWithContext:(JavaScriptContext*) context
+{
+}
+
 -(NSString*) deviceName
 {
     return [self identifier];
@@ -281,6 +285,23 @@ static void setButton(NSButton* button, MyButton* item)
 //
 @implementation CustomDeviceTab
 
+- (void)performCustomInitWithContext:(JavaScriptContext*) context
+{
+    // Initialize the slider enable
+    [m_sliderEnableButton setState: NSOnState];
+    [m_slider setEnabled:YES];
+    
+    // Set the current menu values from the params
+    [m_containerFormatMenu selectItemWithTitle:[context stringParamForKey:@"output_format_name"]];
+    [m_videoCodecMenu selectItemWithTitle:[context stringParamForKey:@"output_video_codec_name"]];
+    [m_audioCodecMenu selectItemWithTitle:[context stringParamForKey:@"output_audio_codec_name"]];
+}
+
+-(IBAction)sliderEnableChanged:(id)sender
+{
+    [m_slider setEnabled:[sender state] == NSOnState];
+}
+
 -(void) setMenus: (NSArray*) menus
 {
     int size = [menus count];
@@ -291,8 +312,8 @@ static void setButton(NSButton* button, MyButton* item)
         
         switch(i) {
             case 0: menuButton = m_containerFormatMenu; break;
-            case 1: menuButton = m_audioCodecMenu; break;
-            case 2: menuButton = m_videoCodecMenu; break;
+            case 1: menuButton = m_videoCodecMenu; break;
+            case 2: menuButton = m_audioCodecMenu; break;
             case 3: menuButton = m_extrasMenu; break;
             default: continue;
         }
@@ -769,6 +790,9 @@ static void setButton(NSButton* button, MyButton* item)
 
     // Execute script from this device
     [self evaluateScript: context performanceIndex:perfIndex];
+    
+    // Set the device UI according to the current params
+    [m_deviceTab performCustomInitWithContext:context];
 }
 
 -(void) populateTabView:(NSTabView*) tabview
@@ -778,6 +802,7 @@ static void setButton(NSButton* button, MyButton* item)
     
     [m_deviceTab setCheckboxes: m_checkboxes];
     [m_deviceTab setMenus: m_menus];
+    [m_deviceTab setComboboxes: m_comboboxes];
     [m_deviceTab setQuality: [self qualityStops]];
 }
 
