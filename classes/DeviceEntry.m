@@ -98,17 +98,17 @@ static NSString* parseScripts(XMLElement* element)
 {
 }
 
--(int) checkboxState:(int) index
+- (int)checkboxState:(int) index
 {
     return 0;
 }
 
--(int) menuState:(int) index
+- (int)menuState:(int) index
 {
     return 0;
 }
 
--(int) comboboxState:(int) index
+- (NSString*)comboboxValue:(int) index
 {
     return 0;
 }
@@ -297,12 +297,12 @@ static void setButton(NSButton* button, MyButton* item)
     [m_audioCodecMenu selectItemWithTitle:[context stringParamForKey:@"output_audio_codec_name"]];
 }
 
--(IBAction)sliderEnableChanged:(id)sender
+- (IBAction)sliderEnableChanged:(id)sender
 {
     [m_slider setEnabled:[sender state] == NSOnState];
 }
 
--(void) setMenus: (NSArray*) menus
+- (void)setMenus: (NSArray*) menus
 {
     int size = [menus count];
 
@@ -314,7 +314,8 @@ static void setButton(NSButton* button, MyButton* item)
             case 0: menuButton = m_containerFormatMenu; break;
             case 1: menuButton = m_videoCodecMenu; break;
             case 2: menuButton = m_audioCodecMenu; break;
-            case 3: menuButton = m_extrasMenu; break;
+            case 3: menuButton = m_audioQualityMenu; break;
+            case 4: menuButton = m_extrasMenu; break;
             default: continue;
         }
         
@@ -327,7 +328,7 @@ static void setButton(NSButton* button, MyButton* item)
     }
 }
 
--(void) setComboboxes: (NSArray*) comboboxes
+- (void)setComboboxes: (NSArray*) comboboxes
 {
     int size = [comboboxes count];
 
@@ -336,12 +337,10 @@ static void setButton(NSButton* button, MyButton* item)
         NSComboBox* comboboxButton;
         
         switch(i) {
-            case 0: comboboxButton = m_audioBitrateComboBox; break;
-            case 1: comboboxButton = m_audioChannelsComboBox; break;
-            case 2: comboboxButton = m_audioSampleRateComboBox; break;
-            case 3: comboboxButton = m_frameSizeComboBox; break;
-            case 4: comboboxButton = m_frameRateComboBox; break;
-            case 5: comboboxButton = m_extraParamsComboBox; break;
+            case 0: comboboxButton = m_frameWidthComboBox; break;
+            case 1: comboboxButton = m_frameHeightComboBox; break;
+            case 2: comboboxButton = m_frameRateComboBox; break;
+            case 3: comboboxButton = m_extraParamsComboBox; break;
             default: continue;
         }
             
@@ -349,14 +348,27 @@ static void setButton(NSButton* button, MyButton* item)
     }
 }
 
--(int) menuState:(int) index
+- (int)menuState:(int) index
 {
-    return 0;
+    switch (index) {
+        case 0: return [m_containerFormatMenu indexOfSelectedItem];
+        case 1: return [m_videoCodecMenu indexOfSelectedItem];
+        case 2: return [m_audioCodecMenu indexOfSelectedItem];
+        case 3: return [m_audioQualityMenu indexOfSelectedItem];
+        case 4: return [m_extrasMenu indexOfSelectedItem];
+        default: return 0;
+    }
 }
 
--(int) comboboxState:(int) index
+- (NSString*)comboboxValue:(int) index
 {
-    return 0;
+    switch (index) {
+        case 0: return [m_frameWidthComboBox stringValue];
+        case 1: return [m_frameHeightComboBox stringValue];
+        case 2: return [m_frameRateComboBox stringValue];
+        case 3: return [m_extraParamsComboBox stringValue];
+        default: return 0;
+    }
 }
 @end
 
@@ -367,7 +379,7 @@ static void setButton(NSButton* button, MyButton* item)
 //
 @implementation QualityStop
 
-+(QualityStop*) qualityStopWithElement: (XMLElement*) element
++ (QualityStop*)qualityStopWithElement: (XMLElement*) element
 {
     QualityStop* obj = [[QualityStop alloc] init];
 

@@ -2,55 +2,65 @@
 
 <!--
 
-This file describes the actions to be taken when the VideoMonkey GUI is manipulated. The GUI has a list of files to be encoded. For each input file information about it (size, bitrate, frame rate, etc.) is made available. When any change is made to the GUI (selecting a menu item, sliding a slider, checking a box, etc.) this file performs its actions and generates a 'recipe' of the commands to execute to accomplish the encoding.
+This file describes the actions to be taken when the VideoMonkey GUI is manipulated. There are two main purposes: setting information that will be displayed in the Info Panel for the output file, and constructing a recipe for the encoding. JavaScript functions here are also provided to parse the output of the various encoding tools and pass back progress bar information.
+
+For each input file, information about it (size, bitrate, frame rate, etc.) is made available. When any change is made to the GUI (selecting a menu item, sliding a slider, checking a box, etc.) this file performs the actions shown below for each file in the list.
 
 File Syntax
 ===========
 
 The Command file contains an outer <videomonkey> element with one of each children:
 
- <default_device> - parameters used by any device when not overridden, with children:
-     <quality> - set of stops for quality slider, with children:
-         <quality_stop> - one quality stop, with attributes:
-             title - the title of the tick mark
-     <performance> - values for performance menu, with children:
-         <performance_item> - one item in menu, with attributes and children:
-             title - title of this item in menu
-             <param>, <command>, <script> - see below
-     <param>, <command>, <script> - see below
+<default_device> - parameters used by any device when not overridden, with children:
+    <quality> - set of stops for quality slider, with children:
+        <quality_stop> - one quality stop, with attributes:
+            title - the title of the tick mark
+    <performance> - values for performance menu, with children:
+        <performance_item> - one item in menu, with attributes and children:
+            title - title of this item in menu
+            <param>, <command>, <script> - see below
+    <param>, <command>, <script> - see below
          
- <devices> - List of devices in device menu, with children:
-     <device_group> - A grouping of devices. Each groups has a title and groups are separated by a line, 
-                      with attributes and children:
-         title - title for this group
-         <common_device> - features common to all devices in this group, with same children as <default_device>
-         <device> - device in this group, with same children as <default_device> and additional attributes and children:
-             title - title for this device
-             icon - name of the icon image to use for this device
-             enabled - whether or not this device is enabled in the device list (true | false)
-             <checkbox> - this describes a checkbox, with attributes and children:
-                 which - which checkbox (0-n)
-                 title - title on the checkbox
-                 enabled - whether or not this checkbox is enabled (true | false)
-                 <checked_item> - parameters used when this checkbox is checked, with children:
-                     <param>, <command>, <script> - see below
-                 <unchecked_item> - parameters used when this checkbox is not checked, with children:
-                     <param>, <command>, <script> - see below
-             <menu> - this describes a menu, with children:
-                 which - which menu (0-n)
-                 title - title on the menu
-                 enabled - whether or not this menu is enabled (true | false)
-                 <menu_item> - one entry in the menu, with attributes and children:
-                     title - title of this menu item
-                     <param>, <command>, <script> - see below
-                 <unchecked_item> - parameters used when this checkbox is not checked, with children:
-                     <param>, <command>, <script> - see below
+<devices> - List of devices in device menu, with children:
+    <device_group> - A grouping of devices. Each groups has a title and groups are separated by a line, 
+                     with attributes and children:
+        title - title for this group
+        <common_device> - features common to all devices in this group, with same children as <default_device>
+        <device> - device in this group, with same children as <default_device> and additional attributes and children:
+            title - title for this device
+            icon - name of the icon image to use for this device
+            enabled - whether or not this device is enabled in the device list (true | false)
+            <checkbox> - this describes a checkbox, with attributes and children:
+                which - which checkbox (0-n)
+                title - title on the checkbox
+                enabled - whether or not this checkbox is enabled (true | false)
+                <checked_item> - parameters used when this checkbox is checked, with children:
+                    <param>, <command>, <script> - see below
+                <unchecked_item> - parameters used when this checkbox is not checked, with children:
+                    <param>, <command>, <script> - see below
+            <menu> - this describes a menu, with children:
+                which - which menu (0-n)
+                title - title on the menu
+                enabled - whether or not this menu is enabled (true | false)
+                <menu_item> - one entry in the menu, with attributes and children:
+                    title - title of this menu item
+                    <param>, <command>, <script> - see below
+                <radio_group> - encloses a group of menu items to treat as radio buttons
+                    <menu_item> - same as above
+                <checkbox> - menu item that can be checked or unchecked
+                    <checked_item> - same as above
+                    <unchecked_item> - same as above
+                <submenu>
+                    title - title of this submenu
+                    <menu_item> - same as above
+                    <param>, <command>, <script> - see below
+                <separator> - separation line between items
             <param>, <command>, <script> - see below
 
 <script> element
 ================
 
-Wherever a <script> element is allowed, there can be 0 or more. All scripts are concatenated and executed as one. Scripts have access to the normal JavaScript objects (Object, String, Array, etc.). In addition, there is a log() function which takes 0 or more parameters, each of which is converted to a string, concatenated and output to the console. After all strings of a log() function are printed, a newline is printed. Log entries are prefixed for identification.
+Wherever a <script> element is allowed, there can be 0 or more. All scripts are concatenated and executed as one. Scripts have access to the normal JavaScript objects (Object, String, Array, etc.). In addition, there is a log() function which takes 0 or more parameters, each of which is converted to a string, concatenated and output to the console. After all strings of a log() function are printed, a newline is printed. Log entries are prefixed for identification. A 'params' Object is also provided, with properties set as shown below.
 
 <param> element
 ===============
@@ -60,12 +70,12 @@ Wherever a <param> element is allowed, there can be 0 or more. Each element adds
 <command> element
 =================
 
-Wherever a <command> element is allowed, there can be 0 or more. Commands are just like params except that the property value is the contents of the element, rather than the 'value' attribute. All newline characters are stripped from the content string, as are any leading or trailing whitespace characters.
+Wherever a <command> element is allowed, there can be 0 or more. Commands are just like params except that the property value is the contents of the element, rather than a 'value' attribute. All newline characters are stripped from the content string, as are any leading or trailing whitespace characters.
 
 <performance> element
 =================
 
-The <performance> element has 0 or more <performance_item> elements whose 'title' attributes are presented to the user in the 'Encoding:' menu. Each <performance_item> can contain <script>, <param> and <command> elements that are executed when that item is selected.  
+The <performance> element has 0 or more <performance_item> elements whose 'title' attributes are presented to the user in the 'Encoding speed:' menu. Each <performance_item> can contain <script>, <param> and <command> elements that are executed when that item is selected.  
 
 <quality> element
 =================
@@ -75,27 +85,33 @@ The <quality> element has 0 or more <quality_stop> elements whose 'title' attrib
 <checkbox> element
 =================
 
-The <checkbox> element's 'title' attribute is presented to the user as the checkbox indicated by the 'which' attribute (see below). This element has 0 or more <checked_item> and <unchecked_item> elements whose <script>, <param> and <command> elements are executed when the checkbox is checked or unchecked, as appropriate.
+The <checkbox> element's 'title' attribute is presented to the user as the checkbox indicated by the 'which' attribute (see below). This element has 0 or more <checked_item> and <unchecked_item> elements whose <script>, <param> and <command> elements are executed when the checkbox is checked or unchecked, as appropriate. The checkbox element can also appear inside a <menu> element, where it is used as a check menu item. In this case the 'which' attribute is ignored.
 
 <menu> element
 =================
 
-The <menu> element's 'title' attribute is presented to the user as the menu indicated by the 'which' attribute (see below). This element has 0 or more <menu_item> elements whose <script>, <param> and <command> elements are executed when that menu item is selected.
+The <menu> element's 'title' attribute is presented to the user as the menu indicated by the 'which' attribute (see below). This element has 0 or more <menu_item> elements whose <script>, <param> and <command> elements are executed when that menu item is selected. In some cases the menu is presented as a set of radio buttons. In this case, each menu_item is a radio button and when selected, it's <script>, <param> and <command> elements are executed. A <menu> element can inside another menu element, making it a submenu. In this case the 'which' attribute is ignored.
+
+<radio_group>
+=============
+The <radio_group> element can appear inside a <menu> element (top level or submenu). Inside the <radio_group> can appear 0 or more <menu_item> elements, each of which becomes on radio item of the group. When a menu_item is selected, its <script>, <param> and <command> elements are executed.
 
 GUI layout
 =================
 
-The layout of GUI is determined by the 'which' attributes of the <menu> and <checkbox> elements. There are 2 layouts:
+The layout of GUI is determined by the 'which' attributes of the <menu> and <checkbox> elements. There are 4 layouts:
 
     a) 0 to 3 checkboxes and no menus
     b) 0 to 2 checkboxes, an optional set of radio buttons with 2 buttons, and an optional pulldown menu
+    c) A custom layout for controlling all encoding paramerters
+    d) A layout designed for DVD authoring (currently not implemented).
 
-Radio buttons are selected by setting the 'which' attribute to 0, and a pulldown menu is specified with a 'which' attribute of 1. If a menu with a 'which' attribute of 0 or 1 is set, layout (b) is selected. Otherwise layout (a) is selected. In either layout, checkboxes are laid out right to left, e.g., a checkbox with a 'which' attribute of 0 is the right-most in both layouts.
+Radio buttons for layout (a) and (b) are selected by setting the 'which' attribute to 0, and a pulldown menu is specified with a 'which' attribute of 1. If a menu with a 'which' attribute of 0 or 1 is set, layout (b) is selected. Otherwise layout (a) is selected. In either layout, checkboxes are laid out right to left, e.g., a checkbox with a 'which' attribute of 0 is the right-most in both layouts.
 
 Execution
 =========
 
-The workhorse elements are <param>, <command> and <script>. These contain the instructions which ultimately lead to a recipe to use for the encoding job. Params and commands are added to the JavaScript 'params' object in one pass, as long as they are contained in elements which are selected. And then the scripts are executed in a separate pass, as long as their elements are selected. So even later defined params and commands are accessible to earlier scripts. Scripts are executed according to the elements which contain them in the following order:
+The workhorse elements are <param>, <command> and <script>. These contain the instructions which ultimately lead to a recipe to use for the encoding task. Params and commands are added to the JavaScript 'params' object in one pass, as long as they are contained in elements which are selected. And then the scripts are executed in a separate pass, as long as their elements are selected. So even later defined params and commands are accessible to earlier scripts. Scripts are executed according to the elements which contain them in the following order:
 
     1) selected <performance_item> from <default_device>
     2) <default_device>
@@ -106,7 +122,7 @@ The workhorse elements are <param>, <command> and <script>. These contain the in
     7) selected <menu_item> entry from each <menu> in selected <device>
     8) selected <device>
     
-The result of this script execution is a string in 'params.recipe' which is the recipe to be executed. See below for recipe syntax. These scripts are executed when any UI control is changed. This includes the slider, which executes the scripts for each move. The script is executed in turn for each file selected for encoding. This pass of script execution is to fill in the file list entries. When encoding is started, the scripts are executed again for the currently encoding file and the recipe is used to start the encoding. Once encoding is finished, the scripts are executed for the next file, and so on.
+The result of this script execution is the output params (see below) being set for display in the Output Info Panel, and a string in 'params.recipe' which is the recipe to be executed. See below for recipe syntax. These scripts are executed when any UI control is changed. This includes the slider, which executes the scripts for each move. The script is executed in turn for each file selected for encoding. This pass of script execution is to fill in the file list entries. When encoding is started, the scripts are executed again for the currently encoding file and the recipe is used to start the encoding. Once encoding is finished, the scripts are executed for the next file, and so on.
 
 Javascript Params
 =================
@@ -152,26 +168,53 @@ Param Name              Value
 recipe                      Recipe to use for the current encoding
 output_video_width          Width, in pixels, of the output file
 output_video_height         Height, in pixels, of the output file
-output_audio_quality               A string indicating the audio quality of the output file (usually "low", "medium" or "high")
 output_video_bitrate        Approximate bitrate of the output video
 output_format_name          Displayed format of the container
 output_video_codec_name     Displayed video codec
 output_video_profile_name   Displayed profile of the video
 output_video_level_name     Displayed level of this video
 output_video_frame_rate     Framerate of the output file (actual frame rate in fps * 1000)
-output_x264_preset          x264 preset param, including -vpre (if output codec is x264, empty otherwise)
-output_x264__pass1_preset   x264 preset param for pass1, including -vpre (if output codec is x264 and 2 pass, empty otherwise)
-output_x264_profile         x264 profile name, including -vpre (main or baseline, if output codec is x264, empty otherwise)
 
 output_audio_codec_name     Displayed audio codec
 output_audio_bitrate        Audio bitrate
 output_audio_sample_rate    Sample rate of audio
 output_audio_channels       Number of channels of audio
+output_audio_quality        A string indicating the audio quality of the output file (usually "low", "medium" or "high")
 
 processResponse             Global function that handles lines of stderr output from the executing commands (Do not change)
 processResponseCallbacks    An Array of functions called by processResponse()
 processResponseProgress     The current progress of the currently executing command, from 0 to 1
 processResponseMessage      String to be output to the error console.
+
+The following are generated during script execution and are used in the generation of the recipe:
+
+Param Name              Value
+==========              =====
+
+ffmpeg_video_aspect_x       numerator of the -aspect param
+ffmpeg_video_aspect_y       denominator of the -aspect param
+
+ffmpeg_x264_preset          x264 preset param, including -vpre (if output codec is x264, empty otherwise)
+ffmpeg_x264_pass1_preset    x264 preset param for pass1, including -vpre (if output codec is x264 and 2 pass, empty otherwise)
+ffmpeg_x264_profile         x264 profile name, including -vpre (main or baseline, if output codec is x264, empty otherwise)
+
+ffmpeg_option_target
+ffmpeg_option_padleft
+ffmpeg_option_padright
+ffmpeg_option_padtop
+ffmpeg_option_padbottom
+ffmpeg_option_vcodec
+ffmpeg_option_acodec
+ffmpeg_option_pixfmt        currently only set to 'yuv420p' in WMV
+ffmpeg_option_vtag          currently only set to DX50 in AVI
+ffmpeg_option_g
+ffmpeg_option_maxrate
+ffmpeg_option_bufsize
+ffmpeg_option_qmin
+ffmpeg_option_bf
+ffmpeg_option_b             Same as output_video_bitrate
+
+apple_tv_format_limit       True if output frame size is limited to 960x540 @ 30hz or 1024x720 @ 24hz (1st gen Apple TV)
 
 The recipe is used for the actual encoding, the others output values are used to update the file entries, and the
 processResponse values are used to process stderr responses from the executing command.
@@ -251,14 +294,17 @@ DTD
         <!ATTLIST checkbox which CDATA "">
         <!ATTLIST checkbox title CDATA "">
         <!ATTLIST checkbox enabled CDATA "">
-     <!ELEMENT checked_item    (script|param|command)*>
+    <!ELEMENT checked_item    (script|param|command)*>
     <!ELEMENT unchecked_item    (script|param|command)*>
-    <!ELEMENT menu    (menu_item*)>
+    <!ELEMENT menu    (menu_item|radio_group|checkbox|menu|separator*)>
         <!ATTLIST menu which CDATA "">
         <!ATTLIST menu title CDATA "">
         <!ATTLIST menu enabled CDATA "">
-     <!ELEMENT menu_item    (script|param|command)*>
+    <!ELEMENT menu_item    (script|param|command)*>
         <!ATTLIST menu_item title CDATA "">
+    <!ELEMENT radio_group   (menu_item*)>
+        <!ATTLIST radio_group title CDATA "">
+    <!ELEMENT separator    EMPTY>
 ]>
 -->
 
@@ -279,25 +325,19 @@ DTD
         </command>
         
         <!-- Default params (sometimes overridden) -->
-        <command id="ffmpeg_options">
-            -vcodec $ffmpeg_vcodec -b $output_video_bitrate -s $(output_video_width)x$(output_video_height) 
-                -aspect $(output_video_width):$(output_video_height) -r $(output_video_frame_rate)
-            -async 50 -acodec $ffmpeg_acodec -ab $output_audio_bitrate -ar $output_audio_sample_rate 
-                -ac $output_audio_channels
-        </command>
-        <param id="output_x264_profile" value="libx264-baseline" />
+        <param id="ffmpeg_x264_profile" value="libx264-baseline" />
 
         <!-- Composite options -->
         <command id="ffmpeg_single_pass_options">
-            -vpre ffpresets/$output_x264_preset -vpre ffpresets/$output_x264_profile
+            -vpre ffpresets/$ffmpeg_x264_preset -vpre ffpresets/$ffmpeg_x264_profile
         </command>
         <command id="ffmpeg_pass1_options">
             -pass 1 -passlogfile "$pass_log_file" 
-                -vpre ffpresets/$output_x264_pass1_preset -vpre ffpresets/$output_x264_profile
+                -vpre ffpresets/$ffmpeg_x264_pass1_preset -vpre ffpresets/$ffmpeg_x264_profile
         </command>
         <command id="ffmpeg_pass2_options">
             -pass 2 -passlogfile "$pass_log_file" 
-                -vpre ffpresets/$output_x264_pass1_preset -vpre ffpresets/$output_x264_profile
+                -vpre ffpresets/$ffmpeg_x264_pass1_preset -vpre ffpresets/$ffmpeg_x264_profile
         </command>
         
         <!-- Raw encoding commands -->
@@ -364,6 +404,53 @@ DTD
         <script>
             <![CDATA[
             
+            // The first generation Apple TV could not handle 30fps 720p content. If 
+            // you wanted 30fps you were limited to 960x540, and if you wanted
+            // 1024x768 you were limited to 24fps. This variable captures that
+            // information. Here we set it to the empty string. If it is changed
+            // to true or false it indicates a first generation Apple TV encode.
+            params.apple_tv_format_limit = "";
+
+            /*
+             *  Utility functions
+             */
+            function caseInsensitiveCompare(a,b) { return a.toLowerCase() == b.toLowerCase() }
+
+            function bool(v)
+            {
+                if (typeof(v) == "number")
+                    return v != 0;
+                if (typeof(v) == "boolean")
+                    return v;
+                if (typeof(v) == "string")
+                    return v != "false" && v != "";
+                return false;
+            }
+            
+            function number(v)
+            {
+                if (typeof(v) == "number")
+                    return v;
+                if (typeof(v) == "boolean")
+                    return v ? 1 : 0;
+                if (typeof(v) == "string")
+                    return parseFloat(v);
+                return 0;
+            }
+
+            function standardizeVideoCodecName(name)
+            {
+                if (caseInsensitiveCompare(name, "vc-1"))
+                    return "wmv3";
+                if (caseInsensitiveCompare(name, "avc") || caseInsensitiveCompare(name, "avc1"))
+                    return "h.264";
+                return name;
+            }
+            
+
+            /*
+             *  Prosessing responses
+             */
             function addProcessResponseCallback(f)
             {
                 if (!("processResponseCallbacks" in params))
@@ -419,11 +506,76 @@ DTD
                 return false;
             });
             
-            function caseInsensitiveCompare(a,b) { return a.toLowerCase() == b.toLowerCase() }
             
-            function audio(type)
+            /*
+             *  Generate params.ffmpeg_options
+             */
+            // Defaults for ffmpeg options
+            params.ffmpeg_option_target = "";
+            params.ffmpeg_option_padleft = "";
+            params.ffmpeg_option_padright = "";
+            params.ffmpeg_option_padtop = "";
+            params.ffmpeg_option_padbottom = "";
+            params.ffmpeg_option_pixfmt = "";
+            params.ffmpeg_option_vtag = "";
+            params.ffmpeg_option_g = "";
+            params.ffmpeg_option_maxrate = "";
+            params.ffmpeg_option_bufsize = "";
+            params.ffmpeg_option_qmin = "";
+            params.ffmpeg_option_bf = "";
+            params.ffmpeg_option_b = "$output_video_bitrate";
+
+            function addFFMPegParam(param, paramName)
+            {
+                if (paramName == undefined)
+                    paramName = "ffmpeg_option_" + param;
+
+                if (paramName in params && params[paramName] != "")
+                    params.ffmpeg_options += "-" + param + " " + params[paramName] + " ";
+            }
+            
+            function generateFFMPegOptions()
+            {
+
+                params.ffmpeg_options = "";
+                
+                addFFMPegParam("target")
+                params.ffmpeg_options += "-s $(output_video_width)x$(output_video_height) ";
+                params.ffmpeg_options += "-aspect $(ffmpeg_video_aspect_x):$(ffmpeg_video_aspect_y) ";
+                params.ffmpeg_options += "-r $(output_video_frame_rate) ";
+                addFFMPegParam("padleft");
+                addFFMPegParam("padright");
+                addFFMPegParam("padtop");
+                addFFMPegParam("padbottom");
+                addFFMPegParam("vcodec");
+                addFFMPegParam("b");
+                addFFMPegParam("pixfmt");
+                addFFMPegParam("vtag");
+                addFFMPegParam("g");
+                addFFMPegParam("maxrate");
+                addFFMPegParam("bufsize");
+                addFFMPegParam("qmin");
+                addFFMPegParam("bf");
+                params.ffmpeg_options += "-async 50 ";
+                addFFMPegParam("acodec");
+                params.ffmpeg_options += "-ar $output_audio_sample_rate -ac $output_audio_channels  -ab $output_audio_bitrate ";
+                addFFMPegParam("f"); // '-f vob' for MPEG-2 encode to program stream
+            }
+
+
+            /*
+             *  Setting output params
+             */
+            // Sets output_audio_bitrate, output_audio_sample_rate, output_audio_channels, output_audio_quality
+            function setAudioParams(type)
             {
                 switch(type) {
+                    case "default":
+                        params.output_audio_bitrate =  "";
+                        params.output_audio_sample_rate = "";
+                        params.output_audio_channels = "";
+                        params.output_audio_quality = "Default";
+                        break;
                     case "low":
                         params.output_audio_bitrate =  16000;
                         params.output_audio_sample_rate = 11025;
@@ -442,61 +594,6 @@ DTD
                         params.output_audio_channels = 2;
                         params.output_audio_quality = "High";
                         break;
-                    case "avi":
-                        params.output_audio_bitrate = 128000;
-                        params.output_audio_sample_rate = 48000;
-                        params.output_audio_channels = 2;
-                        params.output_audio_quality = "High";
-                        break;
-                    case "mp4Low":
-                        params.output_audio_bitrate =  12000;
-                        params.output_audio_sample_rate = 11025;
-                        params.output_audio_channels = 1;
-                        params.output_audio_quality = "Low";
-                        break;
-                    case "wmv":
-                        params.output_audio_bitrate =  128000;
-                        params.output_audio_sample_rate = 44100;
-                        params.output_audio_channels = 2;
-                        params.output_audio_quality = "High";
-                        break;
-                    case "wmvlow":
-                        params.output_audio_bitrate =  24000;
-                        params.output_audio_sample_rate = 11025;
-                        params.output_audio_channels = 1;
-                        params.output_audio_quality = "Low";
-                        break;
-                }
-            }
-            
-            function mpegaudio(type)
-            {
-                
-                switch(type) {
-                    case "low":
-                        params.output_audio_bitrate =  32000;
-                        params.output_audio_sample_rate = 22050;
-                        params.output_audio_channels = 1;
-                        params.output_audio_quality = "Low";
-                        break;
-                    case "high":
-                        params.output_audio_bitrate =  128000;
-                        params.output_audio_sample_rate = 48000;
-                        params.output_audio_channels = 2;
-                        params.output_audio_quality = "High";
-                        break;
-                    case "vcd":
-                        params.output_audio_bitrate = 224000;
-                        params.output_audio_sample_rate = 44100;
-                        params.output_audio_channels = 2;
-                        params.output_audio_quality = "High";
-                        break;
-                    case "svcd":
-                        params.output_audio_bitrate = 224000;
-                        params.output_audio_sample_rate = 48000;
-                        params.output_audio_channels = 2;
-                        params.output_audio_quality = "High";
-                        break;
                     case "hd":
                         params.output_audio_bitrate = 192000;
                         params.output_audio_sample_rate = 48000;
@@ -506,50 +603,34 @@ DTD
                 }
             }
             
-            function bool(v)
+            // Sets output_video_frame_rate
+            //
+            // if allowDegradedRate is true, degrade the frame rate to half rate if quality is low
+            function setVideoFrameRate(allowDegradedRate)
             {
-                if (typeof(v) == "number")
-                    return v != 0;
-                if (typeof(v) == "boolean")
-                    return v;
-                if (typeof(v) == "string")
-                    return v != "false" && v != "";
-                return false;
-            }
-            
-            function number(v)
-            {
-                if (typeof(v) == "number")
-                    return v;
-                if (typeof(v) == "boolean")
-                    return v ? 1 : 0;
-                if (typeof(v) == "string")
-                    return parseFloat(v);
-                return 0;
-            }
-            
-            function standardizeVideoCodecName(name)
-            {
-                if (caseInsensitiveCompare(name, "vc-1"))
-                    return "wmv3";
-                if (caseInsensitiveCompare(name, "avc") || caseInsensitiveCompare(name, "avc1"))
-                    return "h.264";
-                return name;
-            }
-            
-            function adjustVideoParams(frameSizeLimited)
-            {            
                 // set the frame rate
-                params.frame_rate = 1;
-                if (params.title != "Apple TV" && number(params.quality_stop) == 0)
-                    params.frame_rate = 0.5;
+                var rateMultiplier = 1;
+                if (allowDegradedRate && number(params.quality_stop) == 0)
+                    rateMultiplier = 0.5;
 
-                params.output_video_frame_rate = params.input_frame_rate * params.frame_rate;
+                params.output_video_frame_rate = params.input_frame_rate * rateMultiplier;
                 
                 // All devices have a max frame rate of 30fps
                 if (params.output_video_frame_rate > 30)
                     params.output_video_frame_rate = 30;
-                
+            }
+            
+             // Sets output_video_bitrate
+            function setVideoBitrate(requestedBitrate)
+            {
+                limit = (requestedBitrate > params.input_video_bitrate) && bool(params.limit_output_params);
+                params.output_video_bitrate = limit ? params.input_video_bitrate : requestedBitrate;
+            }
+            
+            // Assumes output_video_frame_rate is set
+            // Sets output_video_width, output_video_height
+            function setVideoSize(requestedWidth, requestedHeight)
+            {
                 // Set output frame size
                 var inputWidth = params.input_video_width;
                 var inputHeight = params.input_video_height;
@@ -567,85 +648,72 @@ DTD
                 
                 // adjust for limit_output_params
                 if (bool(params.limit_output_params)) {
-                    if (params.frame_width > inputWidth || params.frame_height > inputHeight) {
-                        params.frame_width = inputWidth;
-                        params.frame_height = inputHeight;
+                    if (requestedWidth > inputWidth || requestedHeight > inputHeight) {
+                        requestedWidth = inputWidth;
+                        requestedHeight = inputHeight;
                     }
-                    
-                    if (params.output_video_bitrate > params.input_video_bitrate)
-                        params.output_video_bitrate = params.input_video_bitrate;
                 }
                 
                 // Adjust frame rate and frame size based on format_limits for devices that 
-                // are limited to 960x540 for framerates over 24fps
-                if (frameSizeLimited) {
-                    if (params.format_limits == "24fps") {
-                        if (params.frame_width > 960 || params.frame_height > 540) {
-                            if (params.output_video_frame_rate > 24)
-                                params.output_video_frame_rate = 24;
-                            if (params.frame_width > 1280)
-                                params.frame_width = 1280;
-                            if (params.frame_height > 1024)
-                                params.frame_height = 1024;
-                        }
+                // are limited to 960x540 for framerates over 24fps (first gen Apple TV)
+                if (params.apple_tv_format_limit == "24fps") {
+                    if (requestedWidth > 960 || requestedHeight > 540) {
+                        if (params.output_video_frame_rate > 24)
+                            params.output_video_frame_rate = 24;
+                        if (requestedWidth > 1280)
+                            requestedWidth = 1280;
+                        if (requestedHeight > 1024)
+                            requestedHeight = 1024;
                     }
-                    else {
-                        if (params.output_video_frame_rate > 30)
-                            params.output_video_frame_rate = 30;
-                        if (params.frame_width > 960)
-                            params.frame_width = 960;
-                        if (params.frame_height > 540)
-                            params.frame_height = 540;
-                    }
+                }
+                else if (params.apple_tv_format_limit == "30fps"){
+                    if (params.output_video_frame_rate > 30)
+                        params.output_video_frame_rate = 30;
+                    if (requestedWidth > 960)
+                        requestedWidth = 960;
+                    if (requestedHeight > 540)
+                        requestedHeight = 540;
                 }
 
                 // adjust video frame size
                 inputAspect = inputWidth / inputHeight;
 
-                var requestedAspect = params.frame_width / params.frame_height;
+                var requestedAspect = requestedWidth / requestedHeight;
                 
                 if (inputAspect > requestedAspect) {
                     // shorten height
-                    params.output_video_width = params.frame_width;
-                    params.output_video_height = params.frame_width / inputAspect;
+                    requestedHeight = requestedWidth / inputAspect;
                 }
                 else {
                     // shorten width
-                    params.output_video_height = params.frame_height;
-                    params.output_video_width = params.frame_height * inputAspect;
+                    requestedWidth = requestedHeight * inputAspect;
                 }
                 
                 // Make frame size divisible by 16
-                params.output_video_width = Math.round(params.output_video_width / 16) * 16;
-                params.output_video_height = Math.round(params.output_video_height / 16) * 16;
+                requestedWidth = Math.round(requestedWidth / 16) * 16;
+                requestedHeight = Math.round(requestedHeight / 16) * 16;
                 
                 // One more problem. If we are frame size limited then 
                 // rounding could have pushed us over that limit.
                 // We need to make sure the width and height
                 // are below the maximums.
-                if (frameSizeLimited) {
-                    if (params.format_limits == "24fps") {
-                        if (params.output_video_width > 1280)
-                            params.output_video_width -= 16;
-                        if (params.output_video_height > 1024)
-                            params.output_video_height -= 16;
-                    }
-                    else {
-                        if (params.output_video_width > 960)
-                            params.output_video_width -= 16;
-                        if (params.output_video_height > 540)
-                            params.output_video_height -= 16;
-                    }
+                if (params.apple_tv_format_limit == "24fps") {
+                    if (requestedWidth > 1280)
+                        requestedWidth -= 16;
+                    if (requestedHeight > 1024)
+                        requestedHeight -= 16;
                 }
-
-                params.output_video_codec_name = bool(params.h264) ? "H.264" : "MPEG-4"
-                params.output_audio_codec_name = "AAC";
+                else if (params.apple_tv_format_limit == "30fps") {
+                    if (requestedWidth > 960)
+                        requestedWidth -= 16;
+                    if (requestedHeight > 540)
+                        requestedHeight -= 16;
+                }
+                
+                params.output_video_width = requestedWidth;
+                params.output_video_height = requestedHeight;
             }
             
-            audio("high");
-            
-            adjustVideoParams(false);
-           
             ]]>
         </script>
         <quality>
@@ -658,28 +726,28 @@ DTD
         <performance>
             <performance_item title="Fastest">
                 <param id="is_2_pass" value="false" />
-                <param id="output_x264_preset" value="libx264-ultrafast" />
+                <param id="ffmpeg_x264_preset" value="libx264-ultrafast" />
             </performance_item>
             <performance_item title="Fast">
                 <param id="is_2_pass" value="false" />
-                <param id="output_x264_preset" value="libx264-fast" />
+                <param id="ffmpeg_x264_preset" value="libx264-fast" />
            </performance_item>
             <performance_item title="Normal">
                 <param id="is_2_pass" value="false" />
-                <param id="output_x264_preset" value="libx264-medium" />
+                <param id="ffmpeg_x264_preset" value="libx264-medium" />
             </performance_item>
             <performance_item title="High Quality (2 pass)">
                 <param id="is_2_pass" value="true" />
-                <param id="output_x264_preset" value="libx264-slow" />
-                <param id="output_x264_pass1_preset" value="libx264-slow_firstpass" />
+                <param id="ffmpeg_x264_preset" value="libx264-slow" />
+                <param id="ffmpeg_x264_pass1_preset" value="libx264-slow_firstpass" />
             </performance_item>
             <performance_item title="Best Quality (2 pass)">
-                <param id="output_x264_preset" value="libx264-veryslow" />
-                <param id="output_x264_pass1_preset" value="libx264-veryslow_firstpass" />
+                <param id="ffmpeg_x264_preset" value="libx264-veryslow" />
+                <param id="ffmpeg_x264_pass1_preset" value="libx264-veryslow_firstpass" />
            </performance_item>
         </performance>
-        <param id="ffmpeg_vcodec" value="libx264" />
-        <param id="ffmpeg_acodec" value="libfaac" />
+        <param id="ffmpeg_option_vcodec" value="libx264" />
+        <param id="ffmpeg_option_acodec" value="libfaac" />
         <param id="video_suffix" value="mp4" />
     </default_device>
     
@@ -691,6 +759,8 @@ DTD
         -->
         <device_group title="iTunes">
             <common_device>
+                <param id="ffmpeg_option_vcodec" value="libx264" />
+                <param id="ffmpeg_option_acodec" value="libfaac" />
                 <script>
                     <![CDATA[
     
@@ -699,14 +769,16 @@ DTD
                     // two we are (params.quality). We also which device we have selected 
                     // (params.title), whether we are doing h.264 or mpeg4 (params.h264), and whether 
                     // we want to optimize for TV or iPod (params.for_tv). From this we need to 
-                    // compute params.frame_width, params.frame_height, params.output_audio_quality and
-                    // params.output_video_bitrate.
+                    // compute requestedFrameWidth, requestedFrameHeight, 
+                    // params.output_audio_quality and params.output_video_bitrate.
                     
                     // We support a number of standard frame sizes. After adjusting these sizes according to the flags
                     // (h264, forTV), we determine the actual frame size using these as maximum values, taking
                     // into account aspect ratio.
                     
                     params.output_format_name = "MPEG-4";
+                    params.output_video_codec_name = bool(params.h264) ? "H.264" : "MPEG-4"
+                    params.output_audio_codec_name = "AAC";
                     
                     var frameSizes = {
                         "tiny":  [  192,  144 ],
@@ -718,7 +790,7 @@ DTD
                     };
                     
                     var deviceFrameSizeMap = {
-                        //                              0           1           2           3           4
+                        //         0            1         2           3           4
                         "All Apple Devices":
                         [
                             [   "small",    "iphone",   "sdef",     "sdef",     "sdef" ],   // mp4 && for iPod
@@ -747,7 +819,14 @@ DTD
                             [   "tiny",     "small",    "iphone",   "iphone",   "iphone" ], // h.264 && for iPod
                             [   "small",    "iphone",   "sdef",     "sdef",     "sdef" ]    // h.264 && for TV
                         ], 
-                        "Apple TV":
+                        "1st Gen Apple TV":
+                        [
+                            [   "sdef",     "sdef",     "sdef",     "sdef",     "sdef" ]    // mp4 && for iPod
+                            [   "sdef",     "sdef",     "sdef",     "sdef",     "sdef" ],   // mp4 && for TV
+                            [   "idef",     "idef",     "idef",     "idef",     "idef" ],   // h.264 && for iPod
+                            [   "idef",     "idef",     "idef",     "idef",     "idef" ]    // h.264 && for TV
+                        ],
+                        "2nd Gen Apple TV":
                         [
                             [   "sdef",     "sdef",     "sdef",     "sdef",     "sdef" ]    // mp4 && for iPod
                             [   "sdef",     "sdef",     "sdef",     "sdef",     "sdef" ],   // mp4 && for TV
@@ -766,7 +845,9 @@ DTD
                             [ [  60,  150,  300,  700, 1500, 2500 ], [  60,  150,  300,  700, 1000, 1500 ] ], 
                         "iPod touch":
                             [ [ 300,  450,  300,  700, 1500, 2500 ], [ 300,  450,  300,  700, 1000, 1500 ] ], 
-                        "Apple TV":
+                        "1st Gen Apple TV":
+                            [ [ 500, 1000, 1500, 2000, 2500, 3000 ], [ 500, 1000, 1500, 2500, 3750, 5000 ] ],
+                        "2nd Gen Apple TV":
                             [ [ 500, 1000, 1500, 2000, 2500, 3000 ], [ 500, 1000, 1500, 2500, 3750, 5000 ] ]
                     };
                     
@@ -776,7 +857,8 @@ DTD
                         "iPod":                 [   "low",      "high",     "high",     "high",     "high" ],
                         "iPhone":               [   "low",      "medium",   "high",     "high",     "high" ],
                         "iPod touch":           [   "low",      "high",     "high",     "high",     "high" ],
-                        "Apple TV":             [   "high",     "high",     "high",     "high",     "high" ]
+                        "1st Gen Apple TV":     [   "high",     "high",     "high",     "high",     "high" ],
+                        "2nd Gen Apple TV":     [   "high",     "high",     "high",     "high",     "high" ]
                     };
                     
                     var levelMap = {
@@ -785,15 +867,21 @@ DTD
                         "iPod":                 [   20, 30, 30, 30, 30 ],
                         "iPhone":               [   20, 30, 30, 30, 30 ],
                         "iPod touch":           [   20, 30, 30, 30, 30 ],
-                        "Apple TV":             [   31, 31, 31, 31, 31 ]
+                        "1st Gen Apple TV":     [   31, 31, 31, 31, 31 ],
+                        "2nd Gen Apple TV":     [   31, 31, 31, 31, 31 ]
                     };
-
+                    
                     var title = params.title;
                     var qualityStop = number(params.quality_stop);
                     var quality = number(params.quality);
                     var h264 = bool(params.h264);
                     var forTV = bool(params.forTV);
+                    var requestedFrameWidth = 0;
+                    var requestedFrameHeight = 0;
                     
+                    // set frame rate
+                    setVideoFrameRate(title != "1st Gen Apple TV" && title != "2nd Gen Apple TV");
+                        
                     // set bitrate
                     var bitrateMin = bitrateQualityMap[title][h264 ? 1 : 0][qualityStop] * 1000;
                     var bitrateMax = bitrateQualityMap[title][h264 ? 1 : 0][qualityStop+1] * 1000;
@@ -802,17 +890,26 @@ DTD
                     // set frame size
                     var index = (h264 ? 2 : 0) + (forTV ? 1 : 0);
                     var sizeString = deviceFrameSizeMap[title][index][qualityStop];
-                    params.frame_width = frameSizes[sizeString][0];
-                    params.frame_height = frameSizes[sizeString][1];
-                        
-                    adjustVideoParams(params.title == "Apple TV");
+                    requestedFrameWidth = frameSizes[sizeString][0];
+                    requestedFrameHeight = frameSizes[sizeString][1];
+                    
+                    setVideoSize(requestedFrameWidth, requestedFrameHeight);
+                    
+                    // Set the aspect ratio
+                    params.ffmpeg_video_aspect_x = params.output_video_width;
+                    params.ffmpeg_video_aspect_y = params.output_video_height;
+
+
                     
                     // set audio quality
-                    audio(audioQualityMap[title][qualityStop]);
+                    setAudioParams(audioQualityMap[title][qualityStop]);
                         
                     // The level is not necessarily accurate
                     params.output_video_profile_name = (title != "Apple TV") ? "baseline" : "main";
                     params.output_video_level_name = levelMap[title][qualityStop];
+                    
+                    // Generate the params
+                    generateFFMPegOptions();
                     
                     // construct the recipe
                     var recipeType = 
@@ -837,10 +934,10 @@ DTD
             <device title="All Apple Devices" icon="itunesfile">
                  <checkbox which="0" title="H.264 Video">
                     <checked_item>
-                            <param id="h264" value="true" />
+                        <param id="h264" value="true" />
                     </checked_item>
                     <unchecked_item>
-                        <param id="h264" value="true" />
+                        <param id="h264" value="false" />
                     </unchecked_item>
                 </checkbox>
             </device>
@@ -852,7 +949,7 @@ DTD
                         <param id="h264" value="true" />
                     </checked_item>
                     <unchecked_item>
-                        <param id="h264" value="true" />
+                        <param id="h264" value="false" />
                     </unchecked_item>
                 </checkbox>
                 <menu which="0" title="Best for:">
@@ -879,7 +976,7 @@ DTD
                         <param id="h264" value="true" />
                     </checked_item>
                     <unchecked_item>
-                        <param id="h264" value="true" />
+                        <param id="h264" value="false" />
                     </unchecked_item>
                 </checkbox>
                 <menu which="0" title="Best for:">
@@ -906,7 +1003,7 @@ DTD
                         <param id="h264" value="true" />
                     </checked_item>
                     <unchecked_item>
-                        <param id="h264" value="true" />
+                        <param id="h264" value="false" />
                     </unchecked_item>
                 </checkbox>
                 <menu which="0" title="Best for:">
@@ -919,15 +1016,15 @@ DTD
                 </menu>
              </device>
             
-            <!-- Apple TV -->
-            <device title="Apple TV" icon="appletv">
-                <param id="output_x264_profile" value="libx264-main" />
+            <!-- First Gen Apple TV -->
+            <device title="1st Gen Apple TV" icon="appletv">
+                <param id="ffmpeg_x264_profile" value="libx264-main" />
                 <menu which="0" title="Format Limits:">
                     <menu_item title="1024x720@24fps">
-                        <param id="format_limits" value="24fps" />
+                        <param id="apple_tv_format_limit" value="24fps" />
                     </menu_item>
                     <menu_item title="960x540@30fps">
-                        <param id="format_limits" value="30fps" />
+                        <param id="apple_tv_format_limit" value="30fps" />
                     </menu_item>
                 </menu>
                 <checkbox which="0" title="H.264 Video">
@@ -935,7 +1032,28 @@ DTD
                         <param id="h264" value="true" />
                     </checked_item>
                     <unchecked_item>
+                        <param id="h264" value="false" />
+                    </unchecked_item>
+                </checkbox>
+                <checkbox which="1" title="Keep Surround Track" enabled="false">
+                    <checked_item>
+                        <param id="keep_surround_track" value="true" />
+                    </checked_item>
+                    <unchecked_item>
+                        <param id="keep_surround_track" value="false" />
+                    </unchecked_item>
+                </checkbox>
+            </device>
+
+            <!-- Second Gen Apple TV -->
+            <device title="2nd Gen Apple TV" icon="appletv2">
+                <param id="ffmpeg_x264_profile" value="libx264-main" />
+                 <checkbox which="0" title="H.264 Video">
+                    <checked_item>
                         <param id="h264" value="true" />
+                    </checked_item>
+                    <unchecked_item>
+                        <param id="h264" value="false" />
                     </unchecked_item>
                 </checkbox>
                 <checkbox which="1" title="Keep Surround Track" enabled="false">
@@ -956,28 +1074,14 @@ DTD
         -->
         <device_group title="Video Formats">
             <common_device>
-                <command id="ffmpeg_single_pass_options">
-                </command>
-                <command id="ffmpeg_pass1_options">
-                    -pass 1 -passlogfile "$pass_log_file"
-                </command>
-                <command id="ffmpeg_pass2_options">
-                    -pass 2 -passlogfile "$pass_log_file"
-                </command>
-                <command id="ffmpeg_options">
-                    $dashtarget $target -s $(output_video_width)x$(output_video_height) -r $fps $aspect $padding
-                    $dashv $ffmpeg_vcodec $pixfmt $tag $gop_size $qmin $dashb $output_video_bitrate $k56 $extras 
-                    -async 50 -acodec $ffmpeg_acodec -ar $output_audio_sample_rate -ac $output_audio_channels 
-                    -ab $output_audio_bitrate $vob
-                </command>
                 <script>
                     <![CDATA[
     
                     // At this point, we know what 2 quality stops we are between (params.quality_stop and params.quality_stop+1)
                     // and we know what percentage of the way between the two we are (params.quality). We also which device we have 
                     // selected (params.title), whether we are doing h.264 or mpeg4 (params.h264), and whether we want to optimize 
-                    // for TV or iPod (params.for_tv). From this we need to compute params.frame_width, params.frame_height,
-                    // params.output_audio_quality and params.output_video_bitrate.
+                    // for TV or iPod (params.for_tv). From this we need to compute requestedFrameWidth, 
+                    // requestedFrameHeight, params.output_audio_quality and params.output_video_bitrate.
                     
                     // We support a number of standard frame sizes. After adjusting these sizes according to the flags
                     // (h264, forTV), we determine the actual frame size using these as maximum values, taking
@@ -1046,15 +1150,9 @@ DTD
                         "mpeg":                 [ 2764,  4608,  6912, 9874,  23040 ]
                     };
                     
-                    var mpegbufsizeMap = {
+                    var mpegBufsizeMap = {
                         //                           0      1      2     3      4
                         "mpeg":                 [  461,   768,  1152, 1646,  3840 ]
-                    };
-                    
-                    var mpegAudioQualityMap = {
-                        //                          0           1           2           3           4
-                        "mpeg":                 [   "low",      "high",     "high",     "high",     "high"  ],
-                        "svcd":                 [   "svcd",     "svcd",     "svcd",     "svcd",     "svcd"  ]
                     };
                     
                     var qualsetMap = {
@@ -1063,400 +1161,312 @@ DTD
                         "WMV":                  [   "",         "240",      "175",      "120",       "60"  ]
                     };
 
-                    params.aspect = "";
+                    // Values are between ratios of 1.2 - 1.5 - 1.9 - 2.5 - > 2.5
+                    var tivoVideoSize = [
+                        [ [ 352, 480 ], [ 352, 352 ], [ 352, 272 ], [ 352, 480 ] ], // Quality 0
+                        [ [ 480, 480 ], [ 480, 352 ], [ 480, 272 ], [ 480, 480 ] ], // Quality 1
+                        [ [ 544, 480 ], [ 544, 352 ], [ 544, 272 ], [ 544, 480 ] ], // Quality 2
+                        [ [ 544, 480 ], [ 544, 352 ], [ 544, 272 ], [ 544, 480 ] ], // Quality 3
+                        [ [ 720, 480 ], [ 720, 352 ], [ 720, 272 ], [ 720, 480 ] ]  // Quality 4
+                    ];
                     
-                    var title = params.title;
+                    // Values are between ratios of 1.2 - 1.5 - 1.9 - 2.5 - > 2.5
+                    // First value in set is padtop, second is padbottom
+                    var tivoVideoPadding = [ [ -1, -1 ], [ 64, 64 ], [ 96, 112 ], [ -1, -1 ] ];
+                    
                     var qualityStop = number(params.quality_stop);
                     var quality = number(params.quality);
                     var h264 = bool(params.h264);
                     var forTV = bool(params.forTV);
-                    var wide = bool(params.wide);
-                    var format = bool(params.format);
+                    var width320 = bool(params.width320);
+                    var isNTSC = bool(params.isNTSC);
                     var mpeg2 = bool(params.mpeg2);
+                    var requestedFrameWidth = 0;
+                    var requestedFrameHeight = 0;
                     
-                    // set bitrate
-                    if(title == "MP4") {
-                        var index = (h264 ? 2 : 0) + (wide ? 1 : 0);
-                        var bitrateMin = bitrateQualityMap[title][index][qualityStop] * 1000;
-                        params.output_video_bitrate = bitrateMin;
-                    } else if (title == "MPEG") {
-                        if(params.profile == "none") {
-                            var bitrateMin = mpegbitrateQualityMap[params.profile][qualityStop] * 1000;
-                            params.output_video_bitrate = bitrateMin;
-                            params.dashb = "-b";
-                        }else if(params.profile == "vcd") {
-                            params.output_video_bitrate = "";
-                            params.dashb = "";
-                        }else if(params.profile == "svcd") {
-                            var bitrateMin = mpegbitrateQualityMap[params.profile][format ? 1 : 0][qualityStop] * 1000;
-                            params.output_video_bitrate = bitrateMin;
-                            params.dashb = "-b";
-                        }else if(params.profile == "cvd") {
-                            var bitrateMin = mpegbitrateQualityMap[params.profile][format ? 1 : 0][qualityStop] * 1000;
-                            params.output_video_bitrate = bitrateMin;
-                            params.dashb = "-b";
-                        }else if(params.profile == "tivo") {
-                            var bitrateMin = mpegbitrateQualityMap[params.profile][qualityStop] * 1000;
-                            params.output_video_bitrate = bitrateMin;
-                            params.dashb = "-b";
-                        }else if(params.profile == "ts") {
-                            var bitrateMin = mpegbitrateQualityMap[params.profile][format ? 1 : 0][qualityStop] * 1000;
-                            params.output_video_bitrate = bitrateMin;
-                            params.dashb = "-b";
-                        }else if(params.profile == "720" || params.profile == "1080") {
-                            var bitrateMin = "18500";
-                            params.output_video_bitrate = bitrateMin;
-                            params.dashb = "-b";
-                        }
-                    }else if(title == "Flash") {
-                        if(qualityStop == "0")  {
-                            params.output_video_bitrate = "30000";
-                        }else{                  
-                            var qualset = qualsetMap[title][qualityStop];
-                            var br = Math.round(((params.input_video_width) * (params.input_video_height)) / qualset);
-                            params.output_video_bitrate = (br) * 1000;
-                        
-                        }
-                    }else if(title == "WMV") {
-                        if(qualityStop == "0")  {
-                            params.output_video_bitrate = "20000";
-                        }else{                  
-                            var qualset = qualsetMap[title][qualityStop];
-                            var br = Math.round(((params.input_video_width) * (params.input_video_height)) / qualset);
-                            params.output_video_bitrate = (br) * 1000;
-                        
-                        }
-                    }else{
-                        var bitrateMin = bitrateQualityMap[title][wide ? 1 : 0][qualityStop] * 1000;
-                        params.output_video_bitrate = bitrateMin;
+                    // set:
+                    //      output_video_bitrate, ffmpeg_option_qmin, requested_frame_width, requested_frame_height
+                    //      ffmpeg_option_padleft, ffmpeg_option_padright, ffmpeg_option_padtop, ffmpeg_option_padbottom
+                    //      
+                    
+                    // Init qmin
+                    params.ffmpeg_option_qmin = qminMap[params.title][qualityStop];
+                    
+                    // Init bitrate
+                    params.output_video_bitrate = bitrateQualityMap[params.title][width320 ? 1 : 0][qualityStop] * 1000;
+                    
+                    // Init width and height
+                    if (width320)
+                        requestedFrameWidth = 320;
+                    else if (qualityStop == 0) {
+                        var sizeString = deviceFrameSizeMap[params.title][qualityStop];
+                        requestedFrameWidth = frameSizes[sizeString][0];
+                        requestedFrameHeight = frameSizes[sizeString][1];
                     }
+                    else {
+                        requestedFrameWidth = params.input_video_width;
+                        requestedFrameHeight = params.input_video_height;
+                    }
+                     
+                    
+                    switch (params.title) {
+                        case "AVI":
+                            break;
+                        case "MP4":
+                            var index = (h264 ? 2 : 0) + (width320 ? 1 : 0);
+                            params.output_video_bitrate = bitrateQualityMap[params.title][index][qualityStop] * 1000;
+                            if (qualityStop == 4)
+                                params.ffmpeg_option_qmin = "";
+                            else if qualityStop == 0) {
+                                params.ffmpeg_option_maxrate = "40k";
+                                params.ffmpeg_option_bufsize = "5k";
+                                params.ffmpeg_option_g = "ntsc";
+                                params.output_video_frame_rate = "10";
+                            }
+                            break;
+                        case "QuickTime":
+                            break;
+                        case "WMV":
+                            if (qualityStop == 0) 
+                                params.output_video_bitrate = 20000;
+                            else {
+                                var qualset = qualsetMap[params.title][qualityStop];
+                                var br = Math.round(((params.input_video_width) * (params.input_video_height)) / qualset);
+                                params.output_video_bitrate = br * 1000;
+                            }
                             
-                    // set qmin
-                    if(title == "MP4") {
-                        if(qualityStop == "4") {
-                            params.qmin = "";
-                        }else{
-                        var qminn = qminMap[title][qualityStop];
-                        params.qmin = "-qmin " + (qminn);
-                        }
-                    }else if(title == "MPEG") {
-                        if(qualityStop == "4" && params.profile == "none" || params.profile == "svcd" || 
-                                params.profile == "cvd" || params.profile == "tivo" || params.profile == "ts") {
-                            params.qmin = "-bf 2";
-                        }else if(params.profile == "vcd") {
-                            params.qmin = "-qmin 5 -bf 2";
-                        }else if(params.profile == "1080" || params.profile == "720") {
-                            params.qmin = "";
-                        }else{
-                            var qminn = qminMap[title][qualityStop];
-                            params.qmin = "-qmin " + qminn + " -bf 2";
-                        }
-                    }else{
-                        var qminn = qminMap[title][qualityStop];
-                        params.qmin = "-qmin " + qminn;
-                    }
-                    
-                    // set frame size
-                    if(title == "AVI") {
-                        if(bool(params.wide)) {
-                            params.frame_width = 320;
-                        }else{
-                            if(qualityStop == "0") {
-                                var sizeString = deviceFrameSizeMap[title][qualityStop];
-                                params.frame_width = frameSizes[sizeString][0];
-                                params.frame_height = frameSizes[sizeString][1];
-                            }else{
-                                params.frame_width = params.input_video_width;
-                                params.frame_height = params.input_video_height;
+                            if (qualityStop == 0) {
+                                requestedFrameWidth = 240;
+                                params.ffmpeg_option_maxrate = "24k";
+                                params.ffmpeg_option_bufsize = "5k";
+                                params.ffmpeg_option_g = "ntsc";
+                                params.output_video_frame_rate = "10";
                             }
-                        }
-                    }else if(title == "MP4") {
-                        if(bool(params.wide)) {
-                            params.frame_width = 320;
-                        }else{
-                            if(qualityStop == "0") {
-                                var sizeString = deviceFrameSizeMap[title][qualityStop];
-                                params.frame_width = frameSizes[sizeString][0];
-                                params.frame_height = frameSizes[sizeString][1];
-                            }else{
-                                params.frame_width = params.input_video_width;
-                                params.frame_height = params.input_video_height;
+                            else if (width320)
+                                requestedFrameWidth = "320";
+                            else {
+                                requestedFrameWidth = params.input_video_width;
+                                requestedFrameHeight = params.input_video_height;
                             }
-                        }
-                    }else if(title == "WMV") {
-                        if(qualityStop == "0") {
-                            params.frame_width = "240";
-                            params.extras = "-maxrate 24k -bufsize 5k -g 30";
-                        }else if(bool(params.wide)) {
-                            params.frame_width = "320";
-                            params.extras = "";
-                        }else{
-                            params.frame_width = params.input_video_width;
-                            params.frame_height = params.input_video_height;
-                            params.extras = "";
-                        }
-                    }else if(title == "MPEG") {
-                        
-                    }else if(title == "Flash") {
-                        if(qualityStop == "0") {
-                            params.frame_width = "240";
-                            params.extras = "-maxrate 34k -bufsize 5k -g 30";
-                        }else if(bool(params.wide)) {
-                            params.frame_width = "320";
-                            params.extras = "";
-                        }else{
-                            params.frame_width = params.input_video_width;
-                            params.frame_height = params.input_video_height;
-                            params.extras = "";
-                        }
-                    }
+                            break;
+                        case "Flash":
+                            if (qualityStop == "0") 
+                                params.output_video_bitrate = 30000;
+                            else {
+                                 var qualset = qualsetMap[params.title][qualityStop];
+                                 var br = Math.round(((params.input_video_width) * (params.input_video_height)) / qualset);
+                                 params.output_video_bitrate = br * 1000;
+                            }
 
-                    
-                    // 56k Format?
-                    if(qualityStop == "0" && title == "MP4") {
-                        params.k56 = "-maxrate 40k -bufsize 5k -g ntsc";
-                        params.output_video_frame_rate = "10";
-                    }else if(qualityStop == "0" && title == "WMV") {
-                        params.k56 = "-maxrate 24k -bufsize 5k -g 30";
-                        params.output_video_frame_rate = "10";
-                    }else{
-                        params.k56 = "";
-                    }
-                    
-                    if(title == "MPEG") {
-                        params.output_video_frame_rate = format ? "ntsc" : "pal";
-                        if(params.profile == "720" || params.profile == "1080") {
-                            mpegaudio("hd");
-                            params.aspect = "-aspect 16:9";
-                            if(params.input_video_aspect >= "1.2" && params.input_video_aspect <= "1.5" && params.profile == "720") {
-                                params.padding = "-padleft 160 -padright 160";
-                                params.output_video_width = "960";
-                                params.output_video_height = "720";
-                            }else if(params.input_video_aspect >= "1.6" && params.input_video_aspect <= "1.9" && params.profile == "720") {
-                                params.padding = "";
-                                params.output_video_width = "1280";
-                                params.output_video_height = "720";
-                            }else if(params.input_video_aspect >= "2" && params.input_video_aspect <= "2.5" && params.profile == "720") {
-                                params.padding = "-padleft 80 -padright 96";
-                                params.output_video_width = "1280";
-                                params.output_video_height = "544";
-                            }else if(params.profile == "720") {
-                                params.padding = "";
-                                params.output_video_width = "1280";
-                                params.output_video_height = "720";
-                            }else if(params.input_video_aspect >= "1.2" && params.input_video_aspect <= "1.5" && params.profile == "1080") {
-                                params.padding = "-padleft 240 -padright 240";
-                                params.output_video_width = "1440";
-                                params.output_video_height = "1080";
-                            }else if(params.input_video_aspect >= "1.6" && params.input_video_aspect <= "1.9" && params.profile == "1080") {
-                                params.padding = "";
-                                params.output_video_width = "1920";
-                                params.output_video_height = "1080";
-                            }else if(params.input_video_aspect >= "2" && params.input_video_aspect <= "2.5" && params.profile == "1080") {
-                                params.padding = "-padleft 128 -padright 136";
-                                params.output_video_width = "1920";
-                                params.output_video_height = "816";
-                            }else if(params.profile == "1080") {
-                                params.padding = "";
-                                params.output_video_width = "1920";
-                                params.output_video_height = "1080";
+                            if (qualityStop == 0) {
+                                requestedFrameWidth = "240";
+                                params.ffmpeg_option_maxrate = "34k";
+                                params.ffmpeg_option_bufsize = "5k";
+                                params.ffmpeg_option_g = 30;
                             }
-                        }else if(params.profile == "none") {
-                            mpegaudio(mpegAudioQualityMap["mpeg"][qualityStop]);
-                            params.frame_width = params.input_video_width;
-                            params.frame_height = params.input_video_height;
-                            if(bool(params.mpeg2)) {
-                                params.ffmpeg_vcodec = "mpeg2video";
-                                params.aspect = "";
-                            }else{
-                                params.ffmpeg_vcodec = "mpeg1video";
-                                params.aspect = "-aspect " + params.input_video_width + ":" + params.input_video_height;
+                            else if (width320)
+                                requestedFrameWidth = "320";
+                            else {
+                                requestedFrameWidth = params.input_video_width;
+                                requestedFrameHeight = params.input_video_height;
                             }
-                        }else if(params.profile == "vcd") {
-                            mpegaudio("vcd");
-                            params.aspect = "-aspect 4:3";
-                            if(params.input_video_aspect >= "1.2" && params.input_video_aspect <= "1.5") {
-                                params.padding = "";
-                                params.output_video_width = "352";
-                                params.output_video_height = format ? "240" : "288";
-                            }else if(params.input_video_aspect >= "1.6" && params.input_video_aspect <= "1.9") {
-                                params.padding = format ? "-padtop 32 -padbottom 32" : "-padtop 48 -padbottom 48";
-                                params.output_video_width = "352";
-                                params.output_video_height = format ? "176" : "192";
-                            }else if(params.input_video_aspect >= "2" && params.input_video_aspect <= "2.5") {
-                                params.padding = format ? "-padtop 48 -padbottom 48" : "-padtop 64 -padbottom 64";
-                                params.output_video_width = "352";
-                                params.output_video_height = format ? "144" : "160";
-                            }else{
-                                params.padding = "";
-                                params.output_video_width = "352";
-                                params.output_video_height = "240";
-                            }
-                        }else if(params.profile == "svcd") {
-                            mpegaudio("svcd");
-                            params.aspect = "-aspect 4:3";
-                            if(params.input_video_aspect >= "1.2" && params.input_video_aspect <= "1.5") {
-                                params.padding = "";
-                                params.output_video_width = "480";
-                                params.output_video_height = format ? "480" : "576";
-                            }else if(params.input_video_aspect >= "1.6" && params.input_video_aspect <= "1.9") {
-                                params.padding = "-padtop 64 -padbottom 64";
-                                params.output_video_width = "480";
-                                params.output_video_height = format ? "352" : "448";
-                            }else if(params.input_video_aspect >= "2" && params.input_video_aspect <= "2.5") {
-                                params.padding = format ? "-padtop 96 -padbottom 112" : "-padtop 112 -padbottom 112";
-                                params.output_video_width = "480";
-                                params.output_video_height = format ? "272" : "352";
-                            }else{
-                                params.padding = "";
-                                params.output_video_width = "480";
-                                params.output_video_height = format ? "480" : "576";
-                            }
-                        }else if(params.profile == "cvd") {
-                            mpegaudio("high");
-                            params.aspect = "-aspect 4:3";
-                            if(params.input_video_aspect >= "1.2" && params.input_video_aspect <= "1.5") {
-                                params.padding = "";
-                                params.output_video_width = "352";
-                                params.output_video_height = format ? "480" : "576";
-                            }else if(params.input_video_aspect >= "1.6" && params.input_video_aspect <= "1.9") {
-                                params.padding = "-padtop 64 -padbottom 48";
-                                params.output_video_width = "352";
-                                params.output_video_height = format ? "352" : "448";
-                            }else if(params.input_video_aspect >= "2" && params.input_video_aspect <= "2.5") {
-                                params.padding = format ? "-padtop 96 -padbottom 112" : "-padtop 112 -padbottom 112";
-                                params.output_video_width = "352";
-                                params.output_video_height = format ? "272" : "352";
-                            }else{
-                                params.padding = "";
-                                params.output_video_width = "352";
-                                params.output_video_height = format ? "480" : "576";
-                            }
-                        }else if(params.profile == "tivo") {
-                            mpegaudio("high");
-                            params.aspect = "-aspect 4:3";
-                            if(qualityStop == "0") {
-                                if(params.input_video_aspect >= "1.2" && params.input_video_aspect <= "1.5") {
-                                    params.padding = "";
-                                    params.output_video_width = "352";
-                                    params.output_video_height = "480";
-                                }else if(params.input_video_aspect >= "1.6" && params.input_video_aspect <= "1.9") {
-                                    params.padding = "-padtop 64 -padbottom 64";
-                                    params.output_video_width = "352";
-                                    params.output_video_height = "352";
-                                }else if(params.input_video_aspect >= "2" && params.input_video_aspect <= "2.5") {
-                                    params.padding = "-padtop 96 -padbottom 112";
-                                    params.output_video_width = "352";
-                                    params.output_video_height = "272";
-                                }else{
-                                    params.padding = "";
-                                    params.output_video_width = "352";
-                                    params.output_video_height ="480";
-                                }
-                            }else if(qualityStop == "1") {
-                                if(params.input_video_aspect >= "1.2" && params.input_video_aspect <= "1.5") {
-                                    params.padding = "";
-                                    params.output_video_width = "480";
-                                    params.output_video_height = "480";
-                                }else if(params.input_video_aspect >= "1.6" && params.input_video_aspect <= "1.9") {
-                                    params.padding = "-padtop 64 -padbottom 64";
-                                    params.output_video_width = "480";
-                                    params.output_video_height = "352";
-                                }else if(params.input_video_aspect >= "2" && params.input_video_aspect <= "2.5") {
-                                    params.padding = "-padtop 96 -padbottom 112";
-                                    params.output_video_width = "480";
-                                    params.output_video_height = "272";
-                                }else{
-                                    params.padding = "";
-                                    params.output_video_width = "480";
-                                    params.output_video_height = "480";
-                                }
-                            }else if(qualityStop == "2" || qualityStop == "3") {
-                                if(params.input_video_aspect >= "1.2" && params.input_video_aspect <= "1.5") {
-                                    params.padding = "";
-                                    params.output_video_width = "544";
-                                    params.output_video_height = "480";
-                                }else if(params.input_video_aspect >= "1.6" && params.input_video_aspect <= "1.9") {
-                                    params.padding = "-padtop 64 -padbottom 64";
-                                    params.output_video_width = "544";
-                                    params.output_video_height = "352";
-                                }else if(params.input_video_aspect >= "2" && params.input_video_aspect <= "2.5") {
-                                    params.padding = "-padtop 96 -padbottom 112";
-                                    params.output_video_width = "544";
-                                    params.output_video_height = "272";
-                                }else{
-                                    params.padding = "";
-                                    params.output_video_width = "544";
-                                    params.output_video_height = "480";
-                                }
-                            }else if(qualityStop == "4") {
-                                if(params.input_video_aspect >= "1.2" && params.input_video_aspect <= "1.5") {
-                                    params.padding = "";
-                                    params.output_video_width = "720";
-                                    params.output_video_height = "480";
-                                }else if(params.input_video_aspect >= "1.6" && params.input_video_aspect <= "1.9") {
-                                    params.padding = "-padtop 64 -padbottom 64";
-                                    params.output_video_width = "720";
-                                    params.output_video_height = "352";
-                                }else if(params.input_video_aspect >= "2" && params.input_video_aspect <= "2.5") {
-                                    params.padding = "-padtop 96 -padbottom 112";
-                                    params.output_video_width = "720";
-                                    params.output_video_height = "272";
-                                }else{
-                                    params.padding = "";
-                                    params.output_video_width = "720";
-                                    params.output_video_height = "480";
-                                }
-                            }
-                        }else if(params.profile == "ts") {
-                            mpegaudio("high");
-                            params.aspect = "-aspect 4:3";
-                            params.output_video_width = "352";
-                            params.output_video_height = format ? "480" : "576";
-                            params.padding = "";
-                        }
-                        
+                            break;
+                        case "MPEG":
+                            switch(params.profile) {
+                                case "none":
+                                    setAudioParams((qualityStop == 0) ? "low" : "high";
+                                    params.output_video_bitrate = mpegbitrateQualityMap[params.profile][qualityStop] * 1000;
 
-                        if(params.profile == "vcd") {
-                            params.dashtarget = "-target";
-                            params.target = format ? "ntsc-vcd" : "pal-vcd";
-                        }else{
-                            params.dashtarget = "";
-                            params.target = "";
-                        }
-                    }else{
-                        params.padding = "";
-                    }
-                    
-                    // Set up MPEG Extras
-                    if(title == "MPEG") {
-                        if(params.profile == "none") {
-                            if(bool(params.mpeg2)) {
-                                params.extras = "";
-                                params.ffmpeg_vcodec = "mpeg2video";
-                                params.output_video_codec_name = "MPEG-2";
-                            }else{
-                                var ratemax = mpegMaxrateMap["mpeg"][qualityStop];
-                                var bufsize = mpegbufsizeMap["mpeg"][qualityStop];
-                                params.extras = "-maxrate " + ratemax + " -bufsize " + bufsize;
-                                params.ffmpeg_vcodec = "mpeg1video";
-                                params.output_video_codec_name = "MPEG-1";
+                                    if (mpeg2) {
+                                        params.ffmpeg_option_vcodec = "mpeg2video";
+                                        params.output_video_codec_name = "MPEG-2";
+                                    }
+                                    else {
+                                        params.ffmpeg_option_vcodec = "mpeg1video";
+                                        params.output_video_codec_name = "MPEG-1";
+                                        
+                                        params.ffmpeg_video_aspect_x = params.input_video_width;
+                                        params.ffmpeg_video_aspect_y = params.input_video_height;
+
+                                        params.ffmpeg_option_ratemax = mpegMaxrateMap["mpeg"][qualityStop];
+                                        params.ffmpeg_option_bufsize = mpegBufsizeMap["mpeg"][qualityStop];
+                                    }
+                                    break;
+                                case "vcd":
+                                    params.ffmpeg_option_qmin = 5;
+                                    params.ffmpeg_option_bf = 2;
+                                    params.ffmpeg_option_target = isNTSC ? "ntsc-vcd" : "pal-vcd";
+                                    params.ffmpeg_video_aspect_x = 4;
+                                    params.ffmpeg_video_aspect_y = 3;
+                                    
+                                    if (params.input_video_aspect >= 1.2 && params.input_video_aspect <= 1.5) {
+                                        requestedFrameWidth = 352;
+                                        requestedFrameHeight = isNTSC ? 240 : 288;
+                                    }
+                                    else if (params.input_video_aspect >= 1.6 && params.input_video_aspect <= 1.9) {
+                                        params.ffmpeg_option_padtop = isNTSC ? 32 : 48;
+                                        params.ffmpeg_option_padbottom = isNTSC ? 32 : 48;
+                                        
+                                        requestedFrameWidth = 352;
+                                        requestedFrameHeight = isNTSC ? 176 : 192;
+                                    }
+                                    else if (params.input_video_aspect >= 2 && params.input_video_aspect <= 2.5) {
+                                        params.ffmpeg_option_padtop = isNTSC ? 48 : 64;
+                                        params.ffmpeg_option_padbottom = isNTSC ? 48 : 64;
+                                        requestedFrameWidth = 352;
+                                        requestedFrameHeight = isNTSC ? 144 : 160;
+                                    }
+                                    else {
+                                        requestedFrameWidth = "352";
+                                        requestedFrameHeight = "240";
+                                    }
+                                    break;
+                                case "svcd":
+                                    params.output_video_bitrate = mpegbitrateQualityMap[params.profile][isNTSC ? 1 : 0][qualityStop] * 1000;
+
+                                    params.ffmpeg_video_aspect_x = 4;
+                                    params.ffmpeg_video_aspect_y = 3;
+                                    
+                                    if (params.input_video_aspect >= 1.2 && params.input_video_aspect <= 1.5) {
+                                        requestedFrameWidth = 480;
+                                        requestedFrameHeight = isNTSC ? 480 : 576;
+                                    }
+                                    else if (params.input_video_aspect >= 1.6 && params.input_video_aspect <= 1.9) {
+                                        params.ffmpeg_option_padtop = 64;
+                                        params.ffmpeg_option_padbottom = 64;
+                                        requestedFrameWidth = 480;
+                                        requestedFrameHeight = isNTSC ? 352 : 448;
+                                    }
+                                    else if (params.input_video_aspect >= 2 && params.input_video_aspect <= 2.5) {
+                                        params.ffmpeg_option_padtop = isNTSC ? 96 : 112;
+                                        params.ffmpeg_option_padbottom = isNTSC ? 96 : 112;
+                                        requestedFrameWidth = 480;
+                                        requestedFrameHeight = isNTSC ? 272 : 352;
+                                    }
+                                    else {
+                                        requestedFrameWidth = 480;
+                                        requestedFrameHeight = isNTSC ? 480 : 576;
+                                    }
+                                    break;
+                                case "cvd":
+                                    params.output_video_bitrate = mpegbitrateQualityMap[params.profile][isNTSC ? 1 : 0][qualityStop] * 1000;
+
+                                    params.ffmpeg_video_aspect_x = 4;
+                                    params.ffmpeg_video_aspect_y = 3;
+                                    
+                                    if (params.input_video_aspect >= 1.2 && params.input_video_aspect <= 1.5) {
+                                        requestedFrameWidth = 352;
+                                        requestedFrameHeight = isNTSC ? 480 : 576;
+                                    }
+                                    else if (params.input_video_aspect >= 1.6 && params.input_video_aspect <= 1.9) {
+                                        params.ffmpeg_option_padtop = 64;
+                                        params.ffmpeg_option_padbottom = 64;
+                                        requestedFrameWidth = 352;
+                                        requestedFrameHeight = isNTSC ? 352 : 448;
+                                    }
+                                    else if (params.input_video_aspect >= 2 && params.input_video_aspect <= 2.5) {
+                                        params.ffmpeg_option_padtop = isNTSC ? 96 : 112;
+                                        params.ffmpeg_option_padbottom = isNTSC ? 96 : 112;
+                                        requestedFrameWidth = 352;
+                                        requestedFrameHeight = isNTSC ? 272 : 352;
+                                    }
+                                    else{
+                                        requestedFrameWidth = 352;
+                                        requestedFrameHeight = isNTSC ? 480 : 576;
+                                    }
+                                    break;
+                                case "tivo":
+                                    // Values are between ratios of 1.2 - 1.5 - 1.9 - 2.5 - > 2.5
+                                    var index;
+                                    if (params.input_video_aspect > 2.5)
+                                        index = 0;
+                                    else if (params.input_video_aspect > 2)
+                                        index = 3;
+                                    else if (params.input_video_aspect > 1.6)
+                                        index = 2;
+                                    else if (params.input_video_aspect > 1.2)
+                                        index = 1;
+                                    else
+                                        index = 0;
+                                    
+                                    requestedFrameWidth = tivoVideoSize[params.qualityStop][index][0];
+                                    requestedFrameHeight = tivoVideoSize[params.qualityStop][index][1];
+                                    params.output_video_bitrate = mpegbitrateQualityMap[params.profile][qualityStop] * 1000;
+                                    
+                                    params.ffmpeg_option_padtop = tivoVideoPadding[index][0];
+                                    if (params.ffmpeg_option_padtop = < 0)
+                                        params.ffmpeg_option_padtop = "";
+
+                                    params.ffmpeg_option_padbottom = tivoVideoPadding[index][1];
+                                    if (params.ffmpeg_option_padbottom = < 0)
+                                        params.ffmpeg_option_padbottom = "";
+                                     break;
+                                case "ts":
+                                    params.output_video_bitrate = mpegbitrateQualityMap[params.profile][isNTSC ? 1 : 0][qualityStop] * 1000;
+                                    setAudioParams("high");
+                                    params.ffmpeg_video_aspect_x = 4;
+                                    params.ffmpeg_video_aspect_y = 3;
+                                    requestedFrameWidth = "352";
+                                    requestedFrameHeight = isNTSC ? "480" : "576";
+                                    break;
+                                case "720":
+                                case "1080":
+                                    setAudioParams("hd");
+                                    params.output_video_bitrate = 18500;
+                                    params.ffmpeg_video_aspect_x = 16;
+                                    params.ffmpeg_video_aspect_y = 9;
+                                    
+                                    if (params.profile == "720") {
+                                        requestedFrameWidth = 1280;
+                                        requestedFrameHeight = 720;
+
+                                        if (params.input_video_aspect >= 1.2 && params.input_video_aspect <= 1.5) {
+                                            params.ffmpeg_option_padleft = 160;
+                                            params.ffmpeg_option_padright = 160;
+                                            requestedFrameWidth = 960;
+                                        }
+                                        else if (params.input_video_aspect >= 2 && params.input_video_aspect <= 2.5) {
+                                            params.ffmpeg_option_padleft = 80;
+                                            params.ffmpeg_option_padright = 80;
+                                            requestedFrameHeight = 544;
+                                        }
+                                    }
+                                    else {
+                                        requestedFrameWidth = 1920;
+                                        requestedFrameHeight = 1080;
+
+                                        if (params.input_video_aspect >= 1.2 && params.input_video_aspect <= 1.5) {
+                                            params.ffmpeg_option_padleft = 240;
+                                            params.ffmpeg_option_padright = 240;
+                                            requestedFrameWidth = 1440;
+                                        }
+                                        else if (params.input_video_aspect >= 2 && params.input_video_aspect <= 2.5) {
+                                            params.ffmpeg_option_padleft = 128;
+                                            params.ffmpeg_option_padright = 128;
+                                            requestedFrameHeight = 816;
+                                        }
+                                    }
+                                    break;
                             }
-                        }
+                            break;
+                            
+                        case "DV":
+                            params.output_video_bitrate = bitrateQualityMap[params.title][width320 ? 1 : 0][qualityStop] * 1000;
+                            break;
                     }
                     
-                    adjustVideoParams(false);
+                    setVideoSize(requestedFrameWidth, requestedFrameHeight);
                     
                     // set audio quality
-                    if(title == "MPEG") {
+                    if(params.title == "MPEG") {
 
                     }else{
-                        audio(audioQualityMap[title][qualityStop]);
+                        audio(audioQualityMap[params.title][qualityStop]);
                     }
                         
                     // The level is not necessarily accurate
-                    params.output_video_profile_name = (title != "Apple TV") ? "baseline" : "main";
-                    //params.output_video_level_name = levelMap[title][qualityStop];
+                    params.output_video_profile_name = (params.title != "Apple TV") ? "baseline" : "main";
+                    //params.output_video_level_name = levelMap[params.title][qualityStop];
 
                     // construct the recipe
                     if (     !bool(params.input_format == "Quicktime") && !bool(params.has_audio) && !bool(params.is_2_pass))
@@ -1480,18 +1490,17 @@ DTD
                 </script>
             </common_device>
             <!-- AVI -->
-            <!-- AVI -->
             <device title="AVI" icon="file" enabled="true">
                 <checkbox which="0" title="320 Pixels Wide">
                     <checked_item>
-                        <param id="wide" value="true" />
+                        <param id="width320" value="true" />
                     </checked_item>
                     <unchecked_item>
-                        <param id="wide" value="false" />
+                        <param id="width320" value="false" />
                     </unchecked_item>
                 </checkbox>
-                <param id="ffmpeg_vcodec" value="mpeg4" />
-                <param id="ffmpeg_acodec" value="libmp3lame" />
+                <param id="ffmpeg_option_vcodec" value="mpeg4" />
+                <param id="ffmpeg_option_acodec" value="libmp3lame" />
                 <param id="video_suffix" value="avi" />
                 <param id="output_audio_bitrate" value="128000" />
                 <param id="output_audio_sample_rate" value="44100" />
@@ -1515,14 +1524,12 @@ DTD
             <device title="MP4" icon="file" enabled="true">
                 <checkbox which="0" title="H.264 Video">
                     <checked_item>
-                        <param id="ffmpeg_vcodec" value="libx264" />
+                        <param id="ffmpeg_option_vcodec" value="libx264" />
                         <param id="output_video_codec_name" value="H.264" />
-                        <param id="extras" 
-                            value="-bf 1 -level 41 -sc_threshold 40 -partitions partp4x4 -rc_eq 'blurCplx^(1-qComp)' -refs 3  -qmax 51" />
                         <param id="h264" value="true" />
                     </checked_item>
                     <unchecked_item>
-                        <param id="ffmpeg_vcodec" value="mpeg4" />
+                        <param id="ffmpeg_option_vcodec" value="mpeg4" />
                         <param id="output_video_codec_name" value="MPEG-4" />
                         <param id="extras" value="" />
                         <param id="h264" value="false" />
@@ -1530,18 +1537,10 @@ DTD
                 </checkbox>
                 <checkbox which="1" title="320 Pixels Wide">
                     <checked_item>
-                        <param id="wide" value="true" />
+                        <param id="width320" value="true" />
                     </checked_item>
                     <unchecked_item>
-                        <param id="wide" value="false" />
-                    </unchecked_item>
-                </checkbox>
-                <checkbox which="2" title="RTSP Streaming">
-                    <checked_item>
-                        <param id="gop_size" value="-g 50" />
-                    </checked_item>
-                    <unchecked_item>
-                        <param id="gop_size" value="-g 200" />
+                        <param id="width320" value="false" />
                     </unchecked_item>
                 </checkbox>
                 <param id="tag" value="" />
@@ -1559,18 +1558,18 @@ DTD
             <device title="QuickTime" icon="file" enabled="true">
                 <checkbox which="0" title="H.264 Video">
                     <checked_item>
-                        <param id="ffmpeg_vcodec" value="libx264" />
+                        <param id="ffmpeg_option_vcodec" value="libx264" />
                     </checked_item>
                     <unchecked_item>
-                        <param id="ffmpeg_vcodec" value="mpeg4" />
+                        <param id="ffmpeg_option_vcodec" value="mpeg4" />
                     </unchecked_item>
                 </checkbox>
                 <menu which="0" title="Best for:">
                     <menu_item title="iPhone Screen">
-                        <param id="ffmpeg_vcodec" value="libx264" />
+                        <param id="ffmpeg_option_vcodec" value="libx264" />
                     </menu_item>
                     <menu_item title="TV Screen">
-                        <param id="ffmpeg_vcodec" value="mpeg4" />
+                        <param id="ffmpeg_option_vcodec" value="mpeg4" />
                     </menu_item>
                 </menu>
             </device>
@@ -1579,14 +1578,14 @@ DTD
             <device title="WMV" icon="wma" enabled="true">
                 <checkbox which="0" title="320 Pixels Wide">
                     <checked_item>
-                        <param id="wide" value="true" />
+                        <param id="width320" value="true" />
                     </checked_item>
                     <unchecked_item>
-                        <param id="wide" value="false" />
+                        <param id="width320" value="false" />
                     </unchecked_item>
                 </checkbox>
-                <param id="ffmpeg_vcodec" value="wmv1" />
-                <param id="ffmpeg_acodec" value="wmav2" />
+                <param id="ffmpeg_option_vcodec" value="wmv1" />
+                <param id="ffmpeg_option_acodec" value="wmav2" />
                 <param id="gop_size" value="-g 15" />
                 <param id="extras" value="" />
                 <param id="tag" value="" />
@@ -1608,10 +1607,10 @@ DTD
             <device title="Flash" icon="flash" enabled="true">
                 <checkbox which="0" title="320 Pixels Wide">
                     <checked_item>
-                        <param id="wide" value="true" />
+                        <param id="width320" value="true" />
                     </checked_item>
                     <unchecked_item>
-                        <param id="wide" value="false" />
+                        <param id="width320" value="false" />
                     </unchecked_item>
                 </checkbox>
                 <checkbox which="1" title="Raw .flv Format">
@@ -1628,18 +1627,18 @@ DTD
                 <param id="padding" value="" />
                 <param id="aspect" value="" />
                 <param id="dashv" value="" />
-                <param id="ffmpeg_vcodec" value="" />
+                <param id="ffmpeg_option_vcodec" value="" />
                 <param id="pixfmt" value="" />
                 <param id="tag" value="" />
                 <param id="dashb" value="-b" />
-                <param id="ffmpeg_acodec" value="libmp3lame" />
+                <param id="ffmpeg_option_acodec" value="libmp3lame" />
                 <param id="gop_size" value="-g 300" />
                 <param id="vob" value="" />
             </device>
             
             <!-- MPEG -->
             <device title="MPEG" icon="file" enabled="true">
-                 <checkbox which="0" title="MPEG-2">
+                  <checkbox which="0" title="MPEG-2">
                     <checked_item>
                         <param id="vob" value="-f vob" />
                         <param id="mpeg2" value="true" />
@@ -1651,10 +1650,12 @@ DTD
                 </checkbox>
                 <menu which="0" title="Format:">
                     <menu_item title="NTSC">
-                        <param id="format" value="true" />
+                        <param id="isNTSC" value="true" />
+                        <param id="output_video_frame_rate" value="ntsc" />
                     </menu_item>
                     <menu_item title="PAL">
-                        <param id="format" value="false" />
+                        <param id="isNTSC" value="false" />
+                        <param id="output_video_frame_rate" value="pal" />
                     </menu_item>
                 </menu>
                 <menu which="1" title="Profile:">
@@ -1662,13 +1663,13 @@ DTD
                         <param id="profile" value="none" />
                         <param id="dashv" value="-vcodec" />
                         <param id="video_suffix" value="mpg" />
-                        <param id="ffmpeg_acodec" value="mp2" />
+                        <param id="ffmpeg_option_acodec" value="mp2" />
                         <param id="output_audio_codec_name" value="MP2" />
                     </menu_item>
                     <menu_item title="VCD">
                         <param id="profile" value="vcd" />
-                        <param id="ffmpeg_acodec" value="mp2" />
-                        <param id="ffmpeg_vcodec" value="" />
+                        <param id="ffmpeg_option_acodec" value="mp2" />
+                        <param id="ffmpeg_option_vcodec" value="" />
                         <param id="output_video_codec_name" value="MPEG-1" />
                         <param id="output_audio_codec_name" value="MP2" />
                         <param id="dashv" value="" />
@@ -1676,8 +1677,8 @@ DTD
                     </menu_item>
                     <menu_item title="SVCD">
                         <param id="profile" value="svcd" />
-                        <param id="ffmpeg_acodec" value="mp2" />
-                        <param id="ffmpeg_vcodec" value="" />
+                        <param id="ffmpeg_option_acodec" value="mp2" />
+                        <param id="ffmpeg_option_vcodec" value="" />
                         <param id="output_video_codec_name" value="MPEG-2" />
                         <param id="output_audio_codec_name" value="MP2" />
                         <param id="dashv" value="" />
@@ -1685,8 +1686,8 @@ DTD
                     </menu_item>
                     <menu_item title="CVD">
                         <param id="profile" value="cvd" />
-                        <param id="ffmpeg_acodec" value="mp2" />
-                        <param id="ffmpeg_vcodec" value="mpeg2video" />
+                        <param id="ffmpeg_option_acodec" value="mp2" />
+                        <param id="ffmpeg_option_vcodec" value="mpeg2video" />
                         <param id="output_video_codec_name" value="MPEG-2" />
                         <param id="output_audio_codec_name" value="MP2" />
                         <param id="dashv" value="-vcodec" />
@@ -1694,8 +1695,8 @@ DTD
                     </menu_item>
                     <menu_item title="TiVo">
                         <param id="profile" value="tivo" />
-                        <param id="ffmpeg_acodec" value="mp2" />
-                        <param id="ffmpeg_vcodec" value="mpeg2video" />
+                        <param id="ffmpeg_option_acodec" value="mp2" />
+                        <param id="ffmpeg_option_vcodec" value="mpeg2video" />
                         <param id="output_video_codec_name" value="MPEG-2" />
                         <param id="output_audio_codec_name" value="MP2" />
                         <param id="dashv" value="-vcodec" />
@@ -1703,9 +1704,9 @@ DTD
                     </menu_item>
                     <menu_item title="Transport Stream">
                         <param id="profile" value="ts" />
-                        <param id="ffmpeg_acodec" value="ac3" />
+                        <param id="ffmpeg_option_acodec" value="ac3" />
                         <param id="video_suffix" value="ts" />
-                        <param id="ffmpeg_vcodec" value="mpeg2video" />
+                        <param id="ffmpeg_option_vcodec" value="mpeg2video" />
                         <param id="output_video_codec_name" value="MPEG-2" />
                         <param id="output_audio_codec_name" value="AC3" />
                         <param id="dashv" value="-vcodec" />
@@ -1713,9 +1714,9 @@ DTD
                     <menu_item title="720p">
                         <param id="profile" value="720" />
                         <param id="qmin" value="" />
-                        <param id="ffmpeg_acodec" value="ac3" />
+                        <param id="ffmpeg_option_acodec" value="ac3" />
                         <param id="video_suffix" value="m2t" />
-                        <param id="ffmpeg_vcodec" value="mpeg2video" />
+                        <param id="ffmpeg_option_vcodec" value="mpeg2video" />
                         <param id="output_video_codec_name" value="MPEG-2" />
                         <param id="output_audio_codec_name" value="AC3" />
                         <param id="dashv" value="-vcodec" />
@@ -1723,9 +1724,9 @@ DTD
                     <menu_item title="1080i">
                         <param id="profile" value="1080" />
                         <param id="qmin" value="" />
-                        <param id="ffmpeg_acodec" value="ac3" />
+                        <param id="ffmpeg_option_acodec" value="ac3" />
                         <param id="video_suffix" value="m2t" />
-                        <param id="ffmpeg_vcodec" value="mpeg2video" />
+                        <param id="ffmpeg_option_vcodec" value="mpeg2video" />
                         <param id="output_video_codec_name" value="MPEG-2" />
                         <param id="output_audio_codec_name" value="AC3" />
                         <param id="dashv" value="-vcodec" />
@@ -1739,12 +1740,10 @@ DTD
             
             <!-- DV -->
             <device title="DV" icon="dv" enabled="true">
-                <param id="ffmpeg_acodec" value="pcm_s16le" />
+                <param id="ffmpeg_option_acodec" value="pcm_s16le" />
                 <param id="output_audio_channels" value="2" />
-                <param id="ffmpeg_vcodec" value="dvvideo" />
+                <param id="ffmpeg_option_vcodec" value="dvvideo" />
                 <param id="output_format_name" value="DV" />
-                <param id="output_video_width" value="$input_video_width" />
-                <param id="output_video_heigth" value="$input_video_heigth" />
                 <param id="output_audio_bitrate" value="48000" />
                 <param id="video_suffix" value="dv" />
                 <param id="output_video_codec_name" value="DV" />
@@ -1794,55 +1793,84 @@ DTD
             <device title="Custom Encoding" icon="custom" enabled="true">
                 <menu which="0"> <!-- Container Format -->
                     <menu_item title="MPEG-4">
+                        <param id="output_format_name" value="MPEG-4" />
                     </menu_item>
                     <menu_item title="AVI">
+                        <param id="output_format_name" value="AVI" />
                     </menu_item>
                     <menu_item title="DV">
+                        <param id="output_format_name" value="DV" />
                     </menu_item>
                     <menu_item title="WMV">
+                        <param id="output_format_name" value="WMV" />
                     </menu_item>
                     <menu_item title="MPEG-2">
+                        <param id="output_format_name" value="MPEG-2" />
                     </menu_item>
                     <menu_item title="MPEG-1">
+                        <param id="output_format_name" value="MPEG-1" />
                     </menu_item>
                     <menu_item title="FLV">
+                        <param id="output_format_name" value="FLV" />
                     </menu_item>
                     <menu_item title="SWF">
+                        <param id="output_format_name" value="SWF" />
                     </menu_item>
                 </menu>
                 <menu which="1"> <!-- Video Codec -->
                     <menu_item title="MPEG-4">
+                        <param id="output_video_codec_name" value="MPEG-4" />
                     </menu_item>
                     <menu_item title="H.264">
+                        <param id="output_video_codec_name" value="H.264" />
                     </menu_item>
                     <menu_item title="MPEG-2">
+                        <param id="output_video_codec_name" value="MPEG-2" />
                     </menu_item>
                     <menu_item title="MPEG-1">
+                        <param id="output_video_codec_name" value="MPEG-1" />
                     </menu_item>
                     <menu_item title="DV">
+                        <param id="output_video_codec_name" value="DV" />
                     </menu_item>
                     <menu_item title="WMV">
+                        <param id="output_video_codec_name" value="WMV" />
                     </menu_item>
                     <menu_item title="FLV">
+                        <param id="output_video_codec_name" value="FLV" />
                     </menu_item>
                 </menu>
                 <menu which="2"> <!-- Audio Codec -->
                     <menu_item title="MP3">
+                        <param id="output_audio_codec_name" value="MP3" />
                     </menu_item>
-                     <menu_item title="AAC">
+                    <menu_item title="AAC">
+                        <param id="output_audio_codec_name" value="AAC" />
                     </menu_item>
-                     <menu_item title="PCM (WAV)">
+                    <menu_item title="PCM (WAV)">
+                        <param id="output_audio_codec_name" value="PCM (WAV)" />
                     </menu_item>
-                     <menu_item title="WMA">
+                    <menu_item title="WMA">
+                        <param id="output_audio_codec_name" value="WMA" />
                     </menu_item>
-                     <menu_item title="FLV">
+                    <menu_item title="FLV">
+                        <param id="output_audio_codec_name" value="FLV" />
                     </menu_item>
                 </menu>
                 <menu which="3"> <!-- Extras -->
                     <menu_item title="-vtag">
                     </menu_item>
-                    <menu_item title="-target">
-                    </menu_item>
+                    <radio_group title="-target">
+                        <menu_item title="---">
+                            <param id="ffmpeg_option_target" value="" />
+                        </menu_item>
+                        <menu_item title="ntsc-vcd">
+                            <param id="ffmpeg_option_target" value="ntsc-vcd" />
+                        </menu_item>
+                        <menu_item title="pal-vcd">
+                            <param id="ffmpeg_option_target" value="pal-vcd" />
+                        </menu_item>
+                    </radio_group>
                     <menu_item title="-pixfmt">
                     </menu_item>
                     <menu_item title="-gopsize">
@@ -1858,6 +1886,18 @@ DTD
                     <menu_item title="-g">
                     </menu_item>
                 </menu>
+                <combobox which="0"> <!-- Audio Bitrate -->
+                </combobox>
+                <combobox which="1"> <!-- Audio Channels -->
+                </combobox>
+                <combobox which="2"> <!-- Audio Sample Rate -->
+                </combobox>
+                <combobox which="3"> <!-- Frame Size -->
+                </combobox>
+                <combobox which="4"> <!-- Frame Rate -->
+                </combobox>
+                <combobox which="5"> <!-- Extra FFMPeg Options -->
+                </combobox>
             </device>
         </device_group>
         <!--
@@ -1867,101 +1907,8 @@ DTD
         -->
         <device_group title="Other Conversions">
             <common_device>
-                <command id="ffmpeg_options">
-                    -ar $output_audio_sample_rate -vcodec $ffmpeg_vcodec  -r $(video_frame_rate)
-                    -s $(output_video_width)x$(output_video_height) $aspect  $pix_fmt  -async 50
-                    -acodec $ffmpeg_acodec $forceFormat
-                </command>
-                <command id="quicktime_to_audio_file">
-                    $qt_export "$input_file" --video=0 "$tmp_audio_file"
-                </command>
-                <command id="correct_yuv">
-                    $yuvcorrect -v 0 -Y LUMINANCE_1.20_0_255_0_255 -Y CHROMINANCE_0_1.04_128_1.04_128_0_255
-                </command>
                  <script>
                     <![CDATA[
-    
-                    // At this point, we know what 2 quality stops we are between (params.quality_stop and params.quality_stop+1)
-                    // and we know what percentage of the way between the two we are (params.quality). We also which device we have 
-                    // selected (params.title), whether we are doing h.264 or mpeg4 (params.h264), and whether we want to optimize 
-                    // for TV or iPod (params.for_tv). From this we need to compute params.frame_width, params.frame_height,
-                    // params.output_audio_quality and params.output_video_bitrate.
-                    
-                    // We support a number of standard frame sizes. After adjusting these sizes according to the flags
-                    // (h264, forTV), we determine the actual frame size using these as maximum values, taking
-                    // into account aspect ratio.
-                    var frameSizes = {
-                        "tiny":  [  192,  144 ],
-                        "small": [  320,  240 ],
-                        "iphone":[  480,  320 ],
-                        "sdef":  [  720,  480 ],
-                        "idef":  [ 1280,  720 ],
-                        "hdef":  [ 1920, 1080 ]
-                    };
-                    
-                    var deviceFrameSizeMap = {
-                        //                              0           1           2           3           4
-                        "DV":                   [   [   "tiny",     "small",    "small",    "small",    "small" ],
-                                                    [   "small",    "iphone",   "sdef",     "sdef",     "sdef" ],
-                                                    [   "tiny",     "small",    "small",    "small",    "small" ],
-                                                    [   "small",    "iphone",   "sdef",     "sdef",     "sdef" ] ]
-                    };
-                    
-                    var bitrateQualityMap = {
-                        //                          mp4                                    h.264 
-                        "DV":                   [ [ 300,  450,  300,  700, 1500, 2500 ], [ 300,  450,  300,  700, 1000, 1500 ] ]
-                    };
-                    
-                    var audioQualityMap = {
-                        //                          0           1           2           3           4
-                        "DV":                   [   "low",      "high",     "high",     "high",     "high" ]
-                    };
-                    
-                    var levelMap = {
-                        //                          0   1   2   3   4
-                        "DV":                   [   20, 30, 30, 30, 30 ]
-                    };
-
-                    var title = params.title;
-                    var qualityStop = number(params.quality_stop);
-                    var quality = number(params.quality);
-                    var region = bool(params.format);
-                    var forTV = bool(params.forTV);
-                    
-                    // set bitrate
-                    var bitrateMin = bitrateQualityMap[title][1][qualityStop] * 1000;
-                    var bitrateMax = bitrateQualityMap[title][1][qualityStop+1] * 1000;
-                    params.output_video_bitrate = "-b "+((bitrateMax - bitrateMin) * quality + bitrateMin);
-                        
-                    adjustVideoParams(false);
-
-                    // set endoder
-                    
-                    params.ffmpeg_vcodec = "dvvideo";
-                    params.output_video_codec_name = "DV"
-                        
-                    // The level is not necessarily accurate
-                    params.output_video_profile_name = (title != "Apple TV") ? "baseline" : "main";
-                    params.output_video_level_name = levelMap[title][qualityStop];
-
-                    // construct the recipe
-                    if (     !bool(params.input_format == "Quicktime") && !bool(params.has_audio) && !bool(params.is_2_pass))
-                        params.recipe = "$normal_single_pass";
-                    else if (!bool(params.input_format == "Quicktime") && !bool(params.has_audio) && bool(params.is_2_pass))
-                        params.recipe = "$normal_pass1 ; $normal_pass2";
-                    else if (!bool(params.input_format == "Quicktime") && bool(params.has_audio) && !bool(params.is_2_pass))
-                        params.recipe = "$normal_single_pass";
-                    else if (!bool(params.input_format == "Quicktime") && bool(params.has_audio) && bool(params.is_2_pass))
-                        params.recipe = "$normal_pass1 ; $normal_pass2";
-                    else if (bool(params.input_format == "Quicktime") && !bool(params.has_audio) && !bool(params.is_2_pass))
-                        params.recipe = "$quicktime_v_single_pass";
-                    else if (bool(params.input_format == "Quicktime") && !bool(params.has_audio) && bool(params.is_2_pass))
-                        params.recipe = "$quicktime_v_pass1 ; $quicktime_v_pass2";
-                    else if (bool(params.input_format == "Quicktime") && bool(params.has_audio) && !bool(params.is_2_pass))
-                        params.recipe = "$quicktime_to_audio_file ; $quicktime_av_single_pass";
-                    else if (bool(params.input_format == "Quicktime"t) && bool(params.has_audio) && bool(params.is_2_pass))
-                        params.recipe = "$quicktime_to_audio_file ; $quicktime_av_pass1 ; $quicktime_av_pass2";
-
                     ]]>
                 </script>
             </common_device>
@@ -1970,18 +1917,18 @@ DTD
             <device title="Create a DVD Image (Not Implemented)" icon="cd" enabled="false">
                 <checkbox which="0" title="H.264 Video">
                     <checked_item>
-                        <param id="ffmpeg_vcodec" value="libx264" />
+                        <param id="ffmpeg_option_vcodec" value="libx264" />
                     </checked_item>
                     <unchecked_item>
-                        <param id="ffmpeg_vcodec" value="mpeg4" />
+                        <param id="ffmpeg_option_vcodec" value="mpeg4" />
                     </unchecked_item>
                 </checkbox>
                 <menu which="0" title="Best for:">
                     <menu_item title="iPhone Screen">
-                        <param id="ffmpeg_vcodec" value="libx264" />
+                        <param id="ffmpeg_option_vcodec" value="libx264" />
                     </menu_item>
                     <menu_item title="TV Screen">
-                        <param id="ffmpeg_vcodec" value="mpeg4" />
+                        <param id="ffmpeg_option_vcodec" value="mpeg4" />
                     </menu_item>
                 </menu>
             </device>

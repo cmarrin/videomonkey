@@ -33,7 +33,7 @@
 
 - (int)checkboxState:(int) index;
 - (int)menuState:(int) index;
-- (int)comboboxState:(int) index;
+- (NSString*)comboboxValue:(int) index;
 - (double)sliderValue;
 
 @end
@@ -72,15 +72,15 @@
     IBOutlet NSPopUpButton* m_containerFormatMenu;
     IBOutlet NSPopUpButton* m_videoCodecMenu;
     IBOutlet NSPopUpButton* m_audioCodecMenu;
+    IBOutlet NSPopUpButton* m_audioQualityMenu;
     IBOutlet NSPopUpButton* m_extrasMenu;
-    IBOutlet NSComboBox* m_extraParamsComboBox;
-    IBOutlet NSComboBox* m_frameSizeComboBox;
+    IBOutlet NSComboBox* m_frameWidthComboBox;
+    IBOutlet NSComboBox* m_frameHeightComboBox;
     IBOutlet NSComboBox* m_frameRateComboBox;
-    IBOutlet NSComboBox* m_audioSampleRateComboBox;
-    IBOutlet NSComboBox* m_audioBitrateComboBox;
-    IBOutlet NSComboBox* m_audioChannelsComboBox;
+    IBOutlet NSComboBox* m_extraParamsComboBox;
 
     IBOutlet NSButton* m_sliderEnableButton;
+    IBOutlet NSButton* m_matchInputAspectRatioButton;
 }
 
 -(IBAction)sliderEnableChanged:(id)sender;
@@ -89,7 +89,7 @@
 - (void)setComboboxes: (NSArray*) comboboxes;
 
 - (int)menuState:(int) index;
-- (int)comboboxState:(int) index;
+- (NSString*)comboboxValue:(int) index;
 
 @end
 
