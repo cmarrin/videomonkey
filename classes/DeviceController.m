@@ -55,6 +55,7 @@ static void addMenuItem(NSPopUpButton* button, NSString* title, NSString* icon, 
 static void addMenuSeparator(NSPopUpButton* button)
 {
     NSMenuItem* item = [NSMenuItem separatorItem];
+    [item setTag:-1];
     [[button menu] addItem:item];
 }
 
@@ -232,15 +233,9 @@ static void addMenuSeparator(NSPopUpButton* button)
     // load the XML file with all the commands and device setup
     [self initCommands];
     
-    int deviceIndex = [m_deviceButton indexOfSelectedItem];
+    id userDevice = [[[NSUserDefaultsController sharedUserDefaultsController] values] valueForKey:@"currentDeviceIndex"];
+    int deviceIndex = userDevice ? [userDevice intValue] : -1;
     int performanceIndex = [m_performanceButton indexOfSelectedItem];
-    
-    // If deviceIndex is 0, it means we don't have any saved prefs
-    // so set it and performanceIndex to something reasonable
-    if (deviceIndex == 0) {
-        deviceIndex = 1;
-        performanceIndex = 2;
-    }
     
     // populate the device menu
     [m_deviceButton removeAllItems];
@@ -266,16 +261,15 @@ static void addMenuSeparator(NSPopUpButton* button)
     }
     
     // set the selected item
-	if ([m_deviceButton numberOfItems] > deviceIndex) {
-		[m_deviceButton selectItemAtIndex:deviceIndex];
-		DeviceEntry* deviceEntry = [self findDeviceEntryWithIndex:[[m_deviceButton itemAtIndex: deviceIndex] tag]];
+    if ([m_deviceButton selectItemWithTag:deviceIndex]) {
+		DeviceEntry* deviceEntry = [self findDeviceEntryWithIndex:deviceIndex];
 		
 		// if the deviceEntry is nil, it mean we had an invalid deviceIndex (probably a bad index from the pref file)
 		// fix that here
 		if (!deviceEntry) {
-			deviceIndex = 1;
-			[m_deviceButton selectItemAtIndex:deviceIndex];
-			deviceEntry = [self findDeviceEntryWithIndex:[[m_deviceButton itemAtIndex: deviceIndex] tag]];
+			deviceIndex = 0;
+			[m_deviceButton selectItemWithTag:deviceIndex];
+			deviceEntry = [self findDeviceEntryWithIndex:deviceIndex];
 			[[[NSUserDefaultsController sharedUserDefaultsController] values] setValue:[NSNumber numberWithInt:deviceIndex] forKey:@"currentDeviceIndex"];
 		}
 		
@@ -298,7 +292,9 @@ static void addMenuSeparator(NSPopUpButton* button)
 
 - (IBAction)selectDevice:(id)sender
 {
-    [self setCurrentDevice:[self findDeviceEntryWithIndex:[[sender selectedItem] tag]]];
+    int deviceIndex = [[sender selectedItem] tag];
+    [[[NSUserDefaultsController sharedUserDefaultsController] values] setValue:[NSNumber numberWithInt:deviceIndex] forKey:@"currentDeviceIndex"];
+    [self setCurrentDevice:[self findDeviceEntryWithIndex:deviceIndex]];
     [self uiChanged];
 }
 

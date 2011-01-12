@@ -22,8 +22,8 @@
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
 			<integer value="5392"/>
-			<integer value="5530"/>
 			<integer value="3033"/>
+			<integer value="503"/>
 			<integer value="29"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
@@ -320,6 +320,10 @@
 				<string key="NSClassName">SUUpdater</string>
 			</object>
 			<object class="NSUserDefaultsController" id="468363876">
+				<object class="NSMutableArray" key="NSDeclaredKeys">
+					<bool key="EncodedWithXMLCoder">YES</bool>
+					<string>currentDeviceIndex</string>
+				</object>
 				<bool key="NSSharedInstance">YES</bool>
 			</object>
 			<object class="NSMenu" id="649796088">
@@ -13144,22 +13148,6 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBBindingConnection" key="connection">
-						<string key="label">selectedIndex: values.currentDeviceIndex</string>
-						<reference key="source" ref="668207334"/>
-						<reference key="destination" ref="468363876"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="668207334"/>
-							<reference key="NSDestination" ref="468363876"/>
-							<string key="NSLabel">selectedIndex: values.currentDeviceIndex</string>
-							<string key="NSBinding">selectedIndex</string>
-							<string key="NSKeyPath">values.currentDeviceIndex</string>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">2244</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
 						<string key="label">selectedIndex: values.encodingPerformanceIndex</string>
 						<reference key="source" ref="1063704480"/>
 						<reference key="destination" ref="468363876"/>
@@ -15554,6 +15542,22 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 						<reference key="destination" ref="5933304"/>
 					</object>
 					<int key="connectionID">5718</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">selectedTag: values.currentDeviceIndex</string>
+						<reference key="source" ref="668207334"/>
+						<reference key="destination" ref="468363876"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="668207334"/>
+							<reference key="NSDestination" ref="468363876"/>
+							<string key="NSLabel">selectedTag: values.currentDeviceIndex</string>
+							<string key="NSBinding">selectedTag</string>
+							<string key="NSKeyPath">values.currentDeviceIndex</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">5724</int>
 				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -25259,7 +25263,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">5720</int>
+			<int key="maxID">5724</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -25550,6 +25554,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 							<string>m_frameHeightComboBox</string>
 							<string>m_frameRateComboBox</string>
 							<string>m_frameWidthComboBox</string>
+							<string>m_matchInputAspectRatioButton</string>
 							<string>m_sliderEnableButton</string>
 							<string>m_videoCodecMenu</string>
 						</object>
@@ -25563,6 +25568,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 							<string>NSComboBox</string>
 							<string>NSComboBox</string>
 							<string>NSComboBox</string>
+							<string>NSButton</string>
 							<string>NSButton</string>
 							<string>NSPopUpButton</string>
 						</object>
@@ -25579,6 +25585,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 							<string>m_frameHeightComboBox</string>
 							<string>m_frameRateComboBox</string>
 							<string>m_frameWidthComboBox</string>
+							<string>m_matchInputAspectRatioButton</string>
 							<string>m_sliderEnableButton</string>
 							<string>m_videoCodecMenu</string>
 						</object>
@@ -25615,6 +25622,10 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 							<object class="IBToOneOutletInfo">
 								<string key="name">m_frameWidthComboBox</string>
 								<string key="candidateClassName">NSComboBox</string>
+							</object>
+							<object class="IBToOneOutletInfo">
+								<string key="name">m_matchInputAspectRatioButton</string>
+								<string key="candidateClassName">NSButton</string>
 							</object>
 							<object class="IBToOneOutletInfo">
 								<string key="name">m_sliderEnableButton</string>

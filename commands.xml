@@ -767,6 +767,8 @@ DTD
                 <script>
                     <![CDATA[
     
+                    // iTunes Formats -
+                    //
                     // At this point, we know what 2 quality stops we are between (params.quality_stop 
                     // and params.quality_stop+1) and we know what percentage of the way between the 
                     // two we are (params.quality). We also know which device we have selected 
@@ -1080,6 +1082,8 @@ DTD
                 <script>
                     <![CDATA[
     
+                    // Video Formats -
+                    //
                     // At this point, we know what 2 quality stops we are between (params.quality_stop and params.quality_stop+1)
                     // and we know what percentage of the way between the two we are (params.quality). We also which device we have 
                     // selected (params.title), whether we are doing h.264 or mpeg4 (params.h264), and whether we want to optimize 
