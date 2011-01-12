@@ -212,7 +212,6 @@ ffmpeg_option_maxrate
 ffmpeg_option_bufsize
 ffmpeg_option_qmin
 ffmpeg_option_bf
-ffmpeg_option_b             Same as output_video_bitrate
 
 apple_tv_format_limit       True if output frame size is limited to 960x540 @ 30hz or 1024x720 @ 24hz (1st gen Apple TV)
 
@@ -523,7 +522,8 @@ DTD
             params.ffmpeg_option_bufsize = "";
             params.ffmpeg_option_qmin = "";
             params.ffmpeg_option_bf = "";
-            params.ffmpeg_option_b = "$output_video_bitrate";
+            
+            params.output_video_bitrate = -1;
 
             function addFFMPegParam(param, paramName)
             {
@@ -548,7 +548,10 @@ DTD
                 addFFMPegParam("padtop");
                 addFFMPegParam("padbottom");
                 addFFMPegParam("vcodec");
-                addFFMPegParam("b");
+                
+                if (params.output_video_bitrate >= 0)
+                    params.ffmpeg_options += "-b $(output_video_bitrate) ";
+                    
                 addFFMPegParam("pixfmt");
                 addFFMPegParam("vtag");
                 addFFMPegParam("g");
@@ -620,7 +623,7 @@ DTD
                     params.output_video_frame_rate = 30;
             }
             
-             // Sets output_video_bitrate
+            // Sets output_video_bitrate
             function setVideoBitrate(requestedBitrate)
             {
                 limit = (requestedBitrate > params.input_video_bitrate) && bool(params.limit_output_params);
@@ -766,7 +769,7 @@ DTD
     
                     // At this point, we know what 2 quality stops we are between (params.quality_stop 
                     // and params.quality_stop+1) and we know what percentage of the way between the 
-                    // two we are (params.quality). We also which device we have selected 
+                    // two we are (params.quality). We also know which device we have selected 
                     // (params.title), whether we are doing h.264 or mpeg4 (params.h264), and whether 
                     // we want to optimize for TV or iPod (params.for_tv). From this we need to 
                     // compute requestedFrameWidth, requestedFrameHeight, 
@@ -885,7 +888,7 @@ DTD
                     // set bitrate
                     var bitrateMin = bitrateQualityMap[title][h264 ? 1 : 0][qualityStop] * 1000;
                     var bitrateMax = bitrateQualityMap[title][h264 ? 1 : 0][qualityStop+1] * 1000;
-                    params.output_video_bitrate = (bitrateMax - bitrateMin) * quality + bitrateMin;
+                    setVideoBitrate((bitrateMax - bitrateMin) * quality + bitrateMin);
                     
                     // set frame size
                     var index = (h264 ? 2 : 0) + (forTV ? 1 : 0);
@@ -1193,7 +1196,7 @@ DTD
                     params.ffmpeg_option_qmin = qminMap[params.title][qualityStop];
                     
                     // Init bitrate
-                    params.output_video_bitrate = bitrateQualityMap[params.title][width320 ? 1 : 0][qualityStop] * 1000;
+                    setVideoBitrate(bitrateQualityMap[params.title][width320 ? 1 : 0][qualityStop] * 1000);
                     
                     // Init width and height
                     if (width320)
@@ -1214,7 +1217,7 @@ DTD
                             break;
                         case "MP4":
                             var index = (h264 ? 2 : 0) + (width320 ? 1 : 0);
-                            params.output_video_bitrate = bitrateQualityMap[params.title][index][qualityStop] * 1000;
+                            setVideoBitrate(bitrateQualityMap[params.title][index][qualityStop] * 1000);
                             if (qualityStop == 4)
                                 params.ffmpeg_option_qmin = "";
                             else if qualityStop == 0) {
@@ -1228,11 +1231,11 @@ DTD
                             break;
                         case "WMV":
                             if (qualityStop == 0) 
-                                params.output_video_bitrate = 20000;
+                                setVideoBitrate(20000);
                             else {
                                 var qualset = qualsetMap[params.title][qualityStop];
                                 var br = Math.round(((params.input_video_width) * (params.input_video_height)) / qualset);
-                                params.output_video_bitrate = br * 1000;
+                                setVideoBitrate(br * 1000);
                             }
                             
                             if (qualityStop == 0) {
@@ -1251,11 +1254,11 @@ DTD
                             break;
                         case "Flash":
                             if (qualityStop == "0") 
-                                params.output_video_bitrate = 30000;
+                                setVideoBitrate(30000);
                             else {
                                  var qualset = qualsetMap[params.title][qualityStop];
                                  var br = Math.round(((params.input_video_width) * (params.input_video_height)) / qualset);
-                                 params.output_video_bitrate = br * 1000;
+                                 setVideoBitrate(br * 1000);
                             }
 
                             if (qualityStop == 0) {
@@ -1275,7 +1278,7 @@ DTD
                             switch(params.profile) {
                                 case "none":
                                     setAudioParams((qualityStop == 0) ? "low" : "high";
-                                    params.output_video_bitrate = mpegbitrateQualityMap[params.profile][qualityStop] * 1000;
+                                    setVideoBitrate(mpegbitrateQualityMap[params.profile][qualityStop] * 1000);
 
                                     if (mpeg2) {
                                         params.ffmpeg_option_vcodec = "mpeg2video";
@@ -1322,7 +1325,7 @@ DTD
                                     }
                                     break;
                                 case "svcd":
-                                    params.output_video_bitrate = mpegbitrateQualityMap[params.profile][isNTSC ? 1 : 0][qualityStop] * 1000;
+                                    setVideoBitrate(mpegbitrateQualityMap[params.profile][isNTSC ? 1 : 0][qualityStop] * 1000);
 
                                     params.ffmpeg_video_aspect_x = 4;
                                     params.ffmpeg_video_aspect_y = 3;
@@ -1349,7 +1352,7 @@ DTD
                                     }
                                     break;
                                 case "cvd":
-                                    params.output_video_bitrate = mpegbitrateQualityMap[params.profile][isNTSC ? 1 : 0][qualityStop] * 1000;
+                                    setVideoBitrate(mpegbitrateQualityMap[params.profile][isNTSC ? 1 : 0][qualityStop] * 1000);
 
                                     params.ffmpeg_video_aspect_x = 4;
                                     params.ffmpeg_video_aspect_y = 3;
@@ -1391,7 +1394,7 @@ DTD
                                     
                                     requestedFrameWidth = tivoVideoSize[params.qualityStop][index][0];
                                     requestedFrameHeight = tivoVideoSize[params.qualityStop][index][1];
-                                    params.output_video_bitrate = mpegbitrateQualityMap[params.profile][qualityStop] * 1000;
+                                    setVideoBitrate(mpegbitrateQualityMap[params.profile][qualityStop] * 1000);
                                     
                                     params.ffmpeg_option_padtop = tivoVideoPadding[index][0];
                                     if (params.ffmpeg_option_padtop = < 0)
@@ -1402,7 +1405,7 @@ DTD
                                         params.ffmpeg_option_padbottom = "";
                                      break;
                                 case "ts":
-                                    params.output_video_bitrate = mpegbitrateQualityMap[params.profile][isNTSC ? 1 : 0][qualityStop] * 1000;
+                                    setVideoBitrate(mpegbitrateQualityMap[params.profile][isNTSC ? 1 : 0][qualityStop] * 1000);
                                     setAudioParams("high");
                                     params.ffmpeg_video_aspect_x = 4;
                                     params.ffmpeg_video_aspect_y = 3;
@@ -1412,7 +1415,7 @@ DTD
                                 case "720":
                                 case "1080":
                                     setAudioParams("hd");
-                                    params.output_video_bitrate = 18500;
+                                    setVideoBitrate(18500);
                                     params.ffmpeg_video_aspect_x = 16;
                                     params.ffmpeg_video_aspect_y = 9;
                                     
@@ -1451,7 +1454,7 @@ DTD
                             break;
                             
                         case "DV":
-                            params.output_video_bitrate = bitrateQualityMap[params.title][width320 ? 1 : 0][qualityStop] * 1000;
+                            setVideoBitrate(bitrateQualityMap[params.title][width320 ? 1 : 0][qualityStop] * 1000);
                             break;
                     }
                     
