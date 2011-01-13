@@ -524,6 +524,10 @@ DTD
             params.ffmpeg_option_bf = "";
             
             params.output_video_bitrate = -1;
+            
+            params.output_video_profile_name = "none";
+            params.output_video_level_name = "none";
+
 
             function addFFMPegParam(param, paramName)
             {
@@ -1191,6 +1195,9 @@ DTD
                     var requestedFrameWidth = 0;
                     var requestedFrameHeight = 0;
                     
+                    // Set default audio quality
+                    setAudioParams("high");
+                    
                     // set:
                     //      output_video_bitrate, ffmpeg_option_qmin, requested_frame_width, requested_frame_height
                     //      ffmpeg_option_padleft, ffmpeg_option_padright, ffmpeg_option_padtop, ffmpeg_option_padbottom
@@ -1203,8 +1210,10 @@ DTD
                     setVideoBitrate(bitrateQualityMap[params.title][width320 ? 1 : 0][qualityStop] * 1000);
                     
                     // Init width and height
-                    if (width320)
+                    if (width320) {
                         requestedFrameWidth = 320;
+                        requestedFrameHeight = 320 * params.input_video_height / params.input_video_width;
+                    }
                     else if (qualityStop == 0) {
                         var sizeString = deviceFrameSizeMap[params.title][qualityStop];
                         requestedFrameWidth = frameSizes[sizeString][0];
@@ -1214,17 +1223,28 @@ DTD
                         requestedFrameWidth = params.input_video_width;
                         requestedFrameHeight = params.input_video_height;
                     }
-                     
-                    
+
                     switch (params.title) {
                         case "AVI":
-                            break;
+                            if(width320)
+                                params.requested_frame_width = 320;
+                            else if (qualityStop == "0") {
+                                var sizeString = deviceFrameSizeMap[title][qualityStop];
+                                params.requested_frame_width = frameSizes[sizeString][0];
+                                params.requested_frame_height = frameSizes[sizeString][1];
+                            } 
+                            else {
+                                params.requested_frame_width = params.input_video_width;
+                                params.requested_frame_height = params.input_video_height;
+                            }
+                        }
+                             break;
                         case "MP4":
                             var index = (h264 ? 2 : 0) + (width320 ? 1 : 0);
                             setVideoBitrate(bitrateQualityMap[params.title][index][qualityStop] * 1000);
                             if (qualityStop == 4)
                                 params.ffmpeg_option_qmin = "";
-                            else if qualityStop == 0) {
+                            else if (qualityStop == 0) {
                                 params.ffmpeg_option_maxrate = "40k";
                                 params.ffmpeg_option_bufsize = "5k";
                                 params.ffmpeg_option_g = "ntsc";
@@ -1281,7 +1301,7 @@ DTD
                         case "MPEG":
                             switch(params.profile) {
                                 case "none":
-                                    setAudioParams((qualityStop == 0) ? "low" : "high";
+                                    setAudioParams((qualityStop == 0) ? "low" : "high");
                                     setVideoBitrate(mpegbitrateQualityMap[params.profile][qualityStop] * 1000);
 
                                     if (mpeg2) {
@@ -1401,11 +1421,11 @@ DTD
                                     setVideoBitrate(mpegbitrateQualityMap[params.profile][qualityStop] * 1000);
                                     
                                     params.ffmpeg_option_padtop = tivoVideoPadding[index][0];
-                                    if (params.ffmpeg_option_padtop = < 0)
+                                    if (params.ffmpeg_option_padtop < 0)
                                         params.ffmpeg_option_padtop = "";
 
                                     params.ffmpeg_option_padbottom = tivoVideoPadding[index][1];
-                                    if (params.ffmpeg_option_padbottom = < 0)
+                                    if (params.ffmpeg_option_padbottom < 0)
                                         params.ffmpeg_option_padbottom = "";
                                      break;
                                 case "ts":
@@ -1464,17 +1484,6 @@ DTD
                     
                     setVideoSize(requestedFrameWidth, requestedFrameHeight);
                     
-                    // set audio quality
-                    if(params.title == "MPEG") {
-
-                    }else{
-                        audio(audioQualityMap[params.title][qualityStop]);
-                    }
-                        
-                    // The level is not necessarily accurate
-                    params.output_video_profile_name = (params.title != "Apple TV") ? "baseline" : "main";
-                    //params.output_video_level_name = levelMap[params.title][qualityStop];
-
                     // construct the recipe
                     if (     !bool(params.input_format == "Quicktime") && !bool(params.has_audio) && !bool(params.is_2_pass))
                         params.recipe = "$normal_single_pass";
@@ -1506,25 +1515,18 @@ DTD
                         <param id="width320" value="false" />
                     </unchecked_item>
                 </checkbox>
+                <param id="output_format_name" value="AVI" />
+                <param id="output_video_codec_name" value="MPEG-4" />
                 <param id="ffmpeg_option_vcodec" value="mpeg4" />
+                <param id="output_audio_codec_name" value="MP3" />
                 <param id="ffmpeg_option_acodec" value="libmp3lame" />
                 <param id="video_suffix" value="avi" />
                 <param id="output_audio_bitrate" value="128000" />
                 <param id="output_audio_sample_rate" value="44100" />
                 <param id="output_audio_channels" value="2" />
-                <param id="gop_size" value="-g 200" />
-                <param id="extras" value="" />
-                <param id="tag" value="-vtag DX50" />
-                <param id="pixfmt" value="" />
-                <param id="output_format_name" value="AVI" />
-                <param id="output_video_codec_name" value="MPEG-4" />
-                <param id="output_audio_codec_name" value="MP3" />
-                <param id="vob" value="" />
+                <param id="ffmpeg_option_g" value="200" />
+                <param id="ffmpeg_option_tag" value="DX50" />
                 <param id="output_video_frame_rate" value="ntsc" />
-                <param id="dashb" value="-b" />
-                <param id="target" value="" />
-                <param id="dashv" value="-vcodec" />
-                <param id="dashtarget" value="" />
             </device>
             
             <!-- MP4 -->
