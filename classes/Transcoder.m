@@ -109,14 +109,19 @@ int heightFromFrameSize(FrameSize f) { return f & 0xffff; }
     NSMutableString* mediainfoPath = [NSMutableString stringWithString: [[NSBundle mainBundle] resourcePath]];
     [mediainfoPath appendString:@"/bin/mediainfo"];
     
+    // ** replace above 2 lines with these two ** NSMutableString* ffprobePath = [NSMutableString stringWithString: [[NSBundle mainBundle] resourcePath]];
+    //[ffprobePath appendString:@"/bin/ffprobe"];
+        
     NSMutableString* mediainfoInformPath = [NSMutableString stringWithString: @"--Inform=file://"];
     [mediainfoInformPath appendString: [[NSBundle mainBundle] resourcePath]];
     [mediainfoInformPath appendString:@"/mediainfo-inform.csv"];
+    // ** replace above 3 lines ** NSMutableArray* args = [NSMutableArray arrayWithObjects: @"-show_format", @"-show_streams", [info filename], nil];
     
     NSTask* task = [[NSTask alloc] init];
     NSMutableArray* args = [NSMutableArray arrayWithObjects: mediainfoInformPath, [info filename], nil];
     [task setArguments: args];
     [task setLaunchPath: mediainfoPath];
+    // ** replace above line ** [task setLaunchPath: ffprobePath];
     
     NSPipe* pipe = [NSPipe pipe];
     [task setStandardOutput:[pipe fileHandleForWriting]];
