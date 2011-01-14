@@ -31,8 +31,7 @@ int heightFromFrameSize(FrameSize f) { return f & 0xffff; }
 @synthesize fileSize;
 
 // Video
-@synthesize videoStreamKind;
-@synthesize videoTrack;
+@synthesize videoIndex;
 @synthesize videoLanguage;
 @synthesize videoCodec;
 @synthesize videoProfile;
@@ -43,8 +42,7 @@ int heightFromFrameSize(FrameSize f) { return f & 0xffff; }
 @synthesize videoBitrate;
 
 // Audio
-@synthesize audioStreamKind;
-@synthesize audioTrack;
+@synthesize audioIndex;
 @synthesize audioLanguage;
 @synthesize audioCodec;
 @synthesize audioSampleRate;
@@ -104,26 +102,26 @@ int heightFromFrameSize(FrameSize f) { return f & 0xffff; }
     return [[AppController instance] fileInfoPanelController];
 }
 
+int ffprobeIndexFromString(NSString* string, NSString* codec)
+{
+    return 0;
+}
+
 -(BOOL) _validateInputFile: (TranscoderFileInfo*) info
 {
     NSMutableString* mediainfoPath = [NSMutableString stringWithString: [[NSBundle mainBundle] resourcePath]];
     [mediainfoPath appendString:@"/bin/mediainfo"];
     
-    // ** replace above 2 lines with these two ** NSMutableString* ffprobePath = [NSMutableString stringWithString: [[NSBundle mainBundle] resourcePath]];
-    //[ffprobePath appendString:@"/bin/ffprobe"];
-        
     NSMutableString* mediainfoInformPath = [NSMutableString stringWithString: @"--Inform=file://"];
     [mediainfoInformPath appendString: [[NSBundle mainBundle] resourcePath]];
     [mediainfoInformPath appendString:@"/mediainfo-inform.csv"];
-    // ** replace above 3 lines ** NSMutableArray* args = [NSMutableArray arrayWithObjects: @"-show_format", @"-show_streams", [info filename], nil];
     
     NSTask* task = [[NSTask alloc] init];
     NSMutableArray* args = [NSMutableArray arrayWithObjects: mediainfoInformPath, [info filename], nil];
     [task setArguments: args];
     [task setLaunchPath: mediainfoPath];
-    // ** replace above line ** [task setLaunchPath: ffprobePath];
     
-    NSPipe* pipe = [NSPipe pipe];
+    NSPipe* pipe = [[NSPipe alloc] init];
     [task setStandardOutput:[pipe fileHandleForWriting]];
     
     [task launch];
@@ -131,12 +129,15 @@ int heightFromFrameSize(FrameSize f) { return f & 0xffff; }
     [task waitUntilExit];
     
     NSString* data = [[NSString alloc] initWithData: [[pipe fileHandleForReading] availableData] encoding: NSASCIIStringEncoding];
+    [task release];
+    [pipe release];
     
     // The first line must start with "-General-" or the file is not valid
     if (![data hasPrefix: @"-General-"])
         return NO;
     
     NSArray* components = [data componentsSeparatedByString:@"\n"];
+    [data release];
     
     // We always have a General line.
     NSArray* general = [[components objectAtIndex:0] componentsSeparatedByString:@","];
@@ -160,20 +161,18 @@ int heightFromFrameSize(FrameSize f) { return f & 0xffff; }
         
         // -Video-,%StreamKindID%,%ID%,%Language%,%Format%,%Codec_Profile%,%ScanType%,%ScanOrder%,%Width%,%Height%,%PixelAspectRatio%,%DisplayAspectRatio%,%FrameRate%.%Bitrate%
 
-        if ([video count] != 14)
+        if ([video count] != 12)
             return NO;
             
-        info.videoStreamKind = [[video objectAtIndex:1] intValue];
-        info.videoTrack = [[video objectAtIndex:2] intValue];
-        info.videoLanguage = [[video objectAtIndex:3] retain];
-        info.videoCodec = [[video objectAtIndex:4] retain];
-        info.videoProfile = [[video objectAtIndex:5] retain];
-        info.videoInterlaced = [[video objectAtIndex:6] isEqualToString:@"Interlace"];
-        FrameSize frameSize = makeFrameSize([[video objectAtIndex:8] intValue], [[video objectAtIndex:9] intValue]);
+        info.videoLanguage = [[video objectAtIndex:1] retain];
+        info.videoCodec = [[video objectAtIndex:2] retain];
+        info.videoProfile = [[video objectAtIndex:3] retain];
+        info.videoInterlaced = [[video objectAtIndex:4] isEqualToString:@"Interlace"];
+        FrameSize frameSize = makeFrameSize([[video objectAtIndex:6] intValue], [[video objectAtIndex:7] intValue]);
         info.videoFrameSize = frameSize;
-        info.videoAspectRatio = [[video objectAtIndex:11] doubleValue];
-        info.videoFrameRate = [[video objectAtIndex:12] doubleValue];
-        info.videoBitrate = [[video objectAtIndex:13] doubleValue];
+        info.videoAspectRatio = [[video objectAtIndex:9] doubleValue];
+        info.videoFrameRate = [[video objectAtIndex:10] doubleValue];
+        info.videoBitrate = [[video objectAtIndex:11] doubleValue];
         
         // standardize video codec name
         NSString* f = VC_H264;
@@ -190,21 +189,43 @@ int heightFromFrameSize(FrameSize f) { return f & 0xffff; }
         NSArray* audio = [[components objectAtIndex:offset] componentsSeparatedByString:@","];
 
         // -Audio-,%StreamKindID%,%ID%,%Language%,%Format%,%SamplingRate%,%Channels%,%BitRate%
-        if ([audio count] != 8)
+        if ([audio count] != 6)
             return NO;
             
-        info.audioStreamKind = [[audio objectAtIndex:1] intValue];
-        info.audioTrack = [[audio objectAtIndex:2] intValue];
-        info.audioLanguage = [[audio objectAtIndex:3] retain];
-        info.audioCodec = [[audio objectAtIndex:4] retain];
-        info.audioSampleRate = [[audio objectAtIndex:5] doubleValue];
-        info.audioChannels = [[audio objectAtIndex:6] intValue];
-        info.audioBitrate = [[audio objectAtIndex:7] doubleValue];
+        info.audioLanguage = [[audio objectAtIndex:1] retain];
+        info.audioCodec = [[audio objectAtIndex:2] retain];
+        info.audioSampleRate = [[audio objectAtIndex:3] doubleValue];
+        info.audioChannels = [[audio objectAtIndex:4] intValue];
+        info.audioBitrate = [[audio objectAtIndex:5] doubleValue];
     }
     
     // compute some values
     info.bitrate = info.videoBitrate + info.audioBitrate;
-
+    
+    // mediainfo doesn't interpret stream indexes the same as ffmpeg. We need these indexes
+    // to know how to map streams from the input to the output. Run ffprobe and pick out
+    // the index values for the video and audio streams
+    NSMutableString* ffprobePath = [NSMutableString stringWithString: [[NSBundle mainBundle] resourcePath]];
+    [ffprobePath appendString:@"/bin/ffprobe"];
+    args = [NSMutableArray arrayWithObjects: @"-show_streams", [info filename], nil];
+    
+    task = [[NSTask alloc] init];
+    [task setArguments: args];
+    [task setLaunchPath: ffprobePath];
+    
+    pipe = [[NSPipe alloc] init];
+    [task setStandardOutput:[pipe fileHandleForWriting]];
+    [task launch];
+    [task waitUntilExit];
+    
+    data = [[NSString alloc] initWithData: [[pipe fileHandleForReading] availableData] encoding: NSASCIIStringEncoding];
+    [task release];
+    [pipe release];
+    
+    info.videoIndex = ffprobeIndexFromString(data, @"video");
+    info.audioIndex = ffprobeIndexFromString(data, @"audio");
+    [data release];
+    
     return YES;
 }
 
