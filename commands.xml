@@ -146,6 +146,8 @@ input_frame_rate            Frame rate, in fps, of the input file
 input_video_bitrate         Bitrate of the video in the input file
 input_video_aspect          Video aspect ratio (may be different from width/height for non-square pixels)
 input_video_codec           Name of the video codec of the input file
+input_video_index           Video stream index in the file (used by the -map attr)
+input_audio_index           Audio stream index in the file (used by the -map attr)
 audio_offset                Offset to apply to audio, in seconds.
 video_offset                Offset to apply to video, in seconds.
 has_audio                   "true" if the input file contains an audio track
@@ -254,10 +256,6 @@ These parameters are always included and never changed by these scripts:
 -passlogfile                Temp file used for 2 pass encoding. Always set to "$pass_log_file" (including quotes)
 -threads                    Number of threads used. Always set to $num_cpus
 -y                          Overwrite output files (always included)
--itsoffset                  Used to offset audio or video. Included twice, once with $video_offset, once with $audio_offset
-                            Precedes corresponding input file (-i), which is usually the same filename, unless getting
-                            audio from a different source
--map                        Always after input files and -itsoffset. Always included twice: -map 0:0 -map 1:1
 -i                          Precedes input file
 ffmpeg                      ffmpeg command path
 qt_export                   qt_export command path (used to extract audio from some file types)
@@ -336,7 +334,7 @@ DTD
         </command>
         <command id="ffmpeg_pass2_options">
             -pass 2 -passlogfile "$pass_log_file" 
-                -vpre ffpresets/$ffmpeg_x264_pass1_preset -vpre ffpresets/$ffmpeg_x264_profile
+                -vpre ffpresets/$ffmpeg_x264_preset -vpre ffpresets/$ffmpeg_x264_profile
         </command>
         
         <!-- Raw encoding commands -->
@@ -350,14 +348,21 @@ DTD
             $ffmpeg -i "$input_file" -f yuv4mpegpipe - | $correct_yuv 
         </command>
         <command id="ffmpeg_normal_av">
+            $ffmpeg -threads $num_cpus -y -i "$input_file"
+        </command>
+        <command id="ffmpeg_normal_av_offset">
             $ffmpeg -threads $num_cpus -y -itsoffset $video_offset -i "$input_file"  
-                                            -itsoffset $audio_offset -i "$input_file" -map 0:0 -map 1:1
+                -itsoffset $audio_offset -i "$input_file" -map 0:$(input_video_index) -map 1:$(input_audo_index)
         </command>
         <command id="ffmpeg_normal_v">
             $ffmpeg -threads $num_cpus -i "$input_file"
         </command>
         <command id="yuv_to_ffmpeg_av">
             $ffmpeg -threads $num_cpus -y -i - -i "$tmp_audio_file"
+        </command>
+        <command id="yuv_to_ffmpeg_av_offset">
+            $ffmpeg -threads $num_cpus -y -itsoffset $video_offset -i - 
+                -itsoffset $audio_offset -i "$tmp_audio_file" -map 0:$(input_video_index) -map 1:$(input_audo_index)
         </command>
         <command id="yuv_to_ffmpeg_v">
             $ffmpeg -threads $num_cpus -y -i -
@@ -367,11 +372,17 @@ DTD
         <command id="quicktime_av_single_pass">
             $quicktime_to_yuv | $yuv_to_ffmpeg_av $ffmpeg_options $ffmpeg_single_pass_options "$output_file"
         </command>
+        <command id="quicktime_av_single_pass_offset">
+            $quicktime_to_yuv | $yuv_to_ffmpeg_av_offset $ffmpeg_options $ffmpeg_single_pass_options "$output_file"
+        </command>
         <command id="quicktime_av_pass1"> 
             $quicktime_to_yuv | $yuv_to_ffmpeg_av $ffmpeg_options $ffmpeg_pass1_options "$output_file" 
         </command>
         <command id="quicktime_av_pass2">
             $quicktime_to_yuv | $yuv_to_ffmpeg_av $ffmpeg_options $ffmpeg_pass2_options "$output_file"
+        </command>
+        <command id="quicktime_av_pass2_offset">
+            $quicktime_to_yuv | $yuv_to_ffmpeg_av_offset $ffmpeg_options $ffmpeg_pass2_options "$output_file"
         </command>
         <command id="quicktime_v_single_pass"> 
             $quicktime_to_yuv | $yuv_to_ffmpeg_v $ffmpeg_options $ffmpeg_single_pass_options "$output_file"
@@ -385,11 +396,17 @@ DTD
         <command id="normal_av_single_pass">
             $ffmpeg_normal_av $ffmpeg_options $ffmpeg_single_pass_options "$output_file"
         </command>
+        <command id="normal_av_single_pass_offset">
+            $ffmpeg_normal_av_offset $ffmpeg_options $ffmpeg_single_pass_options "$output_file"
+        </command>
         <command id="normal_av_pass1">
             $ffmpeg_normal_av $ffmpeg_options $ffmpeg_pass1_options "$output_file"
         </command>
         <command id="normal_av_pass2">
             $ffmpeg_normal_av $ffmpeg_options $ffmpeg_pass2_options "$output_file"
+        </command>
+        <command id="normal_av_pass2_offset">
+            $ffmpeg_normal_av_offset $ffmpeg_options $ffmpeg_pass2_options "$output_file"
         </command>
         <command id="normal_v_single_pass">
             $ffmpeg_normal_v $ffmpeg_options $ffmpeg_single_pass_options "$output_file"
@@ -402,6 +419,15 @@ DTD
         </command>
         <script>
             <![CDATA[
+            
+            // ffmpeg seems to have problems when using more than 4 cpus. Some files
+            // end up with 0 length video. More than 4 cpus don't help that much
+            // anyway, so we will limit to 4. The current version crashes with 0
+            // cpus so we will limit that also
+            if (number(params.num_cpus) <= 0)
+                params.num_cpus = 2;
+            else if (number(params.num_cpus) > 4)
+                params.num_cpus = 4;
             
             // The first generation Apple TV could not handle 30fps 720p content. If 
             // you wanted 30fps you were limited to 960x540, and if you wanted
@@ -922,19 +948,21 @@ DTD
                     
                     // construct the recipe
                     var recipeType = 
-                        (bool(params.input_format == "Quicktime") ? 4 : 0) |
+                        ((params.input_format == "Quicktime") ? 4 : 0) |
                         (bool(params.has_audio) ? 2 : 0) |
                         (bool(params.is_2_pass) ? 1 : 0);
+                                                
+                    var offset = (number(params.audio_offset) != 0 || number(params.audio_offset) != 0) ? "_offset" : "";
                         
                     switch (recipeType) {
                         case 0: params.recipe = "$normal_v_single_pass"; break;
                         case 1: params.recipe = "$normal__v_pass1 ; $normal_v_pass2"; break
-                        case 2: params.recipe = "$normal_av_single_pass"; break;
-                        case 3: params.recipe = "$normal_av_pass1 ; $normal_av_pass2"; break;
+                        case 2: params.recipe = "$normal_av_single_pass" + offset; break;
+                        case 3: params.recipe = "$normal_av_pass1 ; $normal_av_pass2" + offset; break;
                         case 4: params.recipe = "$quicktime_v_single_pass"; break;
                         case 5: params.recipe = "$quicktime_v_pass1 ; $quicktime_v_pass2"; break;
-                        case 6: params.recipe = "$quicktime_to_audio_file ; $quicktime_av_single_pass"; break;
-                        case 7: params.recipe = "$quicktime_to_audio_file ; $quicktime_av_pass1 ; $quicktime_av_pass2"; break;
+                        case 6: params.recipe = "$quicktime_to_audio_file ; $quicktime_av_single_pass" + offset; break;
+                        case 7: params.recipe = "$quicktime_to_audio_file ; $quicktime_av_pass1 ; $quicktime_av_pass2" + offset; break;
                     }
                     ]]>
                 </script>

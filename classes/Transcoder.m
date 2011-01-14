@@ -104,7 +104,33 @@ int heightFromFrameSize(FrameSize f) { return f & 0xffff; }
 
 int ffprobeIndexFromString(NSString* string, NSString* codec)
 {
-    return 0;
+    // Split the [STREAM] groups
+    NSArray* groups = [string componentsSeparatedByString:@"[/STREAM]"];
+    
+    for (NSString* group in groups) {
+        // split into lines
+        NSArray* lines = [group componentsSeparatedByString:@"\n"];
+        
+        NSString* codec_type = nil;
+        NSString* index = nil;
+        
+        for (NSString* line in lines) {
+            NSArray* item = [line componentsSeparatedByString:@"="];
+            
+            // hang onto index and codec_type
+            if ([item count] >= 2) {
+                if ([[item objectAtIndex:0] isEqualToString:@"codec_type"])
+                    codec_type = [item objectAtIndex:1];
+                else if ([[item objectAtIndex:0] isEqualToString:@"index"])
+                    index = [item objectAtIndex:1];
+            }
+        }
+        
+        if ([codec_type isEqualToString:codec])
+            return [index intValue];
+    }
+    
+    return -1;
 }
 
 -(BOOL) _validateInputFile: (TranscoderFileInfo*) info
@@ -410,6 +436,8 @@ static NSString* escapePath(NSString* path)
     [env setValue: [[NSNumber numberWithDouble: self.inputFileInfo.videoAspectRatio] stringValue] forKey: @"input_video_aspect"];
     [env setValue: [[NSNumber numberWithInt: self.inputFileInfo.videoBitrate] stringValue] forKey: @"input_video_bitrate"];
     [env setValue: [[NSNumber numberWithDouble: self.inputFileInfo.duration] stringValue] forKey: @"duration"];
+    [env setValue: [[NSNumber numberWithInt: self.inputFileInfo.videoIndex] stringValue] forKey: @"input_video_index"];
+    [env setValue: [[NSNumber numberWithInt: self.inputFileInfo.audioIndex] stringValue] forKey: @"input_audio_index"];
 
     // Set the AV offsets. Positive offsets delay video
     float avOffset = [[[AppController instance] moviePanelController] avOffset];
