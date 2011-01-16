@@ -33,6 +33,8 @@
     NSString* m_currentSearcher;
     BOOL m_metadataSearchSucceeded;
     BOOL m_searchFieldIsEditing;
+    
+    BOOL m_metadataEnabled;
 }
 
 @property(readonly) NSArray* artworkList;
@@ -44,6 +46,8 @@
 @property(readwrite,retain) NSArray* searcherStrings;
 @property(readwrite,retain) NSString* currentSearcher;
 
+@property(assign) BOOL metadataEnabled;
+
 - (IBAction)artworkCheckedStateChanged:(id)sender;
 - (IBAction)searchBoxSelected:(id)sender;
 - (IBAction)useSeasonValueForAllFiles:(id)sender;
@@ -53,6 +57,6 @@
 - (void)initializeMetadataSearch;
 - (void)startMetadataSearch;
 - (void)finishMetadataSearch:(BOOL) success;
-- (void)setMetadataDisabledFileType:(NSString*) fileType;
+- (void)setMetadataStateForFileType:(NSString*) fileType;
 
 @end

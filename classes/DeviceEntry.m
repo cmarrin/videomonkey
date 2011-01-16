@@ -292,9 +292,9 @@ static void setButton(NSButton* button, MyButton* item)
     [m_slider setEnabled:YES];
     
     // Set the current menu values from the params
-    [m_containerFormatMenu selectItemWithTitle:[context stringParamForKey:@"output_format_name"]];
-    [m_videoCodecMenu selectItemWithTitle:[context stringParamForKey:@"output_video_codec_name"]];
-    [m_audioCodecMenu selectItemWithTitle:[context stringParamForKey:@"output_audio_codec_name"]];
+    [m_containerFormatMenu selectItemWithTitle:[context stringParamForKey:@"output_format_name" showError:YES]];
+    [m_videoCodecMenu selectItemWithTitle:[context stringParamForKey:@"output_video_codec_name" showError:YES]];
+    [m_audioCodecMenu selectItemWithTitle:[context stringParamForKey:@"output_audio_codec_name" showError:YES]];
 }
 
 - (IBAction)sliderEnableChanged:(id)sender

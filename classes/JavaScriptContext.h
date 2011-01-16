@@ -57,11 +57,11 @@
 
 -(void) setPropertyInObject: (JavaScriptObject*) obj forKey:(NSString*) key toString: (NSString*) string;
 -(void) setPropertyInObject: (JavaScriptObject*) obj forKey:(NSString*) key toObject: (JavaScriptObject*) object;
--(JavaScriptObject*) objectPropertyInObject: (JavaScriptObject*) obj forKey:(NSString*) key;
--(NSString*) stringPropertyInObject: (JavaScriptObject*) obj forKey:(NSString*) key;
+-(JavaScriptObject*) objectPropertyInObject: (JavaScriptObject*) obj forKey:(NSString*) key showError:(BOOL) showError;
+-(NSString*) stringPropertyInObject: (JavaScriptObject*) obj forKey:(NSString*) key showError:(BOOL) showError;
 
 -(void)setStringParam:(NSString*) string forKey:(NSString*)key;
--(NSString*) stringParamForKey:(NSString*)key;
+-(NSString*) stringParamForKey:(NSString*)key showError:(BOOL) showError;
 -(void) addParams: (NSDictionary*) params;
 
 -(NSString *)evaluateJavaScript:(NSString*)theJavaScript;

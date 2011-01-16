@@ -8,12 +8,14 @@
 
 #import <Cocoa/Cocoa.h>
 
-@class JavaScriptContext;
 
 #define VC_H264 @"h.264"
 #define VC_WMV3 @"wmv3"
 
 @class DeviceEntry;
+@class JavaScriptContext;
+
+typedef enum { ActionEncodeWrite = 0, ActionEncodeOnly, ActionWriteOnly, ActionRewriteOnly } ActionType;
 
 @interface DeviceController : NSObject {
     IBOutlet NSTabView* m_deviceControllerTabView;
@@ -32,25 +34,27 @@
 
     JavaScriptContext* m_context;
     id m_delegate;
+    BOOL m_metadataActionsEnabled;
 }
 
--(IBAction)selectDevice:(id)sender;
--(IBAction)changeUI:(id)sender;
+- (IBAction)selectDevice:(id)sender;
+- (IBAction)changeUI:(id)sender;
 
--(NSString*) fileSuffix;
+- (NSString*)fileSuffix;
 
--(void) setDelegate:(id) delegate;
--(void) setCurrentParamsWithEnvironment: (NSDictionary*) env;
--(NSString*) recipe;
--(NSString*) paramForKey:(NSString*) key;
+- (void)setDelegate:(id) delegate;
+- (void)setCurrentParamsWithEnvironment: (NSDictionary*) env;
+- (NSString*)recipe;
+- (NSString*)paramForKey:(NSString*) key;
+- (BOOL)hasParamForKey:(NSString*) key;
 
--(BOOL) shouldEncode;
--(BOOL) shouldWriteMetadata;
--(BOOL) shouldWriteMetadataToInputFile;
--(BOOL) shouldWriteMetadataToOutputFile;
+- (BOOL)shouldEncode;
+- (BOOL)shouldWriteMetadata;
+- (BOOL)shouldWriteMetadataToInputFile;
+- (BOOL)shouldWriteMetadataToOutputFile;
 
 - (void)processResponse:(NSString*) response forCommand:(NSString*) command;
 
--(void) uiChanged;
+- (void)uiChanged;
 
 @end

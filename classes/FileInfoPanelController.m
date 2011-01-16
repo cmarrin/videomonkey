@@ -6,6 +6,8 @@
 //  Copyright 2008 Chris Marrin. All rights reserved.
 //
 
+#import "AppController.h"
+#import "DeviceController.h"
 #import "FileInfoPanelController.h"
 #import "FileListController.h"
 #import "Metadata.h"
@@ -18,6 +20,7 @@
 @synthesize metadataPanel = m_metadataPanel;
 @synthesize metadataStatus = m_metadataStatus;
 @synthesize searcherStrings = m_searcherStrings;
+@synthesize metadataEnabled = m_metadataEnabled;
 
 -(BOOL) autoSearch
 {
@@ -75,7 +78,7 @@
     self.currentSearcher = [[[NSUserDefaultsController sharedUserDefaultsController] values] valueForKey:@"defaultMetadataSearch"];
     
     // Initialize the metadata disabled status
-    [self setMetadataDisabledFileType:nil];
+    [self setMetadataStateForFileType:nil];
 }
 
 -(IBAction)droppedInImage:(id)sender
@@ -202,13 +205,16 @@
     }
 }
 
-- (void)setMetadataDisabledFileType:(NSString*) fileType
+- (void)setMetadataStateForFileType:(NSString*) fileType
 {
     BOOL enabled = fileType && [fileType length];
     
     if (![fileType isEqualToString:@"MPEG-4"])
         enabled = NO;
-    
+        
+    if ([m_metadataDisabledMessage isHidden] == enabled)
+        return;
+
     [m_metadataContainer setHidden:!enabled];
     [m_metadataDisabledMessage setHidden:enabled];
     

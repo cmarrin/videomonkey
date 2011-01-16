@@ -391,7 +391,7 @@ the function,  or NULL if an error occured.  */
 	return resultString;
 }
 
--(JSValueRef) jsValuePropertyInObject: (JavaScriptObject*) obj forKey:(NSString*) key
+-(JSValueRef) jsValuePropertyInObject: (JavaScriptObject*) obj forKey:(NSString*) key showError:(BOOL) showError
 {
     if (!obj)
         obj = m_globalObject;
@@ -401,12 +401,18 @@ the function,  or NULL if an error occured.  */
     JSValueRef jsValue = JSObjectGetProperty(m_jsContext, [obj jsObject], jskey, &error);
 
     if (!JSValueIsNull(m_jsContext, error)) {
-        NSString* errorString = [NSString stringWithJSValue: error fromContext: m_jsContext];
-        NSRunAlertPanel(@"JavaScript error in property get", errorString, nil, nil, nil);
+        if (showError) {
+            NSString* errorString = [NSString stringWithJSValue: error fromContext: m_jsContext];
+            NSRunAlertPanel(@"JavaScript error in property get", errorString, nil, nil, nil);
+        }
         jsValue = JSValueMakeUndefined(m_jsContext);
     }
-    else if (JSValueIsUndefined(m_jsContext, jsValue))
-        NSRunAlertPanel(@"JavaScript error in property get", [NSString stringWithFormat:@"Property '%@' does not exist", key], nil, nil, nil);
+    else if (JSValueIsUndefined(m_jsContext, jsValue)) {
+        if (showError) {
+            NSRunAlertPanel(@"JavaScript error in property get", [NSString stringWithFormat:@"Property '%@' does not exist", key], nil, nil, nil);
+            jsValue = JSValueMakeUndefined(m_jsContext);
+        }
+    }
 
     JSStringRelease(jskey);
     return jsValue;
@@ -423,17 +429,17 @@ the function,  or NULL if an error occured.  */
     return result;
 }
 
--(JavaScriptObject*) objectPropertyInObject: (JavaScriptObject*) obj forKey:(NSString*) key
+-(JavaScriptObject*) objectPropertyInObject: (JavaScriptObject*) obj forKey:(NSString*) key showError:(BOOL) showError
 {
-    JSValueRef jsValue = [self jsValuePropertyInObject: obj forKey: key];
+    JSValueRef jsValue = [self jsValuePropertyInObject: obj forKey: key showError:showError];
     if (JSValueIsUndefined(m_jsContext, jsValue))
         return nil;
     return [JavaScriptObject javaScriptObject:self withJSObject:JSValueToObject(m_jsContext, jsValue, NULL)];
 }
 
--(NSString*) stringPropertyInObject: (JavaScriptObject*) obj forKey:(NSString*) key
+-(NSString*) stringPropertyInObject: (JavaScriptObject*) obj forKey:(NSString*) key showError:(BOOL) showError
 {
-    JSValueRef jsValue = [self jsValuePropertyInObject: obj forKey: key];
+    JSValueRef jsValue = [self jsValuePropertyInObject: obj forKey: key showError:showError];
     if (JSValueIsUndefined(m_jsContext, jsValue))
         return nil;
     JSStringRef jsstring = JSValueToStringCopy(m_jsContext, jsValue, NULL);
@@ -472,7 +478,7 @@ the function,  or NULL if an error occured.  */
 
 -(void)setStringParam:(NSString*) string forKey:(NSString*)key
 {
-    JavaScriptObject* params = [self objectPropertyInObject: nil forKey: @"params"];
+    JavaScriptObject* params = [self objectPropertyInObject: nil forKey: @"params" showError:YES];
 
     // handle key path
     NSArray* array = [key componentsSeparatedByString:@"."];
@@ -486,7 +492,7 @@ the function,  or NULL if an error occured.  */
                 [self addObject:[array objectAtIndex:i] toObject:params];
             }
 
-            params = [self objectPropertyInObject:params forKey:[array objectAtIndex:i]];
+            params = [self objectPropertyInObject:params forKey:[array objectAtIndex:i] showError:YES];
         }
         
         key = [array objectAtIndex:arrayLength - 1];
@@ -495,10 +501,10 @@ the function,  or NULL if an error occured.  */
     [self setPropertyInObject: params forKey: key toString:string];
 }
 
--(NSString*) stringParamForKey:(NSString*)key
+-(NSString*) stringParamForKey:(NSString*)key showError:(BOOL)showError
 {
-    JavaScriptObject* params = [self objectPropertyInObject: nil forKey: @"params"];
-    return [self stringPropertyInObject:params forKey:key];
+    JavaScriptObject* params = [self objectPropertyInObject: nil forKey: @"params" showError:showError];
+    return [self stringPropertyInObject:params forKey:key showError:showError];
 }
 
 -(void) addParams: (NSDictionary*) params

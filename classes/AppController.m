@@ -649,6 +649,7 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
 
     // Update metadata panel
     [m_fileListController updateMetadataPanelState];
+    [m_fileListController reloadData];
 }
 
 -(void) uiChanged
@@ -656,10 +657,10 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
     for (Transcoder* transcoder in m_fileList)
         [transcoder setParams];
     
-    [m_fileListController reloadData];
 
     // Update metadata panel
     [m_fileListController updateMetadataPanelState];
+    [m_fileListController reloadData];
 }
 
 -(id) metadata

@@ -5,7 +5,13 @@ tar xvf ffmpeg.tar
 rm ffmpeg.tar
 cp ffmpeg.c ffmpeg-0.5.1
 cd ffmpeg-0.5.1
-./configure --disable-ffplay --disable-ffserver --enable-gpl --enable-libxvid --enable-libmp3lame --enable-libvorbis --enable-libfaac --enable-libfaad --enable-nonfree --enable-pthreads --enable-swscale --enable-avfilter --enable-avfilter-lavf --enable-libtheora --enable-libx264 --enable-postproc 
+./configure --disable-ffplay --disable-ffserver --enable-gpl --enable-libxvid --enable-libmp3lame \
+--enable-libfaac --enable-libfaad --enable-nonfree --enable-pthreads --enable-swscale --enable-avfilter --enable-avfilter-lavf \
+--enable-libx264 --enable-postproc --disable-doc --enable-static --disable-shared
+
+
+
+
 
 make
 sudo make install

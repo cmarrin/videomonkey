@@ -181,7 +181,7 @@ static void addMenuSeparator(NSPopUpButton* button)
             
             // do param substitution
             didSubstitute = YES;
-            NSString* substitution = [m_context stringParamForKey: param];
+            NSString* substitution = [m_context stringParamForKey: param showError:YES];
             if (substitution)
                 [tmpString appendString:substitution];
             [tmpString appendString:other];
@@ -260,6 +260,9 @@ static void addMenuSeparator(NSPopUpButton* button)
         addMenuItem(m_deviceButton, [entry title], [entry icon], currentItem++, [entry enabled]);
     }
     
+    [m_actionButton selectItemAtIndex:ActionEncodeWrite];
+    m_metadataActionsEnabled = YES;
+
     // set the selected item
     if ([m_deviceButton selectItemWithTag:deviceIndex]) {
 		DeviceEntry* deviceEntry = [self findDeviceEntryWithIndex:deviceIndex];
@@ -282,7 +285,7 @@ static void addMenuSeparator(NSPopUpButton* button)
     
     [self setCurrentParamsWithEnvironment:nil];
     
-    [m_actionButton selectItemAtIndex:0];
+    [self uiChanged];
 }
 
 - (BOOL)validateMenuItem:(NSMenuItem *)menuItem
@@ -351,13 +354,19 @@ static JSValueRef _jsLog(JSContextRef ctx, JSObjectRef function, JSObjectRef thi
 
 -(NSString*) recipe
 {
-    NSString* recipe = [m_context stringParamForKey:@"recipe"];
+    NSString* recipe = [m_context stringParamForKey:@"recipe" showError:YES];
     return [self replaceParams: recipe];
+}
+
+
+- (BOOL)hasParamForKey:(NSString*) key
+{
+    return [m_context stringParamForKey: key showError:NO] != nil;
 }
 
 -(NSString*) paramForKey:(NSString*) key
 {
-    return [m_context stringParamForKey: key];
+    return [m_context stringParamForKey: key showError:YES];
 }
 
 - (void)processResponse:(NSString*) response forCommand:(NSString*) command
@@ -365,34 +374,50 @@ static JSValueRef _jsLog(JSContextRef ctx, JSObjectRef function, JSObjectRef thi
     [m_context callBooleanFunction:@"processResponse" withParameters:command, response, nil];
 }
 
--(void) uiChanged
+- (void)uiChanged
 {
     [m_delegate uiChanged];
     [m_currentDevice setCurrentParamsInJavaScriptContext:m_context performanceIndex:[m_performanceButton indexOfSelectedItem]];
+    
+    // Update the actions
+    if (![self hasParamForKey:@"output_format_name"])
+        return;
+    
+    
+    BOOL enabled = [[self paramForKey:@"output_format_name"] isEqualToString:@"MPEG-4"];
+    if (m_metadataActionsEnabled == enabled)
+        return;
+        
+    m_metadataActionsEnabled = enabled;
+    
+    [m_actionButton selectItemAtIndex:m_metadataActionsEnabled ? ActionEncodeWrite : ActionEncodeOnly];
+    [[m_actionButton itemAtIndex:ActionEncodeWrite] setEnabled:m_metadataActionsEnabled];
+    [[m_actionButton itemAtIndex:ActionWriteOnly] setEnabled:m_metadataActionsEnabled];
+    [[m_actionButton itemAtIndex:ActionRewriteOnly] setEnabled:m_metadataActionsEnabled];
 }
 
--(BOOL) shouldEncode
+- (BOOL)shouldEncode
 {
     NSInteger sel = [m_actionButton indexOfSelectedItem];
-    return sel == 0 || sel == 1;
+    return sel == ActionEncodeWrite || sel == ActionEncodeOnly;
 }
 
--(BOOL) shouldWriteMetadata
+- (BOOL)shouldWriteMetadata
 {
     NSInteger sel = [m_actionButton indexOfSelectedItem];
-    return sel == 0 || sel == 2 || sel == 3;
+    return sel == ActionEncodeWrite || sel == ActionWriteOnly || sel == ActionRewriteOnly;
 }
 
--(BOOL) shouldWriteMetadataToInputFile
+- (BOOL)shouldWriteMetadataToInputFile
 {
     NSInteger sel = [m_actionButton indexOfSelectedItem];
-    return sel == 2;
+    return sel == ActionWriteOnly;
 }
 
--(BOOL) shouldWriteMetadataToOutputFile
+- (BOOL)shouldWriteMetadataToOutputFile
 {
     NSInteger sel = [m_actionButton indexOfSelectedItem];
-    return sel == 0 || sel == 3;
+    return sel == ActionEncodeWrite || sel == ActionRewriteOnly;
 }
 
 @end

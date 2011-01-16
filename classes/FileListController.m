@@ -299,7 +299,7 @@
     else if ([[[AppController instance] deviceController] shouldWriteMetadataToOutputFile])
         fileType = [transcoder outputFileInfo].format;
         
-    [[AppController instance].fileInfoPanelController setMetadataDisabledFileType:fileType];
+    [[AppController instance].fileInfoPanelController setMetadataStateForFileType:fileType];
 }
 
 - (id)valueForUndefinedKey:(NSString *)key
