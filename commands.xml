@@ -326,15 +326,13 @@ DTD
 
         <!-- Composite options -->
         <command id="ffmpeg_single_pass_options">
-            -vpre ffpresets/$ffmpeg_x264_preset -vpre ffpresets/$ffmpeg_x264_profile
+            $ffmpeg_vpre $ffmpeg_vpre_profile
         </command>
         <command id="ffmpeg_pass1_options">
-            -pass 1 -passlogfile "$pass_log_file" 
-                -vpre ffpresets/$ffmpeg_x264_pass1_preset -vpre ffpresets/$ffmpeg_x264_profile
+            -pass 1 -passlogfile "$pass_log_file" $ffmpeg_vpre_pass1 $ffmpeg_vpre_profile
         </command>
         <command id="ffmpeg_pass2_options">
-            -pass 2 -passlogfile "$pass_log_file" 
-                -vpre ffpresets/$ffmpeg_x264_preset -vpre ffpresets/$ffmpeg_x264_profile
+            -pass 2 -passlogfile "$pass_log_file"  $ffmpeg_vpre $ffmpeg_vpre_profile
         </command>
         
         <!-- Raw encoding commands -->
@@ -553,6 +551,10 @@ DTD
             
             params.output_video_profile_name = "none";
             params.output_video_level_name = "none";
+            
+            params.ffmpeg_vpre_pass1 = "";
+            params.ffmpeg_vpre = "";
+            params.ffmpeg_vpre_profile = "";
 
 
             function addFFMPegParam(param, paramName)
@@ -564,8 +566,14 @@ DTD
                     params.ffmpeg_options += "-" + param + " " + params[paramName] + " ";
             }
             
-            function generateFFMPegOptions()
+            function setFFMPegOptions()
             {
+                // set vpre if needed
+                if (params.ffmpeg_option_vcodec == "libx264") {
+                    params.ffmpeg_vpre_pass1 = "-vpre ffpresets/$ffmpeg_x264_pass1_preset ";
+                    params.ffmpeg_vpre = "-vpre ffpresets/$ffmpeg_x264_preset ";
+                    params.ffmpeg_vpre_profile = "-vpre ffpresets/$ffmpeg_x264_profile ";
+                }
 
                 params.ffmpeg_options = "";
                 
@@ -664,6 +672,12 @@ DTD
             // Sets output_video_width, output_video_height
             function setVideoSize(requestedWidth, requestedHeight)
             {
+                if (requestedWidth == 0)
+                    requestedWidth = params.input_video_width;
+                    
+                if (requestedHeight == 0)
+                    requestedHeight = params.input_video_height;
+                    
                 // Set output frame size
                 var inputWidth = params.input_video_width;
                 var inputHeight = params.input_video_height;
@@ -745,6 +759,34 @@ DTD
                 
                 params.output_video_width = requestedWidth;
                 params.output_video_height = requestedHeight;
+            }
+            
+            // Set ffmpeg_video_aspect_x, ffmpeg_video_aspect_y
+            function setVideoAspectRatio(x, y)
+            {
+                params.ffmpeg_video_aspect_x = (x == 0) ? params.output_video_width : x;
+                params.ffmpeg_video_aspect_y = (y == 0) ? params.output_video_height : y;
+            }
+            // Create params.recipe
+            function setRecipe()
+            {
+                var recipeType = 
+                    ((params.input_format == "Quicktime") ? 4 : 0) |
+                    (bool(params.has_audio) ? 2 : 0) |
+                    (bool(params.is_2_pass) ? 1 : 0);
+                                        
+                var offset = (number(params.audio_offset) != 0 || number(params.audio_offset) != 0) ? "_offset" : "";
+                
+                switch (recipeType) {
+                    case 0: params.recipe = "$normal_v_single_pass"; break;
+                    case 1: params.recipe = "$normal_v_pass1 ; $normal_v_pass2"; break
+                    case 2: params.recipe = "$normal_av_single_pass" + offset; break;
+                    case 3: params.recipe = "$normal_av_pass1 ; $normal_av_pass2" + offset; break;
+                    case 4: params.recipe = "$quicktime_v_single_pass"; break;
+                    case 5: params.recipe = "$quicktime_v_pass1 ; $quicktime_v_pass2"; break;
+                    case 6: params.recipe = "$quicktime_to_audio_file ; $quicktime_av_single_pass" + offset; break;
+                    case 7: params.recipe = "$quicktime_to_audio_file ; $quicktime_av_pass1 ; $quicktime_av_pass2" + offset; break;
+                }
             }
             
             ]]>
@@ -927,11 +969,8 @@ DTD
                     setVideoSize(requestedFrameWidth, requestedFrameHeight);
                     
                     // Set the aspect ratio
-                    params.ffmpeg_video_aspect_x = params.output_video_width;
-                    params.ffmpeg_video_aspect_y = params.output_video_height;
+                    setVideoAspectRatio(params.output_video_width, params.output_video_height);
 
-
-                    
                     // set audio quality
                     setAudioParams(audioQualityMap[title][qualityStop]);
                         
@@ -940,26 +979,10 @@ DTD
                     params.output_video_level_name = levelMap[title][qualityStop];
                     
                     // Generate the params
-                    generateFFMPegOptions();
+                    setFFMPegOptions();
                     
-                    // construct the recipe
-                    var recipeType = 
-                        ((params.input_format == "Quicktime") ? 4 : 0) |
-                        (bool(params.has_audio) ? 2 : 0) |
-                        (bool(params.is_2_pass) ? 1 : 0);
-                                                
-                    var offset = (number(params.audio_offset) != 0 || number(params.audio_offset) != 0) ? "_offset" : "";
-                        
-                    switch (recipeType) {
-                        case 0: params.recipe = "$normal_v_single_pass"; break;
-                        case 1: params.recipe = "$normal_v_pass1 ; $normal_v_pass2"; break
-                        case 2: params.recipe = "$normal_av_single_pass" + offset; break;
-                        case 3: params.recipe = "$normal_av_pass1 ; $normal_av_pass2" + offset; break;
-                        case 4: params.recipe = "$quicktime_v_single_pass"; break;
-                        case 5: params.recipe = "$quicktime_v_pass1 ; $quicktime_v_pass2"; break;
-                        case 6: params.recipe = "$quicktime_to_audio_file ; $quicktime_av_single_pass" + offset; break;
-                        case 7: params.recipe = "$quicktime_to_audio_file ; $quicktime_av_pass1 ; $quicktime_av_pass2" + offset; break;
-                    }
+                    // Generate the recipe
+                    setRecipe();
                     ]]>
                 </script>
             </common_device>
@@ -1218,14 +1241,11 @@ DTD
                     var mpeg2 = bool(params.mpeg2);
                     var requestedFrameWidth = 0;
                     var requestedFrameHeight = 0;
+                    var aspectRatioX = 0;
+                    var aspectRatioY = 0;
                     
                     // Set default audio quality
                     setAudioParams("high");
-                    
-                    // set:
-                    //      output_video_bitrate, ffmpeg_option_qmin, requested_frame_width, requested_frame_height
-                    //      ffmpeg_option_padleft, ffmpeg_option_padright, ffmpeg_option_padtop, ffmpeg_option_padbottom
-                    //      
                     
                     // Init qmin
                     params.ffmpeg_option_qmin = qminMap[params.title][qualityStop];
@@ -1251,18 +1271,17 @@ DTD
                     switch (params.title) {
                         case "AVI":
                             if(width320)
-                                params.requested_frame_width = 320;
+                                requestedFrameWidth = 320;
                             else if (qualityStop == "0") {
                                 var sizeString = deviceFrameSizeMap[title][qualityStop];
-                                params.requested_frame_width = frameSizes[sizeString][0];
-                                params.requested_frame_height = frameSizes[sizeString][1];
+                                requestedFrameWidth = frameSizes[sizeString][0];
+                                requestedFrameHeight = frameSizes[sizeString][1];
                             } 
                             else {
-                                params.requested_frame_width = params.input_video_width;
-                                params.requested_frame_height = params.input_video_height;
+                                requestedFrameWidth = params.input_video_width;
+                                requestedFrameHeight = params.input_video_height;
                             }
-                        }
-                             break;
+                            break;
                         case "MP4":
                             var index = (h264 ? 2 : 0) + (width320 ? 1 : 0);
                             setVideoBitrate(bitrateQualityMap[params.title][index][qualityStop] * 1000);
@@ -1336,8 +1355,8 @@ DTD
                                         params.ffmpeg_option_vcodec = "mpeg1video";
                                         params.output_video_codec_name = "MPEG-1";
                                         
-                                        params.ffmpeg_video_aspect_x = params.input_video_width;
-                                        params.ffmpeg_video_aspect_y = params.input_video_height;
+                                        aspectRatioX = params.input_video_width;
+                                        aspectRatioY = params.input_video_height;
 
                                         params.ffmpeg_option_ratemax = mpegMaxrateMap["mpeg"][qualityStop];
                                         params.ffmpeg_option_bufsize = mpegBufsizeMap["mpeg"][qualityStop];
@@ -1347,8 +1366,8 @@ DTD
                                     params.ffmpeg_option_qmin = 5;
                                     params.ffmpeg_option_bf = 2;
                                     params.ffmpeg_option_target = isNTSC ? "ntsc-vcd" : "pal-vcd";
-                                    params.ffmpeg_video_aspect_x = 4;
-                                    params.ffmpeg_video_aspect_y = 3;
+                                    aspectRatioX = 4;
+                                    aspectRatioY = 3;
                                     
                                     if (params.input_video_aspect >= 1.2 && params.input_video_aspect <= 1.5) {
                                         requestedFrameWidth = 352;
@@ -1375,8 +1394,8 @@ DTD
                                 case "svcd":
                                     setVideoBitrate(mpegbitrateQualityMap[params.profile][isNTSC ? 1 : 0][qualityStop] * 1000);
 
-                                    params.ffmpeg_video_aspect_x = 4;
-                                    params.ffmpeg_video_aspect_y = 3;
+                                    aspectRatioX = 4;
+                                    aspectRatioY = 3;
                                     
                                     if (params.input_video_aspect >= 1.2 && params.input_video_aspect <= 1.5) {
                                         requestedFrameWidth = 480;
@@ -1455,8 +1474,8 @@ DTD
                                 case "ts":
                                     setVideoBitrate(mpegbitrateQualityMap[params.profile][isNTSC ? 1 : 0][qualityStop] * 1000);
                                     setAudioParams("high");
-                                    params.ffmpeg_video_aspect_x = 4;
-                                    params.ffmpeg_video_aspect_y = 3;
+                                    aspectRatioX = 4;
+                                    aspectRatioY = 3;
                                     requestedFrameWidth = "352";
                                     requestedFrameHeight = isNTSC ? "480" : "576";
                                     break;
@@ -1464,8 +1483,8 @@ DTD
                                 case "1080":
                                     setAudioParams("hd");
                                     setVideoBitrate(18500);
-                                    params.ffmpeg_video_aspect_x = 16;
-                                    params.ffmpeg_video_aspect_y = 9;
+                                    aspectRatioX = 16;
+                                    aspectRatioY = 9;
                                     
                                     if (params.profile == "720") {
                                         requestedFrameWidth = 1280;
@@ -1507,24 +1526,13 @@ DTD
                     }
                     
                     setVideoSize(requestedFrameWidth, requestedFrameHeight);
+                    setVideoAspectRatio(aspectRatioX, aspectRatioY);
                     
-                    // construct the recipe
-                    if (     !bool(params.input_format == "Quicktime") && !bool(params.has_audio) && !bool(params.is_2_pass))
-                        params.recipe = "$normal_single_pass";
-                    else if (!bool(params.input_format == "Quicktime") && !bool(params.has_audio) && bool(params.is_2_pass))
-                        params.recipe = "$normal_pass1 ; $normal_pass2";
-                    else if (!bool(params.input_format == "Quicktime") && bool(params.has_audio) && !bool(params.is_2_pass))
-                        params.recipe = "$normal_single_pass";
-                    else if (!bool(params.input_format == "Quicktime") && bool(params.has_audio) && bool(params.is_2_pass))
-                        params.recipe = "$normal_pass1 ; $normal_pass2";
-                    else if (bool(params.input_format == "Quicktime") && !bool(params.has_audio) && !bool(params.is_2_pass))
-                        params.recipe = "$quicktime_v_single_pass";
-                    else if (bool(params.input_format == "Quicktime") && !bool(params.has_audio) && bool(params.is_2_pass))
-                        params.recipe = "$quicktime_v_pass1 ; $quicktime_v_pass2";
-                    else if (bool(params.input_format == "Quicktime") && bool(params.has_audio) && !bool(params.is_2_pass))
-                        params.recipe = "$quicktime_to_audio_file ; $quicktime_av_single_pass";
-                    else if (bool(params.input_format == "Quicktime") && bool(params.has_audio) && bool(params.is_2_pass))
-                        params.recipe = "$quicktime_to_audio_file ; $quicktime_av_pass1 ; $quicktime_av_pass2";
+                    // Generate the params
+                    setFFMPegOptions();
+                    
+                    // Generate the recipe
+                    setRecipe();
 
                     ]]>
                 </script>
