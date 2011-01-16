@@ -345,7 +345,7 @@ DTD
             $yuvcorrect -v 0 -Y LUMINANCE_1.20_0_255_0_255 -Y CHROMINANCE_0_1.04_128_1.04_128_0_255
         </command>
         <command id="quicktime_to_yuv">
-            $ffmpeg -i "$input_file" -f yuv4mpegpipe - | $correct_yuv 
+            $ffmpeg -threads $num_cpus -y -i "$input_file" -f yuv4mpegpipe - | $correct_yuv 
         </command>
         <command id="ffmpeg_normal_av">
             $ffmpeg -threads $num_cpus -y -i "$input_file"
@@ -355,7 +355,7 @@ DTD
                 -itsoffset $audio_offset -i "$input_file" -map 0:$(input_video_index) -map 1:$(input_audo_index)
         </command>
         <command id="ffmpeg_normal_v">
-            $ffmpeg -threads $num_cpus -i "$input_file"
+            $ffmpeg -threads $num_cpus -y -i "$input_file"
         </command>
         <command id="yuv_to_ffmpeg_av">
             $ffmpeg -threads $num_cpus -y -i - -i "$tmp_audio_file"
@@ -769,15 +769,11 @@ DTD
                 <param id="is_2_pass" value="false" />
                 <param id="ffmpeg_x264_preset" value="libx264-medium" />
             </performance_item>
-            <performance_item title="High Quality (2 pass)">
+            <performance_item title="Best (2 pass)">
                 <param id="is_2_pass" value="true" />
                 <param id="ffmpeg_x264_preset" value="libx264-slow" />
                 <param id="ffmpeg_x264_pass1_preset" value="libx264-slow_firstpass" />
             </performance_item>
-            <performance_item title="Best Quality (2 pass)">
-                <param id="ffmpeg_x264_preset" value="libx264-veryslow" />
-                <param id="ffmpeg_x264_pass1_preset" value="libx264-veryslow_firstpass" />
-           </performance_item>
         </performance>
         <param id="ffmpeg_option_vcodec" value="libx264" />
         <param id="ffmpeg_option_acodec" value="libfaac" />
@@ -956,7 +952,7 @@ DTD
                         
                     switch (recipeType) {
                         case 0: params.recipe = "$normal_v_single_pass"; break;
-                        case 1: params.recipe = "$normal__v_pass1 ; $normal_v_pass2"; break
+                        case 1: params.recipe = "$normal_v_pass1 ; $normal_v_pass2"; break
                         case 2: params.recipe = "$normal_av_single_pass" + offset; break;
                         case 3: params.recipe = "$normal_av_pass1 ; $normal_av_pass2" + offset; break;
                         case 4: params.recipe = "$quicktime_v_single_pass"; break;
