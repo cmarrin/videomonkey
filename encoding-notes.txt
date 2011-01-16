@@ -269,3 +269,35 @@ Then each specific device section would select from the menu of encoders, supply
 *************************************************
 *************************************************
 *************************************************
+
+
+                ffprobe         mediainfo
+                -------         ---------
+sample.avi
+    audio       1 (2nd)         same
+    video       0 (1st)         same
+    
+sample.mov
+    audio       0 (1st)         1 (2nd)     Different
+    video       1 (2nd)         2 (1st)     Different
+    
+audiosync.mp4
+    audio       1 (2nd)         2 (2nd)     Different
+    video       0 (1st)         1 (1st)     Different
+    
+Dead...mkv
+    audio       1 (2nd)         2 (2nd)     Different
+    video       0 (1st)         1 (1st)     Different
+    
+niceday.asf
+    audio       0 (1st)         
+    video       1 (2nd)
+    
+niceday.wmv
+    audio       0 (1st)
+    video       1 (2nd)
+    
+test.mkv
+    audio       0 (1st)
+    video       1 (2nd)
+    
