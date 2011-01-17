@@ -258,7 +258,7 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
     [m_stopEncodeItem setEnabled: NO];
     [m_pauseEncodeItem setEnabled: NO];
     
-    [m_deviceController setDelegate:self];
+    [m_deviceController initWithDelegate:self];
     
     m_runState = RS_STOPPED;
     

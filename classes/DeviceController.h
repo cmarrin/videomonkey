@@ -42,7 +42,7 @@ typedef enum { ActionEncodeWrite = 0, ActionEncodeOnly, ActionWriteOnly, ActionR
 
 - (NSString*)fileSuffix;
 
-- (void)setDelegate:(id) delegate;
+- (void)initWithDelegate:(id) delegate;
 - (void)setCurrentParamsWithEnvironment: (NSDictionary*) env;
 - (NSString*)recipe;
 - (NSString*)paramForKey:(NSString*) key;

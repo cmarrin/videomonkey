@@ -418,6 +418,9 @@ DTD
         <script>
             <![CDATA[
             
+log("***** got here");
+log("***** params.quality_stop="+params.quality_stop);
+
             // ffmpeg seems to have problems when using more than 4 cpus. Some files
             // end up with 0 length video. More than 4 cpus don't help that much
             // anyway, so we will limit to 4. The current version crashes with 0
@@ -830,8 +833,6 @@ DTD
         -->
         <device_group title="iTunes">
             <common_device>
-                <param id="ffmpeg_option_vcodec" value="libx264" />
-                <param id="ffmpeg_option_acodec" value="libfaac" />
                 <script>
                     <![CDATA[
     
@@ -951,7 +952,7 @@ DTD
                     var forTV = bool(params.forTV);
                     var requestedFrameWidth = 0;
                     var requestedFrameHeight = 0;
-                    
+                                        
                     // set frame rate
                     setVideoFrameRate(title != "1st Gen Apple TV" && title != "2nd Gen Apple TV");
                         
@@ -1244,11 +1245,14 @@ DTD
                     var aspectRatioX = 0;
                     var aspectRatioY = 0;
                     
+                    params.output_video_frame_rate = params.input_frame_rate;
+                    
                     // Set default audio quality
                     setAudioParams("high");
                     
                     // Init qmin
-                    params.ffmpeg_option_qmin = qminMap[params.title][qualityStop];
+                    if (params.title in qminMap)
+                        params.ffmpeg_option_qmin = qminMap[params.title][qualityStop];
                     
                     // Init bitrate
                     setVideoBitrate(bitrateQualityMap[params.title][width320 ? 1 : 0][qualityStop] * 1000);
@@ -1273,7 +1277,7 @@ DTD
                             if(width320)
                                 requestedFrameWidth = 320;
                             else if (qualityStop == "0") {
-                                var sizeString = deviceFrameSizeMap[title][qualityStop];
+                                var sizeString = deviceFrameSizeMap[params.title][qualityStop];
                                 requestedFrameWidth = frameSizes[sizeString][0];
                                 requestedFrameHeight = frameSizes[sizeString][1];
                             } 
@@ -1591,18 +1595,24 @@ DTD
                 <param id="vob" value="" />
                 <param id="dashb" value="-b" />
                 <param id="target" value="" />
-                <param id="dashv" value="-vcodec" />
                 <param id="dashtarget" value="" />
             </device>
             
             <!-- QuickTime -->
             <device title="QuickTime" icon="file" enabled="true">
+                <param id="output_format_name" value="Quicktime" />
+                <param id="video_suffix" value="mov" />
+                <param id="ffmpeg_option_acodec" value="libfaac" />
+                <param id="output_audio_codec_name" value="AAC" />
+                
                 <checkbox which="0" title="H.264 Video">
                     <checked_item>
                         <param id="ffmpeg_option_vcodec" value="libx264" />
+                        <param id="output_video_codec_name" value="H.264" />
                     </checked_item>
                     <unchecked_item>
-                        <param id="ffmpeg_option_vcodec" value="mpeg4" />
+                        <param id="ffmpeg_option_vcodec" value="MPEG-4" />
+                        <param id="output_video_codec_name" value="H.264" />
                     </unchecked_item>
                 </checkbox>
                 <menu which="0" title="Best for:">
@@ -1638,7 +1648,6 @@ DTD
                 <param id="vob" value="" />
                 <param id="dashb" value="-b" />
                 <param id="target" value="" />
-                <param id="dashv" value="-vcodec" />
                 <param id="dashtarget" value="" />
                 <param id="output_video_frame_rate" value="ntsc" />
                 <param id="aspect" value="" />
@@ -1667,7 +1676,6 @@ DTD
                 <param id="output_video_frame_rate" value="ntsc" />
                 <param id="padding" value="" />
                 <param id="aspect" value="" />
-                <param id="dashv" value="" />
                 <param id="ffmpeg_option_vcodec" value="" />
                 <param id="pixfmt" value="" />
                 <param id="tag" value="" />
@@ -1702,7 +1710,6 @@ DTD
                 <menu which="1" title="Profile:">
                     <menu_item title="None">
                         <param id="profile" value="none" />
-                        <param id="dashv" value="-vcodec" />
                         <param id="video_suffix" value="mpg" />
                         <param id="ffmpeg_option_acodec" value="mp2" />
                         <param id="output_audio_codec_name" value="MP2" />
@@ -1713,7 +1720,6 @@ DTD
                         <param id="ffmpeg_option_vcodec" value="" />
                         <param id="output_video_codec_name" value="MPEG-1" />
                         <param id="output_audio_codec_name" value="MP2" />
-                        <param id="dashv" value="" />
                         <param id="video_suffix" value="mpg" />
                     </menu_item>
                     <menu_item title="SVCD">
@@ -1722,7 +1728,6 @@ DTD
                         <param id="ffmpeg_option_vcodec" value="" />
                         <param id="output_video_codec_name" value="MPEG-2" />
                         <param id="output_audio_codec_name" value="MP2" />
-                        <param id="dashv" value="" />
                         <param id="video_suffix" value="mpg" />
                     </menu_item>
                     <menu_item title="CVD">
@@ -1731,7 +1736,6 @@ DTD
                         <param id="ffmpeg_option_vcodec" value="mpeg2video" />
                         <param id="output_video_codec_name" value="MPEG-2" />
                         <param id="output_audio_codec_name" value="MP2" />
-                        <param id="dashv" value="-vcodec" />
                         <param id="video_suffix" value="mpg" />
                     </menu_item>
                     <menu_item title="TiVo">
@@ -1740,7 +1744,6 @@ DTD
                         <param id="ffmpeg_option_vcodec" value="mpeg2video" />
                         <param id="output_video_codec_name" value="MPEG-2" />
                         <param id="output_audio_codec_name" value="MP2" />
-                        <param id="dashv" value="-vcodec" />
                         <param id="video_suffix" value="mpg" />
                     </menu_item>
                     <menu_item title="Transport Stream">
@@ -1750,7 +1753,6 @@ DTD
                         <param id="ffmpeg_option_vcodec" value="mpeg2video" />
                         <param id="output_video_codec_name" value="MPEG-2" />
                         <param id="output_audio_codec_name" value="AC3" />
-                        <param id="dashv" value="-vcodec" />
                     </menu_item>
                     <menu_item title="720p">
                         <param id="profile" value="720" />
@@ -1760,7 +1762,6 @@ DTD
                         <param id="ffmpeg_option_vcodec" value="mpeg2video" />
                         <param id="output_video_codec_name" value="MPEG-2" />
                         <param id="output_audio_codec_name" value="AC3" />
-                        <param id="dashv" value="-vcodec" />
                     </menu_item>
                     <menu_item title="1080i">
                         <param id="profile" value="1080" />
@@ -1770,7 +1771,6 @@ DTD
                         <param id="ffmpeg_option_vcodec" value="mpeg2video" />
                         <param id="output_video_codec_name" value="MPEG-2" />
                         <param id="output_audio_codec_name" value="AC3" />
-                        <param id="dashv" value="-vcodec" />
                     </menu_item>
                 </menu>
                 <param id="output_format_name" value="MPEG-2" />

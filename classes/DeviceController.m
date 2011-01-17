@@ -222,13 +222,46 @@ static void addMenuSeparator(NSPopUpButton* button)
     }
 }
 
-- (void) awakeFromNib
+static JSValueRef _jsLog(JSContextRef ctx, JSObjectRef function, JSObjectRef thisObject, size_t argumentCount, 
+                         const JSValueRef arguments[], JSValueRef* exception)
+{
+    JSObjectRef global = JSContextGetGlobalObject(ctx);
+    JSStringRef propString = JSStringCreateWithUTF8CString("$app");
+    JSValueRef jsValue = JSObjectGetProperty(ctx, global, propString, NULL);
+    JSObjectRef obj = JSValueToObject(ctx, jsValue, NULL);
+    id delegate = (id) JSObjectGetPrivate(obj);
+
+    // make a string out of the args
+    NSMutableString* string = [[NSMutableString alloc] init];
+    for (int i = 0; i < argumentCount; ++i) {
+        JSStringRef jsString = JSValueToStringCopy(ctx, arguments[i], NULL);
+        [string appendString:[NSString stringWithJSString:jsString]];
+    }
+    
+    if ([delegate respondsToSelector: @selector(log:)])
+        [delegate log:[NSString stringWithFormat:@"JS log: %@\n", string]];
+    
+    return JSValueMakeUndefined(ctx);
+}
+
+-(void) setDelegate:(id) delegate
+{
+    m_delegate = delegate;
+    
+    if (m_context) {
+        // Add log method
+        [m_context addGlobalObject:@"$app" ofClass:NULL withPrivateData:m_delegate];
+        [m_context addGlobalFunctionProperty:@"log" withCallback:_jsLog];
+    }
+}
+
+- (void)initWithDelegate:(id)delegate
 {
     // Create JS context
     m_context = [[JavaScriptContext alloc] init];
     
     // make sure delegate sets up the context
-    [self setDelegate: m_delegate];
+    [self setDelegate: delegate];
 
     // load the XML file with all the commands and device setup
     [self initCommands];
@@ -309,39 +342,6 @@ static void addMenuSeparator(NSPopUpButton* button)
 -(NSString*) fileSuffix
 {
     return [m_currentDevice fileSuffix];
-}
-
-static JSValueRef _jsLog(JSContextRef ctx, JSObjectRef function, JSObjectRef thisObject, size_t argumentCount, 
-                         const JSValueRef arguments[], JSValueRef* exception)
-{
-    JSObjectRef global = JSContextGetGlobalObject(ctx);
-    JSStringRef propString = JSStringCreateWithUTF8CString("$app");
-    JSValueRef jsValue = JSObjectGetProperty(ctx, global, propString, NULL);
-    JSObjectRef obj = JSValueToObject(ctx, jsValue, NULL);
-    id delegate = (id) JSObjectGetPrivate(obj);
-
-    // make a string out of the args
-    NSMutableString* string = [[NSMutableString alloc] init];
-    for (int i = 0; i < argumentCount; ++i) {
-        JSStringRef jsString = JSValueToStringCopy(ctx, arguments[i], NULL);
-        [string appendString:[NSString stringWithJSString:jsString]];
-    }
-    
-    if ([delegate respondsToSelector: @selector(log:)])
-        [delegate log:[NSString stringWithFormat:@"JS log: %@\n", string]];
-    
-    return JSValueMakeUndefined(ctx);
-}
-
--(void) setDelegate:(id) delegate
-{
-    m_delegate = delegate;
-    
-    if (m_context) {
-        // Add log method
-        [m_context addGlobalObject:@"$app" ofClass:NULL withPrivateData:m_delegate];
-        [m_context addGlobalFunctionProperty:@"log" withCallback:_jsLog];
-    }
 }
 
 -(void) setCurrentParamsWithEnvironment: (NSDictionary*) env

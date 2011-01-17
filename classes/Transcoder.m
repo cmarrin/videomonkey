@@ -294,8 +294,6 @@ static NSImage* getFileStatusImage(FileStatus status)
     // init the status image view
     transcoder->m_statusImageView = [[NSImageView alloc] init];
     [transcoder->m_statusImageView setImage: getFileStatusImage(transcoder->m_fileStatus)];
-    
-    //transcoder.currentAction = Action
 
     return transcoder;
 }
