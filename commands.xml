@@ -417,9 +417,6 @@ DTD
         </command>
         <script>
             <![CDATA[
-            
-log("***** got here");
-log("***** params.quality_stop="+params.quality_stop);
 
             // ffmpeg seems to have problems when using more than 4 cpus. Some files
             // end up with 0 length video. More than 4 cpus don't help that much
@@ -1294,7 +1291,6 @@ log("***** params.quality_stop="+params.quality_stop);
                             else if (qualityStop == 0) {
                                 params.ffmpeg_option_maxrate = "40k";
                                 params.ffmpeg_option_bufsize = "5k";
-                                params.ffmpeg_option_g = "ntsc";
                                 params.output_video_frame_rate = "10";
                             }
                             break;
@@ -1313,7 +1309,6 @@ log("***** params.quality_stop="+params.quality_stop);
                                 requestedFrameWidth = 240;
                                 params.ffmpeg_option_maxrate = "24k";
                                 params.ffmpeg_option_bufsize = "5k";
-                                params.ffmpeg_option_g = "ntsc";
                                 params.output_video_frame_rate = "10";
                             }
                             else if (width320)
@@ -1625,7 +1620,7 @@ log("***** params.quality_stop="+params.quality_stop);
                 </menu>
             </device>
             
-            <!-- WMV -->
+            <!-- WMV
             <device title="WMV" icon="wma" enabled="true">
                 <checkbox which="0" title="320 Pixels Wide">
                     <checked_item>
@@ -1652,6 +1647,7 @@ log("***** params.quality_stop="+params.quality_stop);
                 <param id="output_video_frame_rate" value="ntsc" />
                 <param id="aspect" value="" />
             </device>
+            -->
 
             <!-- Flash -->
             <device title="Flash" icon="flash" enabled="true">
@@ -1665,9 +1661,11 @@ log("***** params.quality_stop="+params.quality_stop);
                 </checkbox>
                 <checkbox which="1" title="Raw .flv Format">
                     <checked_item>
+                        <param id="output_format_name" value="FLV" />
                         <param id="video_suffix" value="flv" />
                     </checked_item>
                     <unchecked_item>
+                        <param id="output_format_name" value="SWF" />
                         <param id="video_suffix" value="swf" />
                     </unchecked_item>
                 </checkbox>
@@ -1676,10 +1674,12 @@ log("***** params.quality_stop="+params.quality_stop);
                 <param id="output_video_frame_rate" value="ntsc" />
                 <param id="padding" value="" />
                 <param id="aspect" value="" />
+                <param id="output_video_codec_name" value="" />
                 <param id="ffmpeg_option_vcodec" value="" />
                 <param id="pixfmt" value="" />
                 <param id="tag" value="" />
                 <param id="dashb" value="-b" />
+                <param id="output_audio_codec_name" value="MP3" />
                 <param id="ffmpeg_option_acodec" value="libmp3lame" />
                 <param id="gop_size" value="-g 300" />
                 <param id="vob" value="" />
