@@ -662,10 +662,15 @@ DTD
             }
             
             // Sets output_video_bitrate
-            function setVideoBitrate(requestedBitrate)
+            function setVideoBitrate(bitrateMin, bitrateMax)
             {
-                limit = (requestedBitrate > params.input_video_bitrate) && bool(params.limit_output_params);
-                params.output_video_bitrate = limit ? params.input_video_bitrate : requestedBitrate;
+log("*** bitrateMin="+bitrateMin+", bitrateMax="+bitrateMax+
+    ", input_video_bitrate="+params.input_video_bitrate+", quality="+params.quality);
+
+                var bitrate = (bitrateMax - bitrateMin) * number(params.quality) + bitrateMin;
+                var limit = (bitrate > params.input_video_bitrate) && bool(params.limit_output_params);
+                params.output_video_bitrate = limit ? params.input_video_bitrate : bitrate;
+log("******** limit="+limit+", output_video_bitrate="+params.output_video_bitrate);
             }
             
             // Assumes output_video_frame_rate is set
@@ -676,8 +681,8 @@ DTD
                     requestedWidth = params.input_video_width;
                     
                 if (requestedHeight == 0)
-                    requestedHeight = params.input_video_height;
-                    
+                    requestedHeight = requestedWidth * params.input_video_height / params.input_video_width;
+
                 // Set output frame size
                 var inputWidth = params.input_video_width;
                 var inputHeight = params.input_video_height;
@@ -956,7 +961,7 @@ DTD
                     // set bitrate
                     var bitrateMin = bitrateQualityMap[title][h264 ? 1 : 0][qualityStop] * 1000;
                     var bitrateMax = bitrateQualityMap[title][h264 ? 1 : 0][qualityStop+1] * 1000;
-                    setVideoBitrate((bitrateMax - bitrateMin) * quality + bitrateMin);
+                    setVideoBitrate(bitrateMin, bitrateMax);
                     
                     // set frame size
                     var index = (h264 ? 2 : 0) + (forTV ? 1 : 0);
@@ -1128,60 +1133,21 @@ DTD
         -->
         <device_group title="Video Formats">
             <common_device>
+                <param id="h264" value="false" />
                 <script>
                     <![CDATA[
     
+                    //
                     // Video Formats -
                     //
-                    // At this point, we know what 2 quality stops we are between (params.quality_stop and params.quality_stop+1)
-                    // and we know what percentage of the way between the two we are (params.quality). We also which device we have 
-                    // selected (params.title), whether we are doing h.264 or mpeg4 (params.h264), and whether we want to optimize 
-                    // for TV or iPod (params.for_tv). From this we need to compute requestedFrameWidth, 
-                    // requestedFrameHeight, params.output_audio_quality and params.output_video_bitrate.
-                    
-                    // We support a number of standard frame sizes. After adjusting these sizes according to the flags
-                    // (h264, forTV), we determine the actual frame size using these as maximum values, taking
-                    // into account aspect ratio.
-                    var frameSizes = {
-                        "tiny":  [  240,  180 ],
-                        "small": [  720,  480 ],
-                        "iphone":[  720,  480 ],
-                        "sdef":  [  720,  480 ],
-                        "idef":  [  720,  480 ],
-                        "hdef":  [  720,  480 ]
-                    };
-                    
-                    var deviceFrameSizeMap = {
-                        //                              0           1           2           3           4
-                        "AVI":                      [   "tiny",     "iphone",   "sdef",     "sdef",     "hdef" ],   // mp4 && for iPod
-                        "MP4":                      [   "tiny",     "small",    "small",    "small",    "small" ],  // mp4 && for iPod
-                        "WMV":                      [   "tiny",     "small",    "iphone",   "iphone",   "iphone" ]
-                    };
-                    
                     var bitrateQualityMap = {
-                        "AVI":                  [ [  987, 1382, 2304, 3456,  3800 ], [ 219,  307,  512,  768, 1536 ] ],
-                        "MP4":                  [ [   32, 1728, 2304, 3456,  6912 ], [  32, 1382, 1728, 2304, 3456 ], 
-                                                  [   32,  384,  512,  768,  1536 ], [  32,  307,  384,  512,  768 ] ],
-                        "QuickTime":            [ [   20, 1440, 1975, 2880,  5760 ], [  20,  320,  439,  640, 1280 ] ],
-                        "WMV":                  [ [   20, 1440, 1975, 2880,  5760 ], [  20,  320,  439,  640, 1280 ] ],
-                        "Flash":                [ [   20, 1440, 1975, 2880,  5760 ], [  20,  320,  439,  640, 1280 ] ],
-                        "MPEG":                 [ [ 1382, 2304, 3456, 4937, 11520 ], [  20,  320,  439,  640, 1280 ] ],
-                        "DV":                   [ [ 1382, 2304, 3456, 4937, 11520 ], [  20,  320,  439,  640, 1280 ] ]
-                    };
-                    
-                    var audioQualityMap = {
-                        //                          0           1           2           3           4
-                        "AVI":                  [   "avi",      "avi",      "avi",      "avi",      "avi"  ],
-                        "MP4":                  [   "mp4Low",   "high",     "high",     "high",     "high" ],
-                        "WMV":                  [   "wmvlow",   "wmv",      "wmv",      "wmv",      "wmv"  ],
-                        "Flash":                [   "low",      "wmv",      "wmv",      "wmv",      "wmv"  ]
-                    };
-                    
-                    var levelMap = {
-                        //                          0   1   2   3   4
-                        "AVI":                  [   20, 30, 30, 30, 30 ],
-                        "MP4":                  [   20, 30, 30, 30, 30 ],
-                        "WMV":                  [   20, 30, 30, 30, 30 ]
+                        "AVI":                  [ [  987, 1382, 2304, 3456,  3800, 4000 ], [ 219,  307,  512,  768, 1536, 2000 ] ],
+                        "MP4":                  [ [   60,  500, 1500, 2500,  4500, 7000 ], [  30,  500, 1100, 2000, 3500, 4000 ] ],
+                        "QuickTime":            [ [   20, 1440, 1975, 2880,  3500, 5760 ], [  20,  200,  320,  439,  640, 1280 ] ],
+                        "WMV":                  [ [   20, 1440, 1975, 2880,  3500, 5760 ], [  20,  320,  439,  640,  900, 1280 ] ],
+                        "Flash":                [ [   20, 1440, 1975, 2880,  3500, 5760 ], [  20,  320,  439,  640,  900, 1280 ] ],
+                        "MPEG":                 [ [ 1382, 2304, 3456, 4937,  7000,11520 ], [  20,  320,  439,  640,  900, 1280 ] ],
+                        "DV":                   [ [ 1382, 2304, 3456, 4937,  7000,11520 ], [  20,  320,  439,  640,  900, 1280 ] ]
                     };
                     
                     var qminMap = {
@@ -1194,11 +1160,14 @@ DTD
                     };
                     
                     var mpegbitrateQualityMap = {
-                        "none":                   [ 1382, 2304, 3456, 4937, 11520 ],
-                        "svcd":                 [ [  922, 1536, 2304, 3291,  7680 ], [ 1106,  1843,  2765,  3950, 9216 ] ],
-                        "cvd":                  [ [  676, 1126, 1690, 2414,  5632 ], [  811,  1352,  2028,  2896, 6758 ] ],
-                        "tivo":                   [  676, 1536, 2611, 3730, 11520 ],
-                        "ts":                   [ [  676, 1126, 1690, 2414,  5632 ], [  811,  1352,  2028,  2896, 6758 ] ]
+                        "none":                   [ 1382, 2304, 3456, 4937, 7000,11520 ],
+                        "vcd":                    [ 0, 0, 0, 0, 0 ], // indicates no bitrate should be set
+                        "svcd":                 [ [  922, 1536, 2304, 3291,  5000, 7680 ], [ 1106,  1843,  2765,  3950, 6000, 9216 ] ],
+                        "cvd":                  [ [  676, 1126, 1690, 2414,  3500, 5632 ], [  811,  1352,  2028,  2896, 4000, 6758 ] ],
+                        "tivo":                   [  676, 1536, 2611, 3730,  7000, 11520 ],
+                        "ts":                     [  676, 1126, 1690, 2414,  3500, 5632  ],
+                        "720":                    [  18500, 18500, 18500, 18500,  18500, 18500 ],
+                        "1080":                   [  18500, 18500, 18500, 18500,  18500, 18500 ]
                     };
                     
                     var mpegMaxrateMap = {
@@ -1211,12 +1180,6 @@ DTD
                         "mpeg":                 [  461,   768,  1152, 1646,  3840 ]
                     };
                     
-                    var qualsetMap = {
-                        //                          0           1           2           3           4
-                        "Flash":                [   "",         "350",      "250",      "150",      "100"  ],
-                        "WMV":                  [   "",         "240",      "175",      "120",       "60"  ]
-                    };
-
                     // Values are between ratios of 1.2 - 1.5 - 1.9 - 2.5 - > 2.5
                     var tivoVideoSize = [
                         [ [ 352, 480 ], [ 352, 352 ], [ 352, 272 ], [ 352, 480 ] ], // Quality 0
@@ -1235,7 +1198,7 @@ DTD
                     var h264 = bool(params.h264);
                     var forTV = bool(params.forTV);
                     var width320 = bool(params.width320);
-                    var isNTSC = bool(params.isNTSC);
+                    var ntsc = bool(params.ntsc);
                     var mpeg2 = bool(params.mpeg2);
                     var requestedFrameWidth = 0;
                     var requestedFrameHeight = 0;
@@ -1245,47 +1208,31 @@ DTD
                     params.output_video_frame_rate = params.input_frame_rate;
                     
                     // Set default audio quality
-                    setAudioParams("high");
+                    setAudioParams((qualityStop == 0) ? "low" : (qualityStop == 1) ? "medium" : "high");
                     
                     // Init qmin
                     if (params.title in qminMap)
                         params.ffmpeg_option_qmin = qminMap[params.title][qualityStop];
                     
                     // Init bitrate
-                    setVideoBitrate(bitrateQualityMap[params.title][width320 ? 1 : 0][qualityStop] * 1000);
-                    
+                    // There are 3 flags governing bitrate: h264, width320 and ntsc
+                    // but all are mutually exclusive, so index is 0 if none are set
+                    // and 1 if any are set.
+                    var index = (h264 | width320 | ntsc) ? 1 : 0;
+                    var bitrateMin = bitrateQualityMap[params.title][index][qualityStop] * 1000;
+                    var bitrateMax = bitrateQualityMap[params.title][index][qualityStop+1] * 1000;
+                    setVideoBitrate(bitrateMin, bitrateMax);
+
                     // Init width and height
-                    if (width320) {
+                    if (width320)
                         requestedFrameWidth = 320;
-                        requestedFrameHeight = 320 * params.input_video_height / params.input_video_width;
-                    }
-                    else if (qualityStop == 0) {
-                        var sizeString = deviceFrameSizeMap[params.title][qualityStop];
-                        requestedFrameWidth = frameSizes[sizeString][0];
-                        requestedFrameHeight = frameSizes[sizeString][1];
-                    }
-                    else {
-                        requestedFrameWidth = params.input_video_width;
-                        requestedFrameHeight = params.input_video_height;
-                    }
+                    else if (qualityStop == 0)
+                        requestedFrameWidth = 240;
+                    else
+                        requestedFrameWidth = 720;
 
                     switch (params.title) {
-                        case "AVI":
-                            if(width320)
-                                requestedFrameWidth = 320;
-                            else if (qualityStop == "0") {
-                                var sizeString = deviceFrameSizeMap[params.title][qualityStop];
-                                requestedFrameWidth = frameSizes[sizeString][0];
-                                requestedFrameHeight = frameSizes[sizeString][1];
-                            } 
-                            else {
-                                requestedFrameWidth = params.input_video_width;
-                                requestedFrameHeight = params.input_video_height;
-                            }
-                            break;
                         case "MP4":
-                            var index = (h264 ? 2 : 0) + (width320 ? 1 : 0);
-                            setVideoBitrate(bitrateQualityMap[params.title][index][qualityStop] * 1000);
                             if (qualityStop == 4)
                                 params.ffmpeg_option_qmin = "";
                             else if (qualityStop == 0) {
@@ -1294,58 +1241,29 @@ DTD
                                 params.output_video_frame_rate = "10";
                             }
                             break;
-                        case "QuickTime":
-                            break;
-                        case "WMV":
-                            if (qualityStop == 0) 
-                                setVideoBitrate(20000);
-                            else {
-                                var qualset = qualsetMap[params.title][qualityStop];
-                                var br = Math.round(((params.input_video_width) * (params.input_video_height)) / qualset);
-                                setVideoBitrate(br * 1000);
-                            }
-                            
+                        case "WMV":                            
                             if (qualityStop == 0) {
                                 requestedFrameWidth = 240;
                                 params.ffmpeg_option_maxrate = "24k";
                                 params.ffmpeg_option_bufsize = "5k";
-                                params.output_video_frame_rate = "10";
+                                params.output_video_frame_rate = 10;
                             }
-                            else if (width320)
-                                requestedFrameWidth = "320";
-                            else {
-                                requestedFrameWidth = params.input_video_width;
-                                requestedFrameHeight = params.input_video_height;
-                            }
-                            break;
+                             break;
                         case "Flash":
-                            if (qualityStop == "0") 
-                                setVideoBitrate(30000);
-                            else {
-                                 var qualset = qualsetMap[params.title][qualityStop];
-                                 var br = Math.round(((params.input_video_width) * (params.input_video_height)) / qualset);
-                                 setVideoBitrate(br * 1000);
-                            }
-
                             if (qualityStop == 0) {
-                                requestedFrameWidth = "240";
+                                requestedFrameWidth = 240;
                                 params.ffmpeg_option_maxrate = "34k";
                                 params.ffmpeg_option_bufsize = "5k";
                                 params.ffmpeg_option_g = 30;
                             }
-                            else if (width320)
-                                requestedFrameWidth = "320";
-                            else {
-                                requestedFrameWidth = params.input_video_width;
-                                requestedFrameHeight = params.input_video_height;
-                            }
                             break;
                         case "MPEG":
+                            var bitrateMin = mpegbitrateQualityMap[params.profile][qualityStop] * 1000;
+                            var bitrateMax = mpegbitrateQualityMap[params.profile][qualityStop+1] * 1000;
+                            setVideoBitrate(bitrateMin, bitrateMax);
+                            
                             switch(params.profile) {
                                 case "none":
-                                    setAudioParams((qualityStop == 0) ? "low" : "high");
-                                    setVideoBitrate(mpegbitrateQualityMap[params.profile][qualityStop] * 1000);
-
                                     if (mpeg2) {
                                         params.ffmpeg_option_vcodec = "mpeg2video";
                                         params.output_video_codec_name = "MPEG-2";
@@ -1364,84 +1282,80 @@ DTD
                                 case "vcd":
                                     params.ffmpeg_option_qmin = 5;
                                     params.ffmpeg_option_bf = 2;
-                                    params.ffmpeg_option_target = isNTSC ? "ntsc-vcd" : "pal-vcd";
+                                    params.ffmpeg_option_target = ntsc ? "ntsc-vcd" : "pal-vcd";
                                     aspectRatioX = 4;
                                     aspectRatioY = 3;
                                     
                                     if (params.input_video_aspect >= 1.2 && params.input_video_aspect <= 1.5) {
                                         requestedFrameWidth = 352;
-                                        requestedFrameHeight = isNTSC ? 240 : 288;
+                                        requestedFrameHeight = ntsc ? 240 : 288;
                                     }
                                     else if (params.input_video_aspect >= 1.6 && params.input_video_aspect <= 1.9) {
-                                        params.ffmpeg_option_padtop = isNTSC ? 32 : 48;
-                                        params.ffmpeg_option_padbottom = isNTSC ? 32 : 48;
+                                        params.ffmpeg_option_padtop = ntsc ? 32 : 48;
+                                        params.ffmpeg_option_padbottom = ntsc ? 32 : 48;
                                         
                                         requestedFrameWidth = 352;
-                                        requestedFrameHeight = isNTSC ? 176 : 192;
+                                        requestedFrameHeight = ntsc ? 176 : 192;
                                     }
                                     else if (params.input_video_aspect >= 2 && params.input_video_aspect <= 2.5) {
-                                        params.ffmpeg_option_padtop = isNTSC ? 48 : 64;
-                                        params.ffmpeg_option_padbottom = isNTSC ? 48 : 64;
+                                        params.ffmpeg_option_padtop = ntsc ? 48 : 64;
+                                        params.ffmpeg_option_padbottom = ntsc ? 48 : 64;
                                         requestedFrameWidth = 352;
-                                        requestedFrameHeight = isNTSC ? 144 : 160;
+                                        requestedFrameHeight = ntsc ? 144 : 160;
                                     }
                                     else {
-                                        requestedFrameWidth = "352";
-                                        requestedFrameHeight = "240";
+                                        requestedFrameWidth = 352;
+                                        requestedFrameHeight = 240;
                                     }
                                     break;
                                 case "svcd":
-                                    setVideoBitrate(mpegbitrateQualityMap[params.profile][isNTSC ? 1 : 0][qualityStop] * 1000);
-
                                     aspectRatioX = 4;
                                     aspectRatioY = 3;
                                     
                                     if (params.input_video_aspect >= 1.2 && params.input_video_aspect <= 1.5) {
                                         requestedFrameWidth = 480;
-                                        requestedFrameHeight = isNTSC ? 480 : 576;
+                                        requestedFrameHeight = ntsc ? 480 : 576;
                                     }
                                     else if (params.input_video_aspect >= 1.6 && params.input_video_aspect <= 1.9) {
                                         params.ffmpeg_option_padtop = 64;
                                         params.ffmpeg_option_padbottom = 64;
                                         requestedFrameWidth = 480;
-                                        requestedFrameHeight = isNTSC ? 352 : 448;
+                                        requestedFrameHeight = ntsc ? 352 : 448;
                                     }
                                     else if (params.input_video_aspect >= 2 && params.input_video_aspect <= 2.5) {
-                                        params.ffmpeg_option_padtop = isNTSC ? 96 : 112;
-                                        params.ffmpeg_option_padbottom = isNTSC ? 96 : 112;
+                                        params.ffmpeg_option_padtop = ntsc ? 96 : 112;
+                                        params.ffmpeg_option_padbottom = ntsc ? 96 : 112;
                                         requestedFrameWidth = 480;
-                                        requestedFrameHeight = isNTSC ? 272 : 352;
+                                        requestedFrameHeight = ntsc ? 272 : 352;
                                     }
                                     else {
                                         requestedFrameWidth = 480;
-                                        requestedFrameHeight = isNTSC ? 480 : 576;
+                                        requestedFrameHeight = ntsc ? 480 : 576;
                                     }
                                     break;
                                 case "cvd":
-                                    setVideoBitrate(mpegbitrateQualityMap[params.profile][isNTSC ? 1 : 0][qualityStop] * 1000);
-
                                     params.ffmpeg_video_aspect_x = 4;
                                     params.ffmpeg_video_aspect_y = 3;
                                     
                                     if (params.input_video_aspect >= 1.2 && params.input_video_aspect <= 1.5) {
                                         requestedFrameWidth = 352;
-                                        requestedFrameHeight = isNTSC ? 480 : 576;
+                                        requestedFrameHeight = ntsc ? 480 : 576;
                                     }
                                     else if (params.input_video_aspect >= 1.6 && params.input_video_aspect <= 1.9) {
                                         params.ffmpeg_option_padtop = 64;
                                         params.ffmpeg_option_padbottom = 64;
                                         requestedFrameWidth = 352;
-                                        requestedFrameHeight = isNTSC ? 352 : 448;
+                                        requestedFrameHeight = ntsc ? 352 : 448;
                                     }
                                     else if (params.input_video_aspect >= 2 && params.input_video_aspect <= 2.5) {
-                                        params.ffmpeg_option_padtop = isNTSC ? 96 : 112;
-                                        params.ffmpeg_option_padbottom = isNTSC ? 96 : 112;
+                                        params.ffmpeg_option_padtop = ntsc ? 96 : 112;
+                                        params.ffmpeg_option_padbottom = ntsc ? 96 : 112;
                                         requestedFrameWidth = 352;
-                                        requestedFrameHeight = isNTSC ? 272 : 352;
+                                        requestedFrameHeight = ntsc ? 272 : 352;
                                     }
                                     else{
                                         requestedFrameWidth = 352;
-                                        requestedFrameHeight = isNTSC ? 480 : 576;
+                                        requestedFrameHeight = ntsc ? 480 : 576;
                                     }
                                     break;
                                 case "tivo":
@@ -1460,7 +1374,6 @@ DTD
                                     
                                     requestedFrameWidth = tivoVideoSize[params.qualityStop][index][0];
                                     requestedFrameHeight = tivoVideoSize[params.qualityStop][index][1];
-                                    setVideoBitrate(mpegbitrateQualityMap[params.profile][qualityStop] * 1000);
                                     
                                     params.ffmpeg_option_padtop = tivoVideoPadding[index][0];
                                     if (params.ffmpeg_option_padtop < 0)
@@ -1471,17 +1384,15 @@ DTD
                                         params.ffmpeg_option_padbottom = "";
                                      break;
                                 case "ts":
-                                    setVideoBitrate(mpegbitrateQualityMap[params.profile][isNTSC ? 1 : 0][qualityStop] * 1000);
                                     setAudioParams("high");
                                     aspectRatioX = 4;
                                     aspectRatioY = 3;
-                                    requestedFrameWidth = "352";
-                                    requestedFrameHeight = isNTSC ? "480" : "576";
+                                    requestedFrameWidth = 352;
+                                    requestedFrameHeight = ntsc ? 480 : 576;
                                     break;
                                 case "720":
                                 case "1080":
                                     setAudioParams("hd");
-                                    setVideoBitrate(18500);
                                     aspectRatioX = 16;
                                     aspectRatioY = 9;
                                     
@@ -1518,11 +1429,7 @@ DTD
                                     break;
                             }
                             break;
-                            
-                        case "DV":
-                            setVideoBitrate(bitrateQualityMap[params.title][width320 ? 1 : 0][qualityStop] * 1000);
-                            break;
-                    }
+                   }
                     
                     setVideoSize(requestedFrameWidth, requestedFrameHeight);
                     setVideoAspectRatio(aspectRatioX, aspectRatioY);
@@ -1575,14 +1482,6 @@ DTD
                         <param id="h264" value="false" />
                     </unchecked_item>
                 </checkbox>
-                <checkbox which="1" title="320 Pixels Wide">
-                    <checked_item>
-                        <param id="width320" value="true" />
-                    </checked_item>
-                    <unchecked_item>
-                        <param id="width320" value="false" />
-                    </unchecked_item>
-                </checkbox>
                 <param id="tag" value="" />
                 <param id="pixfmt" value="" />
                 <param id="output_format_name" value="MPEG-4" />
@@ -1620,7 +1519,7 @@ DTD
                 </menu>
             </device>
             
-            <!-- WMV
+            <!-- WMV -->
             <device title="WMV" icon="wma" enabled="true">
                 <checkbox which="0" title="320 Pixels Wide">
                     <checked_item>
@@ -1630,6 +1529,7 @@ DTD
                         <param id="width320" value="false" />
                     </unchecked_item>
                 </checkbox>
+                <param id="num_cpus" value="1" /> <!-- WMV encoding fails if num_cpus is not 1 -->
                 <param id="ffmpeg_option_vcodec" value="wmv1" />
                 <param id="ffmpeg_option_acodec" value="wmav2" />
                 <param id="gop_size" value="-g 15" />
@@ -1647,7 +1547,6 @@ DTD
                 <param id="output_video_frame_rate" value="ntsc" />
                 <param id="aspect" value="" />
             </device>
-            -->
 
             <!-- Flash -->
             <device title="Flash" icon="flash" enabled="true">
@@ -1699,11 +1598,11 @@ DTD
                 </checkbox>
                 <menu which="0" title="Format:">
                     <menu_item title="NTSC">
-                        <param id="isNTSC" value="true" />
+                        <param id="ntsc" value="true" />
                         <param id="output_video_frame_rate" value="ntsc" />
                     </menu_item>
                     <menu_item title="PAL">
-                        <param id="isNTSC" value="false" />
+                        <param id="ntsc" value="false" />
                         <param id="output_video_frame_rate" value="pal" />
                     </menu_item>
                 </menu>
