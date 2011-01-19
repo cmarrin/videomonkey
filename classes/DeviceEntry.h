@@ -26,9 +26,9 @@
 
 - (NSString*)deviceName;
 
-- (void)setCheckboxes: (NSArray*) checkboxes;
-- (void)setMenus: (NSArray*) menus;
-- (void)setComboboxes: (NSArray*) comboboxes;
+- (void)setCheckboxes: (NSDictionary*) checkboxes;
+- (void)setMenus: (NSDictionary*) menus;
+- (void)setComboboxes: (NSDictionary*) comboboxes;
 - (void)setQuality: (NSArray*) qualityStops;
 
 - (int)checkboxState:(int) index;
@@ -58,8 +58,8 @@
     IBOutlet NSTextField* m_sliderLabel5;
 }
 
--(void) setCheckboxes: (NSArray*) checkboxes;
--(void) setMenus: (NSArray*) menus;
+-(void) setCheckboxes: (NSDictionary*) checkboxes;
+-(void) setMenus: (NSDictionary*) menus;
 -(void) setQuality: (NSArray*) qualityStops;
 
 -(int) checkboxState:(int) index;
@@ -191,9 +191,9 @@
     NSMutableArray* m_recipes;
     NSMutableDictionary* m_params;
     NSString* m_script;
-    NSMutableArray* m_checkboxes;
-    NSMutableArray* m_menus;
-    NSMutableArray* m_comboboxes;
+    NSMutableDictionary* m_checkboxes;
+    NSMutableDictionary* m_menus;
+    NSMutableDictionary* m_comboboxes;
     
     double m_minBitrate;
     double m_maxBitrate;

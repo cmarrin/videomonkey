@@ -657,6 +657,7 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
     for (Transcoder* transcoder in m_fileList)
         [transcoder setParams];
     
+    [self setOutputFileName];
 
     // Update metadata panel
     [m_fileListController updateMetadataPanelState];

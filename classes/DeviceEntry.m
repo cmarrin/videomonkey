@@ -82,15 +82,15 @@ static NSString* parseScripts(XMLElement* element)
     return [self identifier];
 }
 
--(void) setCheckboxes: (NSArray*) checkboxes
+-(void) setCheckboxes: (NSDictionary*) checkboxes
 {
 }
 
--(void) setMenus: (NSArray*) menus
+-(void) setMenus: (NSDictionary*) menus
 {
 }
 
--(void) setComboboxes: (NSArray*) comboboxes
+-(void) setComboboxes: (NSDictionary*) comboboxes
 {
 }
 
@@ -156,27 +156,25 @@ static void setButton(NSButton* button, MyButton* item)
         [button setHidden:YES];
 }
 
--(void) setCheckboxes: (NSArray*) checkboxes
+-(void) setCheckboxes: (NSDictionary*) checkboxes
 {
-    int size = [checkboxes count];
-    setButton(m_button0, (size > 0) ? ((MyButton*) [checkboxes objectAtIndex:0]) : nil);
-    setButton(m_button1, (size > 1) ? ((MyButton*) [checkboxes objectAtIndex:1]) : nil);
-	setButton(m_button2, (size > 2) ? ((MyButton*) [checkboxes objectAtIndex:2]) : nil);
+    setButton(m_button0, ((MyButton*) [checkboxes valueForKey:@"0"]));
+    setButton(m_button1, ((MyButton*) [checkboxes valueForKey:@"1"]));
+    setButton(m_button2, ((MyButton*) [checkboxes valueForKey:@"2"]));
 }
 
--(void) setMenus: (NSArray*) menus
-{
-    int size = [menus count];
-    
+-(void) setMenus: (NSDictionary*) menus
+{    
     // menu 0 is the radio (with 2 choices) and menu 1 is the menu
-    if (m_radio && size > 0 && [menus objectAtIndex:0]) {
-        Menu* menu = (Menu*) [menus objectAtIndex:0];
-            
+    Menu* menu0 = (Menu*) [menus valueForKey:@"0"];
+    Menu* menu1 = (Menu*) [menus valueForKey:@"1"];
+    
+    if (m_radio && menu0) {            
         [m_radioLabel setHidden:NO];
-        [m_radioLabel setStringValue:[menu title]];
+        [m_radioLabel setStringValue:[menu0 title]];
         [m_radio setHidden:NO];
             
-        NSArray* itemTitles = [menu itemTitles];
+        NSArray* itemTitles = [menu0 itemTitles];
         [m_radio renewRows:[itemTitles count] columns:1];
         for (int i = 0; i < [itemTitles count]; ++i) {
             NSButtonCell* cell = (NSButtonCell*) [m_radio cellAtRow:i column:0];
@@ -188,14 +186,13 @@ static void setButton(NSButton* button, MyButton* item)
         [m_radio setHidden:YES];
     }
     
-    if (m_menu && size > 1 && [menus objectAtIndex:1]) {
+    if (m_menu && menu1) {
         // handle menus
-        Menu* menu = (Menu*) [menus objectAtIndex:1];
         [m_menuLabel setHidden:NO];
-        [m_menuLabel setStringValue:[menu title]];
+        [m_menuLabel setStringValue:[menu1 title]];
         [m_menu setHidden:NO];
 
-        NSArray* itemTitles = [menu itemTitles];
+        NSArray* itemTitles = [menu1 itemTitles];
         [m_menu removeAllItems];
         for (int i = 0; i < [itemTitles count]; ++i)
             [m_menu insertItemWithTitle:[itemTitles objectAtIndex:i] atIndex:i];
@@ -626,7 +623,7 @@ static void setButton(NSButton* button, MyButton* item)
         int which = (int) [element doubleAttribute:@"which"];
         if (which < 0)
             continue;
-        [m_checkboxes insertObject:[Checkbox checkboxWithElement: element] atIndex:which];
+        [m_checkboxes setValue:[Checkbox checkboxWithElement: element] forKey:[[NSNumber numberWithInt:which] stringValue]];
     }
 }
 
@@ -637,7 +634,7 @@ static void setButton(NSButton* button, MyButton* item)
         int which = (int) [element doubleAttribute:@"which"];
         if (which < 0)
             continue;
-        [m_menus insertObject:[Menu menuWithElement: element] atIndex:which];
+        [m_menus setValue:[Menu menuWithElement: element] forKey:[[NSNumber numberWithInt:which] stringValue]];
     }
 }
 
@@ -648,7 +645,7 @@ static void setButton(NSButton* button, MyButton* item)
         int which = (int) [element doubleAttribute:@"which"];
         if (which < 0)
             continue;
-        [m_comboboxes insertObject:[Menu menuWithElement: element] atIndex:which];
+        [m_comboboxes setValue:[Menu menuWithElement: element] forKey:[[NSNumber numberWithInt:which] stringValue]];
     }
 }
 
@@ -669,8 +666,9 @@ static void setButton(NSButton* button, MyButton* item)
     m_performanceItems = [[NSMutableArray alloc] init];
     m_recipes = [[NSMutableArray alloc] init];
     m_params = [[NSMutableDictionary alloc] init];
-    m_checkboxes = [[NSMutableArray alloc] init];
-    m_menus = [[NSMutableArray alloc] init];
+    m_checkboxes = [[NSMutableDictionary alloc] init];
+    m_menus = [[NSMutableDictionary alloc] init];
+    m_comboboxes = [[NSMutableDictionary alloc] init];
     
     // handle quality
     [self parseQualityStops:[[element lastElementForName:@"quality"] elementsForName: @"quality_stop"]];
@@ -849,23 +847,25 @@ static void setButton(NSButton* button, MyButton* item)
         [context addParams: [(PerformanceItem*) [m_performanceItems objectAtIndex:perfIndex] params]];
 
     // Add params and commands from currently selected checkboxes
-    int i = 0;
-    for (Checkbox* checkbox in m_checkboxes) {
+    for (NSString* which in m_checkboxes) {
+        int i = [which intValue];
+        Checkbox* checkbox = [m_checkboxes valueForKey:which];
+        
         int state = [m_deviceTab checkboxState:i];
         if (state == 0)
             [context addParams: [checkbox uncheckedParams]];
         else if (state == 1)
             [context addParams: [checkbox checkedParams]];
-        i++;
     }
     
     // Add params and commands from currently selected menu items
-    i = 0;
-    for (Menu* menu in m_menus) {
+    for (NSString* which in m_menus) {
+        int i = [which intValue];
+        Menu* menu = [m_menus valueForKey:which];
+        
         int state = [m_deviceTab menuState:i];
         if (state >= 0)
             [context addParams: (NSDictionary*) [[menu itemParams] objectAtIndex:state]];
-        i++;
     }
 }
 
@@ -880,8 +880,10 @@ static void setButton(NSButton* button, MyButton* item)
         [context evaluateJavaScript: [(PerformanceItem*) [m_performanceItems objectAtIndex:perfIndex] script]];
 
     // Evaluate scripts from currently selected checkboxes
-    int i = 0;
-    for (Checkbox* checkbox in m_checkboxes) {
+    for (NSString* which in m_checkboxes) {
+        int i = [which intValue];
+        Checkbox* checkbox = [m_checkboxes valueForKey:which];
+        
         int state = [m_deviceTab checkboxState:i];
         if (state == 0)
             [context evaluateJavaScript: [checkbox uncheckedScript]];
@@ -891,8 +893,10 @@ static void setButton(NSButton* button, MyButton* item)
     }
     
     // Evaluate scripts from currently selected menu items
-    i = 0;
-    for (Menu* menu in m_menus) {
+    for (NSString* which in m_menus) {
+        int i = [which intValue];
+        Menu* menu = [m_menus valueForKey:which];
+        
         int state = [m_deviceTab menuState:i];
         if (state >= 0)
             [context evaluateJavaScript: (NSString*)[[menu itemScripts] objectAtIndex:state]];

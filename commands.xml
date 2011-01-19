@@ -664,13 +664,9 @@ DTD
             // Sets output_video_bitrate
             function setVideoBitrate(bitrateMin, bitrateMax)
             {
-log("*** bitrateMin="+bitrateMin+", bitrateMax="+bitrateMax+
-    ", input_video_bitrate="+params.input_video_bitrate+", quality="+params.quality);
-
                 var bitrate = (bitrateMax - bitrateMin) * number(params.quality) + bitrateMin;
                 var limit = (bitrate > params.input_video_bitrate) && bool(params.limit_output_params);
                 params.output_video_bitrate = limit ? params.input_video_bitrate : bitrate;
-log("******** limit="+limit+", output_video_bitrate="+params.output_video_bitrate);
             }
             
             // Assumes output_video_frame_rate is set
@@ -1205,7 +1201,8 @@ log("******** limit="+limit+", output_video_bitrate="+params.output_video_bitrat
                     var aspectRatioX = 0;
                     var aspectRatioY = 0;
                     
-                    params.output_video_frame_rate = params.input_frame_rate;
+                    if (params.output_video_frame_rate == "")
+                        params.output_video_frame_rate = params.input_frame_rate;
                     
                     // Set default audio quality
                     setAudioParams((qualityStop == 0) ? "low" : (qualityStop == 1) ? "medium" : "high");
@@ -1249,14 +1246,7 @@ log("******** limit="+limit+", output_video_bitrate="+params.output_video_bitrat
                                 params.output_video_frame_rate = 10;
                             }
                              break;
-                        case "Flash":
-                            if (qualityStop == 0) {
-                                requestedFrameWidth = 240;
-                                params.ffmpeg_option_maxrate = "34k";
-                                params.ffmpeg_option_bufsize = "5k";
-                                params.ffmpeg_option_g = 30;
-                            }
-                            break;
+
                         case "MPEG":
                             var bitrateMin = mpegbitrateQualityMap[params.profile][qualityStop] * 1000;
                             var bitrateMax = mpegbitrateQualityMap[params.profile][qualityStop+1] * 1000;
@@ -1445,6 +1435,11 @@ log("******** limit="+limit+", output_video_bitrate="+params.output_video_bitrat
             </common_device>
             <!-- AVI -->
             <device title="AVI" icon="file" enabled="true">
+                <script>
+                    <![CDATA[
+                log("**** video prefix="+params.video_prefix);
+                    ]]>
+                </script>
                 <checkbox which="0" title="320 Pixels Wide">
                     <checked_item>
                         <param id="width320" value="true" />
@@ -1550,6 +1545,16 @@ log("******** limit="+limit+", output_video_bitrate="+params.output_video_bitrat
 
             <!-- Flash -->
             <device title="Flash" icon="flash" enabled="true">
+                <checkbox which="1" title="Raw .flv Format">
+                    <checked_item>
+                        <param id="video_suffix" value="flv" />
+                        <param id="output_format_name" value="FLV" />
+                    </checked_item>
+                    <unchecked_item>
+                        <param id="video_suffix" value="mmm" />
+                        <param id="output_format_name" value="SWF" />
+                    </unchecked_item>
+                </checkbox>
                 <checkbox which="0" title="320 Pixels Wide">
                     <checked_item>
                         <param id="width320" value="true" />
@@ -1558,18 +1563,7 @@ log("******** limit="+limit+", output_video_bitrate="+params.output_video_bitrat
                         <param id="width320" value="false" />
                     </unchecked_item>
                 </checkbox>
-                <checkbox which="1" title="Raw .flv Format">
-                    <checked_item>
-                        <param id="output_format_name" value="FLV" />
-                        <param id="video_suffix" value="flv" />
-                    </checked_item>
-                    <unchecked_item>
-                        <param id="output_format_name" value="SWF" />
-                        <param id="video_suffix" value="swf" />
-                    </unchecked_item>
-                </checkbox>
-                <param id="dashtarget" value="" />
-                <param id="target" value="" />
+                <param id="num_cpus" value="1" /> <!-- Flash encoding fails if num_cpus is not 1 -->
                 <param id="output_video_frame_rate" value="ntsc" />
                 <param id="padding" value="" />
                 <param id="aspect" value="" />
