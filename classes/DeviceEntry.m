@@ -267,7 +267,7 @@ static void setButton(NSButton* button, MyButton* item)
         // return -1 if radio is hidden or index of selected item
         return [m_radio isHidden] ? -1 : [m_radio selectedRow];
         
-    NSPopUpButton* button = (NSPopUpButton*) (index == 0) ? m_menu : nil;
+    NSPopUpButton* button = (NSPopUpButton*) (index == 1) ? m_menu : nil;
     
     // return -1 if button is hidden or index of selected item
     return button ? ([button isHidden] ? -1 : [button indexOfSelectedItem]) : -1;
@@ -735,18 +735,6 @@ static void setButton(NSButton* button, MyButton* item)
 -(NSArray*) recipes
 {
     return [m_recipes count] ? m_recipes : [m_defaultDevice recipes];
-}
-
--(NSString*) paramWithDefault:(NSString*) key
-{
-    NSString* v = [m_params objectForKey:key];
-    return (v && [v length]) ? v : [m_defaultDevice paramWithDefault: key];
-}
-
--(NSString*) fileSuffix
-{
-    NSString* suffix = [self paramWithDefault: @"video_suffix"];
-    return (suffix && [suffix length]) ? suffix : @"mp4"; 
 }
 
 -(int) qualityStop

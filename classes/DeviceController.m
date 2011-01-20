@@ -341,7 +341,7 @@ static JSValueRef _jsLog(JSContextRef ctx, JSObjectRef function, JSObjectRef thi
 
 -(NSString*) fileSuffix
 {
-    return [m_currentDevice fileSuffix];
+    return [self paramForKey:@"video_suffix"];
 }
 
 -(void) setCurrentParamsWithEnvironment: (NSDictionary*) env
@@ -354,7 +354,7 @@ static JSValueRef _jsLog(JSContextRef ctx, JSObjectRef function, JSObjectRef thi
 
 -(NSString*) recipe
 {
-    NSString* recipe = [m_context stringParamForKey:@"recipe" showError:YES];
+    NSString* recipe = [self paramForKey:@"recipe"];
     return [self replaceParams: recipe];
 }
 

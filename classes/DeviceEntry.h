@@ -210,7 +210,6 @@
 -(NSArray*) qualityStops;
 -(NSArray*) performanceItems;
 -(NSArray*) recipes;
--(NSString*) fileSuffix;
 -(void) quality: (double*) q withStop: (int*) stop;
 
 -(void) setCurrentParamsInJavaScriptContext:(JavaScriptContext*) context performanceIndex:(int) perfIndex;

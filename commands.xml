@@ -629,6 +629,12 @@ DTD
                         params.output_audio_channels = 1;
                         params.output_audio_quality = "Medium";
                         break;
+                    case "cd":
+                        params.output_audio_bitrate = 128000;
+                        params.output_audio_sample_rate = 44100;
+                        params.output_audio_channels = 2;
+                        params.output_audio_quality = "CD";
+                        break;
                     case "high":
                         params.output_audio_bitrate = 128000;
                         params.output_audio_sample_rate = 48000;
@@ -1157,7 +1163,7 @@ DTD
                     
                     var mpegbitrateQualityMap = {
                         "none":                   [ 1382, 2304, 3456, 4937, 7000,11520 ],
-                        "vcd":                    [ 0, 0, 0, 0, 0 ], // indicates no bitrate should be set
+                        "vcd":                    [ 0, 0, 0, 0, 0, 0 ], // indicates no bitrate should be set
                         "svcd":                 [ [  922, 1536, 2304, 3291,  5000, 7680 ], [ 1106,  1843,  2765,  3950, 6000, 9216 ] ],
                         "cvd":                  [ [  676, 1126, 1690, 2414,  3500, 5632 ], [  811,  1352,  2028,  2896, 4000, 6758 ] ],
                         "tivo":                   [  676, 1536, 2611, 3730,  7000, 11520 ],
@@ -1183,6 +1189,7 @@ DTD
                         [ [ 544, 480 ], [ 544, 352 ], [ 544, 272 ], [ 544, 480 ] ], // Quality 2
                         [ [ 544, 480 ], [ 544, 352 ], [ 544, 272 ], [ 544, 480 ] ], // Quality 3
                         [ [ 720, 480 ], [ 720, 352 ], [ 720, 272 ], [ 720, 480 ] ]  // Quality 4
+                        [ [ 720, 480 ], [ 720, 352 ], [ 720, 272 ], [ 720, 480 ] ]  // Quality 5
                     ];
                     
                     // Values are between ratios of 1.2 - 1.5 - 1.9 - 2.5 - > 2.5
@@ -1362,8 +1369,8 @@ DTD
                                     else
                                         index = 0;
                                     
-                                    requestedFrameWidth = tivoVideoSize[params.qualityStop][index][0];
-                                    requestedFrameHeight = tivoVideoSize[params.qualityStop][index][1];
+                                    requestedFrameWidth = tivoVideoSize[qualityStop][index][0];
+                                    requestedFrameHeight = tivoVideoSize[qualityStop][index][1];
                                     
                                     params.ffmpeg_option_padtop = tivoVideoPadding[index][0];
                                     if (params.ffmpeg_option_padtop < 0)
@@ -1435,11 +1442,6 @@ DTD
             </common_device>
             <!-- AVI -->
             <device title="AVI" icon="file" enabled="true">
-                <script>
-                    <![CDATA[
-                log("**** video prefix="+params.video_prefix);
-                    ]]>
-                </script>
                 <checkbox which="0" title="320 Pixels Wide">
                     <checked_item>
                         <param id="width320" value="true" />
@@ -1545,13 +1547,18 @@ DTD
 
             <!-- Flash -->
             <device title="Flash" icon="flash" enabled="true">
+                <script>
+                    <![CDATA[
+                        setAudioParams((qualityStop == 0) ? "low" : (qualityStop == 1) ? "medium" : "cd");
+                    ]]>
+                </script>
                 <checkbox which="1" title="Raw .flv Format">
                     <checked_item>
                         <param id="video_suffix" value="flv" />
                         <param id="output_format_name" value="FLV" />
                     </checked_item>
                     <unchecked_item>
-                        <param id="video_suffix" value="mmm" />
+                        <param id="video_suffix" value="swf" />
                         <param id="output_format_name" value="SWF" />
                     </unchecked_item>
                 </checkbox>
@@ -1580,7 +1587,7 @@ DTD
             
             <!-- MPEG -->
             <device title="MPEG" icon="file" enabled="true">
-                  <checkbox which="0" title="MPEG-2">
+                <checkbox which="0" title="MPEG-2">
                     <checked_item>
                         <param id="vob" value="-f vob" />
                         <param id="mpeg2" value="true" />
