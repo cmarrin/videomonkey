@@ -212,9 +212,6 @@
     if (![fileType isEqualToString:@"MPEG-4"])
         enabled = NO;
         
-    if ([m_metadataDisabledMessage isHidden] == enabled)
-        return;
-
     [m_metadataContainer setHidden:!enabled];
     [m_metadataDisabledMessage setHidden:enabled];
     

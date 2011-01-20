@@ -113,14 +113,14 @@ Execution
 
 The workhorse elements are <param>, <command> and <script>. These contain the instructions which ultimately lead to a recipe to use for the encoding task. Params and commands are added to the JavaScript 'params' object in one pass, as long as they are contained in elements which are selected. And then the scripts are executed in a separate pass, as long as their elements are selected. So even later defined params and commands are accessible to earlier scripts. Scripts are executed according to the elements which contain them in the following order:
 
-    1) selected <performance_item> from <default_device>
-    2) <default_device>
-    3) selected <performance_item> from <common_device> for selected <device>
-    4) <common_device> for selected <device>
-    5) selected <performance_item> from selected <device>
-    6) <checked_item> or <unchecked_item> entry from each <checkbox> in selected <device>
-    7) selected <menu_item> entry from each <menu> in selected <device>
-    8) selected <device>
+    1) <default_device>
+    2) selected <performance_item> from <default_device>
+    3) <common_device> for selected <device>
+    4) selected <performance_item> from <common_device> for selected <device>
+    5) selected <device>
+    6) selected <performance_item> from selected <device>
+    7) <checked_item> or <unchecked_item> entry from each <checkbox> in selected <device>
+    8) selected <menu_item> entry from each <menu> in selected <device>
     
 The result of this script execution is the output params (see below) being set for display in the Output Info Panel, and a string in 'params.recipe' which is the recipe to be executed. See below for recipe syntax. These scripts are executed when any UI control is changed. This includes the slider, which executes the scripts for each move. The script is executed in turn for each file selected for encoding. This pass of script execution is to fill in the file list entries. When encoding is started, the scripts are executed again for the currently encoding file and the recipe is used to start the encoding. Once encoding is finished, the scripts are executed for the next file, and so on.
 
@@ -549,8 +549,8 @@ DTD
             
             params.output_video_bitrate = -1;
             
-            params.output_video_profile_name = "none";
-            params.output_video_level_name = "none";
+            params.output_video_profile_name = "";
+            params.output_video_level_name = "";
             
             params.ffmpeg_vpre_pass1 = "";
             params.ffmpeg_vpre = "";
@@ -1172,16 +1172,6 @@ DTD
                         "1080":                   [  18500, 18500, 18500, 18500,  18500, 18500 ]
                     };
                     
-                    var mpegMaxrateMap = {
-                        //                           0      1      2     3       4
-                        "mpeg":                 [ 2764,  4608,  6912, 9874,  23040 ]
-                    };
-                    
-                    var mpegBufsizeMap = {
-                        //                           0      1      2     3      4
-                        "mpeg":                 [  461,   768,  1152, 1646,  3840 ]
-                    };
-                    
                     // Values are between ratios of 1.2 - 1.5 - 1.9 - 2.5 - > 2.5
                     var tivoVideoSize = [
                         [ [ 352, 480 ], [ 352, 352 ], [ 352, 272 ], [ 352, 480 ] ], // Quality 0
@@ -1260,26 +1250,7 @@ DTD
                             setVideoBitrate(bitrateMin, bitrateMax);
                             
                             switch(params.profile) {
-                                case "none":
-                                    if (mpeg2) {
-                                        params.ffmpeg_option_vcodec = "mpeg2video";
-                                        params.output_video_codec_name = "MPEG-2";
-                                    }
-                                    else {
-                                        params.ffmpeg_option_vcodec = "mpeg1video";
-                                        params.output_video_codec_name = "MPEG-1";
-                                        
-                                        aspectRatioX = params.input_video_width;
-                                        aspectRatioY = params.input_video_height;
-
-                                        params.ffmpeg_option_ratemax = mpegMaxrateMap["mpeg"][qualityStop];
-                                        params.ffmpeg_option_bufsize = mpegBufsizeMap["mpeg"][qualityStop];
-                                    }
-                                    break;
                                 case "vcd":
-                                    params.ffmpeg_option_qmin = 5;
-                                    params.ffmpeg_option_bf = 2;
-                                    params.ffmpeg_option_target = ntsc ? "ntsc-vcd" : "pal-vcd";
                                     aspectRatioX = 4;
                                     aspectRatioY = 3;
                                     
@@ -1529,12 +1500,11 @@ DTD
                 <param id="num_cpus" value="1" /> <!-- WMV encoding fails if num_cpus is not 1 -->
                 <param id="ffmpeg_option_vcodec" value="wmv1" />
                 <param id="ffmpeg_option_acodec" value="wmav2" />
-                <param id="gop_size" value="-g 15" />
                 <param id="extras" value="" />
                 <param id="tag" value="" />
                 <param id="pixfmt" value="-pix_fmt yuv420p" />
                 <param id="video_suffix" value="wmv" />
-                <param id="output_format_name" value="ASF" />
+                <param id="output_format_name" value="WMV" />
                 <param id="output_video_codec_name" value="WMV" />
                 <param id="output_audio_codec_name" value="WMA" />
                 <param id="vob" value="" />
@@ -1581,23 +1551,24 @@ DTD
                 <param id="dashb" value="-b" />
                 <param id="output_audio_codec_name" value="MP3" />
                 <param id="ffmpeg_option_acodec" value="libmp3lame" />
-                <param id="gop_size" value="-g 300" />
                 <param id="vob" value="" />
             </device>
             
             <!-- MPEG -->
             <device title="MPEG" icon="file" enabled="true">
-                <checkbox which="0" title="MPEG-2">
-                    <checked_item>
-                        <param id="vob" value="-f vob" />
-                        <param id="mpeg2" value="true" />
-                    </checked_item>
-                    <unchecked_item>
-                        <param id="vob" value="" />
-                        <param id="mpeg2" value="false" />
-                    </unchecked_item>
-                </checkbox>
-                <menu which="0" title="Format:">
+                <script>
+                    <![CDATA[
+                    log("**** got to MPEG");
+                    function setMPEG1Params()
+                    {
+                        var mpegMaxrateMap = [ 2764,  4608,  6912, 9874,  23040 ];                    
+                        params.ffmpeg_option_ratemax = mpegMaxrateMap[params.quality_stop];
+                        var mpegBufsizeMap = [  461,   768,  1152, 1646,  3840 ];
+                        params.ffmpeg_option_bufsize = mpegBufsizeMap[qualityStop];
+                    }
+                    ]]>
+                </script>
+                 <menu which="0" title="Format:">
                     <menu_item title="NTSC">
                         <param id="ntsc" value="true" />
                         <param id="output_video_frame_rate" value="ntsc" />
@@ -1608,75 +1579,62 @@ DTD
                     </menu_item>
                 </menu>
                 <menu which="1" title="Profile:">
-                    <menu_item title="None">
+                    <menu_item title="Generic MPEG-1">
+                        <script> <![CDATA[ setMPEG1Params() ]]> </script>
                         <param id="profile" value="none" />
-                        <param id="video_suffix" value="mpg" />
-                        <param id="ffmpeg_option_acodec" value="mp2" />
-                        <param id="output_audio_codec_name" value="MP2" />
+                        <param id="output_format_name" value="MPEG-1" />
+                        <param id="output_video_codec_name" value="MPEG-1" />
+                        <param id="ffmpeg_option_vcodec" value="mpeg1video" />
+                    </menu_item>
+                    <menu_item title="Generic MPEG-2">
+                        <param id="profile" value="none" />
                     </menu_item>
                     <menu_item title="VCD">
+                        <script> <![CDATA[ 
+                    log("**** got to VCD");
+                            setMPEG1Params();
+                            params.ffmpeg_option_target = params.ntsc ? "ntsc-vcd" : "pal-vcd";
+                        ]]> </script>
                         <param id="profile" value="vcd" />
-                        <param id="ffmpeg_option_acodec" value="mp2" />
-                        <param id="ffmpeg_option_vcodec" value="" />
+                        <param id="ffmpeg_option_qmin" value="5" />
+                        <param id="ffmpeg_option_bf" value="2" />
+                        <param id="output_format_name" value="MPEG-1" />
                         <param id="output_video_codec_name" value="MPEG-1" />
-                        <param id="output_audio_codec_name" value="MP2" />
-                        <param id="video_suffix" value="mpg" />
+                        <param id="ffmpeg_option_vcodec" value="" />
                     </menu_item>
                     <menu_item title="SVCD">
                         <param id="profile" value="svcd" />
-                        <param id="ffmpeg_option_acodec" value="mp2" />
-                        <param id="ffmpeg_option_vcodec" value="" />
-                        <param id="output_video_codec_name" value="MPEG-2" />
-                        <param id="output_audio_codec_name" value="MP2" />
-                        <param id="video_suffix" value="mpg" />
                     </menu_item>
                     <menu_item title="CVD">
                         <param id="profile" value="cvd" />
-                        <param id="ffmpeg_option_acodec" value="mp2" />
-                        <param id="ffmpeg_option_vcodec" value="mpeg2video" />
-                        <param id="output_video_codec_name" value="MPEG-2" />
-                        <param id="output_audio_codec_name" value="MP2" />
-                        <param id="video_suffix" value="mpg" />
                     </menu_item>
                     <menu_item title="TiVo">
                         <param id="profile" value="tivo" />
-                        <param id="ffmpeg_option_acodec" value="mp2" />
-                        <param id="ffmpeg_option_vcodec" value="mpeg2video" />
-                        <param id="output_video_codec_name" value="MPEG-2" />
-                        <param id="output_audio_codec_name" value="MP2" />
-                        <param id="video_suffix" value="mpg" />
                     </menu_item>
                     <menu_item title="Transport Stream">
                         <param id="profile" value="ts" />
-                        <param id="ffmpeg_option_acodec" value="ac3" />
-                        <param id="video_suffix" value="ts" />
-                        <param id="ffmpeg_option_vcodec" value="mpeg2video" />
-                        <param id="output_video_codec_name" value="MPEG-2" />
                         <param id="output_audio_codec_name" value="AC3" />
+                        <param id="ffmpeg_option_acodec" value="ac3" />
                     </menu_item>
                     <menu_item title="720p">
                         <param id="profile" value="720" />
-                        <param id="qmin" value="" />
-                        <param id="ffmpeg_option_acodec" value="ac3" />
                         <param id="video_suffix" value="m2t" />
-                        <param id="ffmpeg_option_vcodec" value="mpeg2video" />
-                        <param id="output_video_codec_name" value="MPEG-2" />
                         <param id="output_audio_codec_name" value="AC3" />
+                        <param id="ffmpeg_option_acodec" value="ac3" />
                     </menu_item>
                     <menu_item title="1080i">
                         <param id="profile" value="1080" />
-                        <param id="qmin" value="" />
-                        <param id="ffmpeg_option_acodec" value="ac3" />
                         <param id="video_suffix" value="m2t" />
-                        <param id="ffmpeg_option_vcodec" value="mpeg2video" />
-                        <param id="output_video_codec_name" value="MPEG-2" />
                         <param id="output_audio_codec_name" value="AC3" />
+                        <param id="ffmpeg_option_acodec" value="ac3" />
                     </menu_item>
                 </menu>
+                <param id="video_suffix" value="mpg" />
                 <param id="output_format_name" value="MPEG-2" />
-                <param id="gop_size" value="-g 15" />
-                <param id="pixfmt" value="" />
-                <param id="tag" value="" />
+                <param id="output_video_codec_name" value="MPEG-2" />
+                <param id="ffmpeg_option_vcodec" value="mpeg2video" />
+                <param id="output_audio_codec_name" value="MP2" />
+                <param id="ffmpeg_option_acodec" value="mp2" />
             </device>
             
             <!-- DV -->

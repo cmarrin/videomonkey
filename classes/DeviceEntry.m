@@ -859,10 +859,23 @@ static void setButton(NSButton* button, MyButton* item)
 
 -(void) evaluateScript: (JavaScriptContext*) context performanceIndex:(int) perfIndex
 {
+    // Execute script in the following order:
+    // 1) <default_device>
+    // 2) selected <performance_item> from <default_device>
+    // 3) <common_device> for selected <device>
+    // 4) selected <performance_item> from <common_device> for selected <device>
+    // 5) selected <device>
+    // 6) selected <performance_item> from selected <device>
+    // 7) <checked_item> or <unchecked_item> entry from each <checkbox> in selected <device>
+    // 8) selected <menu_item> entry from each <menu> in selected <device>
+	
     // Execute script from default device (recursive)
     if (m_defaultDevice)
         [m_defaultDevice evaluateScript: context performanceIndex:perfIndex];
     
+    // Evaluate global script
+    [context evaluateJavaScript:m_script];
+
     // Evaluate scripts from currently selected performance item
     if (perfIndex >= 0 && [m_performanceItems count] > perfIndex)
         [context evaluateJavaScript: [(PerformanceItem*) [m_performanceItems objectAtIndex:perfIndex] script]];
@@ -890,9 +903,6 @@ static void setButton(NSButton* button, MyButton* item)
             [context evaluateJavaScript: (NSString*)[[menu itemScripts] objectAtIndex:state]];
         i++;
     }
-	
-    // Evaluate global script
-    [context evaluateJavaScript:m_script];
 }
 
 @end

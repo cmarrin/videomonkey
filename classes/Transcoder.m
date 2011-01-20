@@ -473,12 +473,17 @@ static NSString* escapePath(NSString* path)
     self.outputFileInfo.format = [[[AppController instance] deviceController] paramForKey:@"output_format_name"];
 
     self.outputFileInfo.videoCodec = [[[AppController instance] deviceController] paramForKey:@"output_video_codec_name"];
-    NSString* profile = [[[AppController instance] deviceController] paramForKey:@"output_video_profile_name"];
-    int level = [[[[AppController instance] deviceController] paramForKey:@"output_video_level_name"] intValue];
-    self.outputFileInfo.videoProfile = [NSString stringWithFormat:@"%@@%d.%d", profile, level/10, level%10];
     self.outputFileInfo.videoFrameRate = [[[[AppController instance] deviceController] paramForKey:@"output_video_frame_rate"] floatValue];
     self.outputFileInfo.videoBitrate = [[[[AppController instance] deviceController] paramForKey:@"output_video_bitrate"] floatValue];
     
+    // Compose a profile and level
+    NSString* profile = [[[AppController instance] deviceController] paramForKey:@"output_video_profile_name"];
+    int level = [[[[AppController instance] deviceController] paramForKey:@"output_video_level_name"] intValue];
+    
+    if ([profile length] > 0)
+        self.outputFileInfo.videoProfile = (level > 0) ?
+            [NSString stringWithFormat:@"%@@%d.%d", profile, level/10, level%10] : profile;
+
     m_audioQuality = [[[AppController instance] deviceController] paramForKey:@"output_audio_quality"];
 
     self.outputFileInfo.audioCodec = [[[AppController instance] deviceController] paramForKey:@"output_audio_codec_name"];

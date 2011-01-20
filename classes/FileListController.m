@@ -296,7 +296,7 @@
     
     if ([[[AppController instance] deviceController] shouldWriteMetadataToInputFile])
         fileType = [transcoder inputFileInfo].format;
-    else if ([[[AppController instance] deviceController] shouldWriteMetadataToOutputFile])
+    else
         fileType = [transcoder outputFileInfo].format;
         
     [[AppController instance].fileInfoPanelController setMetadataStateForFileType:fileType];
