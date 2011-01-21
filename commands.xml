@@ -207,7 +207,7 @@ ffmpeg_option_padtop
 ffmpeg_option_padbottom
 ffmpeg_option_vcodec
 ffmpeg_option_acodec
-ffmpeg_option_pixfmt        currently only set to 'yuv420p' in WMV
+ffmpeg_option_pix_fmt
 ffmpeg_option_vtag          currently only set to DX50 in AVI
 ffmpeg_option_g
 ffmpeg_option_maxrate
@@ -533,17 +533,19 @@ DTD
              *  Generate params.ffmpeg_options
              */
             // Defaults for ffmpeg options
+            /*
             params.ffmpeg_option_target = "";
             params.ffmpeg_option_padleft = "";
             params.ffmpeg_option_padright = "";
             params.ffmpeg_option_padtop = "";
             params.ffmpeg_option_padbottom = "";
-            params.ffmpeg_option_pixfmt = "";
+            params.ffmpeg_option_pix_fmt = "";
             params.ffmpeg_option_vtag = "";
             params.ffmpeg_option_g = "";
             params.ffmpeg_option_maxrate = "";
             params.ffmpeg_option_qmin = "";
             params.ffmpeg_option_bf = "";
+            */
             
             params.output_video_bitrate = -1;
             
@@ -595,7 +597,7 @@ DTD
                 if (params.output_video_bitrate >= 0)
                     params.ffmpeg_options += "-b $(output_video_bitrate) ";
                     
-                addFFMPegParam("pixfmt");
+                addFFMPegParam("pix_fmt");
                 addFFMPegParam("vtag");
                 addFFMPegParam("g");
                 addFFMPegParam("maxrate");
@@ -1193,7 +1195,6 @@ DTD
                     var quality = number(params.quality);
                     var h264 = bool(params.h264);
                     var forTV = bool(params.forTV);
-                    var width320 = bool(params.width320);
                     var ntsc = bool(params.ntsc);
                     var mpeg2 = bool(params.mpeg2);
                     var requestedFrameWidth = 0;
@@ -1211,14 +1212,14 @@ DTD
                         // There are 3 flags governing bitrate: h264, width320 and ntsc
                         // but all are mutually exclusive, so index is 0 if none are set
                         // and 1 if any are set.
-                        var index = (h264 | width320 | ntsc) ? 1 : 0;
+                        var index = (h264 | bool(params.width320) | ntsc) ? 1 : 0;
                         var bitrateMin = bitrateQualityMap[params.title][index][qualityStop] * 1000;
                         var bitrateMax = bitrateQualityMap[params.title][index][qualityStop+1] * 1000;
                         setVideoBitrate(bitrateMin, bitrateMax);
                     }
-
+                    
                     // Init width and height
-                    if (width320)
+                    if (bool(params.width320))
                         requestedFrameWidth = 320;
                     else if (qualityStop == 0)
                         requestedFrameWidth = 240;
@@ -1227,7 +1228,7 @@ DTD
 
                     switch (params.title) {
                         case "MP4":
-                            setAudioParams("");
+                            setAudioParams("default");
                             if (qualityStop == 4)
                                 params.ffmpeg_option_qmin = "";
                             else if (qualityStop == 0) {
@@ -1236,7 +1237,7 @@ DTD
                             }
                             break;
                         case "WMV":                            
-                            setAudioParams("");
+                            setAudioParams("default");
                             if (qualityStop == 0) {
                                 requestedFrameWidth = 240;
                                 params.ffmpeg_option_maxrate = "24k";
@@ -1245,7 +1246,7 @@ DTD
                             break;
 
                         case "MPEG":
-                            setAudioParams("");
+                            setAudioParams("default");
                             var bitrateMin = mpegbitrateQualityMap[params.profile][qualityStop] * 1000;
                             var bitrateMax = mpegbitrateQualityMap[params.profile][qualityStop+1] * 1000;
                             setVideoBitrate(bitrateMin, bitrateMax);
@@ -1400,7 +1401,8 @@ DTD
                             break;
                     }
                     
-                    setVideoSize(requestedFrameWidth, requestedFrameHeight);
+                    if (params.title != "DV")
+                        setVideoSize(requestedFrameWidth, requestedFrameHeight);
                     
                     // Generate the params
                     setFFMPegOptions();
@@ -1452,13 +1454,10 @@ DTD
                     </unchecked_item>
                 </checkbox>
                 <param id="tag" value="" />
-                <param id="pixfmt" value="" />
                 <param id="output_format_name" value="MPEG-4" />
                 <param id="output_audio_codec_name" value="MP3" />
                 <param id="vob" value="" />
                 <param id="dashb" value="-b" />
-                <param id="target" value="" />
-                <param id="dashtarget" value="" />
             </device>
             
             <!-- QuickTime -->
@@ -1503,15 +1502,12 @@ DTD
                 <param id="ffmpeg_option_acodec" value="wmav2" />
                 <param id="extras" value="" />
                 <param id="tag" value="" />
-                <param id="pixfmt" value="-pix_fmt yuv420p" />
                 <param id="video_suffix" value="wmv" />
                 <param id="output_format_name" value="WMV" />
                 <param id="output_video_codec_name" value="WMV" />
                 <param id="output_audio_codec_name" value="WMA" />
                 <param id="vob" value="" />
                 <param id="dashb" value="-b" />
-                <param id="target" value="" />
-                <param id="dashtarget" value="" />
                 <param id="output_video_frame_rate" value="29.97" />
                 <param id="aspect" value="" />
             </device>
@@ -1547,7 +1543,6 @@ DTD
                 <param id="aspect" value="" />
                 <param id="output_video_codec_name" value="" />
                 <param id="ffmpeg_option_vcodec" value="" />
-                <param id="pixfmt" value="" />
                 <param id="tag" value="" />
                 <param id="dashb" value="-b" />
                 <param id="output_audio_codec_name" value="MP3" />
@@ -1645,17 +1640,11 @@ DTD
                 <param id="output_audio_channels" value="2" />
                 <param id="output_audio_bitrate" value="48000" />
                 <param id="output_audio_quality" value="High" />
-                <param id="output_video_width" value="720" />
-                <param id="output_video_height" value="480" />
-                <param id="ffmpeg_video_aspect_x" value="3" />
-                <param id="ffmpeg_video_aspect_y" value="2" />
 
-                <checkbox which="0" title="Force Anamorphic 16:9">
+                <checkbox which="0" title="Force Anamorphic 16:9" enabled="false">
                     <checked_item>
-                        <param id="aspect" value="-aspect 16:9" />
                     </checked_item>
                     <unchecked_item>
-                        <param id="aspect" value="-aspect 3:2" />
                     </unchecked_item>
                 </checkbox>
                 <checkbox which="1" title="Ready for Final Cut">
@@ -1669,18 +1658,18 @@ DTD
                 <menu which="0" title="Format:">
                     <menu_item title="NTSC">
                         <param id="output_video_frame_rate" value="29.97" />
-                        <param id="pix_fmt" value="-pix_fmt yuv411p" />
                         <param id="output_video_width" value="720" />
                         <param id="output_video_height" value="480" />
                         <param id="ffmpeg_video_aspect_x" value="3" />
                         <param id="ffmpeg_video_aspect_y" value="2" />
+                        <param id="ffmpeg_option_pix_fmt" value="yuv411p" />
                     </menu_item>
                     <menu_item title="PAL">
                         <param id="output_video_frame_rate" value="25" />
-                        <param id="pix_fmt" value="-pix_fmt yuv420p" />
                         <param id="output_video_width" value="720" />
-                        <param id="input_video_height" value="576" />
+                        <param id="output_video_height" value="576" />
                         <param id="aspect" value="" />
+                        <param id="ffmpeg_option_pix_fmt" value="yuv420p" />
                     </menu_item>
                 </menu>
                 <quality>
