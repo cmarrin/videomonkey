@@ -3,7 +3,7 @@
 	<data>
 		<int key="IBDocument.SystemTarget">1050</int>
 		<string key="IBDocument.SystemVersion">10H574</string>
-		<string key="IBDocument.InterfaceBuilderVersion">788</string>
+		<string key="IBDocument.InterfaceBuilderVersion">823</string>
 		<string key="IBDocument.AppKitVersion">1038.35</string>
 		<string key="IBDocument.HIToolboxVersion">461.00</string>
 		<object class="NSMutableDictionary" key="IBDocument.PluginVersions">
@@ -15,16 +15,16 @@
 			</object>
 			<object class="NSMutableArray" key="dict.values">
 				<bool key="EncodedWithXMLCoder">YES</bool>
-				<string>788</string>
+				<string>823</string>
 				<string>1756</string>
 			</object>
 		</object>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
-			<integer value="5392"/>
-			<integer value="3052"/>
-			<integer value="1377"/>
 			<integer value="29"/>
+			<integer value="3033"/>
+			<integer value="1377"/>
+			<integer value="5392"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -6355,7 +6355,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 															<object class="NSTextField" id="41457138">
 																<reference key="NSNextResponder" ref="686663763"/>
 																<int key="NSvFlags">268</int>
-																<string key="NSFrame">{{12, 56}, {77, 14}}</string>
+																<string key="NSFrame">{{12, 12}, {77, 14}}</string>
 																<reference key="NSSuperview" ref="686663763"/>
 																<bool key="NSEnabled">YES</bool>
 																<object class="NSTextFieldCell" key="NSCell" id="770926585">
@@ -6387,7 +6387,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 															<object class="NSTextField" id="625059386">
 																<reference key="NSNextResponder" ref="686663763"/>
 																<int key="NSvFlags">268</int>
-																<string key="NSFrame">{{44, 12}, {45, 14}}</string>
+																<string key="NSFrame">{{44, 56}, {45, 14}}</string>
 																<reference key="NSSuperview" ref="686663763"/>
 																<bool key="NSEnabled">YES</bool>
 																<object class="NSTextFieldCell" key="NSCell" id="41962114">
@@ -6419,7 +6419,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 															<object class="NSTextField" id="210017026">
 																<reference key="NSNextResponder" ref="686663763"/>
 																<int key="NSvFlags">270</int>
-																<string key="NSFrame">{{91, 56}, {334, 14}}</string>
+																<string key="NSFrame">{{91, 12}, {334, 14}}</string>
 																<reference key="NSSuperview" ref="686663763"/>
 																<bool key="NSEnabled">YES</bool>
 																<object class="NSTextFieldCell" key="NSCell" id="470587968">
@@ -6491,7 +6491,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 															<object class="NSTextField" id="956659350">
 																<reference key="NSNextResponder" ref="686663763"/>
 																<int key="NSvFlags">270</int>
-																<string key="NSFrame">{{91, 12}, {334, 14}}</string>
+																<string key="NSFrame">{{91, 56}, {334, 14}}</string>
 																<reference key="NSSuperview" ref="686663763"/>
 																<bool key="NSEnabled">YES</bool>
 																<object class="NSTextFieldCell" key="NSCell" id="911329463">
@@ -23917,11 +23917,11 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<integer value="1"/>
 					<string>{{525, 802}, {197, 73}}</string>
-					<string>{{566, 290}, {466, 566}}</string>
+					<string>{{236, 290}, {466, 566}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<boolean value="NO"/>
 					<boolean value="NO"/>
-					<string>{{566, 290}, {466, 566}}</string>
+					<string>{{236, 290}, {466, 566}}</string>
 					<boolean value="NO"/>
 					<boolean value="YES"/>
 					<boolean value="YES"/>
@@ -24133,7 +24133,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 					<string>DurationFormatter</string>
 					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>{{329, 836}, {445, 20}}</string>
+					<string>{{257, 836}, {445, 20}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<integer value="1"/>
 					<string>{74, 862}</string>

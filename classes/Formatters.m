@@ -87,6 +87,8 @@ static NSString* stringForSizeValue(double size, NSString* units)
     
     if (sampleRate < 0 || sampleRate > 4000000000)
         return @"unknown";
+    else if (sampleRate == 0)
+        return @"";
     
     return stringForSizeValue(sampleRate, @"Hz");
 }

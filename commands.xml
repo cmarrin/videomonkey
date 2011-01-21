@@ -553,8 +553,12 @@ DTD
             params.ffmpeg_vpre_pass1 = "";
             params.ffmpeg_vpre = "";
             params.ffmpeg_vpre_profile = "";
-
-
+            
+            params.ffmpeg_video_aspect_x = 0;
+            params.ffmpeg_video_aspect_y = 0;
+            
+            params.output_audio_sample_rate = 0;
+            
             function addFFMPegParam(param, paramName)
             {
                 if (paramName == undefined)
@@ -577,7 +581,10 @@ DTD
                 
                 addFFMPegParam("target")
                 params.ffmpeg_options += "-s $(output_video_width)x$(output_video_height) ";
-                params.ffmpeg_options += "-aspect $(ffmpeg_video_aspect_x):$(ffmpeg_video_aspect_y) ";
+                
+                if (params.ffmpeg_video_aspect_x > 0 && params.ffmpeg_video_aspect_y > 0)
+                    params.ffmpeg_options += "-aspect $(ffmpeg_video_aspect_x):$(ffmpeg_video_aspect_y) ";
+                    
                 params.ffmpeg_options += "-r $(output_video_frame_rate) ";
                 addFFMPegParam("padleft");
                 addFFMPegParam("padright");
@@ -596,7 +603,11 @@ DTD
                 addFFMPegParam("bf");
                 params.ffmpeg_options += "-async 50 ";
                 addFFMPegParam("acodec");
-                params.ffmpeg_options += "-ar $output_audio_sample_rate -ac $output_audio_channels  -ab $output_audio_bitrate ";
+                
+                if (params.output_audio_sample_rate > 0)
+                    params.ffmpeg_options += "-ar $output_audio_sample_rate ";
+                    
+                params.ffmpeg_options += "-ac $output_audio_channels  -ab $output_audio_bitrate ";
                 addFFMPegParam("f"); // '-f vob' for MPEG-2 encode to program stream
             }
 
@@ -608,12 +619,6 @@ DTD
             function setAudioParams(type)
             {
                 switch(type) {
-                    case "default":
-                        params.output_audio_bitrate =  "";
-                        params.output_audio_sample_rate = "";
-                        params.output_audio_channels = "";
-                        params.output_audio_quality = "Default";
-                        break;
                     case "low":
                         params.output_audio_bitrate =  16000;
                         params.output_audio_sample_rate = 11025;
@@ -644,6 +649,10 @@ DTD
                         params.output_audio_channels = 2;
                         params.output_audio_quality = "High";
                         break;
+                    case "default":
+                        setAudioParams((params.quality_stop == 0) ? "low" : (params.quality_stop == 1) ? "medium" : "high");
+                        break;
+
                 }
             }
             
@@ -967,7 +976,8 @@ DTD
                     setVideoSize(requestedFrameWidth, requestedFrameHeight);
                     
                     // Set the aspect ratio
-                    setVideoAspectRatio(params.output_video_width, params.output_video_height);
+                    params.ffmpeg_video_aspect_x = params.output_video_width;
+                    params.ffmpeg_video_aspect_y = params.output_video_height;
 
                     // set audio quality
                     setAudioParams(audioQualityMap[title][qualityStop]);
@@ -1131,7 +1141,7 @@ DTD
                 <param id="h264" value="false" />
                 <script>
                     <![CDATA[
-    
+                            
                     //
                     // Video Formats -
                     //
@@ -1188,27 +1198,24 @@ DTD
                     var mpeg2 = bool(params.mpeg2);
                     var requestedFrameWidth = 0;
                     var requestedFrameHeight = 0;
-                    var aspectRatioX = 0;
-                    var aspectRatioY = 0;
                     
                     if (params.output_video_frame_rate == "")
                         params.output_video_frame_rate = params.input_frame_rate;
-                    
-                    // Set default audio quality
-                    setAudioParams((qualityStop == 0) ? "low" : (qualityStop == 1) ? "medium" : "high");
                     
                     // Init qmin
                     if (params.title in qminMap)
                         params.ffmpeg_option_qmin = qminMap[params.title][qualityStop];
                     
-                    // Init bitrate
-                    // There are 3 flags governing bitrate: h264, width320 and ntsc
-                    // but all are mutually exclusive, so index is 0 if none are set
-                    // and 1 if any are set.
-                    var index = (h264 | width320 | ntsc) ? 1 : 0;
-                    var bitrateMin = bitrateQualityMap[params.title][index][qualityStop] * 1000;
-                    var bitrateMax = bitrateQualityMap[params.title][index][qualityStop+1] * 1000;
-                    setVideoBitrate(bitrateMin, bitrateMax);
+                    if (params.title != "DV") {
+                        // Init bitrate
+                        // There are 3 flags governing bitrate: h264, width320 and ntsc
+                        // but all are mutually exclusive, so index is 0 if none are set
+                        // and 1 if any are set.
+                        var index = (h264 | width320 | ntsc) ? 1 : 0;
+                        var bitrateMin = bitrateQualityMap[params.title][index][qualityStop] * 1000;
+                        var bitrateMax = bitrateQualityMap[params.title][index][qualityStop+1] * 1000;
+                        setVideoBitrate(bitrateMin, bitrateMax);
+                    }
 
                     // Init width and height
                     if (width320)
@@ -1220,6 +1227,7 @@ DTD
 
                     switch (params.title) {
                         case "MP4":
+                            setAudioParams("");
                             if (qualityStop == 4)
                                 params.ffmpeg_option_qmin = "";
                             else if (qualityStop == 0) {
@@ -1228,6 +1236,7 @@ DTD
                             }
                             break;
                         case "WMV":                            
+                            setAudioParams("");
                             if (qualityStop == 0) {
                                 requestedFrameWidth = 240;
                                 params.ffmpeg_option_maxrate = "24k";
@@ -1236,14 +1245,15 @@ DTD
                             break;
 
                         case "MPEG":
+                            setAudioParams("");
                             var bitrateMin = mpegbitrateQualityMap[params.profile][qualityStop] * 1000;
                             var bitrateMax = mpegbitrateQualityMap[params.profile][qualityStop+1] * 1000;
                             setVideoBitrate(bitrateMin, bitrateMax);
                             
                             switch(params.profile) {
                                 case "vcd":
-                                    aspectRatioX = 4;
-                                    aspectRatioY = 3;
+                                    params.ffmpeg_video_aspect_x = 4;
+                                    params.ffmpeg_video_aspect_y = 3;
                                     
                                     if (params.input_video_aspect >= 1.2 && params.input_video_aspect <= 1.5) {
                                         requestedFrameWidth = 352;
@@ -1268,8 +1278,8 @@ DTD
                                     }
                                     break;
                                 case "svcd":
-                                    aspectRatioX = 4;
-                                    aspectRatioY = 3;
+                                    params.ffmpeg_video_aspect_x = 4;
+                                    params.ffmpeg_video_aspect_y = 3;
                                     
                                     if (params.input_video_aspect >= 1.2 && params.input_video_aspect <= 1.5) {
                                         requestedFrameWidth = 480;
@@ -1344,16 +1354,16 @@ DTD
                                      break;
                                 case "ts":
                                     setAudioParams("high");
-                                    aspectRatioX = 4;
-                                    aspectRatioY = 3;
+                                    params.ffmpeg_video_aspect_x = 4;
+                                    params.ffmpeg_video_aspect_y = 3;
                                     requestedFrameWidth = 352;
                                     requestedFrameHeight = ntsc ? 480 : 576;
                                     break;
                                 case "720":
                                 case "1080":
                                     setAudioParams("hd");
-                                    aspectRatioX = 16;
-                                    aspectRatioY = 9;
+                                    params.ffmpeg_video_aspect_x = 16;
+                                    params.ffmpeg_video_aspect_y = 9;
                                     
                                     if (params.profile == "720") {
                                         requestedFrameWidth = 1280;
@@ -1388,10 +1398,9 @@ DTD
                                     break;
                             }
                             break;
-                   }
+                    }
                     
                     setVideoSize(requestedFrameWidth, requestedFrameHeight);
-                    setVideoAspectRatio(aspectRatioX, aspectRatioY);
                     
                     // Generate the params
                     setFFMPegOptions();
@@ -1421,6 +1430,7 @@ DTD
                 <param id="output_audio_bitrate" value="128000" />
                 <param id="output_audio_sample_rate" value="44100" />
                 <param id="output_audio_channels" value="2" />
+                <param id="output_audio_quality" value="CD" />
                 <param id="ffmpeg_option_g" value="200" />
                 <param id="ffmpeg_option_tag" value="DX50" />
                 <param id="output_video_frame_rate" value="29.97" />
@@ -1626,14 +1636,20 @@ DTD
             
             <!-- DV -->
             <device title="DV" icon="dv" enabled="true">
+                <param id="video_suffix" value="dv" />
+                <param id="output_format_name" value="Digital Video" />
+                <param id="output_video_codec_name" value="Digital Video" />
+                <param id="ffmpeg_option_vcodec" value="dvvideo" />
+                <param id="output_audio_codec_name" value="PCM" />
                 <param id="ffmpeg_option_acodec" value="pcm_s16le" />
                 <param id="output_audio_channels" value="2" />
-                <param id="ffmpeg_option_vcodec" value="dvvideo" />
-                <param id="output_format_name" value="DV" />
                 <param id="output_audio_bitrate" value="48000" />
-                <param id="video_suffix" value="dv" />
-                <param id="output_video_codec_name" value="DV" />
-                <param id="output_audio_codec_name" value="PCM" />
+                <param id="output_audio_quality" value="High" />
+                <param id="output_video_width" value="720" />
+                <param id="output_video_height" value="480" />
+                <param id="ffmpeg_video_aspect_x" value="3" />
+                <param id="ffmpeg_video_aspect_y" value="2" />
+
                 <checkbox which="0" title="Force Anamorphic 16:9">
                     <checked_item>
                         <param id="aspect" value="-aspect 16:9" />
@@ -1654,11 +1670,15 @@ DTD
                     <menu_item title="NTSC">
                         <param id="output_video_frame_rate" value="29.97" />
                         <param id="pix_fmt" value="-pix_fmt yuv411p" />
-                        <param id="input_video_height" value="480" />
+                        <param id="output_video_width" value="720" />
+                        <param id="output_video_height" value="480" />
+                        <param id="ffmpeg_video_aspect_x" value="3" />
+                        <param id="ffmpeg_video_aspect_y" value="2" />
                     </menu_item>
                     <menu_item title="PAL">
                         <param id="output_video_frame_rate" value="25" />
                         <param id="pix_fmt" value="-pix_fmt yuv420p" />
+                        <param id="output_video_width" value="720" />
                         <param id="input_video_height" value="576" />
                         <param id="aspect" value="" />
                     </menu_item>

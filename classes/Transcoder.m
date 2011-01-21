@@ -201,13 +201,10 @@ int ffprobeIndexFromString(NSString* string, NSString* codec)
         info.videoBitrate = [[video objectAtIndex:11] doubleValue];
         
         // standardize video codec name
-        NSString* f = VC_H264;
         if ([info.videoCodec caseInsensitiveCompare:@"vc-1"] == NSOrderedSame || [info.videoCodec caseInsensitiveCompare:@"wmv3"] == NSOrderedSame)
-            f = VC_WMV3;
+            info.videoCodec = VC_WMV3;
         else if ([info.videoCodec caseInsensitiveCompare:@"avc"] == NSOrderedSame || [info.videoCodec caseInsensitiveCompare:@"avc1"] == NSOrderedSame)
-            f = VC_H264;
-    
-        info.videoCodec = f;
+            info.videoCodec = VC_H264;
     }
     
     // Do audio if it's there
