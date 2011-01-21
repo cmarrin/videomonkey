@@ -175,7 +175,7 @@ output_format_name          Displayed format of the container
 output_video_codec_name     Displayed video codec
 output_video_profile_name   Displayed profile of the video
 output_video_level_name     Displayed level of this video
-output_video_frame_rate     Framerate of the output file (actual frame rate in fps * 1000)
+output_video_frame_rate     Framerate of the output file
 
 output_audio_codec_name     Displayed audio codec
 output_audio_bitrate        Audio bitrate
@@ -211,7 +211,6 @@ ffmpeg_option_pixfmt        currently only set to 'yuv420p' in WMV
 ffmpeg_option_vtag          currently only set to DX50 in AVI
 ffmpeg_option_g
 ffmpeg_option_maxrate
-ffmpeg_option_bufsize
 ffmpeg_option_qmin
 ffmpeg_option_bf
 
@@ -543,7 +542,6 @@ DTD
             params.ffmpeg_option_vtag = "";
             params.ffmpeg_option_g = "";
             params.ffmpeg_option_maxrate = "";
-            params.ffmpeg_option_bufsize = "";
             params.ffmpeg_option_qmin = "";
             params.ffmpeg_option_bf = "";
             
@@ -594,7 +592,6 @@ DTD
                 addFFMPegParam("vtag");
                 addFFMPegParam("g");
                 addFFMPegParam("maxrate");
-                addFFMPegParam("bufsize");
                 addFFMPegParam("qmin");
                 addFFMPegParam("bf");
                 params.ffmpeg_options += "-async 50 ";
@@ -661,10 +658,6 @@ DTD
                     rateMultiplier = 0.5;
 
                 params.output_video_frame_rate = params.input_frame_rate * rateMultiplier;
-                
-                // All devices have a max frame rate of 30fps
-                if (params.output_video_frame_rate > 30)
-                    params.output_video_frame_rate = 30;
             }
             
             // Sets output_video_bitrate
@@ -1231,15 +1224,13 @@ DTD
                                 params.ffmpeg_option_qmin = "";
                             else if (qualityStop == 0) {
                                 params.ffmpeg_option_maxrate = "40k";
-                                params.ffmpeg_option_bufsize = "5k";
-                                params.output_video_frame_rate = "10";
+                                params.output_video_frame_rate = 10;
                             }
                             break;
                         case "WMV":                            
                             if (qualityStop == 0) {
                                 requestedFrameWidth = 240;
                                 params.ffmpeg_option_maxrate = "24k";
-                                params.ffmpeg_option_bufsize = "5k";
                                 params.output_video_frame_rate = 10;
                             }
                              break;
@@ -1432,7 +1423,7 @@ DTD
                 <param id="output_audio_channels" value="2" />
                 <param id="ffmpeg_option_g" value="200" />
                 <param id="ffmpeg_option_tag" value="DX50" />
-                <param id="output_video_frame_rate" value="ntsc" />
+                <param id="output_video_frame_rate" value="29.97" />
             </device>
             
             <!-- MP4 -->
@@ -1511,7 +1502,7 @@ DTD
                 <param id="dashb" value="-b" />
                 <param id="target" value="" />
                 <param id="dashtarget" value="" />
-                <param id="output_video_frame_rate" value="ntsc" />
+                <param id="output_video_frame_rate" value="29.97" />
                 <param id="aspect" value="" />
             </device>
 
@@ -1541,7 +1532,7 @@ DTD
                     </unchecked_item>
                 </checkbox>
                 <param id="num_cpus" value="1" /> <!-- Flash encoding fails if num_cpus is not 1 -->
-                <param id="output_video_frame_rate" value="ntsc" />
+                <param id="output_video_frame_rate" value="29.97" />
                 <param id="padding" value="" />
                 <param id="aspect" value="" />
                 <param id="output_video_codec_name" value="" />
@@ -1563,19 +1554,17 @@ DTD
                     {
                         var mpegMaxrateMap = [ 2764,  4608,  6912, 9874,  23040 ];                    
                         params.ffmpeg_option_ratemax = mpegMaxrateMap[params.quality_stop];
-                        var mpegBufsizeMap = [  461,   768,  1152, 1646,  3840 ];
-                        params.ffmpeg_option_bufsize = mpegBufsizeMap[qualityStop];
                     }
                     ]]>
                 </script>
                  <menu which="0" title="Format:">
                     <menu_item title="NTSC">
                         <param id="ntsc" value="true" />
-                        <param id="output_video_frame_rate" value="ntsc" />
+                        <param id="output_video_frame_rate" value="29.97" />
                     </menu_item>
                     <menu_item title="PAL">
                         <param id="ntsc" value="false" />
-                        <param id="output_video_frame_rate" value="pal" />
+                        <param id="output_video_frame_rate" value="25" />
                     </menu_item>
                 </menu>
                 <menu which="1" title="Profile:">
@@ -1665,12 +1654,12 @@ DTD
                 </checkbox>
                 <menu which="0" title="Format:">
                     <menu_item title="NTSC">
-                        <param id="video_frame_rate" value="ntsc" />
+                        <param id="output_video_frame_rate" value="ntsc" />
                         <param id="pix_fmt" value="-pix_fmt yuv411p" />
                         <param id="input_video_height" value="480" />
                     </menu_item>
                     <menu_item title="PAL">
-                        <param id="video_frame_rate" value="pal" />
+                        <param id="output_video_frame_rate" value="25" />
                         <param id="pix_fmt" value="-pix_fmt yuv420p" />
                         <param id="input_video_height" value="576" />
                         <param id="aspect" value="" />
@@ -1779,8 +1768,6 @@ DTD
                     <menu_item title="-bf">
                     </menu_item>
                     <menu_item title="-maxrate">
-                    </menu_item>
-                    <menu_item title="-bufsize">
                     </menu_item>
                     <menu_item title="-g">
                     </menu_item>

@@ -473,8 +473,10 @@ static NSString* escapePath(NSString* path)
     self.outputFileInfo.format = [[[AppController instance] deviceController] paramForKey:@"output_format_name"];
 
     self.outputFileInfo.videoCodec = [[[AppController instance] deviceController] paramForKey:@"output_video_codec_name"];
-    self.outputFileInfo.videoFrameRate = [[[[AppController instance] deviceController] paramForKey:@"output_video_frame_rate"] floatValue];
     self.outputFileInfo.videoBitrate = [[[[AppController instance] deviceController] paramForKey:@"output_video_bitrate"] floatValue];
+    
+    self.outputFileInfo.videoFrameRate = [[[[AppController instance] deviceController] paramForKey:@"output_video_frame_rate"] floatValue];
+
     
     // Compose a profile and level
     NSString* profile = [[[AppController instance] deviceController] paramForKey:@"output_video_profile_name"];
