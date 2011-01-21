@@ -1233,7 +1233,7 @@ DTD
                                 params.ffmpeg_option_maxrate = "24k";
                                 params.output_video_frame_rate = 10;
                             }
-                             break;
+                            break;
 
                         case "MPEG":
                             var bitrateMin = mpegbitrateQualityMap[params.profile][qualityStop] * 1000;
@@ -1549,7 +1549,6 @@ DTD
             <device title="MPEG" icon="file" enabled="true">
                 <script>
                     <![CDATA[
-                    log("**** got to MPEG");
                     function setMPEG1Params()
                     {
                         var mpegMaxrateMap = [ 2764,  4608,  6912, 9874,  23040 ];                    
@@ -1580,7 +1579,6 @@ DTD
                     </menu_item>
                     <menu_item title="VCD">
                         <script> <![CDATA[ 
-                    log("**** got to VCD");
                             setMPEG1Params();
                             params.ffmpeg_option_target = params.ntsc ? "ntsc-vcd" : "pal-vcd";
                         ]]> </script>
@@ -1654,7 +1652,7 @@ DTD
                 </checkbox>
                 <menu which="0" title="Format:">
                     <menu_item title="NTSC">
-                        <param id="output_video_frame_rate" value="ntsc" />
+                        <param id="output_video_frame_rate" value="29.97" />
                         <param id="pix_fmt" value="-pix_fmt yuv411p" />
                         <param id="input_video_height" value="480" />
                     </menu_item>
