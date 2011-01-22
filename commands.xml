@@ -306,6 +306,28 @@ DTD
 
 <videomonkey>
     <default_device>
+        <!-- Init params used -->
+        <param id="ffmpeg_option_target" value="" />
+        <param id="ffmpeg_option_padleft" value="" />
+        <param id="ffmpeg_option_padright" value="" />
+        <param id="ffmpeg_option_padtop" value="" />
+        <param id="ffmpeg_option_padbottom" value="" />
+        <param id="ffmpeg_option_pix_fmt" value="" />
+        <param id="ffmpeg_option_vtag" value="" />
+        <param id="ffmpeg_option_g" value="" />
+        <param id="ffmpeg_option_maxrate" value="" />
+        <param id="ffmpeg_option_qmin" value="" />
+        <param id="ffmpeg_option_bf" value="" />
+        <param id="output_video_bitrate" value="0" />
+        <param id="output_video_profile_name" value="" />
+        <param id="output_video_level_name" value="" />
+        <param id="ffmpeg_vpre_pass1" value="" />
+        <param id="ffmpeg_vpre" value="" />
+        <param id="ffmpeg_vpre_profile" value="" />
+        <param id="ffmpeg_video_aspect_x" value="0" />
+        <param id="ffmpeg_video_aspect_y" value="0" />
+        <param id="output_audio_sample_rate" value="0" />
+
         <!-- Apps -->
         <command id="ffmpeg">
             "$(app_resource_path)/bin/ffmpeg"
@@ -532,35 +554,6 @@ DTD
             /*
              *  Generate params.ffmpeg_options
              */
-            // Defaults for ffmpeg options
-            /*
-            params.ffmpeg_option_target = "";
-            params.ffmpeg_option_padleft = "";
-            params.ffmpeg_option_padright = "";
-            params.ffmpeg_option_padtop = "";
-            params.ffmpeg_option_padbottom = "";
-            params.ffmpeg_option_pix_fmt = "";
-            params.ffmpeg_option_vtag = "";
-            params.ffmpeg_option_g = "";
-            params.ffmpeg_option_maxrate = "";
-            params.ffmpeg_option_qmin = "";
-            params.ffmpeg_option_bf = "";
-            */
-            
-            params.output_video_bitrate = -1;
-            
-            params.output_video_profile_name = "";
-            params.output_video_level_name = "";
-            
-            params.ffmpeg_vpre_pass1 = "";
-            params.ffmpeg_vpre = "";
-            params.ffmpeg_vpre_profile = "";
-            
-            params.ffmpeg_video_aspect_x = 0;
-            params.ffmpeg_video_aspect_y = 0;
-            
-            params.output_audio_sample_rate = 0;
-            
             function addFFMPegParam(param, paramName)
             {
                 if (paramName == undefined)
@@ -594,7 +587,7 @@ DTD
                 addFFMPegParam("padbottom");
                 addFFMPegParam("vcodec");
                 
-                if (params.output_video_bitrate >= 0)
+                if (params.output_video_bitrate > 0)
                     params.ffmpeg_options += "-b $(output_video_bitrate) ";
                     
                 addFFMPegParam("pix_fmt");
@@ -781,6 +774,9 @@ DTD
             // Create params.recipe
             function setRecipe()
             {
+                // Set options here so recipe can pick them up
+                setFFMPegOptions();
+                
                 var recipeType = 
                     ((params.input_format == "Quicktime") ? 4 : 0) |
                     (bool(params.has_audio) ? 2 : 0) |
@@ -903,14 +899,14 @@ DTD
                         ], 
                         "1st Gen Apple TV":
                         [
-                            [   "sdef",     "sdef",     "sdef",     "sdef",     "sdef" ]    // mp4 && for iPod
+                            [   "sdef",     "sdef",     "sdef",     "sdef",     "sdef" ],   // mp4 && for iPod
                             [   "sdef",     "sdef",     "sdef",     "sdef",     "sdef" ],   // mp4 && for TV
                             [   "idef",     "idef",     "idef",     "idef",     "idef" ],   // h.264 && for iPod
                             [   "idef",     "idef",     "idef",     "idef",     "idef" ]    // h.264 && for TV
                         ],
                         "2nd Gen Apple TV":
                         [
-                            [   "sdef",     "sdef",     "sdef",     "sdef",     "sdef" ]    // mp4 && for iPod
+                            [   "sdef",     "sdef",     "sdef",     "sdef",     "sdef" ],   // mp4 && for iPod
                             [   "sdef",     "sdef",     "sdef",     "sdef",     "sdef" ],   // mp4 && for TV
                             [   "idef",     "idef",     "idef",     "idef",     "idef" ],   // h.264 && for iPod
                             [   "idef",     "idef",     "idef",     "idef",     "idef" ]    // h.264 && for TV
@@ -971,6 +967,8 @@ DTD
                     
                     // set frame size
                     var index = (h264 ? 2 : 0) + (forTV ? 1 : 0);
+log("**** set frame size: title="+title+", index="+index+", qualityStop="+qualityStop+", passed quality stop='"+params.quality_stop);
+log("**** set frame size: deviceFrameSizeMap[title].length="+deviceFrameSizeMap[title].length);
                     var sizeString = deviceFrameSizeMap[title][index][qualityStop];
                     requestedFrameWidth = frameSizes[sizeString][0];
                     requestedFrameHeight = frameSizes[sizeString][1];
@@ -987,9 +985,6 @@ DTD
                     // The level is not necessarily accurate
                     params.output_video_profile_name = (title != "Apple TV") ? "baseline" : "main";
                     params.output_video_level_name = levelMap[title][qualityStop];
-                    
-                    // Generate the params
-                    setFFMPegOptions();
                     
                     // Generate the recipe
                     setRecipe();
@@ -1156,7 +1151,7 @@ DTD
                         "MPEG":                 [ [ 1382, 2304, 3456, 4937,  7000,11520 ], [  20,  320,  439,  640,  900, 1280 ] ],
                         "DV":                   [ [ 1382, 2304, 3456, 4937,  7000,11520 ], [  20,  320,  439,  640,  900, 1280 ] ]
                     };
-                    
+
                     var qminMap = {
                         //                          0   1   2   3   4
                         "AVI":                  [    9,  7,  5,  3,  2 ],
@@ -1206,17 +1201,16 @@ DTD
                     // Init qmin
                     if (params.title in qminMap)
                         params.ffmpeg_option_qmin = qminMap[params.title][qualityStop];
-                    
-                    if (params.title != "DV") {
-                        // Init bitrate
-                        // There are 3 flags governing bitrate: h264, width320 and ntsc
-                        // but all are mutually exclusive, so index is 0 if none are set
-                        // and 1 if any are set.
-                        var index = (h264 | bool(params.width320) | ntsc) ? 1 : 0;
-                        var bitrateMin = bitrateQualityMap[params.title][index][qualityStop] * 1000;
-                        var bitrateMax = bitrateQualityMap[params.title][index][qualityStop+1] * 1000;
-                        setVideoBitrate(bitrateMin, bitrateMax);
-                    }
+                
+                    // Init bitrate
+                    // There are 3 flags governing bitrate: h264, width320 and ntsc
+                    // but all are mutually exclusive, so index is 0 if none are set
+                    // and 1 if any are set.
+                    log("*** h264="+h264+", width320='"+params.width320+"', ntsc="+ntsc);
+                    var index = (h264 | bool(params.width320) | ntsc) ? 1 : 0;
+                    var bitrateMin = bitrateQualityMap[params.title][index][qualityStop] * 1000;
+                    var bitrateMax = bitrateQualityMap[params.title][index][qualityStop+1] * 1000;
+                    setVideoBitrate(bitrateMin, bitrateMax);
                     
                     // Init width and height
                     if (bool(params.width320))
@@ -1228,7 +1222,6 @@ DTD
 
                     switch (params.title) {
                         case "MP4":
-                            setAudioParams("default");
                             if (qualityStop == 4)
                                 params.ffmpeg_option_qmin = "";
                             else if (qualityStop == 0) {
@@ -1236,17 +1229,7 @@ DTD
                                 params.output_video_frame_rate = 10;
                             }
                             break;
-                        case "WMV":                            
-                            setAudioParams("default");
-                            if (qualityStop == 0) {
-                                requestedFrameWidth = 240;
-                                params.ffmpeg_option_maxrate = "24k";
-                                params.output_video_frame_rate = 10;
-                            }
-                            break;
-
                         case "MPEG":
-                            setAudioParams("default");
                             var bitrateMin = mpegbitrateQualityMap[params.profile][qualityStop] * 1000;
                             var bitrateMax = mpegbitrateQualityMap[params.profile][qualityStop+1] * 1000;
                             setVideoBitrate(bitrateMin, bitrateMax);
@@ -1354,7 +1337,6 @@ DTD
                                         params.ffmpeg_option_padbottom = "";
                                      break;
                                 case "ts":
-                                    setAudioParams("high");
                                     params.ffmpeg_video_aspect_x = 4;
                                     params.ffmpeg_video_aspect_y = 3;
                                     requestedFrameWidth = 352;
@@ -1362,7 +1344,6 @@ DTD
                                     break;
                                 case "720":
                                 case "1080":
-                                    setAudioParams("hd");
                                     params.ffmpeg_video_aspect_x = 16;
                                     params.ffmpeg_video_aspect_y = 9;
                                     
@@ -1404,9 +1385,6 @@ DTD
                     if (params.title != "DV")
                         setVideoSize(requestedFrameWidth, requestedFrameHeight);
                     
-                    // Generate the params
-                    setFFMPegOptions();
-                    
                     // Generate the recipe
                     setRecipe();
 
@@ -1415,6 +1393,12 @@ DTD
             </common_device>
             <!-- AVI -->
             <device title="AVI" icon="file" enabled="true">
+                <script>
+                    <![CDATA[
+                        setAudioParams("cd");
+                        setRecipe();
+                    ]]>
+                </script>
                 <checkbox which="0" title="320 Pixels Wide">
                     <checked_item>
                         <param id="width320" value="true" />
@@ -1429,17 +1413,20 @@ DTD
                 <param id="output_audio_codec_name" value="MP3" />
                 <param id="ffmpeg_option_acodec" value="libmp3lame" />
                 <param id="video_suffix" value="avi" />
-                <param id="output_audio_bitrate" value="128000" />
-                <param id="output_audio_sample_rate" value="44100" />
-                <param id="output_audio_channels" value="2" />
-                <param id="output_audio_quality" value="CD" />
                 <param id="ffmpeg_option_g" value="200" />
                 <param id="ffmpeg_option_tag" value="DX50" />
                 <param id="output_video_frame_rate" value="29.97" />
+                <param id="ffmpeg_option_vtag" value="DX50" />
             </device>
             
             <!-- MP4 -->
             <device title="MP4" icon="file" enabled="true">
+                <script>
+                    <![CDATA[
+                        setAudioParams("default");
+                        setRecipe();
+                    ]]>
+                </script>
                 <checkbox which="0" title="H.264 Video">
                     <checked_item>
                         <param id="ffmpeg_option_vcodec" value="libx264" />
@@ -1453,15 +1440,18 @@ DTD
                         <param id="h264" value="false" />
                     </unchecked_item>
                 </checkbox>
-                <param id="tag" value="" />
                 <param id="output_format_name" value="MPEG-4" />
                 <param id="output_audio_codec_name" value="MP3" />
-                <param id="vob" value="" />
-                <param id="dashb" value="-b" />
             </device>
             
             <!-- QuickTime -->
             <device title="QuickTime" icon="file" enabled="true">
+                <script>
+                    <![CDATA[
+                        setAudioParams("default");
+                        setRecipe();
+                    ]]>
+                </script>
                 <param id="output_format_name" value="Quicktime" />
                 <param id="video_suffix" value="mov" />
                 <param id="ffmpeg_option_acodec" value="libfaac" />
@@ -1498,18 +1488,23 @@ DTD
                     </unchecked_item>
                 </checkbox>
                 <param id="num_cpus" value="1" /> <!-- WMV encoding fails if num_cpus is not 1 -->
+                <param id="ffmpeg_option_pix_fmt" value="yuv420p" />
+                <param id="ffmpeg_option_qmin" value="7" />
+                <param id="ffmpeg_option_g" value="15" />
                 <param id="ffmpeg_option_vcodec" value="wmv1" />
                 <param id="ffmpeg_option_acodec" value="wmav2" />
                 <param id="extras" value="" />
-                <param id="tag" value="" />
                 <param id="video_suffix" value="wmv" />
                 <param id="output_format_name" value="WMV" />
                 <param id="output_video_codec_name" value="WMV" />
                 <param id="output_audio_codec_name" value="WMA" />
-                <param id="vob" value="" />
-                <param id="dashb" value="-b" />
                 <param id="output_video_frame_rate" value="29.97" />
-                <param id="aspect" value="" />
+                <script>
+                    <![CDATA[
+                        setAudioParams((qualityStop == 0) ? "medium" : "cd");
+                        setRecipe();
+                    ]]>
+                </script>
             </device>
 
             <!-- Flash -->
@@ -1517,6 +1512,7 @@ DTD
                 <script>
                     <![CDATA[
                         setAudioParams((qualityStop == 0) ? "low" : (qualityStop == 1) ? "medium" : "cd");
+                        setRecipe();
                     ]]>
                 </script>
                 <checkbox which="1" title="Raw .flv Format">
@@ -1539,15 +1535,10 @@ DTD
                 </checkbox>
                 <param id="num_cpus" value="1" /> <!-- Flash encoding fails if num_cpus is not 1 -->
                 <param id="output_video_frame_rate" value="29.97" />
-                <param id="padding" value="" />
-                <param id="aspect" value="" />
                 <param id="output_video_codec_name" value="" />
                 <param id="ffmpeg_option_vcodec" value="" />
-                <param id="tag" value="" />
-                <param id="dashb" value="-b" />
                 <param id="output_audio_codec_name" value="MP3" />
                 <param id="ffmpeg_option_acodec" value="libmp3lame" />
-                <param id="vob" value="" />
             </device>
             
             <!-- MPEG -->
@@ -1558,6 +1549,8 @@ DTD
                     {
                         var mpegMaxrateMap = [ 2764,  4608,  6912, 9874,  23040 ];                    
                         params.ffmpeg_option_ratemax = mpegMaxrateMap[params.quality_stop];
+                        setAudioParams("default");
+                        setRecipe();
                     }
                     ]]>
                 </script>
@@ -1573,7 +1566,12 @@ DTD
                 </menu>
                 <menu which="1" title="Profile:">
                     <menu_item title="Generic MPEG-1">
-                        <script> <![CDATA[ setMPEG1Params() ]]> </script>
+                        <script>
+                            <![CDATA[
+                            setMPEG1Params();
+                            setRecipe();
+                            ]]>
+                        </script>
                         <param id="profile" value="none" />
                         <param id="output_format_name" value="MPEG-1" />
                         <param id="output_video_codec_name" value="MPEG-1" />
@@ -1586,6 +1584,7 @@ DTD
                         <script> <![CDATA[ 
                             setMPEG1Params();
                             params.ffmpeg_option_target = params.ntsc ? "ntsc-vcd" : "pal-vcd";
+                            setRecipe();
                         ]]> </script>
                         <param id="profile" value="vcd" />
                         <param id="ffmpeg_option_qmin" value="5" />
@@ -1604,17 +1603,35 @@ DTD
                         <param id="profile" value="tivo" />
                     </menu_item>
                     <menu_item title="Transport Stream">
+                        <script>
+                        <![CDATA[
+                            setAudioParams("high");
+                            setRecipe();
+                        ]]>
+                        </script>
                         <param id="profile" value="ts" />
                         <param id="output_audio_codec_name" value="AC3" />
                         <param id="ffmpeg_option_acodec" value="ac3" />
                     </menu_item>
                     <menu_item title="720p">
+                        <script>
+                        <![CDATA[
+                            setAudioParams("hq");
+                            setRecipe();
+                        ]]>
+                        </script>
                         <param id="profile" value="720" />
                         <param id="video_suffix" value="m2t" />
                         <param id="output_audio_codec_name" value="AC3" />
                         <param id="ffmpeg_option_acodec" value="ac3" />
                     </menu_item>
                     <menu_item title="1080i">
+                        <script>
+                        <![CDATA[
+                            setAudioParams("hq");
+                            setRecipe();
+                        ]]>
+                        </script>
                         <param id="profile" value="1080" />
                         <param id="video_suffix" value="m2t" />
                         <param id="output_audio_codec_name" value="AC3" />
@@ -1637,8 +1654,8 @@ DTD
                 <param id="ffmpeg_option_vcodec" value="dvvideo" />
                 <param id="output_audio_codec_name" value="PCM" />
                 <param id="ffmpeg_option_acodec" value="pcm_s16le" />
-                <param id="output_audio_channels" value="2" />
                 <param id="output_audio_bitrate" value="48000" />
+                <param id="output_audio_channels" value="2" />
                 <param id="output_audio_quality" value="High" />
 
                 <checkbox which="0" title="Force Anamorphic 16:9" enabled="false">
@@ -1675,6 +1692,11 @@ DTD
                 <quality>
                     <quality_stop title="Tiny" />
                 </quality>
+                <script>
+                <![CDATA[
+                    setRecipe();
+                ]]>
+                </script>
             </device>
         </device_group>
 
