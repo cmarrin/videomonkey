@@ -21,9 +21,9 @@
 		</object>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
-			<integer value="29"/>
-			<integer value="3033"/>
-			<integer value="1377"/>
+			<integer value="205"/>
+			<integer value="2649"/>
+			<integer value="464"/>
 			<integer value="5392"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
@@ -1253,7 +1253,7 @@
 						<reference ref="818703674"/>
 						<reference ref="715229661"/>
 					</object>
-					<object class="NSArray" key="NSToolbarIBDefaultItems">
+					<object class="NSMutableArray" key="NSToolbarIBDefaultItems">
 						<bool key="EncodedWithXMLCoder">YES</bool>
 						<reference ref="816949384"/>
 						<reference ref="233898901"/>
@@ -13005,51 +13005,11 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBOutletConnection" key="connection">
-						<string key="label">m_fileListView</string>
-						<reference key="source" ref="2824"/>
-						<reference key="destination" ref="8035353"/>
-					</object>
-					<int key="connectionID">2199</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBOutletConnection" key="connection">
-						<string key="label">m_fileListController</string>
-						<reference key="source" ref="98230273"/>
-						<reference key="destination" ref="2824"/>
-					</object>
-					<int key="connectionID">2201</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBOutletConnection" key="connection">
 						<string key="label">dataSource</string>
 						<reference key="source" ref="8035353"/>
 						<reference key="destination" ref="2824"/>
 					</object>
 					<int key="connectionID">2212</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBOutletConnection" key="connection">
-						<string key="label">content</string>
-						<reference key="source" ref="2824"/>
-						<reference key="destination" ref="98230273"/>
-					</object>
-					<int key="connectionID">2217</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">contentArray: fileList</string>
-						<reference key="source" ref="2824"/>
-						<reference key="destination" ref="98230273"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="2824"/>
-							<reference key="NSDestination" ref="98230273"/>
-							<string key="NSLabel">contentArray: fileList</string>
-							<string key="NSBinding">contentArray</string>
-							<string key="NSKeyPath">fileList</string>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">2219</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBActionConnection" key="connection">
@@ -13122,62 +13082,6 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 						</object>
 					</object>
 					<int key="connectionID">2262</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">remove:</string>
-						<reference key="source" ref="2824"/>
-						<reference key="destination" ref="389387449"/>
-					</object>
-					<int key="connectionID">2320</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">remove:</string>
-						<reference key="source" ref="2824"/>
-						<reference key="destination" ref="182184990"/>
-					</object>
-					<int key="connectionID">2321</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">selectAll:</string>
-						<reference key="source" ref="2824"/>
-						<reference key="destination" ref="583158037"/>
-					</object>
-					<int key="connectionID">2324</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">addFiles:</string>
-						<reference key="source" ref="2824"/>
-						<reference key="destination" ref="57870752"/>
-					</object>
-					<int key="connectionID">2325</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">addFiles:</string>
-						<reference key="source" ref="2824"/>
-						<reference key="destination" ref="722745758"/>
-					</object>
-					<int key="connectionID">2326</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">clearAll:</string>
-						<reference key="source" ref="2824"/>
-						<reference key="destination" ref="625263520"/>
-					</object>
-					<int key="connectionID">2327</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">clearAll:</string>
-						<reference key="source" ref="2824"/>
-						<reference key="destination" ref="294629803"/>
-					</object>
-					<int key="connectionID">2328</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBActionConnection" key="connection">
@@ -13358,22 +13262,6 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 						</object>
 					</object>
 					<int key="connectionID">3129</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">selectPrevious:</string>
-						<reference key="source" ref="2824"/>
-						<reference key="destination" ref="432324493"/>
-					</object>
-					<int key="connectionID">3130</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">selectNext:</string>
-						<reference key="source" ref="2824"/>
-						<reference key="destination" ref="452005724"/>
-					</object>
-					<int key="connectionID">3131</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBActionConnection" key="connection">
@@ -14153,14 +14041,6 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBOutletConnection" key="connection">
-						<string key="label">m_fileListController</string>
-						<reference key="source" ref="744558613"/>
-						<reference key="destination" ref="2824"/>
-					</object>
-					<int key="connectionID">3929</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBOutletConnection" key="connection">
 						<string key="label">m_artworkTable</string>
 						<reference key="source" ref="744558613"/>
 						<reference key="destination" ref="340089456"/>
@@ -14371,14 +14251,6 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 						<reference key="destination" ref="744558613"/>
 					</object>
 					<int key="connectionID">4484</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBOutletConnection" key="connection">
-						<string key="label">m_fileListController</string>
-						<reference key="source" ref="926699842"/>
-						<reference key="destination" ref="2824"/>
-					</object>
-					<int key="connectionID">4485</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBOutletConnection" key="connection">
@@ -15172,14 +15044,6 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 					<int key="connectionID">5401</int>
 				</object>
 				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">selectAll:</string>
-						<reference key="source" ref="2824"/>
-						<reference key="destination" ref="278032432"/>
-					</object>
-					<int key="connectionID">5408</int>
-				</object>
-				<object class="IBConnectionRecord">
 					<object class="IBBindingConnection" key="connection">
 						<string key="label">contentValues: lastFoundShowNames</string>
 						<reference key="source" ref="146825493"/>
@@ -15528,6 +15392,102 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 					</object>
 					<int key="connectionID">5738</int>
 				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">addFiles:</string>
+						<reference key="source" ref="2824"/>
+						<reference key="destination" ref="57870752"/>
+					</object>
+					<int key="connectionID">5759</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">addFiles:</string>
+						<reference key="source" ref="2824"/>
+						<reference key="destination" ref="722745758"/>
+					</object>
+					<int key="connectionID">5760</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">clearAll:</string>
+						<reference key="source" ref="2824"/>
+						<reference key="destination" ref="625263520"/>
+					</object>
+					<int key="connectionID">5761</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">clearAll:</string>
+						<reference key="source" ref="2824"/>
+						<reference key="destination" ref="294629803"/>
+					</object>
+					<int key="connectionID">5762</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">remove:</string>
+						<reference key="source" ref="2824"/>
+						<reference key="destination" ref="389387449"/>
+					</object>
+					<int key="connectionID">5763</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">remove:</string>
+						<reference key="source" ref="2824"/>
+						<reference key="destination" ref="182184990"/>
+					</object>
+					<int key="connectionID">5764</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">selectAll:</string>
+						<reference key="source" ref="2824"/>
+						<reference key="destination" ref="278032432"/>
+					</object>
+					<int key="connectionID">5765</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">selectAll:</string>
+						<reference key="source" ref="2824"/>
+						<reference key="destination" ref="583158037"/>
+					</object>
+					<int key="connectionID">5766</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">selectNext:</string>
+						<reference key="source" ref="2824"/>
+						<reference key="destination" ref="452005724"/>
+					</object>
+					<int key="connectionID">5767</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">selectPrevious:</string>
+						<reference key="source" ref="2824"/>
+						<reference key="destination" ref="432324493"/>
+					</object>
+					<int key="connectionID">5768</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">m_fileListView</string>
+						<reference key="source" ref="2824"/>
+						<reference key="destination" ref="8035353"/>
+					</object>
+					<int key="connectionID">5769</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">m_fileListController</string>
+						<reference key="source" ref="98230273"/>
+						<reference key="destination" ref="2824"/>
+					</object>
+					<int key="connectionID">5770</int>
+				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
 				<object class="NSArray" key="orderedObjects">
@@ -15663,7 +15623,6 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 						<int key="objectID">77</int>
 						<reference key="object" ref="294629803"/>
 						<reference key="parent" ref="720053764"/>
-						<string key="objectName">5</string>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">74</int>
@@ -17084,6 +17043,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 						<int key="objectID">2178</int>
 						<reference key="object" ref="2824"/>
 						<reference key="parent" ref="0"/>
+						<string key="objectName">File List Controller</string>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">2221</int>
@@ -23749,7 +23709,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>{{201, 888}, {240, 183}}</string>
+					<string>{{308, 828}, {240, 183}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<integer value="1"/>
 					<string>{{187, 434}, {243, 243}}</string>
@@ -23917,11 +23877,11 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<integer value="1"/>
 					<string>{{525, 802}, {197, 73}}</string>
-					<string>{{236, 290}, {466, 566}}</string>
+					<string>{{440, 145}, {466, 566}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<boolean value="NO"/>
 					<boolean value="NO"/>
-					<string>{{236, 290}, {466, 566}}</string>
+					<string>{{440, 145}, {466, 566}}</string>
 					<boolean value="NO"/>
 					<boolean value="YES"/>
 					<boolean value="YES"/>
@@ -24133,7 +24093,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 					<string>DurationFormatter</string>
 					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>{{257, 836}, {445, 20}}</string>
+					<string>{{134, 1011}, {445, 20}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<integer value="1"/>
 					<string>{74, 862}</string>
@@ -24317,9 +24277,9 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>{{0, 371}, {800, 401}}</string>
+					<string>{{0, 370}, {800, 401}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>{{0, 371}, {800, 401}}</string>
+					<string>{{0, 370}, {800, 401}}</string>
 					<integer value="1"/>
 					<string>{{33, 99}, {480, 360}}</string>
 					<integer value="1"/>
@@ -24672,7 +24632,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 					</object>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>{{153, 475}, {616, 0}}</string>
+					<string>{{92, 544}, {616, 227}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -25170,7 +25130,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 					<integer value="1041"/>
 					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>{{39, 868}, {231, 203}}</string>
+					<string>{{269, 633}, {231, 203}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<integer value="1"/>
 					<string>{{23, 794}, {245, 183}}</string>
@@ -25227,7 +25187,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 					<integer value="1"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<integer value="1"/>
-					<string>{{159, 928}, {238, 143}}</string>
+					<string>{{266, 868}, {238, 143}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<integer value="1"/>
 					<string>{{145, 474}, {199, 203}}</string>
@@ -25258,7 +25218,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">5738</int>
+			<int key="maxID">5770</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -26118,10 +26078,16 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>addFiles:</string>
 							<string>clearAll:</string>
+							<string>remove:</string>
 							<string>selectAll:</string>
+							<string>selectNext:</string>
+							<string>selectPrevious:</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>id</string>
+							<string>id</string>
+							<string>id</string>
 							<string>id</string>
 							<string>id</string>
 							<string>id</string>
@@ -26133,7 +26099,10 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>addFiles:</string>
 							<string>clearAll:</string>
+							<string>remove:</string>
 							<string>selectAll:</string>
+							<string>selectNext:</string>
+							<string>selectPrevious:</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
@@ -26146,7 +26115,19 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 								<string key="candidateClassName">id</string>
 							</object>
 							<object class="IBActionInfo">
+								<string key="name">remove:</string>
+								<string key="candidateClassName">id</string>
+							</object>
+							<object class="IBActionInfo">
 								<string key="name">selectAll:</string>
+								<string key="candidateClassName">id</string>
+							</object>
+							<object class="IBActionInfo">
+								<string key="name">selectNext:</string>
+								<string key="candidateClassName">id</string>
+							</object>
+							<object class="IBActionInfo">
+								<string key="name">selectPrevious:</string>
 								<string key="candidateClassName">id</string>
 							</object>
 						</object>
@@ -26251,14 +26232,12 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>m_artworkImageWell</string>
 							<string>m_artworkTitle</string>
-							<string>m_fileListController</string>
 							<string>m_metadataSearchSpinner</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>NSImageView</string>
 							<string>NSTextField</string>
-							<string>FileListController</string>
 							<string>NSProgressIndicator</string>
 						</object>
 					</object>
@@ -26268,7 +26247,6 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>m_artworkImageWell</string>
 							<string>m_artworkTitle</string>
-							<string>m_fileListController</string>
 							<string>m_metadataSearchSpinner</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
@@ -26280,10 +26258,6 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 							<object class="IBToOneOutletInfo">
 								<string key="name">m_artworkTitle</string>
 								<string key="candidateClassName">NSTextField</string>
-							</object>
-							<object class="IBToOneOutletInfo">
-								<string key="name">m_fileListController</string>
-								<string key="candidateClassName">FileListController</string>
 							</object>
 							<object class="IBToOneOutletInfo">
 								<string key="name">m_metadataSearchSpinner</string>

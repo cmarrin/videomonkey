@@ -71,8 +71,6 @@ typedef enum { RS_STOPPED, RS_RUNNING, RS_PAUSED } RunStateType;
     int m_numFilesToConvert;
     int m_fileConvertingIndex;
     BOOL m_someFilesFailed;
-    
-    NSArray* m_fileList;
 
     // encoding progress displays
     BOOL m_firstTimeEstimate;
@@ -85,10 +83,11 @@ typedef enum { RS_STOPPED, RS_RUNNING, RS_PAUSED } RunStateType;
     double m_finishedEncodedFileSize;
 }
 
-@property (retain) NSArray* fileList;
+@property (readonly) NSString* savePath;
 @property (readonly) DeviceController* deviceController;
 @property (readonly) FileInfoPanelController* fileInfoPanelController;
 @property (readonly) MoviePanelController* moviePanelController;
+@property (readonly) FileListController* fileListController;
 @property (readonly) BOOL limitParams;
 @property (readonly) int numCPUs;
 
@@ -109,14 +108,10 @@ typedef enum { RS_STOPPED, RS_RUNNING, RS_PAUSED } RunStateType;
 -(BOOL) addToMediaLibrary;
 -(BOOL) deleteFromDestination;
 
--(Transcoder*) transcoderForFileName:(NSString*) fileName;
-
 -(void) setProgressFor: (Transcoder*) transcoder to: (double) progress;
 -(void) encodeFinished: (Transcoder*) transcoder withStatus:(int) status;
 
 -(void) log: (NSString*) format, ...;
-
--(void) setSelectedFile: (int) index;
 
 -(void) updateFileInfo;
 -(void) updateEncodingInfo;

@@ -7,18 +7,21 @@
 //
 
 #import "FileListController.h"
+
 #import "AppController.h"
 #import "DeviceController.h"
 #import "FileInfoPanelController.h"
-#import "ProgressCell.h"
 #import "Metadata.h"
 #import "MetadataSearch.h"
+#import "MoviePanelController.h"
+#import "ProgressCell.h"
 #import "Transcoder.h"
 
 #define FileListItemType @"FileListItemType"
 
 @implementation FileListController
 
+@synthesize fileList = m_fileList;
 @synthesize lastFoundShowNames = m_lastFoundShowNames;
 @synthesize lastShowName = m_lastShowName;
 
@@ -26,11 +29,63 @@
 {
     [m_fileListView setDelegate:self];
     
+    m_fileList = [[NSMutableArray alloc] init];
+    [self setContent:m_fileList];
+
 	// Register to accept filename drag/drop
 	[m_fileListView registerForDraggedTypes:[NSArray arrayWithObjects:NSFilenamesPboardType, FileListItemType, nil]];
 
     // Setup ProgressCell
     [[m_fileListView tableColumnWithIdentifier: @"progress"] setDataCell: [[ProgressCell alloc] init]];
+}
+
+- (void)dealloc
+{
+    [m_fileList release];
+    [super dealloc];
+}
+
+static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, NSString* suffix)
+{
+    // extract filename
+    NSString* lastComponent = [inputFileName lastPathComponent];
+    NSString* inputPath = [inputFileName stringByDeletingLastPathComponent];
+    NSString* baseName = [lastComponent stringByDeletingPathExtension];
+
+    if (!savePath)
+        savePath = inputPath;
+        
+    // now make sure the file doesn't exist
+    NSString* filename;
+    for (int i = 0; i < 10000; ++i) {
+        if (i == 0)
+            filename = [[savePath stringByAppendingPathComponent: baseName] stringByAppendingPathExtension: suffix];
+        else
+            filename = [[savePath stringByAppendingPathComponent: 
+                        [NSString stringWithFormat: @"%@_%d", baseName, i]] stringByAppendingPathExtension: suffix];
+            
+        if (![[NSFileManager defaultManager] fileExistsAtPath: filename])
+            break;
+    }
+    
+    return filename;
+}
+
+-(void) setOutputFileName
+{
+    NSString* suffix = [[AppController instance].deviceController fileSuffix];
+    for (Transcoder* transcoder in m_fileList)
+        [transcoder changeOutputFileName: getOutputFileName(transcoder.inputFileInfo.filename, [AppController instance].savePath, suffix)];
+}
+
+-(Transcoder*) transcoderForFileName:(NSString*) fileName
+{
+    NSString* suffix = [[AppController instance].deviceController fileSuffix];
+    Transcoder* transcoder = [Transcoder transcoder];
+    [transcoder addInputFile: fileName];
+    [transcoder addOutputFile: getOutputFileName(fileName, [AppController instance].savePath, suffix)];
+    transcoder.outputFileInfo.duration = transcoder.inputFileInfo.duration;
+    return transcoder;
 }
 
 -(void) reloadData
@@ -109,7 +164,7 @@
     [pboard declareTypes: [NSArray arrayWithObjects: NSFilenamesPboardType, FileListItemType, nil] owner: self];
     
     // put the string value into the paste board
-    [pboard setString: [[[[AppController instance] fileList] objectAtIndex: m_draggedRow] inputFileInfo].filename forType: FileListItemType];
+    [pboard setString: [[m_fileList objectAtIndex: m_draggedRow] inputFileInfo].filename forType: FileListItemType];
     
     return YES;
 }
@@ -143,12 +198,12 @@
         if (aString) {
             // handle move of an item in the table
             // remove the index that got dragged, now that we are accepting the dragging
-            id obj = [[[AppController instance] fileList] objectAtIndex: m_draggedRow];
+            id obj = [m_fileList objectAtIndex: m_draggedRow];
             [obj retain];
             [self removeObjectAtArrangedObjectIndex: m_draggedRow];
             
             // insert the new string (same one that got dragger) into the array
-            if (row > [[[AppController instance] fileList] count])
+            if (row > [m_fileList count])
                 [self addObject: obj];
             else
                 [self insertObject: obj atArrangedObjectIndex: (row > m_draggedRow) ? (row-1) : row];
@@ -161,29 +216,15 @@
             NSArray *filenames = [[pboard propertyListForType:NSFilenamesPboardType] 
                                     sortedArrayUsingSelector:@selector(caseInsensitiveCompare:)];
             
-            // We create all the transcoders and then add them all at once. If we add a
-            // transcoder too soon, the next transcoders validateInputFile will create 
-            // and wait for a task, which will execute the runloop, which will try to 
-            // render the incomplete transcoder and get an assertion.
-            NSMutableArray* transcoders = [[NSMutableArray alloc] init];
-            
-            if (filenames) {
-                for (NSString* filename in filenames) {
-                    Transcoder* transcoder = [[AppController instance] transcoderForFileName: filename];
-                    [transcoders addObject: transcoder];
-                    [transcoder release];
-                    [self addObject:transcoder];
-                    [self reloadData];
-                }
-                
-                //for (Transcoder* transcoder in transcoders)
-                //    [self addObject:transcoder];
-                        
-                [[AppController instance] uiChanged];    
-                [[AppController instance] updateEncodingInfo];    
+            for (NSString* filename in filenames) {
+                Transcoder* transcoder = [self transcoderForFileName: filename];
+                [self addObject: transcoder];
+                [transcoder release];
             }
             
-            [transcoders release];
+            [self reloadData];
+            [[AppController instance] uiChanged];    
+            [[AppController instance] updateEncodingInfo];    
         }
     }
     
@@ -193,15 +234,25 @@
 - (void)tableViewSelectionDidChange:(NSNotification *)aNotification
 {
     // If we have only one item selected, set it otherwise set nothing
-    [[AppController instance] setSelectedFile: ([m_fileListView numberOfSelectedRows] != 1) ? -1 :
-                                        [m_fileListView selectedRow]];
+    int index = ([m_fileListView numberOfSelectedRows] != 1) ? -1 : [m_fileListView selectedRow];
+    
+    // Set the current movie
+    NSString* filename = [(index < 0) ? nil : [m_fileList objectAtIndex:index] inputFileInfo].filename;
+    [[AppController instance].moviePanelController setMovie:filename];
+
+    // Update metadata panel
+    [self updateMetadataPanelState];
+    [self reloadData];
+
+
+
 }
 
 // End of delegation methods
 
 -(void) addFile:(NSString*) filename
 {
-    Transcoder* transcoder = [[AppController instance] transcoderForFileName: filename];
+    Transcoder* transcoder = [self transcoderForFileName: filename];
     [self addObject:transcoder];
     [transcoder release];
     [[AppController instance] uiChanged];    
@@ -224,7 +275,7 @@
     }
 }
 
-- (void)remove:(id)sender
+- (IBAction)remove:(id)sender
 {
     NSArray* selectedObjects = [self selectedObjects];
     for (Transcoder* transcoder in selectedObjects) {
@@ -263,7 +314,7 @@
     return [[self arrangedObjects] objectAtIndex:[self selectionIndex]];
 }
 
-- (void)selectNext:(id)sender
+- (IBAction)selectNext:(id)sender
 {
     if ([[self selectionIndexes] count] == 0)
         [self setSelectionIndex:0];
@@ -274,7 +325,7 @@
     [self setSearchBox];
 }
 
-- (void)selectPrevious:(id)sender
+- (IBAction)selectPrevious:(id)sender
 {
     if ([[self selectionIndexes] count] == 0)
         [self setSelectionIndex:[[self arrangedObjects] count] - 1];
@@ -289,7 +340,7 @@
 {
     Transcoder* transcoder = nil;
     if ([m_fileListView numberOfSelectedRows] == 1)
-        transcoder = [[AppController instance].fileList objectAtIndex:[m_fileListView selectedRow]];
+        transcoder = [m_fileList objectAtIndex:[m_fileListView selectedRow]];
     
     // Enable or disable metadata panel based on file type
     NSString* fileType = nil;

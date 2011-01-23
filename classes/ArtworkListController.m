@@ -63,65 +63,6 @@
     row: (int)row
     dropOperation:(NSTableViewDropOperation)op
 {
-    // This method is called when the mouse is released over an outline view that previously decided to allow 
-    // a drop via the validateDrop method.  The data source should incorporate the data from the dragging 
-    // pasteboard at this time.
-    //NSPasteboard *pboard = [item draggingPasteboard];	// get the paste board
-    //NSString *aString;
-    
-    /*
-    if ([pboard availableTypeFromArray:[NSArray arrayWithObjects: NSFilenamesPboardType, ArtworkListItemType, nil]])
-    {
-        // test to see if the string for the type we defined in the paste board.
-        // if doesn't, do nothing.
-        aString = [pboard stringForType: FileListItemType];
-        
-        if (aString) {
-            // handle move of an item in the table
-            // remove the index that got dragged, now that we are accepting the dragging
-            id obj = [[[AppController instance] fileList] objectAtIndex: m_draggedRow];
-            [obj retain];
-            [self removeObjectAtArrangedObjectIndex: m_draggedRow];
-            
-            // insert the new string (same one that got dragger) into the array
-            if (row > [[[AppController instance] fileList] count])
-                [self addObject: obj];
-            else
-                [self insertObject: obj atArrangedObjectIndex: (row > m_draggedRow) ? (row-1) : row];
-        
-            [obj release];
-            [self reloadData];
-        }
-        else {
-            // handle add of a new filename(s)
-            NSArray *filenames = [pboard propertyListForType:NSFilenamesPboardType];
-            
-            // We create all the transcoders and then add them all at once. If we add a
-            // transcoder too soon, the next transcoders validateInputFile will create 
-            // and wait for a task, which will execute the runloop, which will try to 
-            // render the incomplete transcoder and get an assertion.
-            NSMutableArray* transcoders = [[NSMutableArray alloc] init];
-            
-            if (filenames) {
-                for (NSString* filename in filenames) {
-                    Transcoder* transcoder = [[AppController instance] transcoderForFileName: filename];
-                    [transcoders addObject: transcoder];
-                    [transcoder release];
-                    [self addObject:transcoder];
-                    [self reloadData];
-                }
-                
-                //for (Transcoder* transcoder in transcoders)
-                //    [self addObject:transcoder];
-                        
-                [[AppController instance] uiChanged];    
-            }
-            
-            [transcoders release];
-        }
-    }
-    */
-    
     return YES;
 }
 

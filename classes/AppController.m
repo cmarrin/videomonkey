@@ -116,9 +116,10 @@
 
 @implementation AppController
 
-@synthesize fileList = m_fileList;
+@synthesize savePath = m_savePath;
 @synthesize deviceController = m_deviceController;
 @synthesize fileInfoPanelController = m_fileInfoPanelController;
+@synthesize fileListController = m_fileListController;
 @synthesize moviePanelController = m_moviePanelController;
 @synthesize limitParams = m_limitParams;
 
@@ -164,43 +165,6 @@ static AppController *g_appController;
     return (double) [[NSDate date] timeIntervalSince1970];
 }
 
-static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, NSString* suffix)
-{
-    // extract filename
-    NSString* lastComponent = [inputFileName lastPathComponent];
-    NSString* inputPath = [inputFileName stringByDeletingLastPathComponent];
-    NSString* baseName = [lastComponent stringByDeletingPathExtension];
-
-    if (!savePath)
-        savePath = inputPath;
-        
-    // now make sure the file doesn't exist
-    NSString* filename;
-    for (int i = 0; i < 10000; ++i) {
-        if (i == 0)
-            filename = [[savePath stringByAppendingPathComponent: baseName] stringByAppendingPathExtension: suffix];
-        else
-            filename = [[savePath stringByAppendingPathComponent: 
-                        [NSString stringWithFormat: @"%@_%d", baseName, i]] stringByAppendingPathExtension: suffix];
-            
-        if (![[NSFileManager defaultManager] fileExistsAtPath: filename])
-            break;
-    }
-    
-    return filename;
-}
-
--(void) setOutputFileName
-{
-    NSEnumerator* e = [m_fileList objectEnumerator];
-    Transcoder* transcoder;
-    NSString* suffix = [m_deviceController fileSuffix];
-    
-    while ((transcoder = (Transcoder*) [e nextObject])) {
-        [transcoder changeOutputFileName: getOutputFileName(transcoder.inputFileInfo.filename, m_savePath, suffix)];
-    }
-}
-
 - (void) updateDockIcon
 {
     m_dockTileView.progress = 0;
@@ -221,9 +185,7 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
     
     self = [super init];
     g_appController = self;
-    
-    m_fileList = [[NSMutableArray alloc] init];
-    
+        
     // Save a copy of the app icon
     m_applicationIcon = [[[NSApplication sharedApplication] applicationIconImage] copy];
     
@@ -245,7 +207,6 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
 
 - (void)dealloc
 {
-    [m_fileList release];
     [[NSApp dockTile] setContentView:nil];
     [m_dockTileView release];
     [super dealloc];
@@ -283,7 +244,7 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
     m_totalEncodedFileSize = 0;
     int numNotYetConverted = 0;
 
-    for (Transcoder* transcoder in m_fileList) {
+    for (Transcoder* transcoder in m_fileListController.fileList) {
         FileStatus status = [transcoder fileStatus];
         if ([transcoder enabled] || status == FS_FAILED || status == FS_SUCCEEDED) {
             m_numFilesToConvert++;
@@ -311,13 +272,13 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
     m_firstTimeEstimate = YES;
     
     if (!m_isTerminated) {
-        if (++m_currentEncoding < [m_fileList count]) {
-            if (![[m_fileList objectAtIndex: m_currentEncoding] startEncode])
+        if (++m_currentEncoding < [m_fileListController.fileList count]) {
+            if (![[m_fileListController.fileList objectAtIndex: m_currentEncoding] startEncode])
                 [self startNextEncode];
-            else if ([m_fileList count] > m_currentEncoding) {
+            else if ([m_fileListController.fileList count] > m_currentEncoding) {
                 m_fileConvertingIndex++;
                 m_finishedEncodedFileSize += m_currentEncodedFileSize;
-                m_currentEncodedFileSize = [[m_fileList objectAtIndex: m_currentEncoding] outputFileInfo].fileSize;
+                m_currentEncodedFileSize = [[m_fileListController.fileList objectAtIndex: m_currentEncoding] outputFileInfo].fileSize;
                 
             }
             return;
@@ -346,7 +307,7 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
         m_finishedEncodedFileSize = 0;
         m_currentEncodedFileSize = 0;
     
-        for (Transcoder* transcoder in m_fileList) {
+        for (Transcoder* transcoder in m_fileListController.fileList) {
             if ([transcoder enabled]) {
                 m_numFilesToConvert++;
                 m_totalEncodedFileSize += transcoder.outputFileInfo.fileSize;
@@ -369,20 +330,20 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
         [m_progressText setStringValue:@""];
         [m_fileNumberText setStringValue:@""];
 
-        [self setOutputFileName];
+        [m_fileListController setOutputFileName];
         m_runState = RS_RUNNING;
         m_currentEncoding = -1;
         [self startNextEncode];
     }
     else {
         m_runState = RS_RUNNING;
-        [[m_fileList objectAtIndex: m_currentEncoding] resumeEncode];
+        [[m_fileListController.fileList objectAtIndex: m_currentEncoding] resumeEncode];
     }
 }
 
 - (IBAction)pauseEncode:(id)sender
 {
-    [[m_fileList objectAtIndex: m_currentEncoding] pauseEncode];
+    [[m_fileListController.fileList objectAtIndex: m_currentEncoding] pauseEncode];
     m_runState = RS_PAUSED;
     [m_fileListController reloadData];
 }
@@ -390,7 +351,7 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
 - (IBAction)stopEncode:(id)sender
 {
     m_isTerminated = YES;
-    [[m_fileList objectAtIndex: m_currentEncoding] stopEncode];
+    [[m_fileListController.fileList objectAtIndex: m_currentEncoding] stopEncode];
     m_runState = RS_STOPPED;
     [self setProgressFor:nil to:0];
 }
@@ -490,25 +451,16 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
 {
     if (theItem == m_startEncodeItem) {
         [m_startEncodeItem setLabel:(m_runState == RS_PAUSED) ? @"Resume" : @"Start"];
-        return [m_fileList count] > 0 && m_runState != RS_RUNNING;
+        return [m_fileListController.fileList count] > 0 && m_runState != RS_RUNNING;
     }
         
     if (theItem == m_stopEncodeItem)
-        return [m_fileList count] > 0 && m_runState != RS_STOPPED;
+        return [m_fileListController.fileList count] > 0 && m_runState != RS_STOPPED;
         
     if (theItem == m_pauseEncodeItem)
-        return [m_fileList count] > 0 && m_runState == RS_RUNNING;
+        return [m_fileListController.fileList count] > 0 && m_runState == RS_RUNNING;
         
     return [theItem isEnabled];
-}
-
--(Transcoder*) transcoderForFileName:(NSString*) fileName
-{
-    Transcoder* transcoder = [Transcoder transcoder];
-    [transcoder addInputFile: fileName];
-    [transcoder addOutputFile: getOutputFileName(fileName, m_savePath, [m_deviceController fileSuffix])];
-    transcoder.outputFileInfo.duration = transcoder.inputFileInfo.duration;
-    return transcoder;
 }
 
 -(IBAction)toggleConsoleDrawer:(id)sender
@@ -580,11 +532,6 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
     return m_deleteFromDestination;
 }
 
--(DeviceController*) deviceController
-{
-    return m_deviceController;
-}
-
 - (BOOL)application:(NSApplication *)theApplication openFile:(NSString *)filename
 {
     [m_fileListController addFile:filename];
@@ -626,8 +573,8 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
     fprintf(stderr, "%s", [s UTF8String]);
     
     // Output to log file
-    if ([m_fileList count] > m_currentEncoding)
-        [(Transcoder*) [m_fileList objectAtIndex: m_currentEncoding] logToFile: s];
+    if ([m_fileListController.fileList count] > m_currentEncoding)
+        [(Transcoder*) [m_fileListController.fileList objectAtIndex: m_currentEncoding] logToFile: s];
         
     // Output to consoleView
     [[[m_consoleView textStorage] mutableString] appendString: s];
@@ -642,22 +589,12 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
     [m_fileListController rearrangeObjects];
 }
 
--(void) setSelectedFile: (int) index
-{
-    // Set the current movie
-    [m_moviePanelController setMovie: [(index < 0) ? nil : [m_fileList objectAtIndex:index] inputFileInfo].filename];
-
-    // Update metadata panel
-    [m_fileListController updateMetadataPanelState];
-    [m_fileListController reloadData];
-}
-
 -(void) uiChanged
 {
-    for (Transcoder* transcoder in m_fileList)
+    for (Transcoder* transcoder in m_fileListController.fileList)
         [transcoder setParams];
     
-    [self setOutputFileName];
+    [m_fileListController setOutputFileName];
 
     // Update metadata panel
     [m_fileListController updateMetadataPanelState];

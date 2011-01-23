@@ -73,6 +73,8 @@ int heightFromFrameSize(FrameSize f) { return f & 0xffff; }
 }
 
 // Properties
+@synthesize audioQuality = m_audioQuality;
+@synthesize avOffset = m_avOffset;
 @synthesize progress = m_progress;
 @synthesize enabled = m_enabled;
 @synthesize metadata = m_metadata;
@@ -396,11 +398,6 @@ static NSImage* getFileStatusImage(FileStatus status)
     return m_passLogFileName;
 }
 
--(NSString*) audioQuality
-{
-    return m_audioQuality;
-}
-
 static NSString* escapePath(NSString* path)
 {
     NSArray* array = [path componentsSeparatedByString:@"$"];
@@ -437,9 +434,8 @@ static NSString* escapePath(NSString* path)
     [env setValue: [[NSNumber numberWithInt: self.inputFileInfo.audioIndex] stringValue] forKey: @"input_audio_index"];
 
     // Set the AV offsets. Positive offsets delay video
-    float avOffset = [[[AppController instance] moviePanelController] avOffset];
-    float audioOffset = (avOffset > 0) ? -avOffset : 0;
-    float viddoOffset = (avOffset < 0) ? avOffset : 0;
+    float audioOffset = (m_avOffset > 0) ? -m_avOffset : 0;
+    float viddoOffset = (m_avOffset < 0) ? m_avOffset : 0;
     [env setValue: [[NSNumber numberWithDouble: audioOffset] stringValue] forKey: @"audio_offset"];
     [env setValue: [[NSNumber numberWithDouble: viddoOffset] stringValue] forKey: @"video_offset"];
     

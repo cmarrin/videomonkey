@@ -9,6 +9,7 @@
 #import <Cocoa/Cocoa.h>
 
 @class AppController;
+@class Transcoder;
 
 @interface FileListController : NSArrayController {
     IBOutlet NSTableView* m_fileListView;
@@ -16,8 +17,10 @@
     int m_draggedRow;
     NSArray* m_lastFoundShowNames;
     NSString* m_lastShowName;
+    NSMutableArray* m_fileList;
 }
 
+@property(readonly) NSArray* fileList;
 @property(retain) NSArray* lastFoundShowNames;
 @property(retain) NSString* lastShowName;
 
@@ -32,7 +35,12 @@
 - (IBAction)addFiles:(id)sender;
 - (IBAction)clearAll:(id)sender;
 - (IBAction)selectAll:(id)sender;
+- (IBAction)remove:(id)sender;
+- (IBAction)selectNext:(id)sender;
+- (IBAction)selectPrevious:(id)sender;
 
 -(void) updateMetadataPanelState;
+-(void) setOutputFileName;
+-(Transcoder*) transcoderForFileName:(NSString*) fileName;
 
 @end

@@ -7,7 +7,9 @@
 //
 
 #import "MetadataPanel.h"
-#import "FileInfoPanelController.h"
+
+#import "AppController.h"
+//#import "FileInfoPanelController.h"
 #import "Metadata.h"
 #import "Transcoder.h"
 
@@ -31,9 +33,9 @@
     self.userValue = nil;
 }
 
--(id) fileListController
+- (id)fileListController
 {
-    return [(MetadataPanel*)[[self superview] superview] fileListController];
+    return [AppController instance].fileListController;
 }
 
 -(IBAction)useThisValueForAllFiles:(id)sender
@@ -342,7 +344,10 @@
 
 @implementation MetadataPanel
 
-@synthesize fileListController = m_fileListController;
+-(id) fileListController
+{
+    return [AppController instance].fileListController;
+}
 
 -(void) setMetadataSource:(TagType) type
 {
@@ -359,7 +364,7 @@
 
 -(void) setAllMetadataSource:(TagType) type
 {
-    for (Transcoder* transcoder in [m_fileListController arrangedObjects])
+    for (Transcoder* transcoder in [[AppController instance].fileListController arrangedObjects])
         [[transcoder metadata] setMetadataSource:type];
     
     [self setMetadataSource:type];

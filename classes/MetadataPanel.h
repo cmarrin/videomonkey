@@ -10,8 +10,6 @@
 
 typedef enum { INPUT_TAG, SEARCH_TAG, USER_TAG, OUTPUT_TAG } TagType;
 
-@class FileListController;
-
 @interface MetadataPanelItem : NSBox {
     IBOutlet NSTextField* m_title;
     NSTextField* m_mainTextField;
@@ -60,13 +58,10 @@ typedef enum { INPUT_TAG, SEARCH_TAG, USER_TAG, OUTPUT_TAG } TagType;
 @end
 
 @interface MetadataPanel : NSBox {
-    IBOutlet FileListController* m_fileListController;
     IBOutlet NSTextField* m_artworkTitle;
     IBOutlet NSImageView* m_artworkImageWell;
     IBOutlet NSProgressIndicator* m_metadataSearchSpinner;
 }
-
-@property (readonly) FileListController* fileListController;
 
 -(IBAction)useAllInputValuesForThisFile:(id)sender;
 -(IBAction)useAllSearchValuesForThisFile:(id)sender;
