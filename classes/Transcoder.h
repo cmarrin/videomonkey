@@ -129,11 +129,10 @@ typedef enum FileStatus {   FS_INVALID,     // File is invalid, we can't encode 
 @property (retain) Metadata* metadata;
 @property (readonly) FileInfoPanelController* fileInfoPanelController;
 
-+(Transcoder*) transcoder;
+- (Transcoder*)initWithFilename:(NSString*) filename;
 
--(int) addInputFile: (NSString*) filename;
--(int) addOutputFile: (NSString*) filename;
--(void) changeOutputFileName: (NSString*) filename;
+- (int)addInputFile: (NSString*) filename;
+- (int)addOutputFile: (NSString*) filename;
 
 -(NSValue*) progressCell;
 

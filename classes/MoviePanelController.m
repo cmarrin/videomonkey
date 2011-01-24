@@ -7,35 +7,12 @@
 //
 
 #import "MoviePanelController.h"
+
+#import "AppController.h"
 #import <QTKit/QTMovie.h>
 #import <QTKit/QTTimeRange.h>
 
 @implementation MoviePanelController
-
-@synthesize avOffset = m_avOffset;
-
-- (void)updateAvOffset
-{
-    if (!m_movieIsSet)
-        return;
-    
-    // Get the track to modify
-    QTMovie* movie = [m_movieView movie];
-    NSArray* tracks = [movie tracks];
-    
-    // create a QTTimeRange for the offset
-    QTTimeRange offset = QTMakeTimeRange(QTMakeTimeWithTimeInterval(0), 
-                        QTMakeTimeWithTimeInterval(fabs(m_avOffset)));
-    
-    // Look for the first 'vide' or 'soun' track
-    for (QTTrack* track in tracks) {
-        if ((m_avOffset > 0 && [[track attributeForKey:QTTrackMediaTypeAttribute] isEqualToString:@"vide"]) ||
-            (m_avOffset < 0 && [[track attributeForKey:QTTrackMediaTypeAttribute] isEqualToString:@"soun"])) {
-            [track insertEmptySegmentAt:offset];
-            break;
-        }
-    }
-}
 
 - (void)removeAvOffset
 {
@@ -60,19 +37,39 @@
     }
 }
 
-- (void)setAvOffset:(CGFloat) value
-{
-    // remove any previously inserted segments
-    [self removeAvOffset];
-    
-    m_avOffset = value;
-        
-    [self updateAvOffset];
-}
-
-- (CGFloat) avOffset
+- (CGFloat)avOffset
 {
     return m_avOffset;
+}
+
+- (void)setAvOffset:(CGFloat) value
+{
+    if (!m_movieIsSet)
+        return;
+    
+    // remove any previously inserted segments
+    [self removeAvOffset];
+
+    m_avOffset = value;
+
+    // Get the track to modify
+    QTMovie* movie = [m_movieView movie];
+    NSArray* tracks = [movie tracks];
+    
+    // create a QTTimeRange for the offset
+    QTTimeRange offset = QTMakeTimeRange(QTMakeTimeWithTimeInterval(0), 
+                        QTMakeTimeWithTimeInterval(fabs(m_avOffset)));
+    
+    // Look for the first 'vide' or 'soun' track
+    for (QTTrack* track in tracks) {
+        if ((m_avOffset > 0 && [[track attributeForKey:QTTrackMediaTypeAttribute] isEqualToString:@"vide"]) ||
+            (m_avOffset < 0 && [[track attributeForKey:QTTrackMediaTypeAttribute] isEqualToString:@"soun"])) {
+            [track insertEmptySegmentAt:offset];
+            break;
+        }
+    }
+    
+    [[AppController instance] uiChanged];
 }
 
 - (void)awakeFromNib
@@ -150,7 +147,7 @@
     [m_currentTimeDictionary setValue:[NSNumber numberWithDouble:currentTime] forKey:m_filename];
 }
 
--(void) setMovie:(NSString*) filename
+-(void) setMovie:(NSString*) filename withAvOffset:(float) avOffset
 {
     if ([filename isEqualToString:m_filename] && m_movieIsSet)
         return;
@@ -159,9 +156,8 @@
     
     [m_filename release];
     m_filename = [filename retain];
-    
-    self.avOffset = 0;
-    
+    [self setAvOffset:avOffset];
+
     // add it to the dictionary if needed
     NSNumber* ct = nil;
     if (m_filename) {
@@ -225,7 +221,7 @@
     if (b != m_isVisible) {
         m_isVisible = b;
         if (m_isVisible)
-            [self setMovie: m_filename];
+            [self setMovie: m_filename withAvOffset:m_avOffset];
     }
 }
 

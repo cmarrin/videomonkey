@@ -33,6 +33,6 @@
 -(IBAction)endSelection:(id)sender;
 -(IBAction)encodeSelection:(id)sender;
 
--(void) setMovie:(NSString*) filename;
+-(void) setMovie:(NSString*) filename withAvOffset:(float) avOffset;
 
 @end

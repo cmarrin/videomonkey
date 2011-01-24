@@ -240,11 +240,14 @@ static AppController *g_appController;
 // files to be added or removed from the list while encoding
 -(void) updateEncodingInfo
 {
+    // Update the UI (which also updates the transcoders) in case anything has changed
+    [self uiChanged];
+
     m_numFilesToConvert = 0;
     m_totalEncodedFileSize = 0;
     int numNotYetConverted = 0;
 
-    for (Transcoder* transcoder in m_fileListController.fileList) {
+    for (Transcoder* transcoder in [m_fileListController arrangedObjects]) {
         FileStatus status = [transcoder fileStatus];
         if ([transcoder enabled] || status == FS_FAILED || status == FS_SUCCEEDED) {
             m_numFilesToConvert++;
@@ -265,20 +268,24 @@ static AppController *g_appController;
 // Main Encoding Functions
 -(void) startNextEncode
 {
+    // Update here in case anything has changed since the last encode
+    [self updateEncodingInfo];
+    
     m_currentEncodingStartTime = [self currentTime];
     m_numTotalTimeEstimates = 0;
     m_totalTimeEstimaes = 0;
     m_lastMinutesRemaining = -1;
     m_firstTimeEstimate = YES;
+    NSArray* fileList = [m_fileListController arrangedObjects];
     
     if (!m_isTerminated) {
-        if (++m_currentEncoding < [m_fileListController.fileList count]) {
-            if (![[m_fileListController.fileList objectAtIndex: m_currentEncoding] startEncode])
+        if (++m_currentEncoding < [fileList count]) {
+            if (![[fileList objectAtIndex: m_currentEncoding] startEncode])
                 [self startNextEncode];
-            else if ([m_fileListController.fileList count] > m_currentEncoding) {
+            else if ([fileList count] > m_currentEncoding) {
                 m_fileConvertingIndex++;
                 m_finishedEncodedFileSize += m_currentEncodedFileSize;
-                m_currentEncodedFileSize = [[m_fileListController.fileList objectAtIndex: m_currentEncoding] outputFileInfo].fileSize;
+                m_currentEncodedFileSize = [[fileList objectAtIndex: m_currentEncoding] outputFileInfo].fileSize;
                 
             }
             return;
@@ -299,6 +306,9 @@ static AppController *g_appController;
 
 - (IBAction)startEncode:(id)sender
 {
+    m_numFilesToConvert = 0;
+    m_totalEncodedFileSize = 0;
+
     if (m_runState != RS_PAUSED) {
         [self setProgressFor:nil to:0];
         m_isTerminated = NO;
@@ -307,7 +317,7 @@ static AppController *g_appController;
         m_finishedEncodedFileSize = 0;
         m_currentEncodedFileSize = 0;
     
-        for (Transcoder* transcoder in m_fileListController.fileList) {
+        for (Transcoder* transcoder in [m_fileListController arrangedObjects]) {
             if ([transcoder enabled]) {
                 m_numFilesToConvert++;
                 m_totalEncodedFileSize += transcoder.outputFileInfo.fileSize;
@@ -315,8 +325,6 @@ static AppController *g_appController;
             }
         }
         
-        [self updateEncodingInfo];
-    
         if (!m_numFilesToConvert) {
             NSBeginAlertSheet(@"No Files To Encode", nil, nil, nil, [[NSApplication sharedApplication] mainWindow], 
                             nil, nil, nil, nil, 
@@ -330,20 +338,19 @@ static AppController *g_appController;
         [m_progressText setStringValue:@""];
         [m_fileNumberText setStringValue:@""];
 
-        [m_fileListController setOutputFileName];
         m_runState = RS_RUNNING;
         m_currentEncoding = -1;
         [self startNextEncode];
     }
     else {
         m_runState = RS_RUNNING;
-        [[m_fileListController.fileList objectAtIndex: m_currentEncoding] resumeEncode];
+        [[[m_fileListController arrangedObjects] objectAtIndex: m_currentEncoding] resumeEncode];
     }
 }
 
 - (IBAction)pauseEncode:(id)sender
 {
-    [[m_fileListController.fileList objectAtIndex: m_currentEncoding] pauseEncode];
+    [[[m_fileListController arrangedObjects] objectAtIndex: m_currentEncoding] pauseEncode];
     m_runState = RS_PAUSED;
     [m_fileListController reloadData];
 }
@@ -351,7 +358,7 @@ static AppController *g_appController;
 - (IBAction)stopEncode:(id)sender
 {
     m_isTerminated = YES;
-    [[m_fileListController.fileList objectAtIndex: m_currentEncoding] stopEncode];
+    [[[m_fileListController arrangedObjects] objectAtIndex: m_currentEncoding] stopEncode];
     m_runState = RS_STOPPED;
     [self setProgressFor:nil to:0];
 }
@@ -449,16 +456,18 @@ static AppController *g_appController;
 // Toolbar delegate method
 - (BOOL) validateToolbarItem:(NSToolbarItem *)theItem
 {
+    NSArray* fileList = [m_fileListController arrangedObjects];
+    
     if (theItem == m_startEncodeItem) {
         [m_startEncodeItem setLabel:(m_runState == RS_PAUSED) ? @"Resume" : @"Start"];
-        return [m_fileListController.fileList count] > 0 && m_runState != RS_RUNNING;
+        return [fileList count] > 0 && m_runState != RS_RUNNING;
     }
         
     if (theItem == m_stopEncodeItem)
-        return [m_fileListController.fileList count] > 0 && m_runState != RS_STOPPED;
+        return [fileList count] > 0 && m_runState != RS_STOPPED;
         
     if (theItem == m_pauseEncodeItem)
-        return [m_fileListController.fileList count] > 0 && m_runState == RS_RUNNING;
+        return [fileList count] > 0 && m_runState == RS_RUNNING;
         
     return [theItem isEnabled];
 }
@@ -573,8 +582,8 @@ static AppController *g_appController;
     fprintf(stderr, "%s", [s UTF8String]);
     
     // Output to log file
-    if ([m_fileListController.fileList count] > m_currentEncoding)
-        [(Transcoder*) [m_fileListController.fileList objectAtIndex: m_currentEncoding] logToFile: s];
+    if ([[m_fileListController arrangedObjects] count] > m_currentEncoding)
+        [(Transcoder*) [[m_fileListController arrangedObjects] objectAtIndex: m_currentEncoding] logToFile: s];
         
     // Output to consoleView
     [[[m_consoleView textStorage] mutableString] appendString: s];
@@ -591,13 +600,17 @@ static AppController *g_appController;
 
 -(void) uiChanged
 {
-    for (Transcoder* transcoder in m_fileListController.fileList)
-        [transcoder setParams];
+    // Set the avOffset
+    Transcoder* transcoder = [m_fileListController selection];
     
-    [m_fileListController setOutputFileName];
+    if (transcoder)
+        transcoder.avOffset = m_moviePanelController.avOffset;
 
-    // Update metadata panel
-    [m_fileListController updateMetadataPanelState];
+    for (Transcoder* transcoder in [m_fileListController arrangedObjects])
+        [transcoder setParams];
+
+    // Update panel states
+    [m_fileListController updateState];
     [m_fileListController reloadData];
 }
 

@@ -21,7 +21,6 @@
 
 @implementation FileListController
 
-@synthesize fileList = m_fileList;
 @synthesize lastFoundShowNames = m_lastFoundShowNames;
 @synthesize lastShowName = m_lastShowName;
 
@@ -43,49 +42,6 @@
 {
     [m_fileList release];
     [super dealloc];
-}
-
-static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, NSString* suffix)
-{
-    // extract filename
-    NSString* lastComponent = [inputFileName lastPathComponent];
-    NSString* inputPath = [inputFileName stringByDeletingLastPathComponent];
-    NSString* baseName = [lastComponent stringByDeletingPathExtension];
-
-    if (!savePath)
-        savePath = inputPath;
-        
-    // now make sure the file doesn't exist
-    NSString* filename;
-    for (int i = 0; i < 10000; ++i) {
-        if (i == 0)
-            filename = [[savePath stringByAppendingPathComponent: baseName] stringByAppendingPathExtension: suffix];
-        else
-            filename = [[savePath stringByAppendingPathComponent: 
-                        [NSString stringWithFormat: @"%@_%d", baseName, i]] stringByAppendingPathExtension: suffix];
-            
-        if (![[NSFileManager defaultManager] fileExistsAtPath: filename])
-            break;
-    }
-    
-    return filename;
-}
-
--(void) setOutputFileName
-{
-    NSString* suffix = [[AppController instance].deviceController fileSuffix];
-    for (Transcoder* transcoder in m_fileList)
-        [transcoder changeOutputFileName: getOutputFileName(transcoder.inputFileInfo.filename, [AppController instance].savePath, suffix)];
-}
-
--(Transcoder*) transcoderForFileName:(NSString*) fileName
-{
-    NSString* suffix = [[AppController instance].deviceController fileSuffix];
-    Transcoder* transcoder = [Transcoder transcoder];
-    [transcoder addInputFile: fileName];
-    [transcoder addOutputFile: getOutputFileName(fileName, [AppController instance].savePath, suffix)];
-    transcoder.outputFileInfo.duration = transcoder.inputFileInfo.duration;
-    return transcoder;
 }
 
 -(void) reloadData
@@ -217,7 +173,7 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
                                     sortedArrayUsingSelector:@selector(caseInsensitiveCompare:)];
             
             for (NSString* filename in filenames) {
-                Transcoder* transcoder = [self transcoderForFileName: filename];
+                Transcoder* transcoder = [[Transcoder alloc] initWithFilename: filename];
                 [self addObject: transcoder];
                 [transcoder release];
             }
@@ -235,24 +191,22 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
 {
     // If we have only one item selected, set it otherwise set nothing
     int index = ([m_fileListView numberOfSelectedRows] != 1) ? -1 : [m_fileListView selectedRow];
+    Transcoder* transcoder = (index < 0) ? nil : [m_fileList objectAtIndex:index];
     
     // Set the current movie
-    NSString* filename = [(index < 0) ? nil : [m_fileList objectAtIndex:index] inputFileInfo].filename;
-    [[AppController instance].moviePanelController setMovie:filename];
+    NSString* filename = transcoder ? transcoder.inputFileInfo.filename : nil;
+    [[AppController instance].moviePanelController setMovie:filename withAvOffset:transcoder.avOffset];
 
     // Update metadata panel
-    [self updateMetadataPanelState];
+    [self updateState];
     [self reloadData];
-
-
-
 }
 
 // End of delegation methods
 
 -(void) addFile:(NSString*) filename
 {
-    Transcoder* transcoder = [self transcoderForFileName: filename];
+    Transcoder* transcoder = [[Transcoder alloc] initWithFilename: filename];
     [self addObject:transcoder];
     [transcoder release];
     [[AppController instance] uiChanged];    
@@ -336,13 +290,10 @@ static NSString* getOutputFileName(NSString* inputFileName, NSString* savePath, 
     [self setSearchBox];
 }
 
--(void) updateMetadataPanelState
+-(void) updateState
 {
-    Transcoder* transcoder = nil;
-    if ([m_fileListView numberOfSelectedRows] == 1)
-        transcoder = [m_fileList objectAtIndex:[m_fileListView selectedRow]];
-    
     // Enable or disable metadata panel based on file type
+    Transcoder* transcoder = [self selection];
     NSString* fileType = nil;
     
     if ([[[AppController instance] deviceController] shouldWriteMetadataToInputFile])

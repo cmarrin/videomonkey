@@ -273,28 +273,59 @@ static NSImage* getFileStatusImage(FileStatus status)
     return [[NSImage alloc] initWithContentsOfFile:path]; 
 }
 
-+(Transcoder*) transcoder
+static NSString* outputFileName(NSString* inputFileName)
 {
-    Transcoder* transcoder = [[Transcoder alloc] init];
-    transcoder->m_inputFiles = [[NSMutableArray alloc] init];
-    transcoder->m_outputFiles = [[NSMutableArray alloc] init];
-    transcoder->m_fileStatus = FS_INVALID;
-    transcoder->m_enabled = YES;
-    transcoder->m_tempAudioFileName = [[NSString stringWithFormat:@"/tmp/%p-tmpaudio.wav", transcoder] retain];
-    transcoder->m_passLogFileName = [[NSString stringWithFormat:@"/tmp/%p-tmppass.log", transcoder] retain];
+    // extract filename
+    NSString* lastComponent = [inputFileName lastPathComponent];
+    NSString* inputPath = [inputFileName stringByDeletingLastPathComponent];
+    NSString* baseName = [lastComponent stringByDeletingPathExtension];
+    NSString* suffix = [[AppController instance].deviceController fileSuffix];
+    NSString* savePath = [AppController instance].savePath;
+
+    if (!savePath)
+        savePath = inputPath;
+        
+    // now make sure the file doesn't exist
+    NSString* filename;
+    for (int i = 0; i < 10000; ++i) {
+        if (i == 0)
+            filename = [[savePath stringByAppendingPathComponent: baseName] stringByAppendingPathExtension: suffix];
+        else
+            filename = [[savePath stringByAppendingPathComponent: 
+                        [NSString stringWithFormat: @"%@_%d", baseName, i]] stringByAppendingPathExtension: suffix];
+            
+        if (![[NSFileManager defaultManager] fileExistsAtPath: filename])
+            break;
+    }
+    
+    return filename;
+}
+
+- (Transcoder*)initWithFilename:(NSString*) filename;
+{
+    m_inputFiles = [[NSMutableArray alloc] init];
+    m_outputFiles = [[NSMutableArray alloc] init];
+    m_fileStatus = FS_INVALID;
+    m_enabled = YES;
+    m_tempAudioFileName = [[NSString stringWithFormat:@"/tmp/%p-tmpaudio.wav", self] retain];
+    m_passLogFileName = [[NSString stringWithFormat:@"/tmp/%p-tmppass.log", self] retain];
     
     // init the progress indicator
-    transcoder->m_progressIndicator = [[NSProgressIndicator alloc] init];
-    [transcoder->m_progressIndicator setMinValue:0];
-    [transcoder->m_progressIndicator setMaxValue:1];
-    [transcoder->m_progressIndicator setIndeterminate: NO];
-    [transcoder->m_progressIndicator setBezeled: NO];
+    m_progressIndicator = [[NSProgressIndicator alloc] init];
+    [m_progressIndicator setMinValue:0];
+    [m_progressIndicator setMaxValue:1];
+    [m_progressIndicator setIndeterminate: NO];
+    [m_progressIndicator setBezeled: NO];
     
     // init the status image view
-    transcoder->m_statusImageView = [[NSImageView alloc] init];
-    [transcoder->m_statusImageView setImage: getFileStatusImage(transcoder->m_fileStatus)];
+    m_statusImageView = [[NSImageView alloc] init];
+    [m_statusImageView setImage: getFileStatusImage(m_fileStatus)];
+    
+    [self addInputFile:filename];
+    [self addOutputFile:outputFileName(filename)];
+    self.outputFileInfo.duration = self.inputFileInfo.duration;
 
-    return transcoder;
+    return self;
 }
 
 -(void) dealloc
@@ -345,12 +376,6 @@ static NSImage* getFileStatusImage(FileStatus status)
     [file release];
     file.filename = filename;
     return [m_outputFiles count] - 1;    
-}
-
--(void) changeOutputFileName: (NSString*) filename
-{
-    if ([m_outputFiles count] > 0)
-        [[m_outputFiles objectAtIndex: 0] setFilename: filename];
 }
 
 -(NSValue*) progressCell
@@ -409,6 +434,9 @@ static NSString* escapePath(NSString* path)
     if ([m_outputFiles count] == 0)
         return;
         
+    // Update the output file name
+    self.outputFileInfo.filename = outputFileName(self.inputFileInfo.filename);
+
     // build the environment
     NSMutableDictionary* env = [[NSMutableDictionary alloc] init];
 

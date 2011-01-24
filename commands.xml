@@ -439,15 +439,6 @@ DTD
         <script>
             <![CDATA[
 
-            // ffmpeg seems to have problems when using more than 4 cpus. Some files
-            // end up with 0 length video. More than 4 cpus don't help that much
-            // anyway, so we will limit to 4. The current version crashes with 0
-            // cpus so we will limit that also
-            if (number(params.num_cpus) <= 0)
-                params.num_cpus = 2;
-            else if (number(params.num_cpus) > 4)
-                params.num_cpus = 4;
-            
             // The first generation Apple TV could not handle 30fps 720p content. If 
             // you wanted 30fps you were limited to 960x540, and if you wanted
             // 1024x768 you were limited to 24fps. This variable captures that
@@ -524,8 +515,10 @@ DTD
                     if (response.match(/^frame=/)) {
                         // This looks like a progress line for ffmpeg
                         var frame = number(response.replace(/^frame=/, ""));
+log("*** response="+response);
                         var totalFrames = params.duration * params.output_video_frame_rate;
                         params.processResponseProgress = frame / totalFrames;
+log("*** frame="+frame+", duration="+params.duration+", output_video_frame_rate="+params.output_video_frame_rate);
                         return true;
                     }
                 }
