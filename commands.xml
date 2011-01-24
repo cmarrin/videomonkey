@@ -371,7 +371,7 @@ DTD
         </command>
         <command id="ffmpeg_normal_av_offset">
             $ffmpeg -threads $num_cpus -y -itsoffset $video_offset -i "$input_file"  
-                -itsoffset $audio_offset -i "$input_file" -map 0:$(input_video_index) -map 1:$(input_audo_index)
+                -itsoffset $audio_offset -i "$input_file" -map 0:$(input_video_index) -map 1:$(input_audio_index)
         </command>
         <command id="ffmpeg_normal_v">
             $ffmpeg -threads $num_cpus -y -i "$input_file"
@@ -381,7 +381,7 @@ DTD
         </command>
         <command id="yuv_to_ffmpeg_av_offset">
             $ffmpeg -threads $num_cpus -y -itsoffset $video_offset -i - 
-                -itsoffset $audio_offset -i "$tmp_audio_file" -map 0:$(input_video_index) -map 1:$(input_audo_index)
+                -itsoffset $audio_offset -i "$tmp_audio_file" -map 0:$(input_video_index) -map 1:$(input_audio_index)
         </command>
         <command id="yuv_to_ffmpeg_v">
             $ffmpeg -threads $num_cpus -y -i -
@@ -515,10 +515,8 @@ DTD
                     if (response.match(/^frame=/)) {
                         // This looks like a progress line for ffmpeg
                         var frame = number(response.replace(/^frame=/, ""));
-log("*** response="+response);
                         var totalFrames = params.duration * params.output_video_frame_rate;
                         params.processResponseProgress = frame / totalFrames;
-log("*** frame="+frame+", duration="+params.duration+", output_video_frame_rate="+params.output_video_frame_rate);
                         return true;
                     }
                 }
@@ -775,7 +773,7 @@ log("*** frame="+frame+", duration="+params.duration+", output_video_frame_rate=
                     (bool(params.has_audio) ? 2 : 0) |
                     (bool(params.is_2_pass) ? 1 : 0);
                                         
-                var offset = (number(params.audio_offset) != 0 || number(params.audio_offset) != 0) ? "_offset" : "";
+                var offset = (number(params.audio_offset) != 0 || number(params.video_offset) != 0) ? "_offset" : "";
                 
                 switch (recipeType) {
                     case 0: params.recipe = "$normal_v_single_pass"; break;
@@ -960,8 +958,6 @@ log("*** frame="+frame+", duration="+params.duration+", output_video_frame_rate=
                     
                     // set frame size
                     var index = (h264 ? 2 : 0) + (forTV ? 1 : 0);
-log("**** set frame size: title="+title+", index="+index+", qualityStop="+qualityStop+", passed quality stop='"+params.quality_stop);
-log("**** set frame size: deviceFrameSizeMap[title].length="+deviceFrameSizeMap[title].length);
                     var sizeString = deviceFrameSizeMap[title][index][qualityStop];
                     requestedFrameWidth = frameSizes[sizeString][0];
                     requestedFrameHeight = frameSizes[sizeString][1];
@@ -1199,7 +1195,6 @@ log("**** set frame size: deviceFrameSizeMap[title].length="+deviceFrameSizeMap[
                     // There are 3 flags governing bitrate: h264, width320 and ntsc
                     // but all are mutually exclusive, so index is 0 if none are set
                     // and 1 if any are set.
-                    log("*** h264="+h264+", width320='"+params.width320+"', ntsc="+ntsc);
                     var index = (h264 | bool(params.width320) | ntsc) ? 1 : 0;
                     var bitrateMin = bitrateQualityMap[params.title][index][qualityStop] * 1000;
                     var bitrateMax = bitrateQualityMap[params.title][index][qualityStop+1] * 1000;

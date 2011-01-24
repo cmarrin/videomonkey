@@ -462,10 +462,10 @@ static NSString* escapePath(NSString* path)
     [env setValue: [[NSNumber numberWithInt: self.inputFileInfo.audioIndex] stringValue] forKey: @"input_audio_index"];
 
     // Set the AV offsets. Positive offsets delay video
-    float audioOffset = (m_avOffset > 0) ? -m_avOffset : 0;
-    float viddoOffset = (m_avOffset < 0) ? m_avOffset : 0;
+    float audioOffset = (m_avOffset < 0) ? -m_avOffset : 0;
+    float videoOffset = (m_avOffset > 0) ? m_avOffset : 0;
     [env setValue: [[NSNumber numberWithDouble: audioOffset] stringValue] forKey: @"audio_offset"];
-    [env setValue: [[NSNumber numberWithDouble: viddoOffset] stringValue] forKey: @"video_offset"];
+    [env setValue: [[NSNumber numberWithDouble: videoOffset] stringValue] forKey: @"video_offset"];
     
     [env setValue: self.inputFileInfo.format forKey: @"input_format"];
     [env setValue: ([self hasInputAudio] ? @"true" : @"false") forKey: @"has_audio"];
