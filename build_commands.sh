@@ -5,11 +5,25 @@ tar xvf ffmpeg.tar
 rm ffmpeg.tar
 cp ffmpeg.c ffmpeg-0.5.1
 cd ffmpeg-0.5.1
-./configure --disable-ffplay --disable-ffserver --enable-gpl --enable-libxvid --enable-libmp3lame \
---enable-libfaac --enable-libfaad --enable-nonfree --enable-pthreads --enable-swscale --enable-avfilter --enable-avfilter-lavf \
---enable-libx264 --enable-postproc --disable-doc --enable-static --disable-shared
+./configure --disable-ffplay --disable-ffserver --enable-gpl --enable-pthreads --enable-version3 \
+--enable-libmp3lame --enable-libx264 --enable-avfilter --enable-libxvid \
+--enable-libfaac --enable-nonfree --enable-swscale \
+--enable-postproc \
+--enable-libtheora --enable-libvorbis --enable-filters --enable-runtime-cpudetect --arch=x86 \
+--disable-doc --enable-static --disable-shared
 
 
+--enable-libspeex --enable-libvpx --disable-decoder=libvpx --enable-libtheora --enable-libvorbis 
+--enable-filters --enable-runtime-cpudetect
+
+--arch=x86
+
+--enable-libopencore_amrwb 
+
+
+--enable-gpl --enable-pthreads --enable-version3 --enable-libspeex --enable-libvpx --disable-decoder=libvpx \
+--enable-libmp3lame --enable-libtheora --enable-libvorbis --enable-libx264 --enable-avfilter \
+--enable-libopencore_amrnb --enable-filters --arch=x86 --enable-runtime-cpudetect
 
 
 
