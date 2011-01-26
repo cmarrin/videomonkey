@@ -135,6 +135,17 @@ int ffprobeIndexFromString(NSString* string, NSString* codec)
     return -1;
 }
 
+// Determine if the passed NSFileHandle has any data to read
+static BOOL isReadable(NSFileHandle* fileHandle)
+{
+    int fd = [fileHandle fileDescriptor];
+    fd_set fdset;
+    struct timeval tmout = { 0, 0 }; // return immediately
+    FD_ZERO(&fdset);
+    FD_SET(fd, &fdset);
+    return select(fd + 1, &fdset, NULL, NULL, &tmout) > 0;
+}
+
 -(BOOL) _validateInputFile: (TranscoderFileInfo*) info
 {
     NSMutableString* mediainfoPath = [NSMutableString stringWithString: [[NSBundle mainBundle] resourcePath]];
@@ -155,14 +166,18 @@ int ffprobeIndexFromString(NSString* string, NSString* codec)
     [task launch];
     
     [task waitUntilExit];
-    
+    if (!isReadable([pipe fileHandleForReading]))
+        return NO;
+        
     NSString* data = [[NSString alloc] initWithData: [[pipe fileHandleForReading] availableData] encoding: NSASCIIStringEncoding];
     [task release];
     [pipe release];
     
     // The first line must start with "-General-" or the file is not valid
-    if (![data hasPrefix: @"-General-"])
+    if (![data hasPrefix: @"-General-"]) {
+        [data release];
         return NO;
+    }
     
     NSArray* components = [data componentsSeparatedByString:@"\n"];
     [data release];
@@ -242,8 +257,11 @@ int ffprobeIndexFromString(NSString* string, NSString* codec)
     [task setStandardOutput:[pipe fileHandleForWriting]];
     [task launch];
     [task waitUntilExit];
+        
+    if (!isReadable([pipe fileHandleForReading]))
+        return NO;
     
-    data = [[NSString alloc] initWithData: [[pipe fileHandleForReading] availableData] encoding: NSASCIIStringEncoding];
+    data = [[NSString alloc] initWithData:[[pipe fileHandleForReading] availableData] encoding: NSASCIIStringEncoding];
     [task release];
     [pipe release];
     

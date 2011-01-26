@@ -5101,21 +5101,21 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 							<nil key="kCoderMovie"/>
 							<boolean value="NO" key="kCoderEditable"/>
 						</object>
-						<object class="NSBox" id="265971782">
+						<object class="NSBox" id="201102863">
 							<reference key="NSNextResponder" ref="947487714"/>
 							<int key="NSvFlags">36</int>
 							<object class="NSMutableArray" key="NSSubviews">
 								<bool key="EncodedWithXMLCoder">YES</bool>
-								<object class="NSView" id="655873641">
-									<reference key="NSNextResponder" ref="265971782"/>
+								<object class="NSView" id="512917486">
+									<reference key="NSNextResponder" ref="201102863"/>
 									<int key="NSvFlags">256</int>
 									<object class="NSMutableArray" key="NSSubviews">
 										<bool key="EncodedWithXMLCoder">YES</bool>
 										<object class="NSTextField" id="593119806">
-											<reference key="NSNextResponder" ref="655873641"/>
+											<reference key="NSNextResponder" ref="512917486"/>
 											<int key="NSvFlags">292</int>
 											<string key="NSFrame">{{16, 18}, {111, 17}}</string>
-											<reference key="NSSuperview" ref="655873641"/>
+											<reference key="NSSuperview" ref="512917486"/>
 											<bool key="NSEnabled">YES</bool>
 											<object class="NSTextFieldCell" key="NSCell" id="447528462">
 												<int key="NSCellFlags">67239424</int>
@@ -5128,10 +5128,10 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 											</object>
 										</object>
 										<object class="NSTextField" id="1049636166">
-											<reference key="NSNextResponder" ref="655873641"/>
+											<reference key="NSNextResponder" ref="512917486"/>
 											<int key="NSvFlags">292</int>
 											<string key="NSFrame">{{128, 16}, {54, 22}}</string>
-											<reference key="NSSuperview" ref="655873641"/>
+											<reference key="NSSuperview" ref="512917486"/>
 											<bool key="NSEnabled">YES</bool>
 											<object class="NSTextFieldCell" key="NSCell" id="113551388">
 												<int key="NSCellFlags">-1804468671</int>
@@ -5207,10 +5207,10 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 											</object>
 										</object>
 										<object class="NSStepper" id="580633407">
-											<reference key="NSNextResponder" ref="655873641"/>
+											<reference key="NSNextResponder" ref="512917486"/>
 											<int key="NSvFlags">292</int>
 											<string key="NSFrame">{{187, 12}, {19, 27}}</string>
-											<reference key="NSSuperview" ref="655873641"/>
+											<reference key="NSSuperview" ref="512917486"/>
 											<bool key="NSEnabled">YES</bool>
 											<object class="NSStepperCell" key="NSCell" id="499819398">
 												<int key="NSCellFlags">917024</int>
@@ -5223,10 +5223,10 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 											</object>
 										</object>
 										<object class="NSTextField" id="282284747">
-											<reference key="NSNextResponder" ref="655873641"/>
+											<reference key="NSNextResponder" ref="512917486"/>
 											<int key="NSvFlags">292</int>
 											<string key="NSFrame">{{208, 18}, {56, 17}}</string>
-											<reference key="NSSuperview" ref="655873641"/>
+											<reference key="NSSuperview" ref="512917486"/>
 											<bool key="NSEnabled">YES</bool>
 											<object class="NSTextFieldCell" key="NSCell" id="358633252">
 												<int key="NSCellFlags">68288064</int>
@@ -5240,7 +5240,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 										</object>
 									</object>
 									<string key="NSFrameSize">{280, 51}</string>
-									<reference key="NSSuperview" ref="265971782"/>
+									<reference key="NSSuperview" ref="201102863"/>
 								</object>
 							</object>
 							<string key="NSFrame">{{-2, -6}, {280, 51}}</string>
@@ -5257,7 +5257,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 									<bytes key="NSWhite">MCAwLjgwMDAwMDAxMTkAA</bytes>
 								</object>
 							</object>
-							<reference key="NSContentView" ref="655873641"/>
+							<reference key="NSContentView" ref="512917486"/>
 							<int key="NSBorderType">0</int>
 							<int key="NSBoxType">0</int>
 							<int key="NSTitlePosition">0</int>
@@ -15525,6 +15525,14 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 					</object>
 					<int key="connectionID">5770</int>
 				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">m_fileListController</string>
+						<reference key="source" ref="744558613"/>
+						<reference key="destination" ref="2824"/>
+					</object>
+					<int key="connectionID">5772</int>
+				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
 				<object class="NSArray" key="orderedObjects">
@@ -16324,7 +16332,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 						<object class="NSMutableArray" key="children">
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<reference ref="933784279"/>
-							<reference ref="265971782"/>
+							<reference ref="201102863"/>
 						</object>
 						<reference key="parent" ref="461588446"/>
 					</object>
@@ -22122,7 +22130,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">5771</int>
-						<reference key="object" ref="265971782"/>
+						<reference key="object" ref="201102863"/>
 						<object class="NSMutableArray" key="children">
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<reference ref="593119806"/>
@@ -22139,7 +22147,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<reference ref="447528462"/>
 						</object>
-						<reference key="parent" ref="265971782"/>
+						<reference key="parent" ref="201102863"/>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">5423</int>
@@ -22153,7 +22161,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<reference ref="113551388"/>
 						</object>
-						<reference key="parent" ref="265971782"/>
+						<reference key="parent" ref="201102863"/>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">5436</int>
@@ -22176,7 +22184,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<reference ref="499819398"/>
 						</object>
-						<reference key="parent" ref="265971782"/>
+						<reference key="parent" ref="201102863"/>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">5429</int>
@@ -22190,7 +22198,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<reference ref="358633252"/>
 						</object>
-						<reference key="parent" ref="265971782"/>
+						<reference key="parent" ref="201102863"/>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">5431</int>
@@ -25238,7 +25246,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 						<string key="NS.key.0">ToolTip</string>
 						<object class="IBToolTipAttribute" key="NS.object.0">
 							<string key="name">ToolTip</string>
-							<reference key="object" ref="265971782"/>
+							<reference key="object" ref="201102863"/>
 							<string key="toolTip">Change the relative delay between the audio and video tracks. Positive values delay video, negative values delay audio.</string>
 						</object>
 					</object>
@@ -25305,7 +25313,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">5771</int>
+			<int key="maxID">5772</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
