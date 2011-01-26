@@ -300,4 +300,52 @@ niceday.wmv
 test.mkv
     audio       0 (1st)
     video       1 (2nd)
-    
+
+
+WMV
+---
+
+Works:
+"/Users/cmarrin/personal/Projects/git/videomonkey/build/Debug/VideoMonkey.app/Contents/Resources/bin/ffmpeg" -threads 2 -y -i "/Users/cmarrin/personal/Projects/git/videomonkey/samples/audiosync.mp4" 
+
+-s 240x128 -aspect 240:128  -r 10 -vcodec wmv1 -threads 1 -pix_fmt yuv420p  -g 15   -qmin 7  -b 2326k    
+
+-async 50  -acodec wmav2  -ar 48000 -ac 2 -ab 128000  "/Users/cmarrin/personal/Projects/git/videomonkey/samples/audiosync_1.wmv"
+
+
+Does not work
+"/Users/cmarrin/personal/Projects/git/videomonkey/build/Debug/VideoMonkey.app/Contents/Resources/bin/ffmpeg" -threads 2 -y -i "/Users/cmarrin/personal/Projects/git/videomonkey/samples/audiosync.mp4" 
+
+-s 240x128 -aspect 240:128 -r 10 -vcodec wmv1 -b 20000 -maxrate 24k -bufsize 5k -qmin 9 
+
+-async 50 -acodec wmav2 -ar 48000 -ac 2  -ab 128000    "/Users/cmarrin/personal/Projects/git/videomonkey/samples/audiosync_1.wmv"
+
+
+
+works:
+
+-s 848x480 -r 29.97  -pix_fmt yuv420p  -g 300  -qmin 5  -b 1628k    -async 50  -acodec libmp3lame  -ar 44100 -ac 2 -ab 128k    '/Users/cmarrin/personal/Projects/git/videomonkey/samples/'/'audiosync.mp4'.temp.swf
+
+
+does not work:
+
+-threads 2 -y -i "/Users/cmarrin/personal/Projects/git/videomonkey/samples/audiosync.wmv" -s 240x128 -aspect 240:128 -r 29.97 -b 307202.45 -g 30 -maxrate 34k -bufsize 5k -qmin 5 -async 50 -acodec libmp3lame -ar 11025 -ac 1  -ab 16000    "/Users/cmarrin/personal/Projects/git/videomonkey/samples/audiosync_1.mp4"
+
+
+
+
+
+
+
+
+
+AVI:
+
+-s 720x544 -r 29.97 -vcodec mpeg4 -b 4000000 -g 200 -qmin 2 -async 50 -acodec libmp3lame -ar 44100 -ac 2  -ab 128000    "/Users/cmarrin/personal/Projects/git/videomonkey/samples/sample_hd_9.avi" 
+ 
+ 
+ 
+2nd gen apple tv:
+
+-s 960x720 -aspect 960:720 -r 25 -vcodec libx264 -b 5000000 -async 50 -acodec libfaac -ar 48000 -ac 2  -ab 128000  -vpre ffpresets/libx264-medium  -vpre ffpresets/libx264-main  "/Users/cmarrin/personal/Projects/git/videomonkey/samples/sample_hd_8.mp4"
+
