@@ -1695,7 +1695,7 @@ DTD
         -->
         <device_group title="Advanced">
             <!-- Custom Encoding -->
-            <device title="Custom Encoding" icon="custom" enabled="true">
+            <device title="Custom Encoding (Not Yet Implemented)" icon="custom" enabled="false">
                 <menu which="0"> <!-- Container Format -->
                     <menu_item title="MPEG-4">
                         <param id="output_format_name" value="MPEG-4" />
@@ -1817,7 +1817,7 @@ DTD
             </common_device>
             
             <!-- DVD -->
-            <device title="Create a DVD Image (Not Implemented)" icon="cd" enabled="false">
+            <device title="Create a DVD Image (Not Yet Implemented)" icon="cd" enabled="false">
                 <checkbox which="0" title="H.264 Video">
                     <checked_item>
                         <param id="ffmpeg_option_vcodec" value="libx264" />
