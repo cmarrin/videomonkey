@@ -5,133 +5,143 @@
   <meta http-equiv="Content-Style-Type" content="text/css">
   <title>Release Notes</title>
   <meta name="Generator" content="Cocoa HTML Writer">
-  <meta name="CocoaVersion" content="1038.25">
+  <meta name="CocoaVersion" content="1038.35">
   <style type="text/css">
     p.p2 {margin: 0.0px 0.0px 14.0px 0.0px; font: 18.0px Times}
     p.p3 {margin: 0.0px 0.0px 12.0px 0.0px; font: 14.0px Times}
-    p.p4 {margin: 0.0px 0.0px 14.0px 0.0px; font: 16.0px Times}
-    p.p6 {margin: 0.0px 0.0px 14.0px 0.0px; font: 16.0px Times; min-height: 19.0px}
-    p.p7 {margin: 0.0px 0.0px 14.0px 0.0px; font: 18.0px Times; min-height: 23.0px}
-    p.p8 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Times; min-height: 14.0px}
-    li.li5 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Times}
+    p.p4 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Times}
+    p.p5 {margin: 0.0px 0.0px 0.0px 72.0px; text-indent: -72.0px; font: 14.0px Times; min-height: 18.0px}
+    p.p6 {margin: 0.0px 0.0px 14.0px 0.0px; font: 16.0px Times}
+    p.p7 {margin: 0.0px 0.0px 14.0px 0.0px; font: 16.0px Times; min-height: 19.0px}
+    p.p8 {margin: 0.0px 0.0px 14.0px 0.0px; font: 18.0px Times; min-height: 23.0px}
+    p.p9 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Times; min-height: 14.0px}
+    li.li4 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Times}
+    span.s1 {font: 16.0px Times}
     ul.ul1 {list-style-type: disc}
-    ul.ul2 {list-style-type: circle}
+    ul.ul2 {list-style-type: hyphen}
+    ul.ul3 {list-style-type: circle}
   </style>
 </head>
 <body>
 <h1 style="margin: 0.0px 0.0px 16.0px 0.0px; font: 24.0px Times"><b>Release Notes For Video Monkey</b></h1>
 <p class="p2"><b>Version 0.9 (10/31/2010)</b></p>
 <p class="p3">New video formats and AV sync supported, plus a newer version of ffmpeg.</p>
-<p class="p4"><b>New in this release:</b></p>
+<p class="p3"><span class="s1"><b><i>Note 1: </i></b></span><b>New video format support is very fresh, so it may have kinks to be worked out. Try it out and see! Don't forget to let me know if it does or doesn't work for you.</b></p>
+<p class="p4"><span class="s1"><b><i>Note 2: </i></b></span><b>Now that Video Monkey supports more file formats, it is more important than ever to download and install Perian if you haven'talready. This adds support for all the new formats to Quicktime player. This not only lets you preview your newly encoded files, but it also lets you view files in the Show Movie panel and set their AV offset. Download it from </b><a href="http://www.perian.org/"><b>http://www.perian.org/</b></a></p>
+<p class="p5"><br></p>
+<p class="p6"><b>New in this release:</b></p>
 <ul class="ul1">
-  <li class="li5">Added new output video formats: AVI, MP4, Quicktime, WMV, Flash, MPEG, DV</li>
-  <li class="li5">New AV offset UI in Movie panel. Offsets audio relative to video to fix lip sync problems</li>
-  <li class="li5">New version of ffmpeg with many bug fixes and some new format support.</li>
-  <li class="li5">Added elapsed time of commands to console</li>
-  <li class="li5">Updated ffpreset usage.</li>
-  <li class="li5">Disable metadata panel for output formats that don't support metadata (all except MP4)</li>
-  <li class="li5">Fixed bugs in doing 2 pass encoding</li>
-  <li class="li5">Reduced the number of performance entries. Now only one 2 pass entry</li>
-  <li class="li5">Fixed bug in having special chars in file paths</li>
-  <li class="li5">Now use ffprobe to detect the number and order of streams, for AV sync feature</li>
-  <li class="li5">Can now select multiple files and type an entry in the search box. The search will be applied to all files</li>
-  <li class="li5">Even with multiple files selected, the search box will show a list of results from most recent search.</li>
-  <li class="li5">Fixed frame size setting bugs for Apple TV.</li>
-</ul>
-<p class="p6"><b></b><br></p>
-<p class="p4"><b>Bugs fixed:</b></p>
-<ul class="ul1">
-  <li class="li5">2984591 - Metadata error message</li>
-  <li class="li5">3037146 - First time searching for metadata for multile files fails</li>
+  <li class="li4">Added new output video formats: AVI, MP4, Quicktime, WMV, Flash, MPEG, DV</li>
+  <ul class="ul2">
+    <li class="li4"></li>
+  </ul>
+  <li class="li4">New AV offset UI in Movie panel. Offsets audio relative to video to fix lip sync problems</li>
+  <li class="li4">New version of ffmpeg with many bug fixes and some new format support.</li>
+  <li class="li4">Added elapsed time of commands to console</li>
+  <li class="li4">Updated ffpreset usage.</li>
+  <li class="li4">Disable metadata panel for output formats that don't support metadata (all except MP4)</li>
+  <li class="li4">Fixed bugs in doing 2 pass encoding</li>
+  <li class="li4">Reduced the number of performance entries. Now only one 2 pass entry</li>
+  <li class="li4">Fixed bug in having special chars in file paths</li>
+  <li class="li4">Now use ffprobe to detect the number and order of streams, for AV sync feature</li>
+  <li class="li4">Can now select multiple files and type an entry in the search box. The search will be applied to all files</li>
+  <li class="li4">Even with multiple files selected, the search box will show a list of results from most recent search.</li>
+  <li class="li4">Fixed frame size setting bugs for Apple TV.</li>
 </ul>
 <p class="p7"><br></p>
+<p class="p6"><b>Bugs fixed:</b></p>
+<ul class="ul1">
+  <li class="li4">2984591 - Metadata error message</li>
+  <li class="li4">3037146 - First time searching for metadata for multile files fails</li>
+</ul>
+<p class="p8"><br></p>
 <p class="p2"><b>Version 0.8 (4/8/2010)</b></p>
 <p class="p3">This fixes serious metadata search bugs and makes the metadata search feature easier to use.</p>
-<p class="p4"><b>New in this release:</b></p>
+<p class="p6"><b>New in this release:</b></p>
 <ul class="ul1">
-  <li class="li5">Metadata search now fails more gracefully with better error reporting.</li>
-  <li class="li5">Uses episode and season info from file name, even when searching using search box</li>
-  <li class="li5">Sets episode number, even if it's just a bare number (without season id)</li>
-  <li class="li5">Right click <i>Season</i> title in metadata panel to use the current season for all episodes</li>
-  <li class="li5">Select all button on metadata panel for easier selection</li>
-  <li class="li5">Uses search results from typed in search string for all selected files.</li>
-</ul>
-<p class="p6"><b></b><br></p>
-<p class="p4"><b>Bugs fixed:</b></p>
-<ul class="ul1">
-  <li class="li5">encoding parameters would get confused when metadata search failed</li>
+  <li class="li4">Metadata search now fails more gracefully with better error reporting.</li>
+  <li class="li4">Uses episode and season info from file name, even when searching using search box</li>
+  <li class="li4">Sets episode number, even if it's just a bare number (without season id)</li>
+  <li class="li4">Right click <i>Season</i> title in metadata panel to use the current season for all episodes</li>
+  <li class="li4">Select all button on metadata panel for easier selection</li>
+  <li class="li4">Uses search results from typed in search string for all selected files.</li>
 </ul>
 <p class="p7"><br></p>
+<p class="p6"><b>Bugs fixed:</b></p>
+<ul class="ul1">
+  <li class="li4">encoding parameters would get confused when metadata search failed</li>
+</ul>
+<p class="p8"><br></p>
 <p class="p2"><b>Version 0.7 (3/29/2010)</b></p>
 <p class="p3">This is a small release to fixes crashes when encoding multiple files. It also does search in background to avoid stalling Video Monkey</p>
-<p class="p4"><b>New in this release:</b></p>
+<p class="p6"><b>New in this release:</b></p>
 <ul class="ul1">
-  <li class="li5">Metadata is now searched in the background to avoid stalling VideoMonkey.</li>
-  <li class="li5">New icon during encoding. Shows number of files to encode.</li>
-</ul>
-<p class="p6"><b></b><br></p>
-<p class="p4"><b>Bugs fixed:</b></p>
-<ul class="ul1">
-  <li class="li5">Crash caused by dangling pointers and memory leaks when encoding more than about 3 files.</li>
+  <li class="li4">Metadata is now searched in the background to avoid stalling VideoMonkey.</li>
+  <li class="li4">New icon during encoding. Shows number of files to encode.</li>
 </ul>
 <p class="p7"><br></p>
+<p class="p6"><b>Bugs fixed:</b></p>
+<ul class="ul1">
+  <li class="li4">Crash caused by dangling pointers and memory leaks when encoding more than about 3 files.</li>
+</ul>
+<p class="p8"><br></p>
 <p class="p2"><b>Version 0.6 (12/17/09)</b></p>
 <p class="p3">This release adds the ability to search for metadata on demand rather than automatically. This avoids problems when the metadata search sites are down. It also fixes several bugs</p>
-<p class="p4"><b>New in this release:</b></p>
+<p class="p6"><b>New in this release:</b></p>
 <ul class="ul1">
-  <li class="li5">UI to search metadata manually. You can search the selected file or all files.</li>
-  <li class="li5">New preferences panel. Currently allows control of automatic/manual metadata search and number of cpus to use.</li>
-  <li class="li5">Ability to control number of cpus to use for decode. Can be set to auto to select based on number of cpus on system. Thanks to Breuhan</li>
-  <li class="li5">Added progress bar to dock icon. Thanks to Lars Koerkemeier</li>
-  <li class="li5">Fixed bug when parsing files with non-standard characters</li>
-  <li class="li5">Fixed a bug where a rounding error could create a movie that can not play on Apple TV.</li>
-  <li class="li5">Fixed a bug where wrong filename was used when transferring to iTunes in "write metadata to input file" mode</li>
-  <li class="li5">Fixed 'Unable to select destination folder in v.5' bug. Thanks to Lars Koerkemeier</li>
-  <li class="li5">Movie controller now remembers movie current time and pause/play state when moving between movies</li>
-  <li class="li5">Made finding episode/season in movie more reliable</li>
-  <li class="li5">Fixed suspend/resume</li>
-  <li class="li5">Fixed show/hide of windows</li>
-</ul>
-<p class="p6"><br></p>
-<p class="p4"><b>Bugs fixed:</b></p>
-<ul class="ul1">
-  <li class="li5">Problem converting files with '*' or '?'</li>
-  <li class="li5">VM produces movies that don't play on Apple TV</li>
+  <li class="li4">UI to search metadata manually. You can search the selected file or all files.</li>
+  <li class="li4">New preferences panel. Currently allows control of automatic/manual metadata search and number of cpus to use.</li>
+  <li class="li4">Ability to control number of cpus to use for decode. Can be set to auto to select based on number of cpus on system. Thanks to Breuhan</li>
+  <li class="li4">Added progress bar to dock icon. Thanks to Lars Koerkemeier</li>
+  <li class="li4">Fixed bug when parsing files with non-standard characters</li>
+  <li class="li4">Fixed a bug where a rounding error could create a movie that can not play on Apple TV.</li>
+  <li class="li4">Fixed a bug where wrong filename was used when transferring to iTunes in "write metadata to input file" mode</li>
+  <li class="li4">Fixed 'Unable to select destination folder in v.5' bug. Thanks to Lars Koerkemeier</li>
+  <li class="li4">Movie controller now remembers movie current time and pause/play state when moving between movies</li>
+  <li class="li4">Made finding episode/season in movie more reliable</li>
+  <li class="li4">Fixed suspend/resume</li>
+  <li class="li4">Fixed show/hide of windows</li>
 </ul>
 <p class="p7"><br></p>
+<p class="p6"><b>Bugs fixed:</b></p>
+<ul class="ul1">
+  <li class="li4">Problem converting files with '*' or '?'</li>
+  <li class="li4">VM produces movies that don't play on Apple TV</li>
+</ul>
+<p class="p8"><br></p>
 <p class="p2"><b>Version 0.5 (8/26/09)</b></p>
 <p class="p3">This release adds Snow Leopard support and fixes a couple of bugs. With the imminent release of Snow Leopard, I thought it would be a good idea to get this out now.</p>
-<p class="p4"><b>New in this release:</b></p>
+<p class="p6"><b>New in this release:</b></p>
 <ul class="ul1">
-  <li class="li5">Snow Leopard support</li>
-</ul>
-<p class="p6"><br></p>
-<p class="p4"><b>Bugs fixed:</b></p>
-<ul class="ul1">
-  <li class="li5">Problem converting files with '*' or '?'</li>
-  <li class="li5">VM produces movies that don't play on Apple TV</li>
+  <li class="li4">Snow Leopard support</li>
 </ul>
 <p class="p7"><br></p>
+<p class="p6"><b>Bugs fixed:</b></p>
+<ul class="ul1">
+  <li class="li4">Problem converting files with '*' or '?'</li>
+  <li class="li4">VM produces movies that don't play on Apple TV</li>
+</ul>
+<p class="p8"><br></p>
 <p class="p2"><b>Version 0.4 (7/30/09)</b></p>
 <p class="p3">This release adds full metadata support. The metadata tab of the info panel shows the metadata for each input file. You can then manually add or change the data. You can also type in the name of a TV show or movie and Video Monkey will search thetvdb.com or themoviedb.org and fill in the metadata it finds. Video Monkey tries to figure out the title from the file name or input metadata and automatically search for metadata. For each field you can select between input, user, or search metadata.</p>
-<p class="p4"><b>New in this release:</b></p>
+<p class="p6"><b>New in this release:</b></p>
 <ul class="ul1">
-  <li class="li5">Metadata in input files is read and shown in metadata panel<span class="Apple-converted-space"> </span></li>
-  <li class="li5">Metadata search from thetvdb.com and themoviedb.org</li>
-  <li class="li5">Once search metadata available you can select other search matches, and select season and episode</li>
-  <li class="li5">Metadata search is automatically done for each input file, using the file name to guess the name, or using input metadata</li>
-  <li class="li5">For each metadata item you can select between input, user and search metadata</li>
-  <li class="li5">Allow artwork to be added (using drag &amp; drop) rearranged and selected for inclusion in output file</li>
-  <li class="li5">Artwork is added from search, if available</li>
-  <li class="li5">Added popup menu for each metadata item which allows item to be used in all input files</li>
-  <li class="li5">Added tools menu which allows selecting whether to use input, user or search metadata for all fields in current file or all files</li>
-  <li class="li5">New menu on main page allows write metadata after encoding output file, encode only, write metadata only to input file or rewrite metadata to output file</li>
+  <li class="li4">Metadata in input files is read and shown in metadata panel<span class="Apple-converted-space"> </span></li>
+  <li class="li4">Metadata search from thetvdb.com and themoviedb.org</li>
+  <li class="li4">Once search metadata available you can select other search matches, and select season and episode</li>
+  <li class="li4">Metadata search is automatically done for each input file, using the file name to guess the name, or using input metadata</li>
+  <li class="li4">For each metadata item you can select between input, user and search metadata</li>
+  <li class="li4">Allow artwork to be added (using drag &amp; drop) rearranged and selected for inclusion in output file</li>
+  <li class="li4">Artwork is added from search, if available</li>
+  <li class="li4">Added popup menu for each metadata item which allows item to be used in all input files</li>
+  <li class="li4">Added tools menu which allows selecting whether to use input, user or search metadata for all fields in current file or all files</li>
+  <li class="li4">New menu on main page allows write metadata after encoding output file, encode only, write metadata only to input file or rewrite metadata to output file</li>
 </ul>
-<p class="p6"><br></p>
-<p class="p4"><b>Bugs fixed:</b></p>
+<p class="p7"><br></p>
+<p class="p6"><b>Bugs fixed:</b></p>
 <ul class="ul1">
-  <li class="li5">Make audio and video sync better</li>
-  <li class="li5">Adjust output size to ensure square pixels, even when input is not</li>
+  <li class="li4">Make audio and video sync better</li>
+  <li class="li4">Adjust output size to ensure square pixels, even when input is not</li>
 </ul>
 <h2 style="margin: 0.0px 0.0px 14.0px 0.0px; font: 18.0px Times; min-height: 23.0px"><br></h2>
 <p class="p2"><b>Version 0.3 DOA</b></p>
@@ -139,54 +149,54 @@
 <p class="p3">This release focuses on fixing bugs found in the first release and features to complete the basic functionality of Video Monkey.</p>
 <h3 style="margin: 0.0px 0.0px 14.0px 0.0px; font: 16.0px Times"><b>New in this release:</b></h3>
 <ul class="ul1">
-  <li class="li5">Added a new XMLDocument class for commands.xml and for use in parsing metadata files</li>
-  <li class="li5">Better aspect ratio control of Movie Preview Window</li>
-  <li class="li5">New Info Panel. Shows properties of input and output files and will eventually allow metadata to be displayed and set</li>
-  <li class="li5">Checkboxes to add encoded files to iTunes, and to optionally delete the original</li>
-  <li class="li5">Disabled not-yet-implemented checkboxes and menu items</li>
-  <li class="li5">Added much better documentation to commands.xml.</li>
-  <li class="li5">Updated to v0.5 of ffmpeg</li>
-  <li class="li5">Tweaked bitrate settings to be more appropriate for various devices</li>
-  <li class="li5">Added time remaining to progress, and made overall progress bar show progress for all files together</li>
-  <li class="li5">Changed save path to use NSPathControl</li>
-  <li class="li5">Added a "limit" checkbox. Allows output params (frame size, bitrate, etc.) to be limited by input properties. Avoids oversampled videos</li>
-  <li class="li5">Fixed encoding params to always produce legal h.264 files for each device</li>
+  <li class="li4">Added a new XMLDocument class for commands.xml and for use in parsing metadata files</li>
+  <li class="li4">Better aspect ratio control of Movie Preview Window</li>
+  <li class="li4">New Info Panel. Shows properties of input and output files and will eventually allow metadata to be displayed and set</li>
+  <li class="li4">Checkboxes to add encoded files to iTunes, and to optionally delete the original</li>
+  <li class="li4">Disabled not-yet-implemented checkboxes and menu items</li>
+  <li class="li4">Added much better documentation to commands.xml.</li>
+  <li class="li4">Updated to v0.5 of ffmpeg</li>
+  <li class="li4">Tweaked bitrate settings to be more appropriate for various devices</li>
+  <li class="li4">Added time remaining to progress, and made overall progress bar show progress for all files together</li>
+  <li class="li4">Changed save path to use NSPathControl</li>
+  <li class="li4">Added a "limit" checkbox. Allows output params (frame size, bitrate, etc.) to be limited by input properties. Avoids oversampled videos</li>
+  <li class="li4">Fixed encoding params to always produce legal h.264 files for each device</li>
 </ul>
 <h3 style="margin: 0.0px 0.0px 14.0px 0.0px; font: 16.0px Times; min-height: 19.0px"><br></h3>
 <h3 style="margin: 0.0px 0.0px 14.0px 0.0px; font: 16.0px Times"><b>Bugs fixed:</b></h3>
 <ul class="ul1">
-  <li class="li5">2722694 - Dragging in files with wrong device set causes exception</li>
-  <li class="li5">2694849 - Files converted for iPhone/iPod are not legal</li>
-  <li class="li5">2695089 - File Size overflowed</li>
+  <li class="li4">2722694 - Dragging in files with wrong device set causes exception</li>
+  <li class="li4">2694849 - Files converted for iPhone/iPod are not legal</li>
+  <li class="li4">2695089 - File Size overflowed</li>
 </ul>
-<p class="p8"><br></p>
-<p class="p8"><br></p>
+<p class="p9"><br></p>
+<p class="p9"><br></p>
 <h2 style="margin: 0.0px 0.0px 14.0px 0.0px; font: 18.0px Times"><b>Version 0.1 (3/12/09)</b></h2>
 <p class="p3">This is the first public release of VideoMonkey. It has a lot of functionality, but is not nearly complete.</p>
 <h3 style="margin: 0.0px 0.0px 14.0px 0.0px; font: 16.0px Times"><b>New in this release:</b></h3>
 <ul class="ul1">
-  <li class="li5">Conversion for all popular Apple devices</li>
-  <li class="li5">Quality settings, which adjusts bitrate, frame size, frame rate and audio quality</li>
-  <li class="li5">Performance settings which tradeoff speed of encoding for quality</li>
-  <li class="li5">Drag and drop file list</li>
-  <li class="li5">Enable or disable encoding of each file</li>
-  <li class="li5">Display of output file size (approximate)</li>
-  <li class="li5">Preview window of the currently selected file</li>
-  <li class="li5">Console log</li>
-  <li class="li5">Progress bars in both the main window and file list</li>
-  <li class="li5">Pause and Stop encoding</li>
-  <li class="li5">Auto-update</li>
-  <li class="li5">Saving last user settings</li>
+  <li class="li4">Conversion for all popular Apple devices</li>
+  <li class="li4">Quality settings, which adjusts bitrate, frame size, frame rate and audio quality</li>
+  <li class="li4">Performance settings which tradeoff speed of encoding for quality</li>
+  <li class="li4">Drag and drop file list</li>
+  <li class="li4">Enable or disable encoding of each file</li>
+  <li class="li4">Display of output file size (approximate)</li>
+  <li class="li4">Preview window of the currently selected file</li>
+  <li class="li4">Console log</li>
+  <li class="li4">Progress bars in both the main window and file list</li>
+  <li class="li4">Pause and Stop encoding</li>
+  <li class="li4">Auto-update</li>
+  <li class="li4">Saving last user settings</li>
 </ul>
 <h3 style="margin: 0.0px 0.0px 14.0px 0.0px; font: 16.0px Times; min-height: 19.0px"><br></h3>
 <h3 style="margin: 0.0px 0.0px 14.0px 0.0px; font: 16.0px Times"><b>To do:</b></h3>
-<ul class="ul2">
-  <li class="li5">Preferences Panel</li>
-  <li class="li5">More supported devices</li>
-  <li class="li5">Advanced pane (crop, pad, filters, etc.)</li>
-  <li class="li5">Trim movie using preview window</li>
-  <li class="li5">Metadata writing</li>
-  <li class="li5">Watch folder(s) for automatic encoding</li>
+<ul class="ul3">
+  <li class="li4">Preferences Panel</li>
+  <li class="li4">More supported devices</li>
+  <li class="li4">Advanced pane (crop, pad, filters, etc.)</li>
+  <li class="li4">Trim movie using preview window</li>
+  <li class="li4">Metadata writing</li>
+  <li class="li4">Watch folder(s) for automatic encoding</li>
 </ul>
 </body>
 </html>
