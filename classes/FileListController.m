@@ -293,13 +293,21 @@
 -(void) updateState
 {
     // Enable or disable metadata panel based on file type
-    Transcoder* transcoder = [self selection];
-    NSString* fileType = nil;
     
-    if ([[[AppController instance] deviceController] shouldWriteMetadataToInputFile])
-        fileType = [transcoder inputFileInfo].format;
-    else
-        fileType = [transcoder outputFileInfo].format;
+    // If more than one file is selected, pass a MPEG-4 as the file type if 
+    // any files are MPEG-4. This allows us to write metadata for multiply
+    // selected files
+    NSString* fileType = nil;
+    BOOL inputFile = [[[AppController instance] deviceController] shouldWriteMetadataToInputFile];
+    NSArray* selectedObjects = [self selectedObjects];
+    
+    for (Transcoder* transcoder in selectedObjects) {
+        NSString* candidateFileType = inputFile ? [transcoder inputFileInfo].format : [transcoder outputFileInfo].format;
+        if ([candidateFileType isEqualToString:@"MPEG-4"]) {
+            fileType = @"MPEG-4";
+            break;
+        }
+    }
         
     [[AppController instance].fileInfoPanelController setMetadataStateForFileType:fileType];
 }

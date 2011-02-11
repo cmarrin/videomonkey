@@ -182,9 +182,18 @@ static BOOL isValidInteger(NSString* s)
 
     BOOL firstTime = YES;
     int maybeEpisode = -1;
+    BOOL seeIfNextItemIsEpisode = NO;
     
     for (NSString* item in array) {
         item = [item lowercaseString];
+        
+        // If we have a speculative season and this next item is of the form e<number>, we have a winner
+        if (seeIfNextItemIsEpisode && [item hasPrefix:@"e"]) {
+            if (isValidInteger([item substringFromIndex: 1])) {
+                *episode = [[item substringFromIndex: 1] intValue];
+                continue;
+            }
+        }
 
         // see if this is of the form s<number>e<number>
         if ([item hasPrefix:@"s"]) {
@@ -205,6 +214,16 @@ static BOOL isValidInteger(NSString* s)
                 // we have a season/episode
                 *season = [[seasonEpisode objectAtIndex:0] intValue];
                 *episode = [[seasonEpisode objectAtIndex:1] intValue];
+                continue;
+            }
+        }
+        
+        // see if this is of the form s<number>. If so, we will speculatively save it as the season
+        // and look to see if the next item is of the form e<number>
+        if ([item hasPrefix:@"s"]) {
+            if (isValidInteger([item substringFromIndex: 1])) {
+                *season = [[item substringFromIndex: 1] intValue];
+                seeIfNextItemIsEpisode = YES;
                 continue;
             }
         }
