@@ -353,6 +353,8 @@ static NSImage* getFileStatusImage(FileStatus status)
     
     [self addInputFile:filename];
     [self updateOutputFileName];
+    [self addOutputFile:self.outputFileInfo.filename];
+
     self.outputFileInfo.duration = self.inputFileInfo.duration;
 
     return self;
