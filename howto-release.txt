@@ -11,6 +11,7 @@ This assumes the Video Monkey icon is VideoMonkeyDevel.icns (VideoMonkeyDevel in
 4. Do a release build
 
 5. Zip the VideoMonkey.app you just built (If from Finder, do 'Compress "VideoMonkey.app"')
+    - Rename the zip file to videomonkey-x.y.zip
 
 6. Add an entry to videomonkeycast.xml for the new release
     - Get the 'length' property from 'ls -l' of the zip file
@@ -20,4 +21,8 @@ This assumes the Video Monkey icon is VideoMonkeyDevel.icns (VideoMonkeyDevel in
     - Get the dsa_priv.pem file from the secret place
     - ruby "sparkle/SparkleExtras/Signing\ Tools/sign_update.rb" build/Release/VideoMonkey.app.zip dsa_priv.pem
     
-8. Upload VideoMonkey.app.zip, releasenotes.html and videomonkeycast.xml to ...
+8. Upload videomonkey-x.y.zip, releasenotes.html and videomonkeycast.xml to the website, using the Downloads Manager
+    - Set the category to hidden
+    - Files will end up at http://videomonkey.org/releases/ (which is a link to http://videomonkey.org/wp-content/files)
+    
+9. Profit
