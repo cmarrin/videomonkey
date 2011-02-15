@@ -291,8 +291,10 @@ static NSImage* getFileStatusImage(FileStatus status)
     return [[NSImage alloc] initWithContentsOfFile:path]; 
 }
 
-static NSString* outputFileName(NSString* inputFileName)
+- (void)updateOutputFileName
 {
+    NSString* inputFileName = self.inputFileInfo.filename;
+    
     // extract filename
     NSString* lastComponent = [inputFileName lastPathComponent];
     NSString* inputPath = [inputFileName stringByDeletingLastPathComponent];
@@ -303,6 +305,10 @@ static NSString* outputFileName(NSString* inputFileName)
     if (!savePath)
         savePath = inputPath;
         
+    // If the output file name hasn't changed, don't do an existance check. 
+    // Doing so would generate a new file name if this function is called
+    // after this file is encoded.
+        
     // now make sure the file doesn't exist
     NSString* filename;
     for (int i = 0; i < 10000; ++i) {
@@ -312,11 +318,17 @@ static NSString* outputFileName(NSString* inputFileName)
             filename = [[savePath stringByAppendingPathComponent: 
                         [NSString stringWithFormat: @"%@_%d", baseName, i]] stringByAppendingPathExtension: suffix];
             
+        // If the output file name hasn't changed, don't do an existance check. 
+        // Doing so would generate a new file name if this function is called
+        // after this file is encoded.
+        if ([self.outputFileInfo.filename isEqualToString:filename])
+            return;
+            
         if (![[NSFileManager defaultManager] fileExistsAtPath: filename])
             break;
     }
     
-    return filename;
+    self.outputFileInfo.filename = filename;
 }
 
 - (Transcoder*)initWithFilename:(NSString*) filename;
@@ -340,7 +352,7 @@ static NSString* outputFileName(NSString* inputFileName)
     [m_statusImageView setImage: getFileStatusImage(m_fileStatus)];
     
     [self addInputFile:filename];
-    [self addOutputFile:outputFileName(filename)];
+    [self updateOutputFileName];
     self.outputFileInfo.duration = self.inputFileInfo.duration;
 
     return self;
@@ -453,7 +465,7 @@ static NSString* escapePath(NSString* path)
         return;
         
     // Update the output file name
-    self.outputFileInfo.filename = outputFileName(self.inputFileInfo.filename);
+    [self updateOutputFileName];
 
     // build the environment
     NSMutableDictionary* env = [[NSMutableDictionary alloc] init];
