@@ -1,0 +1,23 @@
+How to do a Video Monkey release
+
+This assumes the Video Monkey icon is VideoMonkeyDevel.icns (VideoMonkeyDevel in Info.plist file)
+
+1. Make sure the tree is all checked in
+
+2. Add an entry for this release to releasenotes.html
+
+3. Change the 'Icon File' property in Info.plist to 'VideoMonkey'
+
+4. Do a release build
+
+5. Zip the VideoMonkey.app you just built (If from Finder, do 'Compress "VideoMonkey.app"')
+
+6. Add an entry to videomonkeycast.xml for the new release
+    - Get the 'length' property from 'ls -l' of the zip file
+    - Get the date from 'date'
+    
+7. Sign the .zip file:
+    - Get the dsa_priv.pem file from the secret place
+    - ruby "sparkle/SparkleExtras/Signing\ Tools/sign_update.rb" build/Release/VideoMonkey.app.zip dsa_priv.pem
+    
+8. Upload VideoMonkey.app.zip, releasenotes.html and videomonkeycast.xml to ...
