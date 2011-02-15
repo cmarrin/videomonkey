@@ -12,29 +12,27 @@
     p.p4 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Times}
     p.p5 {margin: 0.0px 0.0px 0.0px 72.0px; text-indent: -72.0px; font: 14.0px Times; min-height: 18.0px}
     p.p6 {margin: 0.0px 0.0px 14.0px 0.0px; font: 16.0px Times}
-    p.p7 {margin: 0.0px 0.0px 14.0px 0.0px; font: 16.0px Times; min-height: 19.0px}
     p.p8 {margin: 0.0px 0.0px 14.0px 0.0px; font: 18.0px Times; min-height: 23.0px}
-    p.p9 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Times; min-height: 14.0px}
+    p.p9 {margin: 0.0px 0.0px 14.0px 0.0px; font: 16.0px Times; min-height: 19.0px}
+    p.p10 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Times; min-height: 14.0px}
     li.li4 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Times}
+    li.li7 {margin: 0.0px 0.0px 0.0px 0.0px; font: 16.0px Times; min-height: 19.0px}
     span.s1 {font: 16.0px Times}
+    span.s2 {color: #0000ee}
     ul.ul1 {list-style-type: disc}
-    ul.ul2 {list-style-type: hyphen}
-    ul.ul3 {list-style-type: circle}
+    ul.ul2 {list-style-type: circle}
   </style>
 </head>
 <body>
 <h1 style="margin: 0.0px 0.0px 16.0px 0.0px; font: 24.0px Times"><b>Release Notes For Video Monkey</b></h1>
-<p class="p2"><b>Version 0.9 (10/31/2010)</b></p>
+<p class="p2"><b>Version 0.9 (2/15/2010)</b></p>
 <p class="p3">New video formats and AV sync supported, plus a newer version of ffmpeg.</p>
 <p class="p3"><span class="s1"><b><i>Note 1: </i></b></span><b>New video format support is very fresh, so it may have kinks to be worked out. Try it out and see! Don't forget to let me know if it does or doesn't work for you.</b></p>
-<p class="p4"><span class="s1"><b><i>Note 2: </i></b></span><b>Now that Video Monkey supports more file formats, it is more important than ever to download and install Perian if you haven'talready. This adds support for all the new formats to Quicktime player. This not only lets you preview your newly encoded files, but it also lets you view files in the Show Movie panel and set their AV offset. Download it from </b><a href="http://www.perian.org/"><b>http://www.perian.org/</b></a></p>
+<p class="p4"><span class="s1"><b><i>Note 2: </i></b></span><b>Now that Video Monkey supports more file formats, it is more important than ever to download and install Perian if you haven'talready. This adds support for all the new formats to Quicktime player. This not only lets you preview your newly encoded files, but it also lets you view files in the Show Movie panel and set their AV offset. Download it from </b><a href="http://www.perian.org/"><span class="s2"><b>http://www.perian.org/</b></span></a></p>
 <p class="p5"><br></p>
 <p class="p6"><b>New in this release:</b></p>
 <ul class="ul1">
   <li class="li4">Added new output video formats: AVI, MP4, Quicktime, WMV, Flash, MPEG, DV</li>
-  <ul class="ul2">
-    <li class="li4"></li>
-  </ul>
   <li class="li4">New AV offset UI in Movie panel. Offsets audio relative to video to fix lip sync problems</li>
   <li class="li4">New version of ffmpeg with many bug fixes and some new format support.</li>
   <li class="li4">Added elapsed time of commands to console</li>
@@ -47,8 +45,8 @@
   <li class="li4">Can now select multiple files and type an entry in the search box. The search will be applied to all files</li>
   <li class="li4">Even with multiple files selected, the search box will show a list of results from most recent search.</li>
   <li class="li4">Fixed frame size setting bugs for Apple TV.</li>
+  <li class="li7"><br></li>
 </ul>
-<p class="p7"><br></p>
 <p class="p6"><b>Bugs fixed:</b></p>
 <ul class="ul1">
   <li class="li4">2984591 - Metadata error message</li>
@@ -66,7 +64,7 @@
   <li class="li4">Select all button on metadata panel for easier selection</li>
   <li class="li4">Uses search results from typed in search string for all selected files.</li>
 </ul>
-<p class="p7"><br></p>
+<p class="p9"><br></p>
 <p class="p6"><b>Bugs fixed:</b></p>
 <ul class="ul1">
   <li class="li4">encoding parameters would get confused when metadata search failed</li>
@@ -79,7 +77,7 @@
   <li class="li4">Metadata is now searched in the background to avoid stalling VideoMonkey.</li>
   <li class="li4">New icon during encoding. Shows number of files to encode.</li>
 </ul>
-<p class="p7"><br></p>
+<p class="p9"><br></p>
 <p class="p6"><b>Bugs fixed:</b></p>
 <ul class="ul1">
   <li class="li4">Crash caused by dangling pointers and memory leaks when encoding more than about 3 files.</li>
@@ -102,7 +100,7 @@
   <li class="li4">Fixed suspend/resume</li>
   <li class="li4">Fixed show/hide of windows</li>
 </ul>
-<p class="p7"><br></p>
+<p class="p9"><br></p>
 <p class="p6"><b>Bugs fixed:</b></p>
 <ul class="ul1">
   <li class="li4">Problem converting files with '*' or '?'</li>
@@ -115,7 +113,7 @@
 <ul class="ul1">
   <li class="li4">Snow Leopard support</li>
 </ul>
-<p class="p7"><br></p>
+<p class="p9"><br></p>
 <p class="p6"><b>Bugs fixed:</b></p>
 <ul class="ul1">
   <li class="li4">Problem converting files with '*' or '?'</li>
@@ -137,7 +135,7 @@
   <li class="li4">Added tools menu which allows selecting whether to use input, user or search metadata for all fields in current file or all files</li>
   <li class="li4">New menu on main page allows write metadata after encoding output file, encode only, write metadata only to input file or rewrite metadata to output file</li>
 </ul>
-<p class="p7"><br></p>
+<p class="p9"><br></p>
 <p class="p6"><b>Bugs fixed:</b></p>
 <ul class="ul1">
   <li class="li4">Make audio and video sync better</li>
@@ -169,8 +167,8 @@
   <li class="li4">2694849 - Files converted for iPhone/iPod are not legal</li>
   <li class="li4">2695089 - File Size overflowed</li>
 </ul>
-<p class="p9"><br></p>
-<p class="p9"><br></p>
+<p class="p10"><br></p>
+<p class="p10"><br></p>
 <h2 style="margin: 0.0px 0.0px 14.0px 0.0px; font: 18.0px Times"><b>Version 0.1 (3/12/09)</b></h2>
 <p class="p3">This is the first public release of VideoMonkey. It has a lot of functionality, but is not nearly complete.</p>
 <h3 style="margin: 0.0px 0.0px 14.0px 0.0px; font: 16.0px Times"><b>New in this release:</b></h3>
@@ -190,7 +188,7 @@
 </ul>
 <h3 style="margin: 0.0px 0.0px 14.0px 0.0px; font: 16.0px Times; min-height: 19.0px"><br></h3>
 <h3 style="margin: 0.0px 0.0px 14.0px 0.0px; font: 16.0px Times"><b>To do:</b></h3>
-<ul class="ul3">
+<ul class="ul2">
   <li class="li4">Preferences Panel</li>
   <li class="li4">More supported devices</li>
   <li class="li4">Advanced pane (crop, pad, filters, etc.)</li>

@@ -330,7 +330,8 @@ static void setButton(NSButton* button, MyButton* item)
     int size = [comboboxes count];
 
     for (int i = 0; i < size; ++i) {
-        Combobox* combobox = [comboboxes objectAtIndex:i];
+        // FIXME: Comboboxes don't work yet
+        // Combobox* combobox = [comboboxes objectAtIndex:i];
         NSComboBox* comboboxButton;
         
         switch(i) {

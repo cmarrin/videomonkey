@@ -19,7 +19,8 @@ This assumes the Video Monkey icon is VideoMonkeyDevel.icns (VideoMonkeyDevel in
     
 7. Sign the .zip file:
     - Get the dsa_priv.pem file from the secret place
-    - ruby "sparkle/SparkleExtras/Signing\ Tools/sign_update.rb" build/Release/VideoMonkey.app.zip dsa_priv.pem
+    - ruby "sparkle/SparkleExtras/Signing\ Tools/sign_update.rb" <application zip file> dsa_priv.pem
+    - The result of the above will be the signature. Copy it to the sparkle:dsaSignature of the videomonkeycast.xml
     
 8. Upload videomonkey-x.y.zip, releasenotes.html and videomonkeycast.xml to the website, using the Downloads Manager
     - Set the category to hidden
