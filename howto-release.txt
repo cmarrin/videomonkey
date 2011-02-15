@@ -26,4 +26,7 @@ This assumes the Video Monkey icon is VideoMonkeyDevel.icns (VideoMonkeyDevel in
     - Set the category to hidden
     - Files will end up at http://videomonkey.org/releases/ (which is a link to http://videomonkey.org/wp-content/files)
     
-9. Profit
+9. Tag the tree as version x.y
+    git tag -a vx.y -m"Version x.y release"
+    
+10. Restore icon to VideoMonkeyDevel
