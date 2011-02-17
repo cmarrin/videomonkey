@@ -267,7 +267,7 @@ static void setButton(NSButton* button, MyButton* item)
         // return -1 if radio is hidden or index of selected item
         return [m_radio isHidden] ? -1 : [m_radio selectedRow];
         
-    NSPopUpButton* button = (NSPopUpButton*) (index == 1) ? m_menu : nil;
+    NSPopUpButton* button = (NSPopUpButton*) ((index == 1) ? m_menu : nil);
     
     // return -1 if button is hidden or index of selected item
     return button ? ([button isHidden] ? -1 : [button indexOfSelectedItem]) : -1;

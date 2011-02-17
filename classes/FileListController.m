@@ -125,24 +125,18 @@
     return YES;
 }
 
-- (NSDragOperation)tableView: (NSTableView *)aTableView
-    validateDrop: (id <NSDraggingInfo>)item
-    proposedRow: (int)row
-    proposedDropOperation: (NSTableViewDropOperation)op
+- (NSDragOperation)tableView:(NSTableView *)aTableView validateDrop:(id < NSDraggingInfo >)info proposedRow:(NSInteger)row proposedDropOperation:(NSTableViewDropOperation)operation
 {
     // prevent row from highlighting during drag
-    return (op == NSTableViewDropAbove) ? NSDragOperationMove : NSDragOperationNone;
+    return (operation == NSTableViewDropAbove) ? NSDragOperationMove : NSDragOperationNone;
 }
 
-- (BOOL)tableView:(NSTableView*)aTableView
-    acceptDrop: (id <NSDraggingInfo>)item
-    row: (int)row
-    dropOperation:(NSTableViewDropOperation)op
+- (BOOL)tableView:(NSTableView *)aTableView acceptDrop:(id < NSDraggingInfo >)info row:(NSInteger)row dropOperation:(NSTableViewDropOperation)operation
 {
     // This method is called when the mouse is released over an outline view that previously decided to allow 
     // a drop via the validateDrop method.  The data source should incorporate the data from the dragging 
     // pasteboard at this time.
-    NSPasteboard *pboard = [item draggingPasteboard];	// get the paste board
+    NSPasteboard *pboard = [info draggingPasteboard];	// get the paste board
     NSString *aString;
     
     if ([pboard availableTypeFromArray:[NSArray arrayWithObjects: NSFilenamesPboardType, FileListItemType, nil]])

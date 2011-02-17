@@ -49,19 +49,13 @@
     return YES;
 }
 
-- (NSDragOperation)tableView: (NSTableView *)aTableView
-    validateDrop: (id <NSDraggingInfo>)item
-    proposedRow: (int)row
-    proposedDropOperation: (NSTableViewDropOperation)op
+- (NSDragOperation)tableView:(NSTableView *)aTableView validateDrop:(id < NSDraggingInfo >)info proposedRow:(NSInteger)row proposedDropOperation:(NSTableViewDropOperation)operation
 {
     // prevent row from highlighting during drag
-    return (op == NSTableViewDropAbove) ? NSDragOperationMove : NSDragOperationNone;
+    return (operation == NSTableViewDropAbove) ? NSDragOperationMove : NSDragOperationNone;
 }
 
-- (BOOL)tableView:(NSTableView*)aTableView
-    acceptDrop: (id <NSDraggingInfo>)item
-    row: (int)row
-    dropOperation:(NSTableViewDropOperation)op
+- (BOOL)tableView:(NSTableView *)aTableView acceptDrop:(id < NSDraggingInfo >)info row:(NSInteger)row dropOperation:(NSTableViewDropOperation)operation
 {
     return YES;
 }
