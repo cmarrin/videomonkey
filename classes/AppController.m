@@ -603,7 +603,7 @@ static AppController *g_appController;
     // Set the avOffset
     Transcoder* transcoder = [m_fileListController selection];
     
-    if (transcoder)
+    if (transcoder && transcoder.inputFileInfo.videoIndex >= 0 && transcoder.inputFileInfo.audioIndex >= 0)
         transcoder.avOffset = m_moviePanelController.avOffset;
 
     for (Transcoder* transcoder in [m_fileListController arrangedObjects])

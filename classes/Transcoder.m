@@ -104,32 +104,18 @@ int heightFromFrameSize(FrameSize f) { return f & 0xffff; }
     return [[AppController instance] fileInfoPanelController];
 }
 
-int ffprobeIndexFromString(NSString* string, NSString* codec)
+static int ffmpegIndexFromString(NSString* string, NSString* codec)
 {
-    // Split the [STREAM] groups
-    NSArray* groups = [string componentsSeparatedByString:@"[/STREAM]"];
+    // split into lines
+    NSArray* lines = [string componentsSeparatedByString:@"\n"];
     
-    for (NSString* group in groups) {
-        // split into lines
-        NSArray* lines = [group componentsSeparatedByString:@"\n"];
-        
-        NSString* codec_type = nil;
-        NSString* index = nil;
-        
-        for (NSString* line in lines) {
-            NSArray* item = [line componentsSeparatedByString:@"="];
-            
-            // hang onto index and codec_type
-            if ([item count] >= 2) {
-                if ([[item objectAtIndex:0] isEqualToString:@"codec_type"])
-                    codec_type = [item objectAtIndex:1];
-                else if ([[item objectAtIndex:0] isEqualToString:@"index"])
-                    index = [item objectAtIndex:1];
-            }
+    for (NSString* line in lines) {
+        if ([line hasPrefix:@"    Stream #"]) {
+            NSString* streamIndex = [line substringFromIndex:12];
+            NSArray* array = [streamIndex componentsSeparatedByString:@" "];
+            if ([[array objectAtIndex:1] isEqualToString:codec])
+                return [[[[array objectAtIndex:0] componentsSeparatedByString:@"."] objectAtIndex:1] intValue];
         }
-        
-        if ([codec_type isEqualToString:codec])
-            return [index intValue];
     }
     
     return -1;
@@ -144,6 +130,11 @@ static BOOL isReadable(NSFileHandle* fileHandle)
     FD_ZERO(&fdset);
     FD_SET(fd, &fdset);
     return select(fd + 1, &fdset, NULL, NULL, &tmout) > 0;
+}
+
+static void logInputFileError(NSString* filename)
+{
+    [[AppController instance] log: [NSString stringWithFormat:@"The file '%@' is not a video format Video Monkey understands. \n"], filename];
 }
 
 -(BOOL) _validateInputFile: (TranscoderFileInfo*) info
@@ -166,15 +157,18 @@ static BOOL isReadable(NSFileHandle* fileHandle)
     [task launch];
     
     [task waitUntilExit];
-    if (!isReadable([pipe fileHandleForReading]))
+    if (!isReadable([pipe fileHandleForReading])) {
+        logInputFileError([info filename]);
         return NO;
-        
+    }
+    
     NSString* data = [[NSString alloc] initWithData: [[pipe fileHandleForReading] availableData] encoding: NSASCIIStringEncoding];
     [task release];
     [pipe release];
     
     // The first line must start with "-General-" or the file is not valid
     if (![data hasPrefix: @"-General-"]) {
+        logInputFileError([info filename]);
         [data release];
         return NO;
     }
@@ -184,8 +178,10 @@ static BOOL isReadable(NSFileHandle* fileHandle)
     
     // We always have a General line.
     NSArray* general = [[components objectAtIndex:0] componentsSeparatedByString:@","];
-    if ([general count] != 6)
+    if ([general count] != 6) {
+        logInputFileError([info filename]);
         return NO;
+    }
         
     info.format = [general objectAtIndex:1];
     if ([[general objectAtIndex:2] isEqualToString:@"QuickTime"])
@@ -193,8 +189,10 @@ static BOOL isReadable(NSFileHandle* fileHandle)
     info.duration = [[general objectAtIndex:3] doubleValue] / 1000;
     info.fileSize = [[general objectAtIndex:5] doubleValue];
 
-    if ([info.format length] == 0)
+    if ([info.format length] == 0) {
+        logInputFileError([info filename]);
         return NO;
+    }
         
     // Do video if it's there
     int offset = 1;
@@ -204,8 +202,10 @@ static BOOL isReadable(NSFileHandle* fileHandle)
         
         // -Video-,%StreamKindID%,%ID%,%Language%,%Format%,%Codec_Profile%,%ScanType%,%ScanOrder%,%Width%,%Height%,%PixelAspectRatio%,%DisplayAspectRatio%,%FrameRate%.%Bitrate%
 
-        if ([video count] != 12)
+        if ([video count] != 12) {
+            logInputFileError([info filename]);
             return NO;
+        }
             
         info.videoLanguage = [[video objectAtIndex:1] retain];
         info.videoCodec = [[video objectAtIndex:2] retain];
@@ -225,49 +225,66 @@ static BOOL isReadable(NSFileHandle* fileHandle)
     }
     
     // Do audio if it's there
+    BOOL hasAudio = NO;
+    
     if ([components count] > offset && [[components objectAtIndex:offset] hasPrefix: @"-Audio-"]) {
         NSArray* audio = [[components objectAtIndex:offset] componentsSeparatedByString:@","];
 
         // -Audio-,%StreamKindID%,%ID%,%Language%,%Format%,%SamplingRate%,%Channels%,%BitRate%
-        if ([audio count] != 6)
+        if ([audio count] != 6) {
+            logInputFileError([info filename]);
             return NO;
-            
+        }
+
         info.audioLanguage = [[audio objectAtIndex:1] retain];
         info.audioCodec = [[audio objectAtIndex:2] retain];
         info.audioSampleRate = [[audio objectAtIndex:3] doubleValue];
         info.audioChannels = [[audio objectAtIndex:4] intValue];
         info.audioBitrate = [[audio objectAtIndex:5] doubleValue];
+        
+        hasAudio = YES;
     }
     
     // compute some values
     info.bitrate = info.videoBitrate + info.audioBitrate;
     
-    // mediainfo doesn't interpret stream indexes the same as ffmpeg. We need these indexes
-    // to know how to map streams from the input to the output. Run ffprobe and pick out
-    // the index values for the video and audio streams
-    NSMutableString* ffprobePath = [NSMutableString stringWithString: [[NSBundle mainBundle] resourcePath]];
-    [ffprobePath appendString:@"/bin/ffprobe"];
-    args = [NSMutableArray arrayWithObjects: @"-show_streams", [info filename], nil];
-    
-    task = [[NSTask alloc] init];
-    [task setArguments: args];
-    [task setLaunchPath: ffprobePath];
-    
-    pipe = [[NSPipe alloc] init];
-    [task setStandardOutput:[pipe fileHandleForWriting]];
-    [task launch];
-    [task waitUntilExit];
+    info.videoIndex = -1;
+    info.audioIndex = -1;
+    m_avOffset = nan(0);
+
+    if (hasAudio) {
+        m_avOffset = 0;
         
-    if (!isReadable([pipe fileHandleForReading]))
-        return NO;
-    
-    data = [[NSString alloc] initWithData:[[pipe fileHandleForReading] availableData] encoding: NSASCIIStringEncoding];
-    [task release];
-    [pipe release];
-    
-    info.videoIndex = ffprobeIndexFromString(data, @"video");
-    info.audioIndex = ffprobeIndexFromString(data, @"audio");
-    [data release];
+        // mediainfo doesn't interpret stream indexes the same as ffmpeg. We need these indexes
+        // to know how to map streams from the input to the output. Run ffprobe and pick out
+        // the index values for the video and audio streams
+        NSMutableString* ffmpegPath = [NSMutableString stringWithString: [[NSBundle mainBundle] resourcePath]];
+        [ffmpegPath appendString:@"/bin/ffmpeg"];
+        args = [NSMutableArray arrayWithObjects: @"-i", [info filename], nil];
+        
+        task = [[NSTask alloc] init];
+        [task setArguments: args];
+        [task setLaunchPath: ffmpegPath];
+        
+        pipe = [[NSPipe alloc] init];
+        [task setStandardError:[pipe fileHandleForWriting]];
+        [task launch];
+        [task waitUntilExit];
+            
+        if (!isReadable([pipe fileHandleForReading]))
+            [[AppController instance] log: [NSString stringWithFormat:@"Unable to obtain stream index data from the file '%@'. "
+                                                                       "The A/V offset feature will not be available. \n"], info.filename];
+        else {
+            data = [[NSString alloc] initWithData:[[pipe fileHandleForReading] availableData] encoding: NSASCIIStringEncoding];
+        
+            info.videoIndex = ffmpegIndexFromString(data, @"Video:");
+            info.audioIndex = ffmpegIndexFromString(data, @"Audio:");
+            [data release];
+        }
+        
+        [task release];
+        [pipe release];
+    }
     
     return YES;
 }
@@ -380,25 +397,20 @@ static NSImage* getFileStatusImage(FileStatus status)
     TranscoderFileInfo* file = [[TranscoderFileInfo alloc] init];
     file.filename = filename;
     
-    if (![self _validateInputFile: file ]) {
-        [file release];
-        m_fileStatus = FS_INVALID;
-        m_enabled = false;
-        [m_statusImageView setImage: getFileStatusImage(m_fileStatus)];
-        return -1;
-    }
-
+    m_fileStatus = [self _validateInputFile: file] ? FS_VALID : FS_INVALID;
+    m_enabled = m_fileStatus == FS_VALID;
+    [m_statusImageView setImage: getFileStatusImage(m_fileStatus)];
     [m_inputFiles addObject: file];
     [file release];
-    m_fileStatus = FS_VALID;
-    [m_statusImageView setImage: getFileStatusImage(m_fileStatus)];
     
-    // read the metadata
-    [self createMetadata];
-    if ([[[AppController instance] fileInfoPanelController] autoSearch])
-        [self.metadata searchAgain];
+    if (m_fileStatus == FS_VALID) {
+        // read the metadata
+        [self createMetadata];
+        if ([[[AppController instance] fileInfoPanelController] autoSearch])
+            [self.metadata searchAgain];
+    }
     
-    return [m_inputFiles count] - 1;    
+    return (m_fileStatus == FS_VALID) ? ([m_inputFiles count] - 1) : -1;    
 }
 
 - (int) addOutputFile: (NSString*) filename
@@ -490,12 +502,15 @@ static NSString* escapePath(NSString* path)
     [env setValue: [[NSNumber numberWithDouble: self.inputFileInfo.videoAspectRatio] stringValue] forKey: @"input_video_aspect"];
     [env setValue: [[NSNumber numberWithInt: self.inputFileInfo.videoBitrate] stringValue] forKey: @"input_video_bitrate"];
     [env setValue: [[NSNumber numberWithDouble: self.inputFileInfo.duration] stringValue] forKey: @"duration"];
-    [env setValue: [[NSNumber numberWithInt: self.inputFileInfo.videoIndex] stringValue] forKey: @"input_video_index"];
-    [env setValue: [[NSNumber numberWithInt: self.inputFileInfo.audioIndex] stringValue] forKey: @"input_audio_index"];
-
+    
+    
     // Set the AV offsets. Positive offsets delay video
-    float audioOffset = (m_avOffset < 0) ? -m_avOffset : 0;
-    float videoOffset = (m_avOffset > 0) ? m_avOffset : 0;
+    BOOL enableAVOffset = self.inputFileInfo.videoIndex >= 0 && self.inputFileInfo.audioIndex >= 0;
+    
+    [env setValue: [[NSNumber numberWithInt: enableAVOffset ? self.inputFileInfo.videoIndex : 0] stringValue] forKey: @"input_video_index"];
+    [env setValue: [[NSNumber numberWithInt: enableAVOffset ? self.inputFileInfo.audioIndex : 0] stringValue] forKey: @"input_audio_index"];
+    float audioOffset = (enableAVOffset && m_avOffset < 0) ? -m_avOffset : 0;
+    float videoOffset = (enableAVOffset && m_avOffset > 0) ? m_avOffset : 0;
     [env setValue: [[NSNumber numberWithDouble: audioOffset] stringValue] forKey: @"audio_offset"];
     [env setValue: [[NSNumber numberWithDouble: videoOffset] stringValue] forKey: @"video_offset"];
     

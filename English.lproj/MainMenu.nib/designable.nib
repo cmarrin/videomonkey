@@ -21,11 +21,11 @@
 		</object>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
-			<integer value="5771"/>
 			<integer value="2649"/>
 			<integer value="205"/>
 			<integer value="5392"/>
 			<integer value="464"/>
+			<integer value="5771"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -5154,6 +5154,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 															<string>minimumFractionDigits</string>
 															<string>negativeInfinitySymbol</string>
 															<string>nilSymbol</string>
+															<string>notANumberSymbol</string>
 															<string>numberStyle</string>
 															<string>positiveInfinitySymbol</string>
 														</object>
@@ -5170,6 +5171,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 															<integer value="2"/>
 															<string>-∞</string>
 															<string/>
+															<string/>
 															<integer value="1"/>
 															<string>+∞</string>
 														</object>
@@ -5183,8 +5185,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 														<string key="NSString"/>
 													</object>
 													<object class="NSAttributedString" key="NS.nan">
-														<string key="NSString">NaN</string>
-														<reference key="NSAttributes" ref="191012307"/>
+														<string key="NSString"/>
 													</object>
 													<real value="-99.989999999999995" key="NS.min"/>
 													<real value="99.989999999999995" key="NS.max"/>
@@ -15533,6 +15534,70 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 					</object>
 					<int key="connectionID">5772</int>
 				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">enabled: avOffsetValid</string>
+						<reference key="source" ref="1049636166"/>
+						<reference key="destination" ref="179961847"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="1049636166"/>
+							<reference key="NSDestination" ref="179961847"/>
+							<string key="NSLabel">enabled: avOffsetValid</string>
+							<string key="NSBinding">enabled</string>
+							<string key="NSKeyPath">avOffsetValid</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">5774</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">enabled: avOffsetValid</string>
+						<reference key="source" ref="580633407"/>
+						<reference key="destination" ref="179961847"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="580633407"/>
+							<reference key="NSDestination" ref="179961847"/>
+							<string key="NSLabel">enabled: avOffsetValid</string>
+							<string key="NSBinding">enabled</string>
+							<string key="NSKeyPath">avOffsetValid</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">5776</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">enabled: avOffsetValid</string>
+						<reference key="source" ref="282284747"/>
+						<reference key="destination" ref="179961847"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="282284747"/>
+							<reference key="NSDestination" ref="179961847"/>
+							<string key="NSLabel">enabled: avOffsetValid</string>
+							<string key="NSBinding">enabled</string>
+							<string key="NSKeyPath">avOffsetValid</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">5778</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">enabled: avOffsetValid</string>
+						<reference key="source" ref="593119806"/>
+						<reference key="destination" ref="179961847"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="593119806"/>
+							<reference key="NSDestination" ref="179961847"/>
+							<string key="NSLabel">enabled: avOffsetValid</string>
+							<string key="NSBinding">enabled</string>
+							<string key="NSKeyPath">avOffsetValid</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">5781</int>
+				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
 				<object class="NSArray" key="orderedObjects">
@@ -25313,7 +25378,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">5772</int>
+			<int key="maxID">5781</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">

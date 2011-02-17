@@ -23,11 +23,13 @@
     NSTimeInterval m_selectionStart;
     NSTimeInterval m_selectionEnd;
     CGFloat m_avOffset;
+    BOOL m_avOffsetValid;
     
     NSMutableDictionary* m_currentTimeDictionary;
 }
 
 @property(assign) CGFloat avOffset;
+@property(assign) BOOL avOffsetValid;
 
 -(IBAction)startSelection:(id)sender;
 -(IBAction)endSelection:(id)sender;

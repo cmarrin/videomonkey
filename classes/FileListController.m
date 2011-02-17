@@ -195,7 +195,7 @@
     
     // Set the current movie
     NSString* filename = transcoder ? transcoder.inputFileInfo.filename : nil;
-    [[AppController instance].moviePanelController setMovie:filename withAvOffset:transcoder.avOffset];
+    [[AppController instance].moviePanelController setMovie:filename withAvOffset:transcoder ? transcoder.avOffset : nan(0)];
 
     // Update metadata panel
     [self updateState];

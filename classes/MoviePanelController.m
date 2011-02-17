@@ -14,6 +14,8 @@
 
 @implementation MoviePanelController
 
+@synthesize avOffsetValid = m_avOffsetValid;
+
 - (void)removeAvOffset
 {
     if (!m_movieIsSet)
@@ -44,6 +46,8 @@
 
 - (void)setAvOffset:(CGFloat) value
 {
+    self.avOffsetValid = !isnan(m_avOffset);
+    
     if (!m_movieIsSet)
         return;
     
@@ -51,6 +55,9 @@
     [self removeAvOffset];
 
     m_avOffset = value;
+    
+    if (isnan(m_avOffset))
+        return;
 
     // Get the track to modify
     QTMovie* movie = [m_movieView movie];
@@ -87,6 +94,9 @@
     m_selectionEnd = -1;
     
     m_currentTimeDictionary = [[NSMutableDictionary alloc] init];
+
+    self.avOffset = nan(0);
+    self.avOffsetValid = NO;
     
     //QTTimeRange range = QTMakeTimeRange(QTMakeTimeWithTimeInterval(5), QTMakeTimeWithTimeInterval(10));
     //[[m_movieView movie] setSelection: range];
