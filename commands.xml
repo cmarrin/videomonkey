@@ -257,9 +257,6 @@ These parameters are always included and never changed by these scripts:
 -y                          Overwrite output files (always included)
 -i                          Precedes input file
 ffmpeg                      ffmpeg command path
-qt_export                   qt_export command path (used to extract audio from some file types)
-yuvadjust                   yuvadjust command path (used to adjust video saturation, hue, etc.)
-yuvcorrect                  yuvcorrect command path (used to perform color correction on raw yuv data)
 
 DTD
 ===
@@ -332,15 +329,6 @@ DTD
         <command id="ffmpeg">
             "$(app_resource_path)/bin/ffmpeg"
         </command>
-        <command id="qt_export">
-            "$(app_resource_path)/bin/qt_export"
-        </command>
-        <command id="yuvadjust">
-            "$(app_resource_path)/bin/yuvadjust"
-        </command>
-        <command id="yuvcorrect">
-            "$(app_resource_path)/bin/yuvcorrect"
-        </command>
         
         <!-- Default params (sometimes overridden) -->
         <param id="ffmpeg_x264_profile" value="libx264-baseline" />
@@ -357,15 +345,6 @@ DTD
         </command>
         
         <!-- Raw encoding commands -->
-        <command id="quicktime_to_audio_file">
-            $qt_export "$input_file" --video=0 "$tmp_audio_file"
-        </command>
-        <command id="correct_yuv">
-            $yuvcorrect -v 0 -Y LUMINANCE_1.20_0_255_0_255 -Y CHROMINANCE_0_1.04_128_1.04_128_0_255
-        </command>
-        <command id="quicktime_to_yuv">
-            $ffmpeg -threads $num_cpus -y -i "$input_file" -f yuv4mpegpipe - | $correct_yuv 
-        </command>
         <command id="ffmpeg_normal_av">
             $ffmpeg -threads $num_cpus -y -i "$input_file"
         </command>
@@ -388,30 +367,6 @@ DTD
         </command>
         
         <!-- complete encoding commands -->
-        <command id="quicktime_av_single_pass">
-            $quicktime_to_yuv | $yuv_to_ffmpeg_av $ffmpeg_options $ffmpeg_single_pass_options "$output_file"
-        </command>
-        <command id="quicktime_av_single_pass_offset">
-            $quicktime_to_yuv | $yuv_to_ffmpeg_av_offset $ffmpeg_options $ffmpeg_single_pass_options "$output_file"
-        </command>
-        <command id="quicktime_av_pass1"> 
-            $quicktime_to_yuv | $yuv_to_ffmpeg_av $ffmpeg_options $ffmpeg_pass1_options "$output_file" 
-        </command>
-        <command id="quicktime_av_pass2">
-            $quicktime_to_yuv | $yuv_to_ffmpeg_av $ffmpeg_options $ffmpeg_pass2_options "$output_file"
-        </command>
-        <command id="quicktime_av_pass2_offset">
-            $quicktime_to_yuv | $yuv_to_ffmpeg_av_offset $ffmpeg_options $ffmpeg_pass2_options "$output_file"
-        </command>
-        <command id="quicktime_v_single_pass"> 
-            $quicktime_to_yuv | $yuv_to_ffmpeg_v $ffmpeg_options $ffmpeg_single_pass_options "$output_file"
-        </command>
-        <command id="quicktime_v_pass1">
-            $quicktime_to_yuv | $yuv_to_ffmpeg_v $ffmpeg_options $ffmpeg_pass1_options "$output_file"
-        </command>
-        <command id="quicktime_v_pass2">
-            $quicktime_to_yuv | $yuv_to_ffmpeg_v $ffmpeg_options $ffmpeg_pass2_options "$output_file"
-        </command>
         <command id="normal_av_single_pass">
             $ffmpeg_normal_av $ffmpeg_options $ffmpeg_single_pass_options "$output_file"
         </command>
@@ -524,15 +479,6 @@ DTD
                     if (response.match(/^ Progress:/)) {
                         // This looks like a progress line for AtomicParsley
                         var array = response.split(">");
-                        params.processResponseProgress = number(array[1]) / 100;
-                        return true;
-                    }
-                }
-                else if (command == "qt_export") {
-                    if (response.match(/^# progress: (/)) {
-                        // This looks like a progress line for qt_export
-                        // Line is of the form: # progress: (<string>)   <number>% ...
-                        var array = progress.split(")");
                         params.processResponseProgress = number(array[1]) / 100;
                         return true;
                     }
@@ -769,7 +715,6 @@ DTD
                 setFFMPegOptions();
                 
                 var recipeType = 
-                    ((params.input_format == "Quicktime") ? 4 : 0) |
                     (bool(params.has_audio) ? 2 : 0) |
                     (bool(params.is_2_pass) ? 1 : 0);
                                         
@@ -780,10 +725,6 @@ DTD
                     case 1: params.recipe = "$normal_v_pass1 ; $normal_v_pass2"; break
                     case 2: params.recipe = "$normal_av_single_pass" + offset; break;
                     case 3: params.recipe = "$normal_av_pass1 ; $normal_av_pass2" + offset; break;
-                    case 4: params.recipe = "$quicktime_v_single_pass"; break;
-                    case 5: params.recipe = "$quicktime_v_pass1 ; $quicktime_v_pass2"; break;
-                    case 6: params.recipe = "$quicktime_to_audio_file ; $quicktime_av_single_pass" + offset; break;
-                    case 7: params.recipe = "$quicktime_to_audio_file ; $quicktime_av_pass1 ; $quicktime_av_pass2" + offset; break;
                 }
             }
             
