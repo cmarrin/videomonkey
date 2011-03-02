@@ -21,11 +21,11 @@
 		</object>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
-			<integer value="2649"/>
+			<integer value="2659"/>
 			<integer value="205"/>
 			<integer value="5392"/>
-			<integer value="464"/>
 			<integer value="5771"/>
+			<integer value="464"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -6344,7 +6344,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 								<object class="NSTabViewItem" id="823629906">
 									<string key="NSIdentifier">output_info</string>
 									<object class="NSView" key="NSView" id="334171184">
-										<reference key="NSNextResponder" ref="713585461"/>
+										<nil key="NSNextResponder"/>
 										<int key="NSvFlags">274</int>
 										<object class="NSMutableArray" key="NSSubviews">
 											<bool key="EncodedWithXMLCoder">YES</bool>
@@ -7383,7 +7383,6 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 											</object>
 										</object>
 										<string key="NSFrame">{{10, 33}, {462, 479}}</string>
-										<reference key="NSSuperview" ref="713585461"/>
 									</object>
 									<string key="NSLabel">Output Info</string>
 									<reference key="NSColor" ref="153400129"/>
@@ -7392,13 +7391,13 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 								<object class="NSTabViewItem" id="234333069">
 									<string key="NSIdentifier">metadata</string>
 									<object class="NSView" key="NSView" id="709235192">
-										<nil key="NSNextResponder"/>
+										<reference key="NSNextResponder" ref="713585461"/>
 										<int key="NSvFlags">274</int>
 										<object class="NSMutableArray" key="NSSubviews">
 											<bool key="EncodedWithXMLCoder">YES</bool>
 											<object class="NSBox" id="356025203">
 												<reference key="NSNextResponder" ref="709235192"/>
-												<int key="NSvFlags">18</int>
+												<int key="NSvFlags">34</int>
 												<object class="NSMutableArray" key="NSSubviews">
 													<bool key="EncodedWithXMLCoder">YES</bool>
 													<object class="NSView" id="291456288">
@@ -8492,6 +8491,29 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 																																					<object class="NSTextView" id="166982199">
 																																						<reference key="NSNextResponder" ref="954213509"/>
 																																						<int key="NSvFlags">10514</int>
+																																						<object class="NSMutableSet" key="NSDragTypes">
+																																							<bool key="EncodedWithXMLCoder">YES</bool>
+																																							<object class="NSArray" key="set.sortedObjects">
+																																								<bool key="EncodedWithXMLCoder">YES</bool>
+																																								<string>Apple HTML pasteboard type</string>
+																																								<string>Apple PDF pasteboard type</string>
+																																								<string>Apple PICT pasteboard type</string>
+																																								<string>Apple PNG pasteboard type</string>
+																																								<string>Apple URL pasteboard type</string>
+																																								<string>CorePasteboardFlavorType 0x6D6F6F76</string>
+																																								<string>NSColor pasteboard type</string>
+																																								<string>NSFilenamesPboardType</string>
+																																								<string>NSStringPboardType</string>
+																																								<string>NeXT Encapsulated PostScript v1.2 pasteboard type</string>
+																																								<string>NeXT RTFD pasteboard type</string>
+																																								<string>NeXT Rich Text Format v1.0 pasteboard type</string>
+																																								<string>NeXT TIFF v4.0 pasteboard type</string>
+																																								<string>NeXT font pasteboard type</string>
+																																								<string>NeXT ruler pasteboard type</string>
+																																								<string>WebURLsWithTitlesPboardType</string>
+																																								<string>public.url</string>
+																																							</object>
+																																						</object>
 																																						<string key="NSFrameSize">{385, 14}</string>
 																																						<reference key="NSSuperview" ref="954213509"/>
 																																						<object class="NSTextContainer" key="NSTextContainer" id="644192947">
@@ -9895,6 +9917,29 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 																																					<object class="NSTextView" id="499119716">
 																																						<reference key="NSNextResponder" ref="116321285"/>
 																																						<int key="NSvFlags">2322</int>
+																																						<object class="NSMutableSet" key="NSDragTypes">
+																																							<bool key="EncodedWithXMLCoder">YES</bool>
+																																							<object class="NSArray" key="set.sortedObjects">
+																																								<bool key="EncodedWithXMLCoder">YES</bool>
+																																								<string>Apple HTML pasteboard type</string>
+																																								<string>Apple PDF pasteboard type</string>
+																																								<string>Apple PICT pasteboard type</string>
+																																								<string>Apple PNG pasteboard type</string>
+																																								<string>Apple URL pasteboard type</string>
+																																								<string>CorePasteboardFlavorType 0x6D6F6F76</string>
+																																								<string>NSColor pasteboard type</string>
+																																								<string>NSFilenamesPboardType</string>
+																																								<string>NSStringPboardType</string>
+																																								<string>NeXT Encapsulated PostScript v1.2 pasteboard type</string>
+																																								<string>NeXT RTFD pasteboard type</string>
+																																								<string>NeXT Rich Text Format v1.0 pasteboard type</string>
+																																								<string>NeXT TIFF v4.0 pasteboard type</string>
+																																								<string>NeXT font pasteboard type</string>
+																																								<string>NeXT ruler pasteboard type</string>
+																																								<string>WebURLsWithTitlesPboardType</string>
+																																								<string>public.url</string>
+																																							</object>
+																																						</object>
 																																						<string key="NSFrameSize">{385, 14}</string>
 																																						<reference key="NSSuperview" ref="116321285"/>
 																																						<object class="NSTextContainer" key="NSTextContainer" id="206218807">
@@ -11383,7 +11428,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 															</object>
 															<object class="NSBox" id="710003266">
 																<reference key="NSNextResponder" ref="291456288"/>
-																<int key="NSvFlags">12</int>
+																<int key="NSvFlags">10</int>
 																<object class="NSMutableArray" key="NSSubviews">
 																	<bool key="EncodedWithXMLCoder">YES</bool>
 																	<object class="NSView" id="1057001607">
@@ -11394,7 +11439,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 																			<object class="NSComboBox" id="146825493">
 																				<reference key="NSNextResponder" ref="1057001607"/>
 																				<int key="NSvFlags">290</int>
-																				<string key="NSFrame">{{11, 33}, {246, 22}}</string>
+																				<string key="NSFrame">{{11, 33}, {241, 22}}</string>
 																				<reference key="NSSuperview" ref="1057001607"/>
 																				<bool key="NSEnabled">YES</bool>
 																				<object class="NSComboBoxCell" key="NSCell" id="297849934">
@@ -11469,7 +11514,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 																			<object class="NSPopUpButton" id="180530315">
 																				<reference key="NSNextResponder" ref="1057001607"/>
 																				<int key="NSvFlags">289</int>
-																				<string key="NSFrame">{{262, 33}, {66, 25}}</string>
+																				<string key="NSFrame">{{257, 33}, {66, 25}}</string>
 																				<reference key="NSSuperview" ref="1057001607"/>
 																				<bool key="NSEnabled">YES</bool>
 																				<object class="NSPopUpButtonCell" key="NSCell" id="695210571">
@@ -11564,7 +11609,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 																			<object class="NSPopUpButton" id="505444820">
 																				<reference key="NSNextResponder" ref="1057001607"/>
 																				<int key="NSvFlags">289</int>
-																				<string key="NSFrame">{{333, 33}, {123, 22}}</string>
+																				<string key="NSFrame">{{328, 33}, {123, 22}}</string>
 																				<reference key="NSSuperview" ref="1057001607"/>
 																				<bool key="NSEnabled">YES</bool>
 																				<object class="NSPopUpButtonCell" key="NSCell" id="1043121659">
@@ -11862,7 +11907,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 																			<object class="NSTextField" id="138968188">
 																				<reference key="NSNextResponder" ref="1057001607"/>
 																				<int key="NSvFlags">290</int>
-																				<string key="NSFrame">{{285, 13}, {147, 14}}</string>
+																				<string key="NSFrame">{{285, 13}, {142, 14}}</string>
 																				<reference key="NSSuperview" ref="1057001607"/>
 																				<bool key="NSEnabled">YES</bool>
 																				<object class="NSTextFieldCell" key="NSCell" id="843501035">
@@ -11879,18 +11924,18 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 																				<reference key="NSNextResponder" ref="1057001607"/>
 																				<int key="NSvFlags">-2147482335</int>
 																				<object class="NSPSMatrix" key="NSDrawMatrix"/>
-																				<string key="NSFrame">{{437, 12}, {16, 16}}</string>
+																				<string key="NSFrame">{{432, 12}, {16, 16}}</string>
 																				<reference key="NSSuperview" ref="1057001607"/>
 																				<int key="NSpiFlags">20746</int>
 																				<double key="NSMinValue">16</double>
 																				<double key="NSMaxValue">100</double>
 																			</object>
 																		</object>
-																		<string key="NSFrameSize">{472, 64}</string>
+																		<string key="NSFrameSize">{467, 64}</string>
 																		<reference key="NSSuperview" ref="710003266"/>
 																	</object>
 																</object>
-																<string key="NSFrame">{{-1, 6}, {472, 64}}</string>
+																<string key="NSFrame">{{2, 6}, {467, 64}}</string>
 																<reference key="NSSuperview" ref="291456288"/>
 																<string key="NSOffsets">{0, 0}</string>
 																<object class="NSTextFieldCell" key="NSTitleCell">
@@ -11959,20 +12004,21 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 											</object>
 										</object>
 										<string key="NSFrame">{{10, 33}, {462, 479}}</string>
+										<reference key="NSSuperview" ref="713585461"/>
 									</object>
 									<string key="NSLabel">Metadata</string>
 									<reference key="NSColor" ref="153400129"/>
 									<reference key="NSTabView" ref="713585461"/>
 								</object>
 							</object>
-							<reference key="NSSelectedTabViewItem" ref="823629906"/>
+							<reference key="NSSelectedTabViewItem" ref="234333069"/>
 							<reference key="NSFont" ref="176004473"/>
 							<int key="NSTvFlags">0</int>
 							<bool key="NSAllowTruncatedLabels">YES</bool>
 							<bool key="NSDrawsBackground">YES</bool>
 							<object class="NSMutableArray" key="NSSubviews">
 								<bool key="EncodedWithXMLCoder">YES</bool>
-								<reference ref="334171184"/>
+								<reference ref="709235192"/>
 							</object>
 						</object>
 						<object class="NSButton" id="432324493">
@@ -24001,11 +24047,11 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<integer value="1"/>
 					<string>{{525, 802}, {197, 73}}</string>
-					<string>{{334, 145}, {466, 566}}</string>
+					<string>{{334, 143}, {466, 566}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<boolean value="NO"/>
 					<boolean value="NO"/>
-					<string>{{334, 145}, {466, 566}}</string>
+					<string>{{334, 143}, {466, 566}}</string>
 					<boolean value="NO"/>
 					<boolean value="YES"/>
 					<boolean value="YES"/>
