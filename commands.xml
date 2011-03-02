@@ -1066,6 +1066,7 @@ DTD
         <device_group title="Video Formats">
             <common_device>
                 <param id="h264" value="false" />
+                <param id="width320" value="false" />
                 <script>
                     <![CDATA[
                             
@@ -1127,8 +1128,6 @@ DTD
                     
                     if (number(params.output_video_frame_rate) <= 0)
                         params.output_video_frame_rate = params.input_frame_rate;
-                    log("***** params.input_frame_rate='"+params.input_frame_rate+"'");
-                    log("***** params.output_video_frame_rate='"+params.output_video_frame_rate+"'");
                     
                     // Init qmin
                     if (params.title in qminMap)
