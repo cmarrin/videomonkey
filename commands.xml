@@ -1125,8 +1125,10 @@ DTD
                     var requestedFrameWidth = 0;
                     var requestedFrameHeight = 0;
                     
-                    if (params.output_video_frame_rate == "")
+                    if (number(params.output_video_frame_rate) <= 0)
                         params.output_video_frame_rate = params.input_frame_rate;
+                    log("***** params.input_frame_rate='"+params.input_frame_rate+"'");
+                    log("***** params.output_video_frame_rate='"+params.output_video_frame_rate+"'");
                     
                     // Init qmin
                     if (params.title in qminMap)

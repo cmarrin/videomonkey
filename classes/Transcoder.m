@@ -613,6 +613,11 @@ static NSString* escapePath(NSString* path)
             
     // In case metadata was written, cleanup after it
     [self.metadata cleanupAfterMetadataWrite];
+
+    // After we're done with the encode we need to re-init the output filename. It may now exist
+    // and if we were to try to encode again, we need a new filename for it
+    self.outputFileInfo.filename = nil;
+    [self setParams];
 }
 
 -(void) startNextCommands
@@ -644,6 +649,8 @@ static void addCommandElement(NSMutableArray* elements, NSString* command, NSStr
     if ([m_outputFiles count] == 0 || !m_enabled)
         return NO;
     
+    [self setParams];
+
     // Make sure the output file doesn't exist
     if ([[NSFileManager defaultManager] fileExistsAtPath: self.outputFileInfo.filename]) {
         NSRunAlertPanel(@"Internal Error", 
@@ -681,8 +688,6 @@ static void addCommandElement(NSMutableArray* elements, NSString* command, NSStr
     [[NSFileManager defaultManager] removeFileAtPath:m_tempAudioFileName handler:nil];
     [[NSFileManager defaultManager] removeFileAtPath:m_passLogFileName handler:nil];
     
-    [self setParams];
-
     // get recipe
     NSString* recipe = [[[AppController instance] deviceController] recipe];
 
