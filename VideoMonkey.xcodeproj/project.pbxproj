@@ -83,6 +83,7 @@
 		492BCAC40F61F03E00BCBF24 /* Sparkle.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 495DBF940F616C64000E5D62 /* Sparkle.framework */; };
 		492BCAD80F61F08300BCBF24 /* videomonkeycast.xml in Resources */ = {isa = PBXBuildFile; fileRef = 492BCAD70F61F08300BCBF24 /* videomonkeycast.xml */; };
 		492D327E0EF18D8000AEB740 /* bin in Resources */ = {isa = PBXBuildFile; fileRef = 492D327D0EF18D8000AEB740 /* bin */; };
+		492E8F9013200DCE00A5EE9E /* Credits.html in Resources */ = {isa = PBXBuildFile; fileRef = 492E8F8F13200DCE00A5EE9E /* Credits.html */; };
 		4945A8D40FA94FFE00DE3D65 /* MovieDBMetadataSearcher.m in Sources */ = {isa = PBXBuildFile; fileRef = 4945A8D20FA94FFE00DE3D65 /* MovieDBMetadataSearcher.m */; };
 		494917A90EDE07AF0083743F /* VideoMonkey.icns in Resources */ = {isa = PBXBuildFile; fileRef = 494917A80EDE07AF0083743F /* VideoMonkey.icns */; };
 		495444D60F853B9800B046F4 /* Metadata.m in Sources */ = {isa = PBXBuildFile; fileRef = 495444D50F853B9800B046F4 /* Metadata.m */; };
@@ -236,6 +237,7 @@
 		4910FFDE0EC87BB3001B578B /* xbox360.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = xbox360.png; path = images/xbox360.png; sourceTree = "<group>"; };
 		492BCAD70F61F08300BCBF24 /* videomonkeycast.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = videomonkeycast.xml; path = sparkle/videomonkeycast.xml; sourceTree = "<group>"; };
 		492D327D0EF18D8000AEB740 /* bin */ = {isa = PBXFileReference; lastKnownFileType = folder; path = bin; sourceTree = "<group>"; };
+		492E8F8F13200DCE00A5EE9E /* Credits.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = Credits.html; sourceTree = "<group>"; };
 		4945A8D20FA94FFE00DE3D65 /* MovieDBMetadataSearcher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MovieDBMetadataSearcher.m; path = classes/MovieDBMetadataSearcher.m; sourceTree = "<group>"; };
 		4945A8D30FA94FFE00DE3D65 /* MovieDBMetadataSearcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MovieDBMetadataSearcher.h; path = classes/MovieDBMetadataSearcher.h; sourceTree = "<group>"; };
 		494917A80EDE07AF0083743F /* VideoMonkey.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = VideoMonkey.icns; path = icons/VideoMonkey.icns; sourceTree = "<group>"; };
@@ -434,6 +436,7 @@
 				491001880ECBE470001B578B /* MainMenu.nib */,
 				49D469490F0F2E52005D70FD /* commands.xml */,
 				4908A3B60F302179003B65E0 /* releasenotes.html */,
+				492E8F8F13200DCE00A5EE9E /* Credits.html */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -708,6 +711,7 @@
 				49B00E7812D3609400ABAAB3 /* tinycustom.png in Resources */,
 				49B0117212DA60FC00ABAAB3 /* appletv2.png in Resources */,
 				49B0117312DA60FC00ABAAB3 /* tinyappletv2.png in Resources */,
+				492E8F9013200DCE00A5EE9E /* Credits.html in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
