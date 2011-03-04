@@ -124,7 +124,7 @@ typedef enum FileStatus {   FS_INVALID,     // File is invalid, we can't encode 
 @interface Transcoder : NSObject {
   @private
     NSMutableArray* m_inputFiles;
-    NSMutableArray* m_outputFiles;
+    TranscoderFileInfo* m_outputFileInfo;
     Metadata* m_metadata;
     double m_progress;
     BOOL m_enabled;
@@ -160,7 +160,6 @@ typedef enum FileStatus {   FS_INVALID,     // File is invalid, we can't encode 
 - (Transcoder*)initWithFilename:(NSString*) filename;
 
 - (int)addInputFile: (NSString*) filename;
-- (int)addOutputFile: (NSString*) filename;
 
 -(NSValue*) progressCell;
 

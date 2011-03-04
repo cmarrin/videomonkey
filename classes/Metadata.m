@@ -408,7 +408,7 @@ static NSDictionary* g_tagMap = nil;
     
     // toss the trailing \n
     if ([string length] > 1)
-        string = [string substringToIndex:[string length] - 2];
+        string = [string substringToIndex:[string length] - 1];
         
     NSArray* components = [[@"\n" stringByAppendingString:string] componentsSeparatedByString:@"\nAtom \""];
         
@@ -482,7 +482,7 @@ static NSDictionary* g_tagMap = nil;
         NSString* value = [[m_tagDictionary valueForKey: param] outputValue];
         
         // handle special cases
-        if ([param isEqualToString:@"artwork"])
+        if ([param isEqualToString:@"artwork"] || [key isEqualToString:@"desc"])
             continue;
             
         // escape all the quotes

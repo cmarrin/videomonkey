@@ -95,12 +95,8 @@ int heightFromFrameSize(FrameSize f) { return f & 0xffff; }
     return ([m_inputFiles count] > 0) ? ((TranscoderFileInfo*) [m_inputFiles objectAtIndex: 0]) : [Transcoder dummyFileInfo];
 }
 
--(TranscoderFileInfo*) outputFileInfo
-{
-    return ([m_outputFiles count] > 0) ? ((TranscoderFileInfo*) [m_outputFiles objectAtIndex: 0]) : [Transcoder dummyFileInfo];
-}
-
 // Properties
+@synthesize outputFileInfo = m_outputFileInfo;
 @synthesize audioQuality = m_audioQuality;
 @synthesize avOffset = m_avOffset;
 @synthesize progress = m_progress;
@@ -363,12 +359,6 @@ static NSImage* getFileStatusImage(FileStatus status)
             filename = [[savePath stringByAppendingPathComponent: 
                         [NSString stringWithFormat: @"%@_%d", baseName, i]] stringByAppendingPathExtension: suffix];
             
-        // If the output file name hasn't changed, don't do an existance check. 
-        // Doing so would generate a new file name if this function is called
-        // after this file is encoded.
-        if ([self.outputFileInfo.filename isEqualToString:filename])
-            return;
-            
         if (![[NSFileManager defaultManager] fileExistsAtPath: filename])
             break;
     }
@@ -379,7 +369,7 @@ static NSImage* getFileStatusImage(FileStatus status)
 - (Transcoder*)initWithFilename:(NSString*) filename;
 {
     m_inputFiles = [[NSMutableArray alloc] init];
-    m_outputFiles = [[NSMutableArray alloc] init];
+    m_outputFileInfo = [[TranscoderFileInfo alloc] init];
     m_fileStatus = FS_INVALID;
     m_enabled = YES;
     m_tempAudioFileName = [[NSString stringWithFormat:@"/tmp/%p-tmpaudio.wav", self] retain];
@@ -398,7 +388,6 @@ static NSImage* getFileStatusImage(FileStatus status)
     
     [self addInputFile:filename];
     [self updateOutputFileName];
-    [self addOutputFile:self.outputFileInfo.filename];
 
     self.outputFileInfo.duration = self.inputFileInfo.duration;
 
@@ -407,10 +396,14 @@ static NSImage* getFileStatusImage(FileStatus status)
 
 -(void) dealloc
 {
+    [m_tempAudioFileName release];
+    [m_passLogFileName release];
     [m_progressIndicator removeFromSuperview];
     [m_statusImageView removeFromSuperview];
     [m_progressIndicator release];
     [m_statusImageView release];
+    [m_inputFiles release];
+    [m_outputFileInfo release];
     
     [super dealloc];
 }
@@ -439,15 +432,6 @@ static NSImage* getFileStatusImage(FileStatus status)
     }
     
     return (m_fileStatus == FS_VALID) ? ([m_inputFiles count] - 1) : -1;    
-}
-
-- (int) addOutputFile: (NSString*) filename
-{
-    TranscoderFileInfo* file = [[TranscoderFileInfo alloc] init];
-    [m_outputFiles addObject: file];
-    [file release];
-    file.filename = filename;
-    return [m_outputFiles count] - 1;    
 }
 
 -(NSValue*) progressCell
@@ -503,12 +487,6 @@ static NSString* escapePath(NSString* path)
 
 -(void) setParams
 {
-    if ([m_outputFiles count] == 0)
-        return;
-        
-    // Update the output file name
-    [self updateOutputFileName];
-
     // build the environment
     NSMutableDictionary* env = [[NSMutableDictionary alloc] init];
 
@@ -644,8 +622,7 @@ static NSString* escapePath(NSString* path)
 
     // After we're done with the encode we need to re-init the output filename. It may now exist
     // and if we were to try to encode again, we need a new filename for it
-    self.outputFileInfo.filename = nil;
-    [self setParams];
+    [self updateOutputFileName];
 }
 
 -(void) startNextCommands
@@ -674,9 +651,10 @@ static void addCommandElement(NSMutableArray* elements, NSString* command, NSStr
 
 - (BOOL) startEncode
 {
-    if ([m_outputFiles count] == 0 || !m_enabled)
+    if (![self.outputFileInfo.filename length] || !m_enabled)
         return NO;
     
+    [self updateOutputFileName];
     [self setParams];
 
     // Make sure the output file doesn't exist
