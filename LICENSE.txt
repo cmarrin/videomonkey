@@ -1,10 +1,3 @@
-//
-//  ArtworkListController.h
-//  VideoMonkey
-//
-//  Created by Chris Marrin on 1/21/09.
-
-/*
 Copyright (c) 2009-2011 Chris Marrin (chris@marrin.com)
 All rights reserved.
 
@@ -32,18 +25,19 @@ BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
 CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN 
 ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH 
 DAMAGE.
-*/
 
-#import <Cocoa/Cocoa.h>
 
-@interface ArtworkListController : NSArrayController {
-    IBOutlet NSTableView* m_artworkListView;
+Other software used
+===================
 
-    int m_draggedRow;
-}
+Video Monkey makes use of the ffmpeg command line utility (http://www.ffmpeg.org/) which is 
+not owned by the Video Monkey project. It is released under the LGPL or GPL license. See
+website for details.
 
--(void) reloadData;
+Video Monkey makes use of the mediainfo command line utility (http://mediainfo.sourceforge.net/en) 
+which is not owned by the Video Monkey project. It is released under the GPL license. 
+See website for details.
 
--(IBAction)addArtwork:(id)sender;
-
-@end
+Video Monkey makes use of the AtomicParsley command line utility (http://atomicparsley.sourceforge.net/) 
+which is not owned by the Video Monkey project. It is released under the GPL license. 
+See website for details.

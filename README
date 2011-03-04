@@ -1,7 +1,16 @@
-Video Monkey is an open source video transcoder
+Video Monkey is a video transcoder for Mac OSX (Leopard and above). It is released under the
+BSD license (http://www.opensource.org/licenses/bsd-license.php).
+
+Video Monkey makes use of the ffmpeg command line utility (http://www.ffmpeg.org/) which is 
+not owned by the Video Monkey project. It is released under the LGPL or GPL license. See
+website for details.
+
+Video Monkey makes use of the mediainfo command line utility (http://mediainfo.sourceforge.net/en) 
+which is not owned by the Video Monkey project. It is released under the GPL license. 
+See website for details.
+
+Video Monkey makes use of the AtomicParsley command line utility (http://atomicparsley.sourceforge.net/) 
+which is not owned by the Video Monkey project. It is released under the GPL license. 
+See website for details.
 
 Go to http://videomonkey.org for more info
-
-To edit the VideoMonkey Pages doc, first unzip VideoMonkey.pages.zip then open the resulting directory in Pages.
-
-To edit the VideoMonkey website, first unzip WebSite.zip, then go to the WebSite directory.
