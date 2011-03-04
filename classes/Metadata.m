@@ -324,21 +324,12 @@ static NSDictionary* g_tagMap = nil;
 
 -(void) processResponse: (NSString*) response
 {
-    // Ignore lines not starting with 'Atom'
-    if (![response hasPrefix:@"Atom "])
-        return;
-        
-    // parse out the atom and value
-    NSMutableArray* array = [NSMutableArray arrayWithArray:[response componentsSeparatedByString:@":"]];
-    NSArray* atomArray = [[array objectAtIndex:0] componentsSeparatedByString:@" "];
-    NSString* atom = [[atomArray objectAtIndex:1] stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"\""]];
+    // incoming string is of the form: <atom>" contains: <value>
+    NSMutableArray* array = [NSMutableArray arrayWithArray:[response componentsSeparatedByString:@"\" contains: "]];
+    NSString* atom = [array objectAtIndex:0];
     [array removeObjectAtIndex:0];
     NSString* value = [[array componentsJoinedByString:@":"] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
     
-    // if this is an iTunes reverseDNS tag, parse that out
-    if ([atom isEqualToString:@"----"])
-        atom = [[atomArray objectAtIndex:2] stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"[]"]];
-        
     // extract the content rating and annotation if this is iTunEXTC (and simplify atom name)
     if ([atom isEqualToString:@"com.apple.iTunes;iTunEXTC"] || [atom isEqualToString:@"iTunEXTC"]) {
         NSArray* valueArray = [value componentsSeparatedByString:@"|"];
@@ -379,32 +370,24 @@ static NSDictionary* g_tagMap = nil;
 
 -(void) processData: (NSData*) data
 {
-	if([data length]) {
-		NSString* string = [[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding] autorelease];
+	if(![data length])
+        return;
         
-        NSArray* components = [string componentsSeparatedByCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"\r\n"]];
-        int i;
-        assert([components count] > 0);
-        for (i = 0; i < [components count]-1; ++i) {
-            [m_buffer appendString:[components objectAtIndex:i]];
-            
-            // process string
-            [self processResponse: m_buffer];
-            
-            // clear string
-            [m_buffer setString: @""];
-        }
+    NSString* string = [[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding] autorelease];
+    
+    // Prepend the string with '\n' in case Atom... is the first line 
+    string = [@"\n" stringByAppendingString:string];
+    
+    // toss the trailing \n
+    if ([string length] > 1)
+        string = [string substringToIndex:[string length] - 2];
         
-        // if string ends in \n, it is complete, so send it too.
-        if ([string hasSuffix:@"\n"] || [string hasSuffix:@"\r"]) {
-            [m_buffer appendString:[components objectAtIndex:[components count]-1]];
-            [self processResponse: m_buffer];
-            [m_buffer setString: @""];
-        }
-        else {
-            // put remaining component in m_buffer for next time
-            [m_buffer setString: [components objectAtIndex:[components count]-1]];
-        }
+    NSArray* components = [[@"\n" stringByAppendingString:string] componentsSeparatedByString:@"\nAtom \""];
+        
+    for (int i = 0; i < [components count]; ++i) {
+        if (i == 0)
+            continue;
+        [self processResponse: [components objectAtIndex:i]];
     }
 }
 
@@ -418,7 +401,8 @@ static NSDictionary* g_tagMap = nil;
     NSString* tmpArtworkPath = [NSString stringWithFormat:@"/tmp/%p-VideoMonkey", self];
 
     // setup args
-    NSArray* args = [NSArray arrayWithObjects: filename, @"-t", @"-e", tmpArtworkPath, nil];
+    //NSArray* args = [NSArray arrayWithObjects: filename, @"-t", @"-e", tmpArtworkPath, nil];
+    NSArray* args = [NSArray arrayWithObjects: filename, @"-t", nil];
     
     m_task = [[NSTask alloc] init];
     m_messagePipe = [NSPipe pipe];
@@ -632,7 +616,6 @@ static NSDictionary* g_tagMap = nil;
     
     Metadata* metadata = [[Metadata alloc] init];
     metadata->m_transcoder = transcoder;
-    metadata->m_buffer = [[NSMutableString alloc] init];
     metadata->m_task = [[NSTask alloc] init];
     metadata->m_messagePipe = [NSPipe pipe];
     metadata->m_tagDictionary = [[NSMutableDictionary alloc] init];

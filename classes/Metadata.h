@@ -18,7 +18,6 @@
     Transcoder* m_transcoder;
     NSTask* m_task;
     NSPipe* m_messagePipe;
-    NSMutableString* m_buffer;
     NSMutableDictionary* m_tagDictionary;
     NSMutableArray* m_artworkList;
     int m_numArtwork;
