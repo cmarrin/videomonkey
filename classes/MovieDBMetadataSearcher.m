@@ -51,15 +51,15 @@ static NSDictionary* g_moviedbMap = nil;
 
 -(NSString*) makeSearchURLString:(NSString*) searchString
 {
-    return [NSString stringWithFormat:@"http://api.themoviedb.org/2.0/Movie.search?title=%@&api_key=ae6c3dcf41e60014a3d0508e7f650884", searchString];
+    return [NSString stringWithFormat:@"http://api.themoviedb.org/2.1/Movie.search/en/xml/ae6c3dcf41e60014a3d0508e7f650884/%@", searchString];
 }
 
 -(BOOL) loadShowData:(XMLDocument*) document
 {
-    if (![[[document rootElement] name] isEqualToString:@"results"])
+    if (![[[document rootElement] name] isEqualToString:@"OpenSearchDescription"])
         return NO;
         
-    XMLElement* matches = [[document rootElement] lastElementForName:@"moviematches"];
+    XMLElement* matches = [[document rootElement] lastElementForName:@"movies"];
     if (!matches)
         return NO;
         
@@ -71,7 +71,7 @@ static NSDictionary* g_moviedbMap = nil;
     NSMutableArray* foundShowIds = [[NSMutableArray alloc] init];
 
     for (XMLElement* element in movies) {
-        NSString* name = [[element lastElementForName:@"title"] content];
+        NSString* name = [[element lastElementForName:@"name"] content];
         NSString* idString = [[element lastElementForName:@"id"] content];
         int id = (idString && [idString length] > 0) ? [idString intValue] : -1;
         if (name && [name length] > 0 && id >= 0) {
@@ -97,20 +97,23 @@ static NSDictionary* g_moviedbMap = nil;
     // init the tag map, if needed
     if (!g_moviedbMap) {
         g_moviedbMap = [[NSDictionary dictionaryWithObjectsAndKeys:
-            @"title",       	@"title", 
-            @"description", 	@"short_overview", 
-            @"year",        	@"release",
+            @"title",       	@"name", 
+            @"description", 	@"overview", 
+            @"year",        	@"released",
+            @"contentRating",   @"certification",
             nil ] retain];
     }
     
     return self;
 }
 
--(void) collectArtwork:(NSArray*) fromArray toArray:(NSMutableArray*) toArray
+-(void) collectArtwork:(XMLElement*) parent toArray:(NSMutableArray*) toArray
 {
-    for (XMLElement* element in fromArray) {
-        if ([[element stringAttribute:@"size"] isEqualToString:@"original"]) {
-            NSString* s = [element content];
+    NSArray* images = [[parent lastElementForName:@"images"] elementsForName:@"image"];
+    for (XMLElement* image in images) {
+        if ([[image stringAttribute:@"size"] isEqualToString:@"original"] && 
+                [[image stringAttribute:@"type"] isEqualToString:@"poster"]) {
+            NSString* s = [image stringAttribute:@"url"];
             if (s && [s length] > 0)
                 [toArray addObject:s];
         }
@@ -121,10 +124,10 @@ static NSDictionary* g_moviedbMap = nil;
 {
     BOOL success = NO;
     
-    if (document && [[[document rootElement] name] isEqualToString:@"results"]) {
+    if (document && [[[document rootElement] name] isEqualToString:@"OpenSearchDescription"]) {
         assert(document == m_currentSearchDocument);
     
-        XMLElement* matches = [[document rootElement] lastElementForName:@"moviematches"];
+        XMLElement* matches = [[document rootElement] lastElementForName:@"movies"];
         if (matches) {
             XMLElement* movie = [matches lastElementForName:@"movie"];
             if (movie) {
@@ -143,7 +146,7 @@ static NSDictionary* g_moviedbMap = nil;
                 
                 // collect the artwork
                 NSMutableArray* artwork = [[NSMutableArray alloc] init];
-                [self collectArtwork: [movie elementsForName:@"poster"] toArray:artwork];
+                [self collectArtwork:movie toArray:artwork];
                 [m_dictionary setValue:artwork forKey:@"artwork"];
                 
                 success = YES;
@@ -159,18 +162,19 @@ static NSDictionary* g_moviedbMap = nil;
 
 -(void) detailsForShow:(int) showId season:(int) season episode:(int) episode
 {
-    if (showId != m_loadedShowId) {
-        [m_dictionary release];
-        m_dictionary = [[NSMutableDictionary alloc] init];
-        m_loadedShowId = showId;
+    if (showId == m_loadedShowId)
+        [m_metadataSearch detailsLoaded:m_dictionary success:YES];
         
-        NSString* urlString = [NSString stringWithFormat:@"http://api.themoviedb.org/2.0/Movie.getInfo?id=%d&api_key=ae6c3dcf41e60014a3d0508e7f650884", showId];
-        NSURL* url = [NSURL URLWithString:urlString];
-        assert(!m_currentSearchDocument);
-        m_currentSearchDocument = [[XMLDocument xmlDocumentWithContentsOfURL:url
-                        withInfo:[NSString stringWithFormat:@"searching for movie with ID %d", showId] 
-                        target:self selector:@selector(loadDetailsCallback:)] retain];
-    }
+    [m_dictionary release];
+    m_dictionary = [[NSMutableDictionary alloc] init];
+    m_loadedShowId = showId;
+    
+    NSString* urlString = [NSString stringWithFormat:@"http://api.themoviedb.org/2.1/Movie.getInfo/en/xml/ae6c3dcf41e60014a3d0508e7f650884/%d", showId];
+    NSURL* url = [NSURL URLWithString:urlString];
+    assert(!m_currentSearchDocument);
+    m_currentSearchDocument = [[XMLDocument xmlDocumentWithContentsOfURL:url
+                    withInfo:[NSString stringWithFormat:@"searching for movie with ID %d", showId] 
+                    target:self selector:@selector(loadDetailsCallback:)] retain];
 }
 
 @end
