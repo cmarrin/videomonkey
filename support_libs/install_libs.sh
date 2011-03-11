@@ -100,4 +100,12 @@ if [ -d ffmpeg ]; then
 else
     echo "Getting ffmpeg..."
     git clone git://git.ffmpeg.org/ffmpeg.git
+    cd ffmpeg
 fi
+./configure --disable-ffplay --disable-ffserver --enable-gpl --enable-pthreads --enable-version3 \
+--enable-libmp3lame --enable-libx264 --enable-avfilter --enable-libxvid \
+--enable-libfaac --enable-nonfree --enable-swscale \
+--enable-postproc \
+--enable-libtheora --enable-libvorbis --enable-filters --enable-runtime-cpudetect \
+--disable-doc --enable-static --disable-shared
+make
