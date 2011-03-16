@@ -1182,6 +1182,8 @@ DTD
 
                     switch (params.title) {
                         case "MP4":
+                            setVideoFrameRate(false);
+                        log("*** qualityStop="+qualityStop+", input_frame_rate="+params.input_frame_rate+", output_video_frame_rate="+params.output_video_frame_rate);
                             if (qualityStop == 4)
                                 params.ffmpeg_option_qmin = "";
                             else if (qualityStop == 0) {
