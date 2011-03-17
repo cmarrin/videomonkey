@@ -31,5 +31,6 @@ This assumes the Video Monkey icon is VideoMonkeyDevel.icns (VideoMonkeyDevel in
     
 9. Tag the tree as version x.y
     git tag -a vx.y -m"Version x.y release"
+    git push --tags
     
 10. Restore icon to VideoMonkeyDevel
