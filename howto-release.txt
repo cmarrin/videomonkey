@@ -6,7 +6,9 @@ This assumes the Video Monkey icon is VideoMonkeyDevel.icns (VideoMonkeyDevel in
 
 2. Add an entry for this release to releasenotes.html
 
-3. Change the 'Icon File' property in Info.plist to 'VideoMonkey'
+3. Change Info.plist for release
+    - Change the 'Icon File' property to 'VideoMonkey'
+    - Remove the 'x' from the 'Bundle version' property
 
 4. Do a release build
 
@@ -33,4 +35,8 @@ This assumes the Video Monkey icon is VideoMonkeyDevel.icns (VideoMonkeyDevel in
     git tag -a vx.y -m"Version x.y release"
     git push --tags
     
-10. Restore icon to VideoMonkeyDevel
+10. Change Info.plist for next release development
+    - Restore 'Icon File' property to 'VideoMonkeyDevel'
+    - Change the 'Bundle version' property to <next release>x
+
+
