@@ -73,7 +73,7 @@
 	<key>CFBundleExecutable</key>
 	<string>${EXECUTABLE_NAME}</string>
 	<key>CFBundleIconFile</key>
-	<string>VideoMonkeyDevel</string>
+	<string>VideoMonkey</string>
 	<key>CFBundleIdentifier</key>
 	<string>org.VideoMonkey.${PRODUCT_NAME:identifier}</string>
 	<key>CFBundleInfoDictionaryVersion</key>
