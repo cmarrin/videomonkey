@@ -943,7 +943,7 @@ DTD
                     setAudioParams(audioQualityMap[title][qualityStop]);
                         
                     // The level is not necessarily accurate
-                    params.output_video_profile_name = (title != "Apple TV") ? "baseline" : "main";
+                    params.output_video_profile_name = (title != "1st Gen Apple TV") ? "baseline" : "main";
                     params.output_video_level_name = levelMap[title][qualityStop];
                     
                     // Generate the recipe
