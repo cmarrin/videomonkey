@@ -349,3 +349,27 @@ AVI:
 
 -s 960x720 -aspect 960:720 -r 25 -vcodec libx264 -b 5000000 -async 50 -acodec libfaac -ar 48000 -ac 2  -ab 128000  -vpre ffpresets/libx264-medium  -vpre ffpresets/libx264-main  "/Users/cmarrin/personal/Projects/git/videomonkey/samples/sample_hd_8.mp4"
 
+
+
+
+DVD Authoring
+=============
+
+Create VOB files for each input video:
+
+ffmpeg -y -i <input file> -threads 4 -t 120 -target ntsc-dvd -s 720x480 -aspect 16:9 -r ntsc -g 15 
+    -sc_threshold 1000000000 -flags cgop -flags2 sgop -bf 2 -async 50 -ar 48000 -ab 192k -ac 2   -f vob <temp file>.vob
+
+
+Make DVD structure:
+
+dvdauthor -t <temp file 1>.vob <temp file 2>.vob ... -o <DVD Directory> -v 16:9+nopanscan
+
+
+Make iso file (using mkisofs)
+
+mkisofs -dvd-video -o <iso file>.iso -V <Disk name (13 char max?)> <DVD Directory>
+
+
+Can we use hdiutil instead of mkisofs?
+
