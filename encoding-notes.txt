@@ -373,3 +373,27 @@ mkisofs -dvd-video -o <iso file>.iso -V <Disk name (13 char max?)> <DVD Director
 
 Can we use hdiutil instead of mkisofs?
 
+
+I was successful making a DVD directory with this:
+
+	ffmpeg -i av_out_of_sync.mov -target pal-dvd av_out_of_sync.vob
+	ffmpeg -i sample.mp4 -target pal-dvd sample.vob
+	dvdauthor -o MY_DVD -x dvd.xml
+
+dvd.xml
+=======
+<dvdauthor>
+    <vmgm />
+    <titleset>
+        <titles>
+            <pgc>
+                <vob file="av_out_of_sync.vob" />
+                <vob file="sample.vob" />
+            </pgc>
+        </titles>
+    </titleset>
+</dvdauthor>
+=====
+
+I used pal-dvd because that's what the example used. ntsc-dvd will probably work the same
+
