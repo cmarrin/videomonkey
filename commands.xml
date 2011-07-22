@@ -362,6 +362,7 @@ DTD
         
         <!-- Default params (sometimes overridden) -->
         <param id="ffmpeg_x264_profile" value="libx264-baseline" />
+        <param id="output_video_profile_name" value="baseline" />
 
         <!-- Composite options -->
         <command id="ffmpeg_single_pass_options">
@@ -944,7 +945,7 @@ DTD
                     setAudioParams(audioQualityMap[title][qualityStop]);
                         
                     // The level is not necessarily accurate
-                    params.output_video_profile_name = (title != "1st Gen Apple TV") ? "baseline" : "main";
+                    params.output_video_profile_name = (title != "2nd Gen Apple TV") ? "baseline" : "main";
                     params.output_video_level_name = levelMap[title][qualityStop];
                     
                     // Generate the recipe
@@ -1040,7 +1041,6 @@ DTD
             
             <!-- First Gen Apple TV -->
             <device title="1st Gen Apple TV" icon="appletv">
-                <param id="ffmpeg_x264_profile" value="libx264-main" />
                 <menu which="0" title="Format Limits:">
                     <menu_item title="1024x720@24fps">
                         <param id="apple_tv_format_limit" value="24fps" />
@@ -1070,6 +1070,7 @@ DTD
             <!-- Second Gen Apple TV -->
             <device title="2nd Gen Apple TV" icon="appletv2">
                 <param id="ffmpeg_x264_profile" value="libx264-main" />
+                <param id="output_video_profile_name" value="main" />
                  <checkbox which="0" title="H.264 Video">
                     <checked_item>
                         <param id="h264" value="true" />
