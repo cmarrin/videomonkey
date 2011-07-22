@@ -637,6 +637,7 @@ DTD
                 var bitrate = (bitrateMax - bitrateMin) * number(params.quality) + bitrateMin;
                 var limit = (bitrate > params.input_video_bitrate) && bool(params.limit_output_params);
                 params.output_video_bitrate = limit ? params.input_video_bitrate : bitrate;
+                log("video bitrate: input="+params.input_video_bitrate+", min="+bitrateMin+", max="+bitrateMax+", output="+params.output_video_bitrate);
             }
             
             // Assumes output_video_frame_rate is set
@@ -1790,8 +1791,8 @@ DTD
             </common_device>
             
             <!-- DVD -->
-            <device title="Create a DVD Image (Not Yet Implemented)" icon="cd" enabled="false">
-                <checkbox which="0" title="H.264 Video">
+            <device title="Create a DVD Image" icon="cd" enabled="true">
+               <checkbox which="0" title="Dual layer">
                     <checked_item>
                         <param id="ffmpeg_option_vcodec" value="libx264" />
                     </checked_item>
@@ -1799,11 +1800,30 @@ DTD
                         <param id="ffmpeg_option_vcodec" value="mpeg4" />
                     </unchecked_item>
                 </checkbox>
-                <menu which="0" title="Best for:">
-                    <menu_item title="iPhone Screen">
+                <checkbox which="1" title="Add chapter for each file">
+                    <checked_item>
+                        <param id="ffmpeg_option_vcodec" value="libx264" />
+                    </checked_item>
+                    <unchecked_item>
+                        <param id="ffmpeg_option_vcodec" value="mpeg4" />
+                    </unchecked_item>
+                </checkbox>
+                <menu which="0" title="Format:">
+                    <menu_item title="NTSC">
                         <param id="ffmpeg_option_vcodec" value="libx264" />
                     </menu_item>
-                    <menu_item title="TV Screen">
+                    <menu_item title="PAL">
+                        <param id="ffmpeg_option_vcodec" value="mpeg4" />
+                    </menu_item>
+                </menu>
+                <menu which="1" title="Create:">
+                    <menu_item title="Burnable Image">
+                        <param id="ffmpeg_option_vcodec" value="libx264" />
+                    </menu_item>
+                    <menu_item title="VIDEO_TS Folder">
+                        <param id="ffmpeg_option_vcodec" value="mpeg4" />
+                    </menu_item>
+                    <menu_item title="Plain .VOB Files">
                         <param id="ffmpeg_option_vcodec" value="mpeg4" />
                     </menu_item>
                 </menu>
