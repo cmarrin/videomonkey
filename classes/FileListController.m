@@ -245,8 +245,8 @@ DAMAGE.
     [panel setAllowsMultipleSelection:YES];
     [panel setTitle:@"Choose a File"];
     [panel setPrompt:@"Add"];
-    if ([panel runModalForTypes: nil] == NSOKButton) {
-        for (NSString* filename in [panel filenames])
+    if ([panel runModal] == NSOKButton) {
+        for (NSString* filename in [panel URLs])
             [self addFile:filename];
     }
 }

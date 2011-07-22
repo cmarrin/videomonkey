@@ -608,7 +608,7 @@ static NSString* escapePath(NSString* path)
     
     // toss output file if not successful
     if (deleteOutputFile)
-        [[NSFileManager defaultManager] removeFileAtPath:self.outputFileInfo.filename handler:nil];
+        [[NSFileManager defaultManager] removeItemAtPath:self.outputFileInfo.filename error:nil];
     else if (moveOutputFileToTrash)
         [[NSWorkspace sharedWorkspace] 
             performFileOperation:NSWorkspaceRecycleOperation 
@@ -685,14 +685,14 @@ static void addCommandElement(NSMutableArray* elements, NSString* command, NSStr
         
     NSString* logFileName = [NSString stringWithFormat:@"%@/%@-%@.log",
                                 logFilePath, [self.outputFileInfo.filename lastPathComponent], [[NSDate date] description]];
-    [[NSFileManager defaultManager] removeFileAtPath:logFileName handler:nil];
+    [[NSFileManager defaultManager] removeItemAtPath:logFileName error:nil];
     [[NSFileManager defaultManager] createFileAtPath:logFileName contents:nil attributes:nil];
                                 
     m_logFile = [[NSFileHandle fileHandleForWritingAtPath:logFileName] retain];
     
     // make sure the tmp tmp files do not exist
-    [[NSFileManager defaultManager] removeFileAtPath:m_tempAudioFileName handler:nil];
-    [[NSFileManager defaultManager] removeFileAtPath:m_passLogFileName handler:nil];
+    [[NSFileManager defaultManager] removeItemAtPath:m_tempAudioFileName error:nil];
+    [[NSFileManager defaultManager] removeItemAtPath:m_passLogFileName error:nil];
     
     // get recipe
     NSString* recipe = [[[AppController instance] deviceController] recipe];

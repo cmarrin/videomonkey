@@ -40,7 +40,7 @@ DAMAGE.
 @class FileListController;
 @class MetadataPanel;
 
-@interface FileInfoPanelController : NSObject {
+@interface FileInfoPanelController : NSObject <NSComboBoxDelegate> {
 @private
     IBOutlet NSWindow* m_fileInfoWindow;
     IBOutlet NSTabView* m_fileInfoTabView;
