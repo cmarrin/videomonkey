@@ -230,6 +230,8 @@ static AppController *g_appController;
     if ([[[[NSUserDefaultsController sharedUserDefaultsController] values] valueForKey:@"defaultMetadataSearch"] length] == 0)
         [[[NSUserDefaultsController sharedUserDefaultsController] values] setValue:@"thetvdb.com" forKey:@"defaultMetadataSearch"];
 
+    [GrowlApplicationBridge setGrowlDelegate: self];
+
     return self;
 }
 
@@ -318,14 +320,31 @@ static AppController *g_appController;
             }
             return;
         }
-        if (!m_someFilesFailed)
+        if (!m_someFilesFailed) {
             NSBeginAlertSheet(@"Encoding Successful", nil, nil, nil, [[NSApplication sharedApplication] mainWindow], 
                             nil, nil, nil, nil, 
                             @"All files finished encoding without errors");
-        else 
+                            
+            [GrowlApplicationBridge notifyWithTitle:@"Encoding Done"
+                                        description:@"All files finished encoding without errors"
+                                   notificationName:@"Example"
+                                           iconData:nil
+                                           priority:0
+                                           isSticky:NO
+                                       clickContext:nil];
+        } else { 
             NSBeginAlertSheet(@"Encoding FAILED", nil, nil, nil, [[NSApplication sharedApplication] mainWindow], 
                             nil, nil, nil, nil, 
                             @"Some files had errors during encoding. See Console for details");
+                            
+            [GrowlApplicationBridge notifyWithTitle:@"Encoding FAILED!"
+                                        description:@"Some files had errors during encoding. See Console for details"
+                                   notificationName:@"Example"
+                                           iconData:nil
+                                           priority:0
+                                           isSticky:NO
+                                       clickContext:nil];
+        }
     }
     
     m_runState =  RS_STOPPED;
@@ -399,7 +418,7 @@ static AppController *g_appController;
         [m_totalProgressBar startAnimation:self];
         [m_progressText setStringValue:@"Press start to encode"];
         [m_fileNumberText setStringValue:@""];
-		[self updateDockIcon];
+        [self updateDockIcon];
         return;
     }
     
@@ -421,7 +440,7 @@ static AppController *g_appController;
     if (progress == 0 || progress == 1) {
         [m_totalProgressBar setIndeterminate:YES];
         [m_totalProgressBar startAnimation:self];
-		[self updateDockIcon];
+        [self updateDockIcon];
     }
     else {
         [m_totalProgressBar stopAnimation:self];
@@ -434,7 +453,7 @@ static AppController *g_appController;
         overallProgress *= m_currentEncodedFileSize / m_totalEncodedFileSize;
         overallProgress += m_finishedEncodedFileSize / m_totalEncodedFileSize;
         [m_totalProgressBar setDoubleValue: overallProgress];
-		[self updateDockIcon:(float)progress currentFile:m_fileConvertingIndex totalFiles:m_numFilesToConvert];
+        [self updateDockIcon:(float)progress currentFile:m_fileConvertingIndex totalFiles:m_numFilesToConvert];
         
         if (!timeRemainingString) {
             // compute time remaining
@@ -528,8 +547,8 @@ static AppController *g_appController;
 
 - (void)pathControl:(NSPathControl *)pathControl willDisplayOpenPanel: (NSOpenPanel *)openPanel
 {
-	[openPanel setCanCreateDirectories:YES];
-	[openPanel setCanChooseDirectories:YES];
+    [openPanel setCanCreateDirectories:YES];
+    [openPanel setCanChooseDirectories:YES];
 }
 
 // This is a delegate for NSPathControl to add the 'Same folder as input file' menu item

@@ -35,6 +35,7 @@ DAMAGE.
 */
 
 #import <Cocoa/Cocoa.h>
+#import <Growl-WithInstaller/Growl.h>
 
 @class DeviceController;
 @class FileInfoPanelController;
@@ -66,7 +67,7 @@ typedef enum { RS_STOPPED, RS_RUNNING, RS_PAUSED } RunStateType;
 // Workaround to get an event when a file is selected from NSPathCell
 @interface MyPathCell : NSPathCell { } - (void)setURL:(NSURL *)url; @end
 
-@interface AppController : NSObject {
+@interface AppController : NSObject <GrowlApplicationBridgeDelegate> {
 @private
     IBOutlet NSProgressIndicator* m_totalProgressBar;
     IBOutlet NSTextField* m_progressText;
@@ -84,8 +85,9 @@ typedef enum { RS_STOPPED, RS_RUNNING, RS_PAUSED } RunStateType;
     IBOutlet NSButton* m_addToMediaLibraryButton;
     IBOutlet NSButton* m_deleteFromDestinationButton;
     IBOutlet NSPathControl* m_savePathControl;
-	
-	NSImage* m_applicationIcon;
+    IBOutlet NSWindow* mainWindow;
+    
+    NSImage* m_applicationIcon;
     MyDockTileView* m_dockTileView;
     
     NSString* m_savePath;

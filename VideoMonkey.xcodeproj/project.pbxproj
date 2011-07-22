@@ -100,6 +100,9 @@
 		4983925A0F1EB70E00C23782 /* DeviceEntry.m in Sources */ = {isa = PBXBuildFile; fileRef = 498392590F1EB70E00C23782 /* DeviceEntry.m */; };
 		4983960D0F269AC400C23782 /* Formatters.m in Sources */ = {isa = PBXBuildFile; fileRef = 4983960C0F269AC400C23782 /* Formatters.m */; };
 		498397370F278F2400C23782 /* FileListController.m in Sources */ = {isa = PBXBuildFile; fileRef = 498397360F278F2400C23782 /* FileListController.m */; };
+		4997693713D9DE5F00B35BBA /* Growl-WithInstaller.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4997693613D9DE5F00B35BBA /* Growl-WithInstaller.framework */; };
+		4997693813D9DEF900B35BBA /* Growl-WithInstaller.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 4997693613D9DE5F00B35BBA /* Growl-WithInstaller.framework */; };
+		4997693A13D9DF7E00B35BBA /* Growl Registration Ticket.growlRegDict in Resources */ = {isa = PBXBuildFile; fileRef = 4997693913D9DF7E00B35BBA /* Growl Registration Ticket.growlRegDict */; };
 		499A31770EDD97EB000C0AAF /* Transcoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 499A31760EDD97EB000C0AAF /* Transcoder.m */; };
 		499A31D30EDEE3E4000C0AAF /* mediainfo-inform.csv in Resources */ = {isa = PBXBuildFile; fileRef = 499A31D20EDEE3E4000C0AAF /* mediainfo-inform.csv */; };
 		49A9DD3F0F8907A000CCDDEB /* Quartz.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 49A9DD3E0F8907A000CCDDEB /* Quartz.framework */; };
@@ -146,6 +149,7 @@
 			dstSubfolderSpec = 10;
 			files = (
 				492BCAC40F61F03E00BCBF24 /* Sparkle.framework in Copy Frameworks */,
+				4997693813D9DEF900B35BBA /* Growl-WithInstaller.framework in Copy Frameworks */,
 			);
 			name = "Copy Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -262,6 +266,8 @@
 		4983960C0F269AC400C23782 /* Formatters.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Formatters.m; path = classes/Formatters.m; sourceTree = "<group>"; };
 		498397350F278F2400C23782 /* FileListController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FileListController.h; path = classes/FileListController.h; sourceTree = "<group>"; };
 		498397360F278F2400C23782 /* FileListController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FileListController.m; path = classes/FileListController.m; sourceTree = "<group>"; };
+		4997693613D9DE5F00B35BBA /* Growl-WithInstaller.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = "Growl-WithInstaller.framework"; sourceTree = "<group>"; };
+		4997693913D9DF7E00B35BBA /* Growl Registration Ticket.growlRegDict */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "Growl Registration Ticket.growlRegDict"; sourceTree = "<group>"; };
 		499A31750EDD97EB000C0AAF /* Transcoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Transcoder.h; path = classes/Transcoder.h; sourceTree = "<group>"; };
 		499A31760EDD97EB000C0AAF /* Transcoder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Transcoder.m; path = classes/Transcoder.m; sourceTree = "<group>"; };
 		499A31D20EDEE3E4000C0AAF /* mediainfo-inform.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; lineEnding = 2; path = "mediainfo-inform.csv"; sourceTree = "<group>"; };
@@ -319,6 +325,7 @@
 				495DBF950F616C64000E5D62 /* Sparkle.framework in Frameworks */,
 				49B007F20F7124D200D0EFF2 /* ScriptingBridge.framework in Frameworks */,
 				49A9DD3F0F8907A000CCDDEB /* Quartz.framework in Frameworks */,
+				4997693713D9DE5F00B35BBA /* Growl-WithInstaller.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -371,6 +378,7 @@
 		1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				4997693613D9DE5F00B35BBA /* Growl-WithInstaller.framework */,
 				49A9DD3E0F8907A000CCDDEB /* Quartz.framework */,
 				49B007F10F7124D200D0EFF2 /* ScriptingBridge.framework */,
 				495DBF940F616C64000E5D62 /* Sparkle.framework */,
@@ -425,6 +433,7 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				4997693913D9DF7E00B35BBA /* Growl Registration Ticket.growlRegDict */,
 				49D468210F28CFA30095A2AB /* dsa_pub.pem */,
 				49E911930EF86C3F009D0CAF /* ffpresets */,
 				492D327D0EF18D8000AEB740 /* bin */,
@@ -715,6 +724,7 @@
 				49B0117212DA60FC00ABAAB3 /* appletv2.png in Resources */,
 				49B0117312DA60FC00ABAAB3 /* tinyappletv2.png in Resources */,
 				492E8F9013200DCE00A5EE9E /* Credits.html in Resources */,
+				4997693A13D9DF7E00B35BBA /* Growl Registration Ticket.growlRegDict in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
