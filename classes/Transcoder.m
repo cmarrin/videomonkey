@@ -730,10 +730,7 @@ static void addCommandElement(NSMutableArray* elements, NSString* command, NSStr
                 }
                     
                 unichar c = [recipe characterAtIndex:stringIndex++];
-                char cs[2];
-                cs[0] = (char) c;
-                cs[1] = '\0';
-                NSString* charString = [NSString stringWithCString:cs encoding:NSASCIIStringEncoding];
+                NSString* charString = [NSString stringWithCharacters:&c length:1];
                 
                 if (c == '\'')
                     inSingleQuotes = !inSingleQuotes;
