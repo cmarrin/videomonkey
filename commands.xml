@@ -1384,7 +1384,6 @@ DTD
                 <param id="video_suffix" value="avi" />
                 <param id="ffmpeg_option_g" value="200" />
                 <param id="ffmpeg_option_tag" value="DX50" />
-                <param id="output_video_frame_rate" value="29.97" />
                 <param id="ffmpeg_option_vtag" value="DX50" />
             </device>
             
@@ -1467,7 +1466,6 @@ DTD
                 <param id="output_format_name" value="WMV" />
                 <param id="output_video_codec_name" value="WMV" />
                 <param id="output_audio_codec_name" value="WMA" />
-                <param id="output_video_frame_rate" value="29.97" />
                 <script>
                     <![CDATA[
                         setAudioParams((qualityStop == 0) ? "medium" : "cd");
@@ -1503,7 +1501,6 @@ DTD
                     </unchecked_item>
                 </checkbox>
                 <param id="num_cpus" value="1" /> <!-- Flash encoding fails if num_cpus is not 1 -->
-                <param id="output_video_frame_rate" value="29.97" />
                 <param id="output_video_codec_name" value="" />
                 <param id="ffmpeg_option_vcodec" value="" />
                 <param id="output_audio_codec_name" value="MP3" />
