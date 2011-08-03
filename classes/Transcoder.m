@@ -211,6 +211,7 @@ static void logInputFileError(NSString* filename)
     if ([[general objectAtIndex:2] isEqualToString:@"QuickTime"])
         info.format = @"Quicktime";
     info.duration = [[general objectAtIndex:3] doubleValue] / 1000;
+    double overallBitrate = [[general objectAtIndex:4] doubleValue];
     info.fileSize = [[general objectAtIndex:5] doubleValue];
 
     if ([info.format length] == 0) {
@@ -240,6 +241,9 @@ static void logInputFileError(NSString* filename)
         info.videoAspectRatio = [[video objectAtIndex:9] doubleValue];
         info.videoFrameRate = [[video objectAtIndex:10] doubleValue];
         info.videoBitrate = [[video objectAtIndex:11] doubleValue];
+        
+        if (!info.videoBitrate)
+            info.videoBitrate = overallBitrate;
         
         // standardize video codec name
         if ([info.videoCodec caseInsensitiveCompare:@"vc-1"] == NSOrderedSame || [info.videoCodec caseInsensitiveCompare:@"wmv3"] == NSOrderedSame)
