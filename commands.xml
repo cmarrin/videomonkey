@@ -1105,15 +1105,18 @@ DTD
                     // Video Formats -
                     //
                     var bitrateQualityMap = {
-                        "AVI":                  [ [  987, 1382, 2304, 3456,  3800, 4000 ], [ 219,  307,  512,  768, 1536, 2000 ] ],
-                        "MP4":                  [ [  150,  500, 1500, 2500,  4500,30000 ], [  80,  500, 1100, 2000, 3500,30000 ] ],
-                        "QuickTime":            [ [  150, 1440, 1975, 2880,  3500, 5760 ], [  80,  200,  320,  439,  640, 1280 ] ],
-                        "WMV":                  [ [  150, 1440, 1975, 2880,  3500, 5760 ], [  80,  320,  439,  640,  900, 1280 ] ],
-                        "Flash":                [ [  150, 1440, 1975, 2880,  3500, 5760 ], [  80,  320,  439,  640,  900, 1280 ] ],
-                        "MPEG":                 [ [ 1382, 2304, 3456, 4937,  7000,11520 ], [  80,  320,  439,  640,  900, 1280 ] ],
-                        "DV":                   [ [ 1382, 2304, 3456, 4937,  7000,11520 ], [  80,  320,  439,  640,  900, 1280 ] ]
+                        "AVI":                  [ [   50,  500, 1500, 2500,  3800, 4000 ] /* !320  */, [ 150,  307,  512,  768, 1536, 2000 ] ] /* 320  */,
+                        "MP4":                  [ [  150,  500, 1500, 2500,  4500,30000 ] /* !h264 */, [  50,  500, 1100, 2000, 3500,20000 ] ] /* h264 */,
+                        "QuickTime":            [ [  150,  500, 1500, 2500,  4500,30000 ] /* !h264 */, [  50,  500, 1100, 2000, 3500,20000 ] ] /* h264 */,
+                        "WMV":                  [ [   50,  500, 1500, 2500,  3500, 5760 ] /* !320  */, [  50,  320,  439,  640,  900, 1280 ] ] /* 320  */,
+                        "Flash":                [ [  150, 1440, 1975, 2880,  3500, 5760 ] /* !320  */, [  50,  320,  439,  640,  900, 1280 ] ] /* 320  */,
+                        "MPEG":                 [ [ 1382, 2304, 3456, 4937,  7000,11520 ] /* !ntsc */, [  50,  320,  439,  640,  900, 1280 ] ] /* ntsc */,
+                        "DV":                   [ [ 1382, 2304, 3456, 4937,  7000,11520 ] /* !ntsc */, [  50,  320,  439,  640,  900, 1280 ] ] /* ntsc */
                     };
 
+                    // Video sizes, 0 means actual size
+                    var generalVideoSize = [ [ 240, 180 ], [ 640, 480 ], [ 1024, 768 ], [ 0, 0 ], [ 0, 0 ], [ 0, 0 ] ];
+                    
                     var qminMap = {
                         //                          0   1   2   3   4
                         "AVI":                  [    9,  7,  5,  3,  2 ],
@@ -1141,17 +1144,13 @@ DTD
                         [ [ 480, 480 ], [ 480, 352 ], [ 480, 272 ], [ 480, 480 ] ], // Quality 1
                         [ [ 544, 480 ], [ 544, 352 ], [ 544, 272 ], [ 544, 480 ] ], // Quality 2
                         [ [ 544, 480 ], [ 544, 352 ], [ 544, 272 ], [ 544, 480 ] ], // Quality 3
-                        [ [ 720, 480 ], [ 720, 352 ], [ 720, 272 ], [ 720, 480 ] ]  // Quality 4
+                        [ [ 720, 480 ], [ 720, 352 ], [ 720, 272 ], [ 720, 480 ] ], // Quality 4
                         [ [ 720, 480 ], [ 720, 352 ], [ 720, 272 ], [ 720, 480 ] ]  // Quality 5
                     ];
                     
                     // Values are between ratios of 1.2 - 1.5 - 1.9 - 2.5 - > 2.5
                     // First value in set is padtop, second is padbottom
                     var tivoVideoPadding = [ [ -1, -1 ], [ 64, 64 ], [ 96, 112 ], [ -1, -1 ] ];
-                    
-                    // Video sizes for MPEG-4. 0 means actual size
-                    var mpeg4VideoSize = [ [ 320, 240 ], [ 640, 480 ], [ 1024, 768 ], [ 0, 0 ], [ 0, 0 ], [ 0, 0 ] ];
-                    var mpeg4VideoBitrate = [ 200, 400, 800, 0.6, 0.8,  1.1 ];
                     
                     var qualityStop = number(params.quality_stop);
                     var quality = number(params.quality);
@@ -1181,10 +1180,10 @@ DTD
                     // Init width and height
                     if (bool(params.width320))
                         requestedFrameWidth = 320;
-                    else if (qualityStop == 0)
-                        requestedFrameWidth = 240;
-                    else
-                        requestedFrameWidth = 720;
+                    else {
+                        requestedFrameWidth = generalVideoSize[qualityStop][0];
+                        requestedFrameHeight = generalVideoSize[qualityStop][1];
+                    }
 
                     switch (params.title) {
                         case "MP4":
@@ -1195,8 +1194,6 @@ DTD
                                 params.ffmpeg_option_maxrate = "40k";
                                 params.output_video_frame_rate = 10;
                             }
-                            requestedFrameWidth = mpeg4VideoSize[qualityStop][0];
-                            requestedFrameHeight = mpeg4VideoSize[qualityStop][1];
                             break;
                         case "MPEG":
                             var bitrateMin = mpegbitrateQualityMap[params.profile][qualityStop] * 1000;
@@ -1364,7 +1361,7 @@ DTD
             <device title="AVI" icon="file" enabled="true">
                 <script>
                     <![CDATA[
-                        setAudioParams("cd");
+                        setAudioParams((qualityStop == 0) ? "low" : (qualityStop == 1) ? "medium" : "cd");
                         setRecipe();
                     ]]>
                 </script>
@@ -1468,7 +1465,7 @@ DTD
                 <param id="output_audio_codec_name" value="WMA" />
                 <script>
                     <![CDATA[
-                        setAudioParams((qualityStop == 0) ? "medium" : "cd");
+                        setAudioParams((qualityStop == 0) ? "low" : (qualityStop == 1) ? "medium" : "cd");
                         setRecipe();
                     ]]>
                 </script>
@@ -1805,7 +1802,7 @@ DTD
             </common_device>
             
             <!-- DVD -->
-            <device title="Create a DVD Image" icon="cd" enabled="true">
+            <device title="Create a DVD Image" icon="cd" enabled="false">
                <checkbox which="0" title="Dual layer">
                     <checked_item>
                         <param id="ffmpeg_option_vcodec" value="libx264" />
