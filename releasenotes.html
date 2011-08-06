@@ -5,19 +5,19 @@
   <meta http-equiv="Content-Style-Type" content="text/css">
   <title>Release Notes</title>
   <meta name="Generator" content="Cocoa HTML Writer">
-  <meta name="CocoaVersion" content="1038.35">
+  <meta name="CocoaVersion" content="1138.1">
   <style type="text/css">
     p.p2 {margin: 0.0px 0.0px 14.0px 0.0px; font: 18.0px Times}
     p.p3 {margin: 0.0px 0.0px 12.0px 0.0px; font: 14.0px Times}
     p.p4 {margin: 0.0px 0.0px 14.0px 0.0px; font: 16.0px Times}
     p.p5 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Times}
+    p.p6 {margin: 0.0px 0.0px 0.0px 0.0px; font: 16.0px Times; min-height: 19.0px}
     p.p7 {margin: 0.0px 0.0px 14.0px 0.0px; font: 18.0px Times; min-height: 23.0px}
-    p.p8 {margin: 0.0px 0.0px 0.0px 72.0px; text-indent: -72.0px; font: 14.0px Times; min-height: 18.0px}
+    p.p9 {margin: 0.0px 0.0px 0.0px 72.0px; text-indent: -72.0px; font: 14.0px Times; min-height: 18.0px}
     p.p10 {margin: 0.0px 0.0px 14.0px 0.0px; font: 16.0px Times; min-height: 19.0px}
     p.p11 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Times; min-height: 14.0px}
     li.li5 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Times}
-    li.li6 {margin: 0.0px 0.0px 0.0px 0.0px; font: 16.0px Times; min-height: 19.0px}
-    li.li9 {margin: 0.0px 0.0px 0.0px 0.0px; font: 16.0px Times}
+    li.li8 {margin: 0.0px 0.0px 0.0px 0.0px; font: 16.0px Times}
     span.s1 {font: 16.0px Times}
     span.s2 {color: #0000ee}
     ul.ul1 {list-style-type: disc}
@@ -26,12 +26,30 @@
 </head>
 <body>
 <h1 style="margin: 0.0px 0.0px 16.0px 0.0px; font: 24.0px Times"><b>Release Notes For Video Monkey</b></h1>
+<p class="p2"><b>Version 0.11 (8/6/2011)</b></p>
+<p class="p3">This is an intermediate release to fix many bugs causing issues for new formats (and some old ones). Added Growl support (thanks to Lars Koerkemeier). Added UI for advanced settings which is operational yet. This notably does not fix a couple of reported issues with certain file formats on Lion. Still waiting for responses from reporters. But I wanted to get the current fixes out.</p>
+<p class="p4"><b>New in this release:</b></p>
+<ul class="ul1">
+  <li class="li5">Added Growl support</li>
+  <li class="li5">Added ability for many video formats (all non-Apple formats except DV and certain MPEG-1/2 formats) to encode to various frame sizes, up to full frame size</li>
+</ul>
+<p class="p6"><br></p>
+<p class="p4"><b>Bugs fixed:</b></p>
+<ul class="ul1">
+  <li class="li5">https://github.com/cmarrin/videomonkey/issues/52 - No video on original appleTV</li>
+  <li class="li5">https://github.com/cmarrin/videomonkey/issues/61 - Overall Progress spelled incorrectly</li>
+  <li class="li5">http://bugs.marrin.org/show_bug.cgi?id=2 - Attempting to encode file with umlaut or Kanji fails</li>
+  <li class="li5">http://bugs.marrin.org/show_bug.cgi?id=3 - Avi framerate stuck on 29.97fps and 720x544</li>
+  <li class="li5">Javascript error when trying to move slider to high quality for Tivo</li>
+  <li class="li5">Tolerate missing video bitrate in input file. Use overall bitrate instead.</li>
+</ul>
+<p class="p7"><br></p>
 <p class="p2"><b>Version 0.10 (3/17/2011)</b></p>
 <p class="p3">Changed back to 32 bit intel-only application, but still with the latest ffmpeg. Also fixed several bugs in the new Video Formats feature.</p>
 <p class="p4"><b>New in this release:</b></p>
 <ul class="ul1">
   <li class="li5">New version of ffmpeg, but 32 bit only</li>
-  <li class="li6"><b></b><br></li>
+  <li class="li8"></li>
 </ul>
 <p class="p4"><b>Bugs fixed:</b></p>
 <ul class="ul1">
@@ -45,7 +63,7 @@
 <p class="p3">New video formats and AV sync supported, plus a newer version of ffmpeg.</p>
 <p class="p3"><span class="s1"><b><i>Note 1: </i></b></span><b>New video format support is very fresh, so it may have kinks to be worked out. Try it out and see! Don't forget to let me know if it does or doesn't work for you.</b></p>
 <p class="p5"><span class="s1"><b><i>Note 2: </i></b></span><b>Now that Video Monkey supports more file formats, it is more important than ever to download and install Perian if you haven'talready. This adds support for all the new formats to Quicktime player. This not only lets you preview your newly encoded files, but it also lets you view files in the Show Movie panel and set their AV offset. Download it from </b><a href="http://www.perian.org/"><span class="s2"><b>http://www.perian.org/</b></span></a></p>
-<p class="p8"><br></p>
+<p class="p9"><br></p>
 <p class="p4"><b>New in this release:</b></p>
 <ul class="ul1">
   <li class="li5">Added new output video formats: AVI, MP4, Quicktime, WMV, Flash, MPEG, DV</li>
@@ -61,7 +79,7 @@
   <li class="li5">Can now select multiple files and type an entry in the search box. The search will be applied to all files</li>
   <li class="li5">Even with multiple files selected, the search box will show a list of results from most recent search.</li>
   <li class="li5">Fixed frame size setting bugs for Apple TV.</li>
-  <li class="li9"></li>
+  <li class="li8"></li>
 </ul>
 <p class="p4"><b>Bugs fixed:</b></p>
 <ul class="ul1">
