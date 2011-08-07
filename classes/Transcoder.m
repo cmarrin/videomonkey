@@ -158,7 +158,7 @@ static BOOL isReadable(NSFileHandle* fileHandle)
 
 static void logInputFileError(NSString* filename)
 {
-    [[AppController instance] log: [NSString stringWithFormat:@"The file '%@' is not a video format Video Monkey understands. \n"], filename];
+    [[AppController instance] log: [NSString stringWithFormat:@"The file '%@' is not a video format Video Monkey understands. \n", filename]];
 }
 
 -(BOOL) _validateInputFile: (TranscoderFileInfo*) info
