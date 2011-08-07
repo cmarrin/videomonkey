@@ -26,9 +26,9 @@ This assumes the Video Monkey icon is VideoMonkeyDevel.icns (VideoMonkeyDevel in
     
 8. Upload videomonkey-x.y.zip, releasenotes.html and videomonkeycast.xml to the website, using the Downloads Manager
     - Delete previous versions of releasenotes.html and videomonkeycast.xml
-    - Set the category of releasenotes.html and videomonkeycast.xml to hidden
-    - Set the category of videomonkey-x.y.zip to current release
-    - Set the category of previous release to previous releases
+    - Set the category of releasenotes.html and videomonkeycast.xml to "Hidden"
+    - Set the category of videomonkey-x.y.zip to "Current release"
+    - Set the category of previous release to "Previous Releases"
     - Files will end up at http://videomonkey.org/releases/ (which is a link to http://videomonkey.org/wp-content/files)
     
 9. Tag the tree as version x.y
