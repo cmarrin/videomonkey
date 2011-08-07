@@ -85,6 +85,7 @@ DAMAGE.
     [m_transcoder logCommand: index withFormat:@""];
     
     // execute the command
+    [self.task setCurrentDirectoryPath:[m_transcoder.outputFileInfo.filename stringByDeletingLastPathComponent]];
     [self.task setArguments: [NSArray arrayWithObjects: @"-c", m_command, nil]];
     [self.task setEnvironment:[NSDictionary dictionaryWithObjectsAndKeys:[[NSBundle mainBundle] resourcePath], @"FFMPEG_DATADIR", nil]];
     [self.task setLaunchPath: @"/bin/sh"];

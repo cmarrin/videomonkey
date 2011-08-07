@@ -140,7 +140,6 @@ typedef enum FileStatus {   FS_INVALID,     // File is invalid, we can't encode 
     
     NSFileHandle* m_logFile;
     NSString* m_tempAudioFileName;
-    NSString* m_passLogFileName;
     NSString* m_audioQuality;
     float m_avOffset; // How much video is ahead of audio, in seconds (negative numbers mean audio is ahead of video)
     
@@ -170,7 +169,6 @@ typedef enum FileStatus {   FS_INVALID,     // File is invalid, we can't encode 
 
 -(BOOL) hasInputAudio;
 -(NSString*) tempAudioFileName;
--(NSString*) passLogFileName;
 
 -(void) setParams;
 

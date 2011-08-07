@@ -167,7 +167,6 @@ app_resource_path           Path to application resources
 input_file                  Current input file path
 output_file                 Current output file path
 tmp_audio_file              Path to a temp file to which audio can be saved
-pass_log_file               Path to the ffmpeg pass log file, used for 2 pass encoding
 input_format                Container format of input file
 input_duration              Duration of input video
 input_video_width           Width, in pixels, of the input file
@@ -282,7 +281,6 @@ Useful URLs:
 These parameters are always included and never changed by these scripts:
 ========================================================================
 -pass                       (1 or 2) identifes pass for 2 pass encoding
--passlogfile                Temp file used for 2 pass encoding. Always set to "$pass_log_file" (including quotes)
 -threads                    Number of threads used. Always set to $num_cpus
 -y                          Overwrite output files (always included)
 -i                          Precedes input file
@@ -369,10 +367,10 @@ DTD
             $ffmpeg_vpre $ffmpeg_vpre_profile
         </command>
         <command id="ffmpeg_pass1_options">
-            -pass 1 -passlogfile "$pass_log_file" $ffmpeg_vpre_pass1 $ffmpeg_vpre_profile
+            -pass 1 $ffmpeg_vpre_pass1 $ffmpeg_vpre_profile
         </command>
         <command id="ffmpeg_pass2_options">
-            -pass 2 -passlogfile "$pass_log_file"  $ffmpeg_vpre $ffmpeg_vpre_profile
+            -pass 2 $ffmpeg_vpre $ffmpeg_vpre_profile
         </command>
         
         <!-- Raw encoding commands -->

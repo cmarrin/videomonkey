@@ -377,7 +377,6 @@ static NSImage* getFileStatusImage(FileStatus status)
     m_fileStatus = FS_INVALID;
     m_enabled = YES;
     m_tempAudioFileName = [[NSString stringWithFormat:@"/tmp/%p-tmpaudio.wav", self] retain];
-    m_passLogFileName = [[NSString stringWithFormat:@"/tmp/%p-tmppass.log", self] retain];
     
     // init the progress indicator
     m_progressIndicator = [[NSProgressIndicator alloc] init];
@@ -401,7 +400,6 @@ static NSImage* getFileStatusImage(FileStatus status)
 -(void) dealloc
 {
     [m_tempAudioFileName release];
-    [m_passLogFileName release];
     [m_progressIndicator removeFromSuperview];
     [m_statusImageView removeFromSuperview];
     [m_progressIndicator release];
@@ -478,11 +476,6 @@ static NSImage* getFileStatusImage(FileStatus status)
     return m_tempAudioFileName;
 }
 
--(NSString*) passLogFileName
-{
-    return m_passLogFileName;
-}
-
 static NSString* escapePath(NSString* path)
 {
     NSArray* array = [path componentsSeparatedByString:@"$"];
@@ -502,7 +495,6 @@ static NSString* escapePath(NSString* path)
     [env setValue: escapePath(self.inputFileInfo.filename) forKey: @"input_file"];
     [env setValue: escapePath(self.outputFileInfo.filename) forKey: @"output_file"];
     [env setValue: [self tempAudioFileName] forKey: @"tmp_audio_file"];
-    [env setValue: [self passLogFileName] forKey: @"pass_log_file"];
     
     // fill in params
     FrameSize frameSize = self.inputFileInfo.videoFrameSize;
@@ -610,13 +602,15 @@ static NSString* escapePath(NSString* path)
     [m_logFile release];
     m_logFile = nil;
     
+    NSString* outputPath = [self.outputFileInfo.filename stringByDeletingLastPathComponent];
+    
     // toss output file if not successful
     if (deleteOutputFile)
         [[NSFileManager defaultManager] removeItemAtPath:self.outputFileInfo.filename error:nil];
     else if (moveOutputFileToTrash)
         [[NSWorkspace sharedWorkspace] 
             performFileOperation:NSWorkspaceRecycleOperation 
-            source:[self.outputFileInfo.filename stringByDeletingLastPathComponent]
+            source:outputPath
             destination:@""
             files:[NSArray arrayWithObject:[self.outputFileInfo.filename lastPathComponent]]
             tag:nil];
@@ -627,6 +621,14 @@ static NSString* escapePath(NSString* path)
     // After we're done with the encode we need to re-init the output filename. It may now exist
     // and if we were to try to encode again, we need a new filename for it
     [self updateOutputFileName];
+    
+    // Toss tmp files
+    [[NSFileManager defaultManager] removeItemAtPath:m_tempAudioFileName error:nil];
+    
+    // Get rid of ffmpeg 2 pass temp files
+    [[NSFileManager defaultManager] removeItemAtPath:[outputPath stringByAppendingPathComponent:@"x264_2pass.log"] error:nil];
+    [[NSFileManager defaultManager] removeItemAtPath:[outputPath stringByAppendingPathComponent:@"x264_2pass.log.mbtree"] error:nil];
+    [[NSFileManager defaultManager] removeItemAtPath:[outputPath stringByAppendingPathComponent:@"ffmpeg2pass-0.log"] error:nil];    
 }
 
 -(void) startNextCommands
@@ -696,7 +698,6 @@ static void addCommandElement(NSMutableArray* elements, NSString* command, NSStr
     
     // make sure the tmp tmp files do not exist
     [[NSFileManager defaultManager] removeItemAtPath:m_tempAudioFileName error:nil];
-    [[NSFileManager defaultManager] removeItemAtPath:m_passLogFileName error:nil];
     
     // get recipe
     NSString* recipe = [[[AppController instance] deviceController] recipe];
