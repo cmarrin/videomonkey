@@ -26,6 +26,23 @@
 </head>
 <body>
 <h1 style="margin: 0.0px 0.0px 16.0px 0.0px; font: 24.0px Times"><b>Release Notes For Video Monkey</b></h1>
+<p class="p2"><b>Version 0.12 (8/9/2011)</b></p>
+<p class="p3">This is a quick release to fix the problem that 0.11 used the Lion SDK to build and therefore would not run on Leopard systems (but it does run on Snow Leopard). I've added a few other nifty fixes as well</p>
+<p class="p4"><b>New in this release:</b></p>
+<ul class="ul1">
+  <li class="li5">Changed how bitrate is computed to give better results at more frame sizes</li>
+  <li class="li5">Made all formats (except DV) using half framerate at lowest quality setting</li>
+  <li class="li5">Make performance button always start out as <i>normal</i> to avoid it annoyingly always coming up as <i>fastest</i></li>
+</ul>
+<p class="p6"><br></p>
+<p class="p4"><b>Bugs fixed:</b></p>
+<ul class="ul1">
+  <li class="li5">http://bugs.marrin.org/show_bug.cgi?id=7 - Failure to encode dual pass in OS X 10.7 Lion</li>
+  <li class="li5">http://bugs.marrin.org/show_bug.cgi?id=5 - Crash for AVI with Lion</li>
+  <li class="li5">Use 10.5 SDK so VideoMonkey runs on Leopard</li>
+  <li class="li5">Fixed bug where quality slider was sometimes disabled in error</li>
+</ul>
+<p class="p7"><b></b><br></p>
 <p class="p2"><b>Version 0.11 (8/6/2011)</b></p>
 <p class="p3">This is an intermediate release to fix many bugs causing issues for new formats (and some old ones). Added Growl support (thanks to Lars Koerkemeier). Added UI for advanced settings which is operational yet. This notably does not fix a couple of reported issues with certain file formats on Lion. Still waiting for responses from reporters. But I wanted to get the current fixes out.</p>
 <p class="p4"><b>New in this release:</b></p>
