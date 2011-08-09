@@ -849,6 +849,10 @@ static void setButton(NSButton* button, MyButton* item)
         [menuItem setTitle:[item title]];
         [[button menu] addItem:menuItem];
     }
+
+    // FIXME: Ultimately performance should be saved in user defaults on a per-device basis. For now we'll
+    // just set it to 'normal'
+    [button selectItemAtIndex:2];
 }
 
 -(void) addParamsToJavaScriptContext: (JavaScriptContext*) context performanceIndex:(int) perfIndex

@@ -340,10 +340,6 @@ static JSValueRef _jsLog(JSContextRef ctx, JSObjectRef function, JSObjectRef thi
 		[self setCurrentDevice:deviceEntry];
 	}
 	
-    // set the selected item
-    // FIXME: need to get this from prefs
-    [m_performanceButton selectItemAtIndex:performanceIndex];
-    
     [self setCurrentParamsWithEnvironment:nil];
     
     [self uiChanged];
