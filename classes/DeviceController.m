@@ -296,7 +296,6 @@ static JSValueRef _jsLog(JSContextRef ctx, JSObjectRef function, JSObjectRef thi
     
     id userDevice = [[[NSUserDefaultsController sharedUserDefaultsController] values] valueForKey:@"currentDeviceIndex"];
     int deviceIndex = userDevice ? [userDevice intValue] : -1;
-    int performanceIndex = [m_performanceButton indexOfSelectedItem];
     
     // populate the device menu
     [m_deviceButton removeAllItems];
