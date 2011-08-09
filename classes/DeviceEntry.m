@@ -239,6 +239,7 @@ static void setButton(NSButton* button, MyButton* item)
 	// If its 1 we keep it but disable it. I think it looks cleaner.
     // If we see any other number in the array we will turn off the quality slider
     [m_slider setHidden:NO];
+    [m_slider setEnabled:YES];
     [m_sliderLabel1 setHidden:NO];
     [m_sliderLabel2 setHidden:NO];
     [m_sliderLabel3 setHidden:NO];
