@@ -39,7 +39,7 @@ DAMAGE.
 @class AppController;
 @class Transcoder;
 
-@interface FileListController : NSArrayController <NSTableViewDelegate> {
+@interface FileListController : NSArrayController /* <NSTableViewDelegate> */ {
     IBOutlet NSTableView* m_fileListView;
 
     int m_draggedRow;

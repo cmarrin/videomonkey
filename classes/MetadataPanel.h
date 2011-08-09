@@ -38,7 +38,7 @@ DAMAGE.
 
 typedef enum { INPUT_TAG, SEARCH_TAG, USER_TAG, OUTPUT_TAG } TagType;
 
-@interface MetadataPanelItem : NSBox <NSTextFieldDelegate> {
+@interface MetadataPanelItem : NSBox /* <NSTextFieldDelegate> */ {
     IBOutlet NSTextField* m_title;
     NSTextField* m_mainTextField;
     NSMatrix* m_sourceMatrix;
