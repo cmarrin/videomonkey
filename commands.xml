@@ -624,7 +624,7 @@ DTD
             {
                 // set the frame rate
                 var rateMultiplier = 1;
-                if (allowDegradedRate && number(params.quality_stop) == 0)
+                if (allowDegradedRate && number(params.quality_stop) == 0 && number(params.quality) < 0.5)
                     rateMultiplier = 0.5;
 
                 params.output_video_frame_rate = params.input_frame_rate * rateMultiplier;
@@ -635,7 +635,7 @@ DTD
             {
                 var bitrate = (bitrateMax - bitrateMin) * number(params.quality) + bitrateMin;
                 var limit = (bitrate > params.input_video_bitrate) && bool(params.limit_output_params);
-                params.output_video_bitrate = limit ? params.input_video_bitrate : bitrate;
+                params.output_video_bitrate = Math.round(limit ? params.input_video_bitrate : bitrate);
             }
             
             // Assumes output_video_frame_rate is set
@@ -1102,18 +1102,22 @@ DTD
                     //
                     // Video Formats -
                     //
-                    var bitrateQualityMap = {
-                        "AVI":                  [ [   50,  500, 1500, 2500,  3800, 4000 ] /* !320  */, [ 150,  307,  512,  768, 1536, 2000 ] ] /* 320  */,
-                        "MP4":                  [ [  150,  500, 1500, 2500,  4500,30000 ] /* !h264 */, [  50,  500, 1100, 2000, 3500,20000 ] ] /* h264 */,
-                        "QuickTime":            [ [  150,  500, 1500, 2500,  4500,30000 ] /* !h264 */, [  50,  500, 1100, 2000, 3500,20000 ] ] /* h264 */,
-                        "WMV":                  [ [   50,  500, 1500, 2500,  3500, 5760 ] /* !320  */, [  50,  320,  439,  640,  900, 1280 ] ] /* 320  */,
-                        "Flash":                [ [  150, 1440, 1975, 2880,  3500, 5760 ] /* !320  */, [  50,  320,  439,  640,  900, 1280 ] ] /* 320  */,
-                        "MPEG":                 [ [ 1382, 2304, 3456, 4937,  7000,11520 ] /* !ntsc */, [  50,  320,  439,  640,  900, 1280 ] ] /* ntsc */,
-                        "DV":                   [ [ 1382, 2304, 3456, 4937,  7000,11520 ] /* !ntsc */, [  50,  320,  439,  640,  900, 1280 ] ] /* ntsc */
-                    };
+                    // var bitrateQualityMap = {
+                    //     "AVI":                  [ [  200,  500, 1500, 2500,  3800, 4000 ] /* !320  */, [ 300,  350,  400,  500,  600,  800 ] ] /* 320  */,
+                    //     "MP4":                  [ [  300,  500, 1500, 2500,  4500,30000 ] /* !h264 */, [ 200,  500, 1100, 2000, 3500,20000 ] ] /* h264 */,
+                    //     "QuickTime":            [ [  300,  500, 1500, 2500,  4500,30000 ] /* !h264 */, [ 200,  500, 1100, 2000, 3500,20000 ] ] /* h264 */,
+                    //     "WMV":                  [ [  200,  500, 1500, 2500,  3500, 5760 ] /* !320  */, [ 300,  350,  400,  500,  600,  800 ] ] /* 320  */,
+                    //     "Flash":                [ [  200, 1440, 1975, 2880,  3500, 5760 ] /* !320  */, [ 300,  350,  400,  500,  600,  800 ] ] /* 320  */,
+                    //     "MPEG":                 [ [ 1000, 2304, 3456, 4937,  7000,11520 ] /* !ntsc */, [ 300,  320,  439,  640,  900, 1280 ] ] /* ntsc */,
+                    //     "DV":                   [ [ 1000, 2304, 3456, 4937,  7000,11520 ] /* !ntsc */, [ 300,  320,  439,  640,  900, 1280 ] ] /* ntsc */
+                    // };
 
                     // Video sizes, 0 means actual size
                     var generalVideoSize = [ [ 240, 180 ], [ 640, 480 ], [ 1024, 768 ], [ 0, 0 ], [ 0, 0 ], [ 0, 0 ] ];
+                    
+                    // Bitrate multipliers - these are multiplied by the total pixels per frame (width x height) to get the final bitrate
+                    var generalMpeg4BitrateMultiplier = [ 1.5, 2.5, 3.5, 5, 7, 10 ];
+                    var generalH264BitrateMultiplier = [ 0.5, 1, 1.5, 2, 4, 8 ];
                     
                     var qminMap = {
                         //                          0   1   2   3   4
@@ -1159,22 +1163,12 @@ DTD
                     var requestedFrameWidth = 0;
                     var requestedFrameHeight = 0;
                     
-                    if (number(params.output_video_frame_rate) <= 0)
-                        params.output_video_frame_rate = params.input_frame_rate;
+                    setVideoFrameRate(params.title != "DV");
                     
                     // Init qmin
                     if (params.title in qminMap)
                         params.ffmpeg_option_qmin = qminMap[params.title][qualityStop];
                 
-                    // Init bitrate
-                    // There are 3 flags governing bitrate: h264, width320 and ntsc
-                    // but all are mutually exclusive, so index is 0 if none are set
-                    // and 1 if any are set.
-                    var index = (h264 | bool(params.width320) | ntsc) ? 1 : 0;
-                    var bitrateMin = bitrateQualityMap[params.title][index][qualityStop] * 1000;
-                    var bitrateMax = bitrateQualityMap[params.title][index][qualityStop+1] * 1000;
-                    setVideoBitrate(bitrateMin, bitrateMax);
-                    
                     // Init width and height
                     if (bool(params.width320))
                         requestedFrameWidth = 320;
@@ -1183,15 +1177,35 @@ DTD
                         requestedFrameHeight = generalVideoSize[qualityStop][1];
                     }
 
+                    if (params.title != "DV")
+                        setVideoSize(requestedFrameWidth, requestedFrameHeight);
+                    
+                    // Init bitrate
+                    // Bitrate is width * height * bitrate multiplier * (extra bitrate multiplier for small sizes)
+                    var bitrateMultTable = h264 ? generalH264BitrateMultiplier : generalMpeg4BitrateMultiplier;
+                    var pixels = params.output_video_width * params.output_video_height;
+                    
+                    // extraMultiplier is a PWL curve with a value of 5 at 40K or below, 2 at 300K and 1 at 750K or above
+                    var extraMultiplier;
+                    if (pixels > 750000)
+                        extraMultiplier = 1;
+                    else if (pixels > 300000)
+                        extraMultiplier = 2 - (pixels - 300000) / (750000 - 300000);
+                    else if (pixels > 40000)
+                        extraMultiplier = 5 - (pixels - 40000) / (300000 - 40000) * 3;
+                    else
+                        extraMultiplier = 5;
+                        
+                    var bitrateMin = pixels * bitrateMultTable[qualityStop] * extraMultiplier;
+                    var bitrateMax = pixels * bitrateMultTable[qualityStop+1] * extraMultiplier;
+log("*** pixels="+pixels+", bitrateMin="+bitrateMin+", bitrateMax="+bitrateMax+", extraMultiplier="+extraMultiplier);
+                    setVideoBitrate(bitrateMin, bitrateMax);
+                    
                     switch (params.title) {
                         case "MP4":
-                            setVideoFrameRate(false);
+                            //params.ffmpeg_option_maxrate = "600k";
                             if (qualityStop == 4)
                                 params.ffmpeg_option_qmin = "";
-                            else if (qualityStop == 0) {
-                                params.ffmpeg_option_maxrate = "40k";
-                                params.output_video_frame_rate = 10;
-                            }
                             break;
                         case "MPEG":
                             var bitrateMin = mpegbitrateQualityMap[params.profile][qualityStop] * 1000;
@@ -1424,10 +1438,12 @@ DTD
                     <checked_item>
                         <param id="ffmpeg_option_vcodec" value="libx264" />
                         <param id="output_video_codec_name" value="H.264" />
+                        <param id="h264" value="true" />
                     </checked_item>
                     <unchecked_item>
-                        <param id="ffmpeg_option_vcodec" value="MPEG-4" />
-                        <param id="output_video_codec_name" value="H.264" />
+                        <param id="ffmpeg_option_vcodec" value="mpeg4" />
+                        <param id="output_video_codec_name" value="MPEG-4" />
+                        <param id="h264" value="false" />
                     </unchecked_item>
                 </checkbox>
                 <menu which="0" title="Best for:">
