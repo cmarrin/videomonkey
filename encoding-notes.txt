@@ -397,3 +397,91 @@ dvd.xml
 
 I used pal-dvd because that's what the example used. ntsc-dvd will probably work the same
 
+Then I used this to make the iso file:
+
+    hdiutil makehybrid -udf -udf-volume-name MY_DVD -o MY_DVD.iso MY_DVD
+    
+Then I did this to burn it:
+
+    hdiutil burn -puppetstrings MY_DVD.iso
+    
+The spew looked like this:
+
+PERCENT:0.000000
+PERCENT:-1.000000
+MESSAGE:Preparing data for burn
+PERCENT:-1.000000
+MESSAGE:Opening session
+PERCENT:-1.000000
+MESSAGE:Opening track
+PERCENT:-1.000000
+MESSAGE:Writing track
+PERCENT:0.652133
+PERCENT:1.844606
+PERCENT:5.422023
+PERCENT:7.806969
+PERCENT:11.384386
+PERCENT:14.961803
+PERCENT:18.539221
+PERCENT:22.116638
+PERCENT:25.694057
+PERCENT:29.271475
+PERCENT:32.848892
+PERCENT:36.426308
+PERCENT:40.003727
+PERCENT:43.581142
+PERCENT:47.158562
+PERCENT:50.735981
+PERCENT:54.313396
+PERCENT:54.313396
+MESSAGE:Closing track
+PERCENT:54.313396
+MESSAGE:Closing session
+PERCENT:57.890816
+PERCENT:61.468231
+PERCENT:65.045647
+PERCENT:68.623062
+PERCENT:72.200485
+PERCENT:75.777901
+PERCENT:79.355316
+PERCENT:82.932732
+PERCENT:86.510155
+PERCENT:90.087578
+PERCENT:93.664993
+PERCENT:-1.000000
+PERCENT:-1.000000
+PERCENT:-1.000000
+MESSAGE:Finishing burn
+PERCENT:0.000000
+MESSAGE:Verifying burn…
+MESSAGE:Verifying
+PERCENT:0.000000
+PERCENT:0.000000
+PERCENT:9.539780
+PERCENT:19.079559
+PERCENT:28.619341
+PERCENT:38.159119
+PERCENT:47.698898
+PERCENT:57.238682
+PERCENT:66.778465
+PERCENT:76.318237
+PERCENT:85.858025
+PERCENT:95.397797
+PERCENT:100.000000
+PERCENT:100.000000
+MESSAGE:Burn completed successfully
+PERCENT:100.000000
+MESSAGE:hdiutil: burn: completed
+
+
+If a burnable disk is not inserted a line will spew:
+
+	Please insert a disc:
+
+
+if the disk inserted is not blank a line will spew:
+
+	Media is not writable
+
+
+PERCENT:-1.000000 mean 'indeterminate', progress bar should show barber pole
