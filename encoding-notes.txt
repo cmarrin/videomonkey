@@ -14,6 +14,28 @@ The above will stitch together files of any format by first converting to mpeg (
 DV files can be catted without feeding into ffmpeg. So you can convert to DV, then cat directly to the output DV file.
 
 
+Another technique was:
+
+mkfifo temp1.a
+mkfifo temp1.v
+mkfifo temp2.a
+mkfifo temp2.v
+mkfifo all.a
+mkfifo all.v
+ffmpeg -i input1.flv -vn -f u16le -acodec pcm_s16le -ac 2 -ar 44100 - > temp1.a < /dev/null &
+ffmpeg -i input2.flv -vn -f u16le -acodec pcm_s16le -ac 2 -ar 44100 - > temp2.a < /dev/null &
+ffmpeg -i input1.flv -an -f yuv4mpegpipe - > temp1.v < /dev/null &
+{ ffmpeg -i input2.flv -an -f yuv4mpegpipe - < /dev/null | tail -n +2 > temp2.v ; } &
+cat temp1.a temp2.a > all.a &
+cat temp1.v temp2.v > all.v &
+ffmpeg -f u16le -acodec pcm_s16le -ac 2 -ar 44100 -i all.a \
+       -f yuv4mpegpipe -i all.v \
+       -sameq -y output.flv
+rm temp[12].[av] all.[av]
+
+
+This one almost worked once, but I think the framerate and size of both videos must be identical. Also seems like some cruft was left lying around, so it didn't work the seconds time.
+
 
 Recipes
 
@@ -485,3 +507,7 @@ if the disk inserted is not blank a line will spew:
 
 
 PERCENT:-1.000000 mean 'indeterminate', progress bar should show barber pole
+
+
+
+
