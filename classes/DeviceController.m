@@ -35,6 +35,8 @@ DAMAGE.
 */
 
 #import "DeviceController.h"
+
+#import "AppController.h"
 #import "DeviceEntry.h"
 #import "JavaScriptContext.h"
 #import "XMLDocument.h"
@@ -88,6 +90,8 @@ static void addMenuSeparator(NSPopUpButton* button)
 }
 
 @implementation DeviceController
+
+@synthesize audioCodecStrings = m_audioCodecStrings;
 
 -(void) initCommands
 {
@@ -341,6 +345,10 @@ static JSValueRef _jsLog(JSContextRef ctx, JSObjectRef function, JSObjectRef thi
 	
     [self setCurrentParamsWithEnvironment:nil];
     
+    // Initialize the advanced override menus
+    NSString* string = [self paramForKey:@"advanced_audio_codec"];
+    self.audioCodecStrings = [string componentsSeparatedByString:@","];
+
     [self uiChanged];
 }
 

@@ -49,6 +49,61 @@ FrameSize makeFrameSize(int width, int height) { return ((uint32_t) width << 16)
 int widthFromFrameSize(FrameSize f) { return f >> 16; }
 int heightFromFrameSize(FrameSize f) { return f & 0xffff; }
 
+@implementation OverrideableValue
+
+@synthesize overriddenValue;
+
+- (id)copyWithZone:(NSZone *)zone
+{
+    OverrideableValue* v = [[OverrideableValue allocWithZone:zone] init];
+    v.overridden = overridden;
+    v.overriddenValue = [overriddenValue retain];
+    v.value = [value retain];
+    return v;
+}
+
+- (void)setOverridden:(BOOL)v
+{
+    BOOL changed = v ^ overridden;
+    overridden = v;
+    if (changed) {
+        if (overridden && !overriddenValue)
+            self.overriddenValue = value;
+        self.value = value; // Update value in GUI
+    }
+}
+
+- (BOOL)overridden
+{
+    return overridden;
+}
+
+- (void)setValue:(id)v
+{
+    value = v;
+}
+
+- (id)value
+{
+    if (overridden)
+        return overriddenValue;
+    return value;
+}
+
+- (void)setOverriddenValue:(id)v
+{
+    overriddenValue = v;
+    if (overridden)
+        self.value = value;
+}
+
+- (id)overriddenValue
+{
+    return overriddenValue;
+}
+
+@end
+
 @implementation TranscoderFileInfo
 
 // General
@@ -76,6 +131,20 @@ int heightFromFrameSize(FrameSize f) { return f & 0xffff; }
 @synthesize audioSampleRate;
 @synthesize audioChannels;
 @synthesize audioBitrate;
+
+- (id)init
+{
+    if (self = [super init]) {
+        audioCodec = [[OverrideableValue alloc] init];
+    }
+    return self;
+}
+
+- (void)dealloc
+{
+    [audioCodec release];
+    [super dealloc];
+}
 
 @end
 
@@ -265,7 +334,7 @@ static void logInputFileError(NSString* filename)
         }
 
         info.audioLanguage = [[audio objectAtIndex:1] retain];
-        info.audioCodec = [[audio objectAtIndex:2] retain];
+        info.audioCodec.value = [[audio objectAtIndex:2] retain];
         info.audioSampleRate = [[audio objectAtIndex:3] doubleValue];
         info.audioChannels = [[audio objectAtIndex:4] intValue];
         info.audioBitrate = [[audio objectAtIndex:5] doubleValue];
@@ -525,6 +594,9 @@ static NSString* escapePath(NSString* path)
     [env setValue: [[NSNumber numberWithInt: [[AppController instance] numCPUs]] stringValue] forKey: @"num_cpus"];
 
     [env setValue: self.inputFileInfo.videoCodec forKey: @"input_video_codec"];
+    
+    // If we have overrides, set them here.
+    [env setValue:self.outputFileInfo.audioCodec.overridden ? self.outputFileInfo.audioCodec.value : @"" forKey: @"output_audio_codec_name_override"];
 
     // set the params
     [[[AppController instance] deviceController] setCurrentParamsWithEnvironment:env];
@@ -559,7 +631,7 @@ static NSString* escapePath(NSString* path)
 
     m_audioQuality = [[[AppController instance] deviceController] paramForKey:@"output_audio_quality"];
 
-    self.outputFileInfo.audioCodec = [[[AppController instance] deviceController] paramForKey:@"output_audio_codec_name"];
+    self.outputFileInfo.audioCodec.value = [[[AppController instance] deviceController] paramForKey:@"output_audio_codec_name"];
     self.outputFileInfo.audioBitrate = [[[[AppController instance] deviceController] paramForKey:@"output_audio_bitrate"] floatValue];
     self.outputFileInfo.audioSampleRate = [[[[AppController instance] deviceController] paramForKey:@"output_audio_sample_rate"] floatValue];
     self.outputFileInfo.audioChannels = [[[[AppController instance] deviceController] paramForKey:@"output_audio_channels"] intValue];

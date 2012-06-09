@@ -352,7 +352,10 @@ DTD
         <param id="ffmpeg_video_aspect_x" value="0" />
         <param id="ffmpeg_video_aspect_y" value="0" />
         <param id="output_audio_sample_rate" value="0" />
-
+        
+        <!-- Advanced menu items -->
+        <param id="advanced_audio_codec" value="MP3, AAC, WMA, AC3, MP2, PCM" />
+            
         <!-- Apps -->
         <command id="ffmpeg">
             "$(app_resource_path)/bin/ffmpeg"
@@ -563,6 +566,20 @@ DTD
                 addFFMPegParam("qmin");
                 addFFMPegParam("bf");
                 params.ffmpeg_options += "-async 50 ";
+                
+                // Set ffmpeg_option_acodec from output_audio_codec_name
+                var audio_codec_name = params.output_audio_codec_name_override;
+                if (audio_codec_name == "")
+                    audio_codec_name = params.output_audio_codec_name;
+                switch(audio_codec_name) {
+                    case "MP3": params.ffmpeg_option_acodec = "libmp3lame"; break;
+                    case "AAC": params.ffmpeg_option_acodec = "libfaac"; break;
+                    case "WMA": params.ffmpeg_option_acodec = "wmav2"; break;
+                    case "AC3": params.ffmpeg_option_acodec = "ac3"; break;
+                    case "MP2": params.ffmpeg_option_acodec = "mp2"; break;
+                    case "PCM": params.ffmpeg_option_acodec = "pcm_s16le"; break;
+                    default: params.ffmpeg_option_acodec = "libmp3lame"; break;
+                }
                 addFFMPegParam("acodec");
                 
                 if (params.output_audio_sample_rate > 0)
@@ -786,7 +803,7 @@ DTD
             </performance_item>
         </performance>
         <param id="ffmpeg_option_vcodec" value="libx264" />
-        <param id="ffmpeg_option_acodec" value="libfaac" />
+        <param id="output_audio_codec_name" value="AAC" />
         <param id="video_suffix" value="mp4" />
     </default_device>
     
@@ -1389,7 +1406,6 @@ log("*** pixels="+pixels+", bitrateMin="+bitrateMin+", bitrateMax="+bitrateMax+"
                 <param id="output_video_codec_name" value="MPEG-4" />
                 <param id="ffmpeg_option_vcodec" value="mpeg4" />
                 <param id="output_audio_codec_name" value="MP3" />
-                <param id="ffmpeg_option_acodec" value="libmp3lame" />
                 <param id="video_suffix" value="avi" />
                 <param id="ffmpeg_option_g" value="200" />
                 <param id="ffmpeg_option_tag" value="DX50" />
@@ -1431,7 +1447,6 @@ log("*** pixels="+pixels+", bitrateMin="+bitrateMin+", bitrateMax="+bitrateMax+"
                 </script>
                 <param id="output_format_name" value="Quicktime" />
                 <param id="video_suffix" value="mov" />
-                <param id="ffmpeg_option_acodec" value="libfaac" />
                 <param id="output_audio_codec_name" value="AAC" />
                 
                 <checkbox which="0" title="H.264 Video">
@@ -1471,7 +1486,6 @@ log("*** pixels="+pixels+", bitrateMin="+bitrateMin+", bitrateMax="+bitrateMax+"
                 <param id="ffmpeg_option_qmin" value="7" />
                 <param id="ffmpeg_option_g" value="15" />
                 <param id="ffmpeg_option_vcodec" value="wmv1" />
-                <param id="ffmpeg_option_acodec" value="wmav2" />
                 <param id="extras" value="" />
                 <param id="video_suffix" value="wmv" />
                 <param id="output_format_name" value="WMV" />
@@ -1515,7 +1529,6 @@ log("*** pixels="+pixels+", bitrateMin="+bitrateMin+", bitrateMax="+bitrateMax+"
                 <param id="output_video_codec_name" value="" />
                 <param id="ffmpeg_option_vcodec" value="" />
                 <param id="output_audio_codec_name" value="MP3" />
-                <param id="ffmpeg_option_acodec" value="libmp3lame" />
             </device>
             
             <!-- MPEG -->
@@ -1598,7 +1611,6 @@ log("*** pixels="+pixels+", bitrateMin="+bitrateMin+", bitrateMax="+bitrateMax+"
                         </script>
                         <param id="profile" value="ts" />
                         <param id="output_audio_codec_name" value="AC3" />
-                        <param id="ffmpeg_option_acodec" value="ac3" />
                     </menu_item>
                     <menu_item title="720p">
                         <script>
@@ -1610,7 +1622,6 @@ log("*** pixels="+pixels+", bitrateMin="+bitrateMin+", bitrateMax="+bitrateMax+"
                         <param id="profile" value="720" />
                         <param id="video_suffix" value="m2t" />
                         <param id="output_audio_codec_name" value="AC3" />
-                        <param id="ffmpeg_option_acodec" value="ac3" />
                     </menu_item>
                     <menu_item title="1080i">
                         <script>
@@ -1622,7 +1633,6 @@ log("*** pixels="+pixels+", bitrateMin="+bitrateMin+", bitrateMax="+bitrateMax+"
                         <param id="profile" value="1080" />
                         <param id="video_suffix" value="m2t" />
                         <param id="output_audio_codec_name" value="AC3" />
-                        <param id="ffmpeg_option_acodec" value="ac3" />
                     </menu_item>
                 </menu>
                 <param id="video_suffix" value="mpg" />
@@ -1630,7 +1640,6 @@ log("*** pixels="+pixels+", bitrateMin="+bitrateMin+", bitrateMax="+bitrateMax+"
                 <param id="output_video_codec_name" value="MPEG-2" />
                 <param id="ffmpeg_option_vcodec" value="mpeg2video" />
                 <param id="output_audio_codec_name" value="MP2" />
-                <param id="ffmpeg_option_acodec" value="mp2" />
             </device>
             
             <!-- DV -->
@@ -1640,7 +1649,6 @@ log("*** pixels="+pixels+", bitrateMin="+bitrateMin+", bitrateMax="+bitrateMax+"
                 <param id="output_video_codec_name" value="Digital Video" />
                 <param id="ffmpeg_option_vcodec" value="dvvideo" />
                 <param id="output_audio_codec_name" value="PCM" />
-                <param id="ffmpeg_option_acodec" value="pcm_s16le" />
                 <param id="output_audio_bitrate" value="48000" />
                 <param id="output_audio_channels" value="2" />
                 <param id="output_audio_quality" value="High" />
@@ -1684,122 +1692,6 @@ log("*** pixels="+pixels+", bitrateMin="+bitrateMin+", bitrateMax="+bitrateMax+"
                     setRecipe();
                 ]]>
                 </script>
-            </device>
-        </device_group>
-
-        <!--
-        
-            Advanced
-            
-        -->
-        <device_group title="Advanced">
-            <!-- Custom Encoding -->
-            <device title="Custom Encoding (Not Yet Implemented)" icon="custom" enabled="false">
-                <menu which="0"> <!-- Container Format -->
-                    <menu_item title="MPEG-4">
-                        <param id="output_format_name" value="MPEG-4" />
-                    </menu_item>
-                    <menu_item title="AVI">
-                        <param id="output_format_name" value="AVI" />
-                    </menu_item>
-                    <menu_item title="DV">
-                        <param id="output_format_name" value="DV" />
-                    </menu_item>
-                    <menu_item title="WMV">
-                        <param id="output_format_name" value="WMV" />
-                    </menu_item>
-                    <menu_item title="MPEG-2">
-                        <param id="output_format_name" value="MPEG-2" />
-                    </menu_item>
-                    <menu_item title="MPEG-1">
-                        <param id="output_format_name" value="MPEG-1" />
-                    </menu_item>
-                    <menu_item title="FLV">
-                        <param id="output_format_name" value="FLV" />
-                    </menu_item>
-                    <menu_item title="SWF">
-                        <param id="output_format_name" value="SWF" />
-                    </menu_item>
-                </menu>
-                <menu which="1"> <!-- Video Codec -->
-                    <menu_item title="MPEG-4">
-                        <param id="output_video_codec_name" value="MPEG-4" />
-                    </menu_item>
-                    <menu_item title="H.264">
-                        <param id="output_video_codec_name" value="H.264" />
-                    </menu_item>
-                    <menu_item title="MPEG-2">
-                        <param id="output_video_codec_name" value="MPEG-2" />
-                    </menu_item>
-                    <menu_item title="MPEG-1">
-                        <param id="output_video_codec_name" value="MPEG-1" />
-                    </menu_item>
-                    <menu_item title="DV">
-                        <param id="output_video_codec_name" value="DV" />
-                    </menu_item>
-                    <menu_item title="WMV">
-                        <param id="output_video_codec_name" value="WMV" />
-                    </menu_item>
-                    <menu_item title="FLV">
-                        <param id="output_video_codec_name" value="FLV" />
-                    </menu_item>
-                </menu>
-                <menu which="2"> <!-- Audio Codec -->
-                    <menu_item title="MP3">
-                        <param id="output_audio_codec_name" value="MP3" />
-                    </menu_item>
-                    <menu_item title="AAC">
-                        <param id="output_audio_codec_name" value="AAC" />
-                    </menu_item>
-                    <menu_item title="PCM (WAV)">
-                        <param id="output_audio_codec_name" value="PCM (WAV)" />
-                    </menu_item>
-                    <menu_item title="WMA">
-                        <param id="output_audio_codec_name" value="WMA" />
-                    </menu_item>
-                    <menu_item title="FLV">
-                        <param id="output_audio_codec_name" value="FLV" />
-                    </menu_item>
-                </menu>
-                <menu which="3"> <!-- Extras -->
-                    <menu_item title="-vtag">
-                    </menu_item>
-                    <radio_group title="-target">
-                        <menu_item title="---">
-                            <param id="ffmpeg_option_target" value="" />
-                        </menu_item>
-                        <menu_item title="ntsc-vcd">
-                            <param id="ffmpeg_option_target" value="ntsc-vcd" />
-                        </menu_item>
-                        <menu_item title="pal-vcd">
-                            <param id="ffmpeg_option_target" value="pal-vcd" />
-                        </menu_item>
-                    </radio_group>
-                    <menu_item title="-pixfmt">
-                    </menu_item>
-                    <menu_item title="-gopsize">
-                    </menu_item>
-                    <menu_item title="-qmin">
-                    </menu_item>
-                    <menu_item title="-bf">
-                    </menu_item>
-                    <menu_item title="-maxrate">
-                    </menu_item>
-                    <menu_item title="-g">
-                    </menu_item>
-                </menu>
-                <combobox which="0"> <!-- Audio Bitrate -->
-                </combobox>
-                <combobox which="1"> <!-- Audio Channels -->
-                </combobox>
-                <combobox which="2"> <!-- Audio Sample Rate -->
-                </combobox>
-                <combobox which="3"> <!-- Frame Size -->
-                </combobox>
-                <combobox which="4"> <!-- Frame Rate -->
-                </combobox>
-                <combobox which="5"> <!-- Extra FFMPeg Options -->
-                </combobox>
             </device>
         </device_group>
         <!--

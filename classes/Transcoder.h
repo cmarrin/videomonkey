@@ -65,6 +65,18 @@ typedef enum FileStatus {   FS_INVALID,     // File is invalid, we can't encode 
                             FS_SUCCEEDED    // File was successfully encoded
                         } FileStatus;
 
+@interface OverrideableValue : NSObject {
+    id value;
+    id overriddenValue;
+    BOOL overridden;
+}
+
+@property(retain) id value;
+@property(retain) id overriddenValue;
+@property(assign) BOOL overridden;
+
+@end
+
 @interface TranscoderFileInfo : NSObject {
     // General
     NSString* filename;
@@ -87,7 +99,7 @@ typedef enum FileStatus {   FS_INVALID,     // File is invalid, we can't encode 
     // Audio
     int audioIndex;
     NSString* audioLanguage;
-    NSString* audioCodec;
+    OverrideableValue* audioCodec;
     double audioSampleRate;
     int audioChannels;
     double audioBitrate;
@@ -114,7 +126,7 @@ typedef enum FileStatus {   FS_INVALID,     // File is invalid, we can't encode 
 // Audio
 @property(assign) int audioIndex;
 @property(retain) NSString* audioLanguage;
-@property(retain) NSString* audioCodec;
+@property(readonly) OverrideableValue* audioCodec;
 @property(assign) double audioSampleRate;
 @property(assign) int audioChannels;
 @property(assign) double audioBitrate;
@@ -125,6 +137,7 @@ typedef enum FileStatus {   FS_INVALID,     // File is invalid, we can't encode 
   @private
     NSMutableArray* m_inputFiles;
     TranscoderFileInfo* m_outputFileInfo;
+    TranscoderFileInfo* m_outputFileInfoOverrides;
     Metadata* m_metadata;
     double m_progress;
     BOOL m_enabled;

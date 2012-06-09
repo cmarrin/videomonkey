@@ -63,7 +63,11 @@ typedef enum { ActionEncodeWrite = 0, ActionEncodeOnly, ActionWriteOnly, ActionR
     JavaScriptContext* m_context;
     id m_delegate;
     BOOL m_metadataActionsEnabled;
+
+    NSArray* m_audioCodecStrings;
 }
+
+@property(readwrite,retain) NSArray* audioCodecStrings;
 
 - (IBAction)selectDevice:(id)sender;
 - (IBAction)changeUI:(id)sender;
