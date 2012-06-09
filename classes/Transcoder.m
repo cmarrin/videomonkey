@@ -301,7 +301,7 @@ static void logInputFileError(NSString* filename)
             
         if (!isReadable([pipe fileHandleForReading]))
             [[AppController instance] log: [NSString stringWithFormat:@"Unable to obtain stream index data from the file '%@'. "
-                                                                       "The A/V offset feature will not be available. \n"], info.filename];
+                                                                       "The A/V offset feature will not be available. \n", info.filename]];
         else {
             data = [[NSString alloc] initWithData:[[pipe fileHandleForReading] availableData] encoding: NSASCIIStringEncoding];
         
@@ -327,6 +327,7 @@ static NSImage* getFileStatusImage(FileStatus status)
         case FS_ENCODING:   name = @"converting";  break;
         case FS_FAILED:     name = @"error";       break;
         case FS_SUCCEEDED:  name = @"ok";          break;
+        case FS_PAUSED:     name = @"paused";      break;
     }
     
     if (!name)

@@ -166,6 +166,8 @@ static NSDictionary* g_tagMap = nil;
             return self.searchValue;
         case USER_TAG:
             return self.userValue;
+        case OUTPUT_TAG:
+            return self.outputValue;
     }
     return nil;
 }
@@ -184,6 +186,9 @@ static NSDictionary* g_tagMap = nil;
             break;
         case USER_TAG:
             self.userValue = value;
+            break;
+        case OUTPUT_TAG:
+            assert(0);
             break;
     }
     
@@ -226,6 +231,7 @@ static NSDictionary* g_tagMap = nil;
         case INPUT_TAG:     m_outputValue = [m_inputValue retain];  break;
         case SEARCH_TAG:    m_outputValue = [m_searchValue retain];  break;
         case USER_TAG:      m_outputValue = [m_userValue retain];  break;
+        case OUTPUT_TAG:    break;
     }
     
     [oldValue release];

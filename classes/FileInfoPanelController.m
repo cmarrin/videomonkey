@@ -245,7 +245,7 @@ DAMAGE.
     
     if (!enabled) {
         if (!fileType)
-            [m_metadataDisabledMessage setStringValue:[NSString stringWithFormat:@"No metadata compatible output file selected", fileType]];
+            [m_metadataDisabledMessage setStringValue:[NSString stringWithFormat:@"No metadata compatible output file selected"]];
         else
             [m_metadataDisabledMessage setStringValue:[NSString stringWithFormat:@"Metadata cannot be written to %@ files", fileType]];
     }

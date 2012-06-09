@@ -204,7 +204,7 @@ the function,  or NULL if an error occured.  */
 					}
 				} else {
 				
-					NSLog(@"bad parameter type for item %d (%@) in vsCallJSFunction:withArg:andArgList:",
+					NSLog(@"bad parameter type for item %zd (%@) in vsCallJSFunction:withArg:andArgList:",
 						argumentCount, nthID);
 					argsOK = NO; /* unknown parameter type */
 				}
@@ -542,11 +542,6 @@ the function,  or NULL if an error occured.  */
         if (value)
             [self setStringParam:value forKey:key];
     }
-}
-
--(JavaScriptObject*) globalObject
-{
-    return m_globalObject;
 }
 
 -(JSContextRef) jsContext

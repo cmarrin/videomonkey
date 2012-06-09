@@ -98,6 +98,8 @@ DAMAGE.
             return m_searchValue;
         case USER_TAG:
             return m_userValue;
+        case OUTPUT_TAG:
+            return nil;
     }
     return nil;
 }
@@ -151,9 +153,10 @@ DAMAGE.
 {
     TagType type = (TagType) [t intValue];
     switch(type) {
-        case INPUT_TAG:     [self setValue: m_inputValue];  break;
-        case SEARCH_TAG:     [self setValue: m_searchValue];  break;
-        case USER_TAG:     [self setValue: m_userValue];  break;
+        case INPUT_TAG: [self setValue: m_inputValue];  break;
+        case SEARCH_TAG: [self setValue: m_searchValue];  break;
+        case USER_TAG: [self setValue: m_userValue];  break;
+        case OUTPUT_TAG: break;
     }
     
     [[self inputButton] setBordered:type == INPUT_TAG];

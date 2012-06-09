@@ -43,7 +43,7 @@ DAMAGE.
 @private
     BOOL m_isVisible;
     BOOL m_movieIsSet;
-    NSMutableString* m_filename;
+    NSString* m_filename;
     int m_extraContentWidth;
     int m_extraContentHeight;
     int m_extraFrameWidth;
