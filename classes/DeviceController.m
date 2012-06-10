@@ -92,6 +92,7 @@ static void addMenuSeparator(NSPopUpButton* button)
 @implementation DeviceController
 
 @synthesize audioCodecStrings = m_audioCodecStrings;
+@synthesize videoCodecStrings = m_videoCodecStrings;
 
 -(void) initCommands
 {
@@ -348,6 +349,8 @@ static JSValueRef _jsLog(JSContextRef ctx, JSObjectRef function, JSObjectRef thi
     // Initialize the advanced override menus
     NSString* string = [self paramForKey:@"advanced_audio_codec"];
     self.audioCodecStrings = [string componentsSeparatedByString:@","];
+    string = [self paramForKey:@"advanced_video_codec"];
+    self.videoCodecStrings = [string componentsSeparatedByString:@","];
 
     [self uiChanged];
 }

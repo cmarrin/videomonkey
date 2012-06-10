@@ -88,7 +88,7 @@ typedef enum FileStatus {   FS_INVALID,     // File is invalid, we can't encode 
     // Video
     int videoIndex;
     NSString* videoLanguage;
-    NSString* videoCodec;
+    OverrideableValue* videoCodec;
     NSString* videoProfile;
     BOOL videoInterlaced;
     FrameSize videoFrameSize;
@@ -115,7 +115,7 @@ typedef enum FileStatus {   FS_INVALID,     // File is invalid, we can't encode 
 // Video
 @property(assign) int videoIndex;
 @property(retain) NSString* videoLanguage;
-@property(retain) NSString* videoCodec;
+@property(retain) OverrideableValue* videoCodec;
 @property(retain) NSString* videoProfile;
 @property(assign) BOOL videoInterlaced;
 @property(assign) FrameSize videoFrameSize;

@@ -354,8 +354,9 @@ DTD
         <param id="output_audio_sample_rate" value="0" />
         
         <!-- Advanced menu items -->
-        <param id="advanced_audio_codec" value="MP3, AAC, WMA, AC3, MP2, PCM" />
-            
+        <param id="advanced_audio_codec" value="MP3,AAC,WMA,AC3,MP2,PCM" />
+        <param id="advanced_video_codec" value="H.264,MPEG-4,WMV,FLV,MPEG-1,MPEG-2,Digital Video" />
+
         <!-- Apps -->
         <command id="ffmpeg">
             "$(app_resource_path)/bin/ffmpeg"
@@ -535,7 +536,7 @@ DTD
             function setFFMPegOptions()
             {
                 // set vpre if needed
-                if (params.ffmpeg_option_vcodec == "libx264") {
+                if (params.output_video_codec_name == "H.264") {
                     params.ffmpeg_vpre_pass1 = "-vpre ffpresets/$ffmpeg_x264_pass1_preset ";
                     params.ffmpeg_vpre = "-vpre ffpresets/$ffmpeg_x264_preset ";
                     params.ffmpeg_vpre_profile = "-vpre ffpresets/$ffmpeg_x264_profile ";
@@ -554,6 +555,21 @@ DTD
                 addFFMPegParam("padright");
                 addFFMPegParam("padtop");
                 addFFMPegParam("padbottom");
+
+                // Set ffmpeg_option_vcodec from output_video_codec_name
+                var video_codec_name = params.output_video_codec_name_override;
+                if (video_codec_name == "")
+                    video_codec_name = params.output_video_codec_name;
+                switch(video_codec_name) {
+                    case "H.264": params.ffmpeg_option_vcodec = "libx264"; break;
+                    case "MPEG-4": params.ffmpeg_option_vcodec = "mpeg4"; break;
+                    case "WMV": params.ffmpeg_option_vcodec = "wmv1"; break;
+                    case "FLV": params.ffmpeg_option_vcodec = "flv"; break;
+                    case "MPEG-1": params.ffmpeg_option_vcodec = "mpeg1video"; break;
+                    case "MPEG-2": params.ffmpeg_option_vcodec = "mpeg2video"; break;
+                    case "Digital Video": params.ffmpeg_option_vcodec = "dvvideo"; break;
+                    default: params.ffmpeg_option_vcodec = "libx264"; break;
+                }
                 addFFMPegParam("vcodec");
                 
                 if (params.output_video_bitrate > 0)
@@ -802,7 +818,7 @@ DTD
                 <param id="ffmpeg_x264_pass1_preset" value="libx264-slow_firstpass" />
             </performance_item>
         </performance>
-        <param id="ffmpeg_option_vcodec" value="libx264" />
+        <param id="output_video_codec_name" value="H.264" />
         <param id="output_audio_codec_name" value="AAC" />
         <param id="video_suffix" value="mp4" />
     </default_device>
@@ -1215,7 +1231,6 @@ DTD
                         
                     var bitrateMin = pixels * bitrateMultTable[qualityStop] * extraMultiplier;
                     var bitrateMax = pixels * bitrateMultTable[qualityStop+1] * extraMultiplier;
-log("*** pixels="+pixels+", bitrateMin="+bitrateMin+", bitrateMax="+bitrateMax+", extraMultiplier="+extraMultiplier);
                     setVideoBitrate(bitrateMin, bitrateMax);
                     
                     switch (params.title) {
@@ -1404,12 +1419,10 @@ log("*** pixels="+pixels+", bitrateMin="+bitrateMin+", bitrateMax="+bitrateMax+"
                 </checkbox>
                 <param id="output_format_name" value="AVI" />
                 <param id="output_video_codec_name" value="MPEG-4" />
-                <param id="ffmpeg_option_vcodec" value="mpeg4" />
                 <param id="output_audio_codec_name" value="MP3" />
                 <param id="video_suffix" value="avi" />
                 <param id="ffmpeg_option_g" value="200" />
-                <param id="ffmpeg_option_tag" value="DX50" />
-                <param id="ffmpeg_option_vtag" value="DX50" />
+                <!-- <param id="ffmpeg_option_vtag" value="DX50" /> -->
             </device>
             
             <!-- MP4 -->
@@ -1422,12 +1435,10 @@ log("*** pixels="+pixels+", bitrateMin="+bitrateMin+", bitrateMax="+bitrateMax+"
                 </script>
                 <checkbox which="0" title="H.264 Video">
                     <checked_item>
-                        <param id="ffmpeg_option_vcodec" value="libx264" />
                         <param id="output_video_codec_name" value="H.264" />
                         <param id="h264" value="true" />
                     </checked_item>
                     <unchecked_item>
-                        <param id="ffmpeg_option_vcodec" value="mpeg4" />
                         <param id="output_video_codec_name" value="MPEG-4" />
                         <param id="extras" value="" />
                         <param id="h264" value="false" />
@@ -1451,22 +1462,20 @@ log("*** pixels="+pixels+", bitrateMin="+bitrateMin+", bitrateMax="+bitrateMax+"
                 
                 <checkbox which="0" title="H.264 Video">
                     <checked_item>
-                        <param id="ffmpeg_option_vcodec" value="libx264" />
                         <param id="output_video_codec_name" value="H.264" />
                         <param id="h264" value="true" />
                     </checked_item>
                     <unchecked_item>
-                        <param id="ffmpeg_option_vcodec" value="mpeg4" />
                         <param id="output_video_codec_name" value="MPEG-4" />
                         <param id="h264" value="false" />
                     </unchecked_item>
                 </checkbox>
                 <menu which="0" title="Best for:">
                     <menu_item title="iPhone Screen">
-                        <param id="ffmpeg_option_vcodec" value="libx264" />
+                        <param id="output_video_codec_name" value="H.264" />
                     </menu_item>
                     <menu_item title="TV Screen">
-                        <param id="ffmpeg_option_vcodec" value="mpeg4" />
+                        <param id="output_video_codec_name" value="MPEG-4" />
                     </menu_item>
                 </menu>
             </device>
@@ -1485,7 +1494,6 @@ log("*** pixels="+pixels+", bitrateMin="+bitrateMin+", bitrateMax="+bitrateMax+"
                 <param id="ffmpeg_option_pix_fmt" value="yuv420p" />
                 <param id="ffmpeg_option_qmin" value="7" />
                 <param id="ffmpeg_option_g" value="15" />
-                <param id="ffmpeg_option_vcodec" value="wmv1" />
                 <param id="extras" value="" />
                 <param id="video_suffix" value="wmv" />
                 <param id="output_format_name" value="WMV" />
@@ -1526,8 +1534,7 @@ log("*** pixels="+pixels+", bitrateMin="+bitrateMin+", bitrateMax="+bitrateMax+"
                     </unchecked_item>
                 </checkbox>
                 <param id="num_cpus" value="1" /> <!-- Flash encoding fails if num_cpus is not 1 -->
-                <param id="output_video_codec_name" value="" />
-                <param id="ffmpeg_option_vcodec" value="" />
+                <param id="output_video_codec_name" value="FLV" />
                 <param id="output_audio_codec_name" value="MP3" />
             </device>
             
@@ -1565,7 +1572,6 @@ log("*** pixels="+pixels+", bitrateMin="+bitrateMin+", bitrateMax="+bitrateMax+"
                         <param id="profile" value="none" />
                         <param id="output_format_name" value="MPEG-1" />
                         <param id="output_video_codec_name" value="MPEG-1" />
-                        <param id="ffmpeg_option_vcodec" value="mpeg1video" />
                     </menu_item>
                     <menu_item title="Generic MPEG-2">
                         <param id="profile" value="none" />
@@ -1581,7 +1587,6 @@ log("*** pixels="+pixels+", bitrateMin="+bitrateMin+", bitrateMax="+bitrateMax+"
                         <param id="ffmpeg_option_bf" value="2" />
                         <param id="output_format_name" value="MPEG-1" />
                         <param id="output_video_codec_name" value="MPEG-1" />
-                        <param id="ffmpeg_option_vcodec" value="" />
                     </menu_item>
                     <menu_item title="SVCD">
                         <param id="profile" value="svcd" />
@@ -1638,7 +1643,6 @@ log("*** pixels="+pixels+", bitrateMin="+bitrateMin+", bitrateMax="+bitrateMax+"
                 <param id="video_suffix" value="mpg" />
                 <param id="output_format_name" value="MPEG-2" />
                 <param id="output_video_codec_name" value="MPEG-2" />
-                <param id="ffmpeg_option_vcodec" value="mpeg2video" />
                 <param id="output_audio_codec_name" value="MP2" />
             </device>
             
@@ -1647,7 +1651,6 @@ log("*** pixels="+pixels+", bitrateMin="+bitrateMin+", bitrateMax="+bitrateMax+"
                 <param id="video_suffix" value="dv" />
                 <param id="output_format_name" value="Digital Video" />
                 <param id="output_video_codec_name" value="Digital Video" />
-                <param id="ffmpeg_option_vcodec" value="dvvideo" />
                 <param id="output_audio_codec_name" value="PCM" />
                 <param id="output_audio_bitrate" value="48000" />
                 <param id="output_audio_channels" value="2" />
@@ -1711,37 +1714,37 @@ log("*** pixels="+pixels+", bitrateMin="+bitrateMin+", bitrateMax="+bitrateMax+"
             <device title="Create a DVD Image" icon="cd" enabled="false">
                <checkbox which="0" title="Dual layer">
                     <checked_item>
-                        <param id="ffmpeg_option_vcodec" value="libx264" />
+                        <param id="output_video_codec_name" value="H.264" />
                     </checked_item>
                     <unchecked_item>
-                        <param id="ffmpeg_option_vcodec" value="mpeg4" />
+                        <param id="output_video_codec_name" value="MPEG-4" />
                     </unchecked_item>
                 </checkbox>
                 <checkbox which="1" title="Add chapter for each file">
                     <checked_item>
-                        <param id="ffmpeg_option_vcodec" value="libx264" />
+                        <param id="output_video_codec_name" value="H.264" />
                     </checked_item>
                     <unchecked_item>
-                        <param id="ffmpeg_option_vcodec" value="mpeg4" />
+                        <param id="output_video_codec_name" value="MPEG-4" />
                     </unchecked_item>
                 </checkbox>
                 <menu which="0" title="Format:">
                     <menu_item title="NTSC">
-                        <param id="ffmpeg_option_vcodec" value="libx264" />
+                        <param id="output_video_codec_name" value="H.264" />
                     </menu_item>
                     <menu_item title="PAL">
-                        <param id="ffmpeg_option_vcodec" value="mpeg4" />
+                        <param id="output_video_codec_name" value="MPEG-4" />
                     </menu_item>
                 </menu>
                 <menu which="1" title="Create:">
                     <menu_item title="Burnable Image">
-                        <param id="ffmpeg_option_vcodec" value="libx264" />
+                        <param id="output_video_codec_name" value="H.264" />
                     </menu_item>
                     <menu_item title="VIDEO_TS Folder">
-                        <param id="ffmpeg_option_vcodec" value="mpeg4" />
+                        <param id="output_video_codec_name" value="MPEG-4" />
                     </menu_item>
                     <menu_item title="Plain .VOB Files">
-                        <param id="ffmpeg_option_vcodec" value="mpeg4" />
+                        <param id="output_video_codec_name" value="MPEG-4" />
                     </menu_item>
                 </menu>
             </device>

@@ -136,6 +136,7 @@ int heightFromFrameSize(FrameSize f) { return f & 0xffff; }
 {
     if (self = [super init]) {
         audioCodec = [[OverrideableValue alloc] init];
+        videoCodec = [[OverrideableValue alloc] init];
     }
     return self;
 }
@@ -143,6 +144,7 @@ int heightFromFrameSize(FrameSize f) { return f & 0xffff; }
 - (void)dealloc
 {
     [audioCodec release];
+    [videoCodec release];
     [super dealloc];
 }
 
@@ -302,7 +304,7 @@ static void logInputFileError(NSString* filename)
         }
             
         info.videoLanguage = [[video objectAtIndex:1] retain];
-        info.videoCodec = [[video objectAtIndex:2] retain];
+        info.videoCodec.value = [[video objectAtIndex:2] retain];
         info.videoProfile = [[video objectAtIndex:3] retain];
         info.videoInterlaced = [[video objectAtIndex:4] isEqualToString:@"Interlace"];
         FrameSize frameSize = makeFrameSize([[video objectAtIndex:6] intValue], [[video objectAtIndex:7] intValue]);
@@ -315,10 +317,10 @@ static void logInputFileError(NSString* filename)
             info.videoBitrate = overallBitrate;
         
         // standardize video codec name
-        if ([info.videoCodec caseInsensitiveCompare:@"vc-1"] == NSOrderedSame || [info.videoCodec caseInsensitiveCompare:@"wmv3"] == NSOrderedSame)
-            info.videoCodec = VC_WMV3;
-        else if ([info.videoCodec caseInsensitiveCompare:@"avc"] == NSOrderedSame || [info.videoCodec caseInsensitiveCompare:@"avc1"] == NSOrderedSame)
-            info.videoCodec = VC_H264;
+        if ([info.videoCodec.value caseInsensitiveCompare:@"vc-1"] == NSOrderedSame || [info.videoCodec.value caseInsensitiveCompare:@"wmv3"] == NSOrderedSame)
+            info.videoCodec.value = VC_WMV3;
+        else if ([info.videoCodec.value caseInsensitiveCompare:@"avc"] == NSOrderedSame || [info.videoCodec.value caseInsensitiveCompare:@"avc1"] == NSOrderedSame)
+            info.videoCodec.value = VC_H264;
     }
     
     // Do audio if it's there
@@ -593,10 +595,9 @@ static NSString* escapePath(NSString* path)
     // set the number of CPUs
     [env setValue: [[NSNumber numberWithInt: [[AppController instance] numCPUs]] stringValue] forKey: @"num_cpus"];
 
-    [env setValue: self.inputFileInfo.videoCodec forKey: @"input_video_codec"];
-    
     // If we have overrides, set them here.
     [env setValue:self.outputFileInfo.audioCodec.overridden ? self.outputFileInfo.audioCodec.value : @"" forKey: @"output_audio_codec_name_override"];
+    [env setValue:self.outputFileInfo.videoCodec.overridden ? self.outputFileInfo.videoCodec.value : @"" forKey: @"output_video_codec_name_override"];
 
     // set the params
     [[[AppController instance] deviceController] setCurrentParamsWithEnvironment:env];
@@ -615,7 +616,7 @@ static NSString* escapePath(NSString* path)
     
     self.outputFileInfo.format = [[[AppController instance] deviceController] paramForKey:@"output_format_name"];
 
-    self.outputFileInfo.videoCodec = [[[AppController instance] deviceController] paramForKey:@"output_video_codec_name"];
+    self.outputFileInfo.videoCodec.value = [[[AppController instance] deviceController] paramForKey:@"output_video_codec_name"];
     self.outputFileInfo.videoBitrate = [[[[AppController instance] deviceController] paramForKey:@"output_video_bitrate"] floatValue];
     
     self.outputFileInfo.videoFrameRate = [[[[AppController instance] deviceController] paramForKey:@"output_video_frame_rate"] floatValue];
