@@ -355,7 +355,7 @@ DTD
         <!-- Advanced menu items -->
         <param id="advanced_audio_codec" value="MP3,AAC,WMA,AC3,MP2,PCM" />
         <param id="advanced_video_codec" value="H.264,MPEG-4,WMV,FLV,MPEG-1,MPEG-2,Digital Video" />
-        <param id="advanced_video_profile" value=",baseline,main" />
+        <param id="advanced_video_profile" value="baseline,main" />
 
         <!-- Apps -->
         <command id="ffmpeg">
@@ -542,11 +542,15 @@ DTD
                 if (video_codec_name == "")
                     video_codec_name = params.output_video_codec_name;
 
+                var video_profile_name = params.output_video_profile_name_override;
+                if (video_profile_name == "")
+                    video_profile_name = params.output_video_profile_name;
+
                 // set vpre if needed
                 if (video_codec_name == "H.264") {
                     params.ffmpeg_vpre_pass1 = "-vpre ffpresets/$ffmpeg_x264_pass1_preset ";
                     params.ffmpeg_vpre = "-vpre ffpresets/$ffmpeg_x264_preset ";
-                    params.ffmpeg_vpre_profile = "-vpre ffpresets/libx264-$output_video_profile_name ";
+                    params.ffmpeg_vpre_profile = "-vpre ffpresets/libx264-" + video_profile_name + " ";
                 }
 
                 params.ffmpeg_options = "";

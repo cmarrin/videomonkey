@@ -137,6 +137,7 @@ int heightFromFrameSize(FrameSize f) { return f & 0xffff; }
     if (self = [super init]) {
         audioCodec = [[OverrideableValue alloc] init];
         videoCodec = [[OverrideableValue alloc] init];
+        videoProfile = [[OverrideableValue alloc] init];
     }
     return self;
 }
@@ -145,6 +146,7 @@ int heightFromFrameSize(FrameSize f) { return f & 0xffff; }
 {
     [audioCodec release];
     [videoCodec release];
+    [videoProfile release];
     [super dealloc];
 }
 
@@ -305,7 +307,7 @@ static void logInputFileError(NSString* filename)
             
         info.videoLanguage = [[video objectAtIndex:1] retain];
         info.videoCodec.value = [[video objectAtIndex:2] retain];
-        info.videoProfile = [[video objectAtIndex:3] retain];
+        info.videoProfile.value = [[video objectAtIndex:3] retain];
         info.videoInterlaced = [[video objectAtIndex:4] isEqualToString:@"Interlace"];
         FrameSize frameSize = makeFrameSize([[video objectAtIndex:6] intValue], [[video objectAtIndex:7] intValue]);
         info.videoFrameSize = frameSize;
@@ -598,6 +600,7 @@ static NSString* escapePath(NSString* path)
     // If we have overrides, set them here.
     [env setValue:self.outputFileInfo.audioCodec.overridden ? self.outputFileInfo.audioCodec.value : @"" forKey: @"output_audio_codec_name_override"];
     [env setValue:self.outputFileInfo.videoCodec.overridden ? self.outputFileInfo.videoCodec.value : @"" forKey: @"output_video_codec_name_override"];
+    [env setValue:self.outputFileInfo.videoProfile.overridden ? self.outputFileInfo.videoProfile.value : @"" forKey: @"output_video_profile_name_override"];
 
     // set the params
     [[[AppController instance] deviceController] setCurrentParamsWithEnvironment:env];
@@ -627,7 +630,7 @@ static NSString* escapePath(NSString* path)
     int level = [[[[AppController instance] deviceController] paramForKey:@"output_video_level_name"] intValue];
     
     if ([profile length] > 0)
-        self.outputFileInfo.videoProfile = (level > 0) ?
+        self.outputFileInfo.videoProfile.value = (level > 0) ?
             [NSString stringWithFormat:@"%@@%d.%d", profile, level/10, level%10] : profile;
 
     m_audioQuality = [[[AppController instance] deviceController] paramForKey:@"output_audio_quality"];
