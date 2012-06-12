@@ -227,7 +227,6 @@ ffmpeg_video_aspect_y       denominator of the -aspect param
 
 ffmpeg_x264_preset          x264 preset param, including -vpre (if output codec is x264, empty otherwise)
 ffmpeg_x264_pass1_preset    x264 preset param for pass1, including -vpre (if output codec is x264 and 2 pass, empty otherwise)
-ffmpeg_x264_profile         x264 profile name, including -vpre (main or baseline, if output codec is x264, empty otherwise)
 
 ffmpeg_option_target
 ffmpeg_option_padleft
@@ -356,6 +355,7 @@ DTD
         <!-- Advanced menu items -->
         <param id="advanced_audio_codec" value="MP3,AAC,WMA,AC3,MP2,PCM" />
         <param id="advanced_video_codec" value="H.264,MPEG-4,WMV,FLV,MPEG-1,MPEG-2,Digital Video" />
+        <param id="advanced_video_profile" value=",baseline,main" />
 
         <!-- Apps -->
         <command id="ffmpeg">
@@ -363,7 +363,6 @@ DTD
         </command>
         
         <!-- Default params (sometimes overridden) -->
-        <param id="ffmpeg_x264_profile" value="libx264-baseline" />
         <param id="output_video_profile_name" value="baseline" />
 
         <!-- Composite options -->
@@ -535,11 +534,19 @@ DTD
             
             function setFFMPegOptions()
             {
+                var audio_codec_name = params.output_audio_codec_name_override;
+                if (audio_codec_name == "")
+                    audio_codec_name = params.output_audio_codec_name;
+
+                var video_codec_name = params.output_video_codec_name_override;
+                if (video_codec_name == "")
+                    video_codec_name = params.output_video_codec_name;
+
                 // set vpre if needed
-                if (params.output_video_codec_name == "H.264") {
+                if (video_codec_name == "H.264") {
                     params.ffmpeg_vpre_pass1 = "-vpre ffpresets/$ffmpeg_x264_pass1_preset ";
                     params.ffmpeg_vpre = "-vpre ffpresets/$ffmpeg_x264_preset ";
-                    params.ffmpeg_vpre_profile = "-vpre ffpresets/$ffmpeg_x264_profile ";
+                    params.ffmpeg_vpre_profile = "-vpre ffpresets/libx264-$output_video_profile_name ";
                 }
 
                 params.ffmpeg_options = "";
@@ -557,9 +564,6 @@ DTD
                 addFFMPegParam("padbottom");
 
                 // Set ffmpeg_option_vcodec from output_video_codec_name
-                var video_codec_name = params.output_video_codec_name_override;
-                if (video_codec_name == "")
-                    video_codec_name = params.output_video_codec_name;
                 switch(video_codec_name) {
                     case "H.264": params.ffmpeg_option_vcodec = "libx264"; break;
                     case "MPEG-4": params.ffmpeg_option_vcodec = "mpeg4"; break;
@@ -584,9 +588,6 @@ DTD
                 params.ffmpeg_options += "-async 50 ";
                 
                 // Set ffmpeg_option_acodec from output_audio_codec_name
-                var audio_codec_name = params.output_audio_codec_name_override;
-                if (audio_codec_name == "")
-                    audio_codec_name = params.output_audio_codec_name;
                 switch(audio_codec_name) {
                     case "MP3": params.ffmpeg_option_acodec = "libmp3lame"; break;
                     case "AAC": params.ffmpeg_option_acodec = "libfaac"; break;
@@ -1099,7 +1100,6 @@ DTD
 
             <!-- Second Gen Apple TV -->
             <device title="2nd Gen Apple TV" icon="appletv2">
-                <param id="ffmpeg_x264_profile" value="libx264-main" />
                 <param id="output_video_profile_name" value="main" />
                  <checkbox which="0" title="H.264 Video">
                     <checked_item>
