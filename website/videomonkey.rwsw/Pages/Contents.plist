@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>SandwichFillings</key>
+	<array>
+		<dict>
+			<key>Dictionary</key>
+			<dict>
+				<key>HomePage</key>
+				<string>03-News</string>
+			</dict>
+			<key>Files</key>
+			<array/>
+			<key>Subsandwiches</key>
+			<array>
+				<string>01-PLusKit-Page</string>
+				<string>02-About-Video-Monkey</string>
+				<string>03-News</string>
+				<string>04-News-Header</string>
+				<string>05-News</string>
+				<string>06-Blog</string>
+				<string>07-Blog-Header</string>
+				<string>08-Blog</string>
+				<string>09-Downloads</string>
+				<string>10-Report-A-Bug</string>
+				<string>11-Development</string>
+				<string>12-Help</string>
+				<string>13-Recent-posts</string>
+				<string>14-Video-Monkey-Help</string>
+			</array>
+		</dict>
+	</array>
+	<key>Type</key>
+	<string>Pages</string>
+</dict>
+</plist>
