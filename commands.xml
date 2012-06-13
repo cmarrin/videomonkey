@@ -546,6 +546,10 @@ DTD
                 if (video_profile_name == "")
                     video_profile_name = params.output_video_profile_name;
 
+                var video_frame_rate = params.output_video_frame_rate_override;
+                if (video_frame_rate == "")
+                    video_frame_rate = params.output_video_frame_rate;
+
                 // set vpre if needed
                 if (video_codec_name == "H.264") {
                     params.ffmpeg_vpre_pass1 = "-vpre ffpresets/$ffmpeg_x264_pass1_preset ";
@@ -561,7 +565,7 @@ DTD
                 if (params.ffmpeg_video_aspect_x > 0 && params.ffmpeg_video_aspect_y > 0)
                     params.ffmpeg_options += "-aspect $(ffmpeg_video_aspect_x):$(ffmpeg_video_aspect_y) ";
                     
-                params.ffmpeg_options += "-r $(output_video_frame_rate) ";
+                params.ffmpeg_options += "-r " + video_frame_rate + " ";
                 addFFMPegParam("padleft");
                 addFFMPegParam("padright");
                 addFFMPegParam("padtop");

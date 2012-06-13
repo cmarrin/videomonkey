@@ -138,6 +138,7 @@ int heightFromFrameSize(FrameSize f) { return f & 0xffff; }
         audioCodec = [[OverrideableValue alloc] init];
         videoCodec = [[OverrideableValue alloc] init];
         videoProfile = [[OverrideableValue alloc] init];
+        videoFrameRate = [[OverrideableValue alloc] init];
     }
     return self;
 }
@@ -147,6 +148,7 @@ int heightFromFrameSize(FrameSize f) { return f & 0xffff; }
     [audioCodec release];
     [videoCodec release];
     [videoProfile release];
+    [videoFrameRate release];
     [super dealloc];
 }
 
@@ -312,7 +314,7 @@ static void logInputFileError(NSString* filename)
         FrameSize frameSize = makeFrameSize([[video objectAtIndex:6] intValue], [[video objectAtIndex:7] intValue]);
         info.videoFrameSize = frameSize;
         info.videoAspectRatio = [[video objectAtIndex:9] doubleValue];
-        info.videoFrameRate = [[video objectAtIndex:10] doubleValue];
+        info.videoFrameRate.value = [[video objectAtIndex:10] retain];
         info.videoBitrate = [[video objectAtIndex:11] doubleValue];
         
         if (!info.videoBitrate)
@@ -574,7 +576,7 @@ static NSString* escapePath(NSString* path)
     FrameSize frameSize = self.inputFileInfo.videoFrameSize;
     [env setValue: [[NSNumber numberWithInt: widthFromFrameSize(frameSize)] stringValue] forKey: @"input_video_width"];
     [env setValue: [[NSNumber numberWithInt: heightFromFrameSize(frameSize)] stringValue] forKey: @"input_video_height"];
-    [env setValue: [[NSNumber numberWithDouble: self.inputFileInfo.videoFrameRate] stringValue] forKey: @"input_frame_rate"];
+    [env setValue: self.inputFileInfo.videoFrameRate.value forKey: @"input_frame_rate"];
     [env setValue: [[NSNumber numberWithDouble: self.inputFileInfo.videoAspectRatio] stringValue] forKey: @"input_video_aspect"];
     [env setValue: [[NSNumber numberWithInt: self.inputFileInfo.videoBitrate] stringValue] forKey: @"input_video_bitrate"];
     [env setValue: [[NSNumber numberWithDouble: self.inputFileInfo.duration] stringValue] forKey: @"duration"];
@@ -601,6 +603,7 @@ static NSString* escapePath(NSString* path)
     [env setValue:self.outputFileInfo.audioCodec.overridden ? self.outputFileInfo.audioCodec.value : @"" forKey: @"output_audio_codec_name_override"];
     [env setValue:self.outputFileInfo.videoCodec.overridden ? self.outputFileInfo.videoCodec.value : @"" forKey: @"output_video_codec_name_override"];
     [env setValue:self.outputFileInfo.videoProfile.overridden ? self.outputFileInfo.videoProfile.value : @"" forKey: @"output_video_profile_name_override"];
+    [env setValue:self.outputFileInfo.videoFrameRate.overridden ? self.outputFileInfo.videoFrameRate.value : @"" forKey: @"output_video_frame_rate_override"];
 
     // set the params
     [[[AppController instance] deviceController] setCurrentParamsWithEnvironment:env];
@@ -622,7 +625,7 @@ static NSString* escapePath(NSString* path)
     self.outputFileInfo.videoCodec.value = [[[AppController instance] deviceController] paramForKey:@"output_video_codec_name"];
     self.outputFileInfo.videoBitrate = [[[[AppController instance] deviceController] paramForKey:@"output_video_bitrate"] floatValue];
     
-    self.outputFileInfo.videoFrameRate = [[[[AppController instance] deviceController] paramForKey:@"output_video_frame_rate"] floatValue];
+    self.outputFileInfo.videoFrameRate.value = [[[AppController instance] deviceController] paramForKey:@"output_video_frame_rate"];
 
     
     // Compose a profile and level
