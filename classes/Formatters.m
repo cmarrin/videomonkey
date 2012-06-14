@@ -70,19 +70,6 @@ static NSString* stringForSizeValue(double size, NSString* units)
 
 @end
 
-@implementation FrameSizeFormatter
-
-- (NSString *)stringForObjectValue:(id)anObject
-{
-    int frameSize = [anObject intValue];
-    int width = frameSize >> 16;
-    int height = frameSize & 0xffff;
-    
-    return [NSString stringWithFormat:@"%dx%d", width, height];
-}
-
-@end
-
 @implementation FileSizeFormatter
 
 - (NSString *)stringForObjectValue:(id)anObject

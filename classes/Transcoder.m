@@ -45,9 +45,17 @@ DAMAGE.
 #import "MoviePanelController.h"
 #import "Metadata.h"
 
-FrameSize makeFrameSize(int width, int height) { return ((uint32_t) width << 16) | ((uint32_t) height & 0xffff); }
-int widthFromFrameSize(FrameSize f) { return f >> 16; }
-int heightFromFrameSize(FrameSize f) { return f & 0xffff; }
+static NSString* makeFrameSize(int width, int height)
+{
+    return [NSString stringWithFormat:@"%dx%d", width, height];
+}
+
+static void frameSize(NSString* f, int* width, int* height)
+{
+    NSArray* values = [f componentsSeparatedByString:@"x"];
+    *width = [[values objectAtIndex:0] intValue];
+    *height = [[values objectAtIndex:1] intValue];
+}
 
 @implementation OverrideableValue
 
@@ -311,8 +319,7 @@ static void logInputFileError(NSString* filename)
         info.videoCodec.value = [[video objectAtIndex:2] retain];
         info.videoProfile.value = [[video objectAtIndex:3] retain];
         info.videoInterlaced = [[video objectAtIndex:4] isEqualToString:@"Interlace"];
-        FrameSize frameSize = makeFrameSize([[video objectAtIndex:6] intValue], [[video objectAtIndex:7] intValue]);
-        info.videoFrameSize = frameSize;
+        info.videoFrameSize = [makeFrameSize([[video objectAtIndex:6] intValue], [[video objectAtIndex:7] intValue]) retain];
         info.videoAspectRatio = [[video objectAtIndex:9] doubleValue];
         info.videoFrameRate.value = [[video objectAtIndex:10] retain];
         info.videoBitrate = [[video objectAtIndex:11] doubleValue];
@@ -573,9 +580,10 @@ static NSString* escapePath(NSString* path)
     [env setValue: [self tempAudioFileName] forKey: @"tmp_audio_file"];
     
     // fill in params
-    FrameSize frameSize = self.inputFileInfo.videoFrameSize;
-    [env setValue: [[NSNumber numberWithInt: widthFromFrameSize(frameSize)] stringValue] forKey: @"input_video_width"];
-    [env setValue: [[NSNumber numberWithInt: heightFromFrameSize(frameSize)] stringValue] forKey: @"input_video_height"];
+    int width, height;
+    frameSize(self.inputFileInfo.videoFrameSize, &width, &height);
+    [env setValue: [[NSNumber numberWithInt: width] stringValue] forKey: @"input_video_width"];
+    [env setValue: [[NSNumber numberWithInt: height] stringValue] forKey: @"input_video_height"];
     [env setValue: self.inputFileInfo.videoFrameRate.value forKey: @"input_frame_rate"];
     [env setValue: [[NSNumber numberWithDouble: self.inputFileInfo.videoAspectRatio] stringValue] forKey: @"input_video_aspect"];
     [env setValue: [[NSNumber numberWithInt: self.inputFileInfo.videoBitrate] stringValue] forKey: @"input_video_bitrate"];
@@ -609,15 +617,14 @@ static NSString* escapePath(NSString* path)
     [[[AppController instance] deviceController] setCurrentParamsWithEnvironment:env];
     
     // save some of the values
-    int width = [[[[AppController instance] deviceController] paramForKey:@"output_video_width"] intValue];
-    int height = [[[[AppController instance] deviceController] paramForKey:@"output_video_height"] intValue];
+    width = [[[[AppController instance] deviceController] paramForKey:@"output_video_width"] intValue];
+    height = [[[[AppController instance] deviceController] paramForKey:@"output_video_height"] intValue];
     if (width > 32767)
         width = 32767;
     if (height > 32767)
         height = 32767;
         
-    frameSize = makeFrameSize(width, height);
-    self.outputFileInfo.videoFrameSize = frameSize;
+    self.outputFileInfo.videoFrameSize = [makeFrameSize(width, height) retain];
     self.outputFileInfo.videoAspectRatio = (double) width / (double) height;
     
     self.outputFileInfo.format = [[[AppController instance] deviceController] paramForKey:@"output_format_name"];

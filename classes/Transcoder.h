@@ -46,9 +46,6 @@ DAMAGE.
 @class Metadata;
 @class FileInfoPanelController;
 
-// FrameSize is a 32 bit integer with upper 16 bits width and lower 16 bits height
-typedef uint32_t FrameSize;
-
     //
     //  FS_INVALID      - File is invalid, we can't encode this file
     //  FS_VALID        - File is waiting to be encoded
@@ -91,7 +88,7 @@ typedef enum FileStatus {   FS_INVALID,     // File is invalid, we can't encode 
     OverrideableValue* videoCodec;
     OverrideableValue* videoProfile;
     BOOL videoInterlaced;
-    FrameSize videoFrameSize;
+    NSString* videoFrameSize;
     double videoBitrate;
     double videoAspectRatio;
     OverrideableValue* videoFrameRate;
@@ -118,7 +115,7 @@ typedef enum FileStatus {   FS_INVALID,     // File is invalid, we can't encode 
 @property(retain) OverrideableValue* videoCodec;
 @property(retain) OverrideableValue* videoProfile;
 @property(assign) BOOL videoInterlaced;
-@property(assign) FrameSize videoFrameSize;
+@property(assign) NSString* videoFrameSize;
 @property(assign) double videoAspectRatio;
 @property(assign) OverrideableValue* videoFrameRate;
 @property(assign) double videoBitrate;
