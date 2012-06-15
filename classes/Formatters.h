@@ -37,50 +37,49 @@ DAMAGE.
 #import <Cocoa/Cocoa.h>
 
 
-@interface FileSizeFormatter : NSNumberFormatter {
-}
+@interface FileSizeFormatter : NSNumberFormatter
 
 - (NSString *)stringForObjectValue:(id)anObject;
 
 @end
 
-@interface DurationFormatter : NSNumberFormatter {
-}
+@interface DurationFormatter : NSNumberFormatter
 
 - (NSString *)stringForObjectValue:(id)anObject;
 
 @end
 
-@interface BitrateFormatter : NSNumberFormatter {
-}
+@interface BitrateFormatter : NSNumberFormatter
 
 - (NSString *)stringForObjectValue:(id)anObject;
 
 @end
 
-@interface SampleRateFormatter : NSNumberFormatter {
-}
+@interface SampleRateFormatter : NSNumberFormatter
 
 - (NSString *)stringForObjectValue:(id)anObject;
 
 @end
 
-@interface BooleanFormatter : NSNumberFormatter {
-}
+@interface BooleanFormatter : NSNumberFormatter
 
 - (NSString *)stringForObjectValue:(id)anObject;
 
 @end
 
-@interface FramerateFormatter : NSNumberFormatter {
-}
+@interface FramerateFormatter : NSNumberFormatter
 
 - (NSString *)stringForObjectValue:(id)anObject;
 
 @end
 
-@interface AspectRatioFormatter : NSNumberFormatter {
-}
+@interface AspectRatioFormatter : NSNumberFormatter
+
+- (NSString *)stringForObjectValue:(id)anObject;
+
+@end
+
+@interface FrameWidthFormatter : NSNumberFormatter
 
 - (NSString *)stringForObjectValue:(id)anObject;
 

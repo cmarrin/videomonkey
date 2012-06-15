@@ -149,3 +149,13 @@ static NSString* stringForSizeValue(double size, NSString* units)
 }
 
 @end
+
+@implementation FrameWidthFormatter
+
+- (NSString *)stringForObjectValue:(id)anObject
+{
+    return anObject;
+}
+
+@end
+
