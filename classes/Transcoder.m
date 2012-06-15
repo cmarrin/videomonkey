@@ -61,6 +61,20 @@ static void frameSize(NSString* f, int* width, int* height)
 
 @synthesize overriddenValue;
 
+- (id)initWithListener:(id)l
+{
+    if (self = [super init]) {
+        listener = [l retain];
+    }
+    return self;
+}
+
+- (void)dealloc
+{
+    [listener release];
+    [super dealloc];
+}
+
 - (id)copyWithZone:(NSZone *)zone
 {
     OverrideableValue* v = [[OverrideableValue allocWithZone:zone] init];
@@ -90,6 +104,8 @@ static void frameSize(NSString* f, int* width, int* height)
 {
     [value release];
     value = [v retain];
+    if (listener)
+        [listener overrideableValueUdated:self];
 }
 
 - (id)value
@@ -114,63 +130,6 @@ static void frameSize(NSString* f, int* width, int* height)
 
 @end
 
-@implementation OverrideableFrameSizeValue
-
-- (void)setOverriddenValue:(id)v
-{
-    int width, height;
-    frameSize(v, &width, &height);
-    int currentWidth, currentHeight;
-    frameSize(overriddenValue, &currentWidth, &currentHeight);
-    if (width <= 0)
-        width = currentWidth;
-    if (height <= 0)
-        height = currentHeight;
-    [super setOverriddenValue:makeFrameSize(width, height)];
-}
-
-@end
-
-@implementation FrameWidthTransformer
-
-+ (Class)transformedValueClass { return [NSString class]; }
-+ (BOOL)allowsReverseTransformation { return YES; }
-
-- (id)transformedValue:(id)value
-{
-    int width, height;
-    frameSize(value, &width, &height);
-    return [NSNumber numberWithInt:width];
-}
-
-- (id)reverseTransformedValue:(id)value
-{
-    int v = [value intValue];
-    return [NSString stringWithFormat:@"%dx0", v];
-}
-
-@end
-
-@implementation FrameHeightTransformer
-
-+ (Class)transformedValueClass { return [NSString class]; }
-+ (BOOL)allowsReverseTransformation { return YES; }
-
-- (id)transformedValue:(id)value
-{
-    int width, height;
-    frameSize(value, &width, &height);
-    return [NSNumber numberWithInt:height];
-}
-
-- (id)reverseTransformedValue:(id)value
-{
-    int v = [value intValue];
-    return [NSString stringWithFormat:@"0x%d", v];
-}
-
-@end
-
 @implementation TranscoderFileInfo
 
 // General
@@ -187,6 +146,8 @@ static void frameSize(NSString* f, int* width, int* height)
 @synthesize videoProfile;
 @synthesize videoInterlaced;
 @synthesize videoFrameSize;
+@synthesize videoWidth;
+@synthesize videoHeight;
 @synthesize videoAspectRatio;
 @synthesize videoFrameRate;
 @synthesize videoBitrate;
@@ -199,6 +160,17 @@ static void frameSize(NSString* f, int* width, int* height)
 @synthesize audioChannels;
 @synthesize audioBitrate;
 
+- (void)setVideoWidthHeightOverridden:(BOOL)v
+{
+    self.videoWidth.overridden = v;
+    self.videoHeight.overridden = v;
+}
+
+- (BOOL)videoWidthHeightOverridden
+{
+    return self.videoWidth.overridden;
+}
+
 - (id)init
 {
     if (self = [super init]) {
@@ -206,7 +178,8 @@ static void frameSize(NSString* f, int* width, int* height)
         videoCodec = [[OverrideableValue alloc] init];
         videoProfile = [[OverrideableValue alloc] init];
         videoFrameRate = [[OverrideableValue alloc] init];
-        videoFrameSize = [[OverrideableFrameSizeValue alloc] init];
+        videoWidth = [[OverrideableValue alloc] initWithListener:self];
+        videoHeight = [[OverrideableValue alloc] initWithListener:self];
     }
     return self;
 }
@@ -217,8 +190,14 @@ static void frameSize(NSString* f, int* width, int* height)
     [videoCodec release];
     [videoProfile release];
     [videoFrameRate release];
-    [videoFrameSize release];
+    [videoWidth release];
+    [videoHeight release];
     [super dealloc];
+}
+
+- (void)overrideableValueUdated:(OverrideableValue*)value
+{
+    self.videoFrameSize = makeFrameSize([videoWidth.value intValue], [videoHeight.value intValue]);
 }
 
 @end
@@ -380,7 +359,8 @@ static void logInputFileError(NSString* filename)
         info.videoCodec.value = [[video objectAtIndex:2] retain];
         info.videoProfile.value = [[video objectAtIndex:3] retain];
         info.videoInterlaced = [[video objectAtIndex:4] isEqualToString:@"Interlace"];
-        info.videoFrameSize.value = [makeFrameSize([[video objectAtIndex:6] intValue], [[video objectAtIndex:7] intValue]) retain];
+        info.videoWidth.value = [[video objectAtIndex:6] retain];
+        info.videoHeight.value = [[video objectAtIndex:7] retain];
         info.videoAspectRatio = [[video objectAtIndex:9] doubleValue];
         info.videoFrameRate.value = [[video objectAtIndex:10] retain];
         info.videoBitrate = [[video objectAtIndex:11] doubleValue];
@@ -641,10 +621,8 @@ static NSString* escapePath(NSString* path)
     [env setValue: [self tempAudioFileName] forKey: @"tmp_audio_file"];
     
     // fill in params
-    int width, height;
-    frameSize(self.inputFileInfo.videoFrameSize.value, &width, &height);
-    [env setValue: [[NSNumber numberWithInt: width] stringValue] forKey: @"input_video_width"];
-    [env setValue: [[NSNumber numberWithInt: height] stringValue] forKey: @"input_video_height"];
+    [env setValue: self.inputFileInfo.videoWidth.value forKey: @"input_video_width"];
+    [env setValue: self.inputFileInfo.videoHeight.value forKey: @"input_video_height"];
     [env setValue: self.inputFileInfo.videoFrameRate.value forKey: @"input_frame_rate"];
     [env setValue: [[NSNumber numberWithDouble: self.inputFileInfo.videoAspectRatio] stringValue] forKey: @"input_video_aspect"];
     [env setValue: [[NSNumber numberWithInt: self.inputFileInfo.videoBitrate] stringValue] forKey: @"input_video_bitrate"];
@@ -673,24 +651,15 @@ static NSString* escapePath(NSString* path)
     [env setValue:self.outputFileInfo.videoCodec.overridden ? self.outputFileInfo.videoCodec.value : @"" forKey: @"output_video_codec_name_override"];
     [env setValue:self.outputFileInfo.videoProfile.overridden ? self.outputFileInfo.videoProfile.value : @"" forKey: @"output_video_profile_name_override"];
     [env setValue:self.outputFileInfo.videoFrameRate.overridden ? self.outputFileInfo.videoFrameRate.value : @"" forKey: @"output_video_frame_rate_override"];
-
-    frameSize(self.outputFileInfo.videoFrameSize.value, &width, &height);
-    [env setValue:self.outputFileInfo.videoFrameSize.overridden ? [[NSNumber numberWithInt: width] stringValue] : @"" forKey: @"output_video_width_override"];
-    [env setValue:self.outputFileInfo.videoFrameSize.overridden ? [[NSNumber numberWithInt: height] stringValue] : @"" forKey: @"output_video_height_override"];
+    [env setValue:self.outputFileInfo.videoWidth.overridden ? self.outputFileInfo.videoWidth.value : @"" forKey: @"output_video_width_override"];
+    [env setValue:self.outputFileInfo.videoHeight.overridden ? self.outputFileInfo.videoHeight.value : @"" forKey: @"output_video_height_override"];
 
     // set the params
     [[[AppController instance] deviceController] setCurrentParamsWithEnvironment:env];
     
     // save some of the values
-    width = [[[[AppController instance] deviceController] paramForKey:@"output_video_width"] intValue];
-    height = [[[[AppController instance] deviceController] paramForKey:@"output_video_height"] intValue];
-    if (width > 32767)
-        width = 32767;
-    if (height > 32767)
-        height = 32767;
-        
-    self.outputFileInfo.videoFrameSize.value = [makeFrameSize(width, height) retain];
-    self.outputFileInfo.videoAspectRatio = (double) width / (double) height;
+    self.outputFileInfo.videoWidth.value = [[[AppController instance] deviceController] paramForKey:@"output_video_width"];
+    self.outputFileInfo.videoHeight.value = [[[AppController instance] deviceController] paramForKey:@"output_video_height"];
     
     self.outputFileInfo.format = [[[AppController instance] deviceController] paramForKey:@"output_format_name"];
 

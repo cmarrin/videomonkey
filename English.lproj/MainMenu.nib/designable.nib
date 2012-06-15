@@ -1699,44 +1699,6 @@
 														<int key="NSCellFlags2">-2147481600</int>
 														<string key="NSContents">Frame Size</string>
 														<reference key="NSSupport" ref="176004473"/>
-														<object class="NSNumberFormatter" key="NSFormatter" id="7689">
-															<object class="NSMutableDictionary" key="NS.attributes">
-																<bool key="EncodedWithXMLCoder">YES</bool>
-																<object class="NSArray" key="dict.sortedKeys">
-																	<bool key="EncodedWithXMLCoder">YES</bool>
-																	<string>allowsFloats</string>
-																	<string>formatterBehavior</string>
-																</object>
-																<object class="NSArray" key="dict.values">
-																	<bool key="EncodedWithXMLCoder">YES</bool>
-																	<integer value="1"/>
-																	<integer value="1040"/>
-																</object>
-															</object>
-															<string key="NS.positiveformat">#</string>
-															<string key="NS.negativeformat">#</string>
-															<nil key="NS.positiveattrs"/>
-															<nil key="NS.negativeattrs"/>
-															<nil key="NS.zero"/>
-															<nil key="NS.nil"/>
-															<object class="NSAttributedString" key="NS.nan">
-																<string key="NSString">NaN</string>
-																<reference key="NSAttributes" ref="329307463"/>
-															</object>
-															<reference key="NS.min" ref="336729506"/>
-															<reference key="NS.max" ref="336729506"/>
-															<object class="NSDecimalNumberHandler" key="NS.rounding">
-																<int key="NS.roundingmode">3</int>
-																<bool key="NS.raise.overflow">YES</bool>
-																<bool key="NS.raise.underflow">YES</bool>
-																<bool key="NS.raise.dividebyzero">YES</bool>
-															</object>
-															<string key="NS.decimal">.</string>
-															<string key="NS.thousand">,</string>
-															<bool key="NS.hasthousands">NO</bool>
-															<bool key="NS.localized">YES</bool>
-															<bool key="NS.allowsfloats">YES</bool>
-														</object>
 														<string key="NSPlaceholderString">1280x1024@24fps</string>
 														<reference key="NSControlView" ref="8035353"/>
 														<reference key="NSBackgroundColor" ref="965780818"/>
@@ -6051,44 +6013,6 @@ AAEAAQAAAT0AAwAAAAEAAgAAAVIAAwAAAAEAAQAAAVMAAwAAAAIAAQABAAAAAA</bytes>
 																	<int key="NSCellFlags2">-1874721792</int>
 																	<string key="NSContents">Video Frame Size Value</string>
 																	<reference key="NSSupport" ref="26"/>
-																	<object class="NSNumberFormatter" key="NSFormatter" id="647539474">
-																		<object class="NSMutableDictionary" key="NS.attributes">
-																			<bool key="EncodedWithXMLCoder">YES</bool>
-																			<object class="NSArray" key="dict.sortedKeys">
-																				<bool key="EncodedWithXMLCoder">YES</bool>
-																				<string>allowsFloats</string>
-																				<string>formatterBehavior</string>
-																			</object>
-																			<object class="NSArray" key="dict.values">
-																				<bool key="EncodedWithXMLCoder">YES</bool>
-																				<integer value="1"/>
-																				<integer value="1040"/>
-																			</object>
-																		</object>
-																		<string key="NS.positiveformat">#</string>
-																		<string key="NS.negativeformat">#</string>
-																		<nil key="NS.positiveattrs"/>
-																		<nil key="NS.negativeattrs"/>
-																		<nil key="NS.zero"/>
-																		<nil key="NS.nil"/>
-																		<object class="NSAttributedString" key="NS.nan">
-																			<string key="NSString">NaN</string>
-																			<reference key="NSAttributes" ref="329307463"/>
-																		</object>
-																		<reference key="NS.min" ref="336729506"/>
-																		<reference key="NS.max" ref="336729506"/>
-																		<object class="NSDecimalNumberHandler" key="NS.rounding">
-																			<int key="NS.roundingmode">3</int>
-																			<bool key="NS.raise.overflow">YES</bool>
-																			<bool key="NS.raise.underflow">YES</bool>
-																			<bool key="NS.raise.dividebyzero">YES</bool>
-																		</object>
-																		<string key="NS.decimal">.</string>
-																		<string key="NS.thousand">,</string>
-																		<bool key="NS.hasthousands">NO</bool>
-																		<bool key="NS.localized">YES</bool>
-																		<bool key="NS.allowsfloats">YES</bool>
-																	</object>
 																	<reference key="NSControlView" ref="903320506"/>
 																	<reference key="NSBackgroundColor" ref="153400129"/>
 																	<reference key="NSTextColor" ref="304018816"/>
@@ -14672,15 +14596,15 @@ AAEAAQAAAT0AAwAAAAEAAgAAAVIAAwAAAAEAAQAAAVMAAwAAAAIAAQABAAAAAA</bytes>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBBindingConnection" key="connection">
-						<string key="label">value: arrangedObjects.outputFileInfo.videoFrameSize.value</string>
+						<string key="label">value: arrangedObjects.outputFileInfo.videoFrameSize</string>
 						<reference key="source" ref="317025038"/>
 						<reference key="destination" ref="2824"/>
 						<object class="NSNibBindingConnector" key="connector">
 							<reference key="NSSource" ref="317025038"/>
 							<reference key="NSDestination" ref="2824"/>
-							<string key="NSLabel">value: arrangedObjects.outputFileInfo.videoFrameSize.value</string>
+							<string key="NSLabel">value: arrangedObjects.outputFileInfo.videoFrameSize</string>
 							<string key="NSBinding">value</string>
-							<string key="NSKeyPath">arrangedObjects.outputFileInfo.videoFrameSize.value</string>
+							<string key="NSKeyPath">arrangedObjects.outputFileInfo.videoFrameSize</string>
 							<object class="NSDictionary" key="NSOptions">
 								<string key="NS.key.0">NSConditionallySetsEditable</string>
 								<boolean value="YES" key="NS.object.0"/>
@@ -14688,7 +14612,7 @@ AAEAAQAAAT0AAwAAAAEAAgAAAVIAAwAAAAEAAQAAAVMAAwAAAAIAAQABAAAAAA</bytes>
 							<int key="NSNibBindingConnectorVersion">2</int>
 						</object>
 					</object>
-					<int key="connectionID">6038</int>
+					<int key="connectionID">6075</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBBindingConnection" key="connection">
@@ -15116,19 +15040,19 @@ AAEAAQAAAT0AAwAAAAEAAgAAAVIAAwAAAAEAAQAAAVMAAwAAAAIAAQABAAAAAA</bytes>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBBindingConnection" key="connection">
-						<string key="label">value: selection.inputFileInfo.videoFrameSize.value</string>
+						<string key="label">value: selection.inputFileInfo.videoFrameSize</string>
 						<reference key="source" ref="903320506"/>
 						<reference key="destination" ref="2824"/>
 						<object class="NSNibBindingConnector" key="connector">
 							<reference key="NSSource" ref="903320506"/>
 							<reference key="NSDestination" ref="2824"/>
-							<string key="NSLabel">value: selection.inputFileInfo.videoFrameSize.value</string>
+							<string key="NSLabel">value: selection.inputFileInfo.videoFrameSize</string>
 							<string key="NSBinding">value</string>
-							<string key="NSKeyPath">selection.inputFileInfo.videoFrameSize.value</string>
+							<string key="NSKeyPath">selection.inputFileInfo.videoFrameSize</string>
 							<int key="NSNibBindingConnectorVersion">2</int>
 						</object>
 					</object>
-					<int key="connectionID">6050</int>
+					<int key="connectionID">6076</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBBindingConnection" key="connection">
@@ -15420,19 +15344,19 @@ AAEAAQAAAT0AAwAAAAEAAgAAAVIAAwAAAAEAAQAAAVMAAwAAAAIAAQABAAAAAA</bytes>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBBindingConnection" key="connection">
-						<string key="label">value: selection.outputFileInfo.videoFrameSize.value</string>
+						<string key="label">value: selection.outputFileInfo.videoFrameSize</string>
 						<reference key="source" ref="875061389"/>
 						<reference key="destination" ref="2824"/>
 						<object class="NSNibBindingConnector" key="connector">
 							<reference key="NSSource" ref="875061389"/>
 							<reference key="NSDestination" ref="2824"/>
-							<string key="NSLabel">value: selection.outputFileInfo.videoFrameSize.value</string>
+							<string key="NSLabel">value: selection.outputFileInfo.videoFrameSize</string>
 							<string key="NSBinding">value</string>
-							<string key="NSKeyPath">selection.outputFileInfo.videoFrameSize.value</string>
+							<string key="NSKeyPath">selection.outputFileInfo.videoFrameSize</string>
 							<int key="NSNibBindingConnectorVersion">2</int>
 						</object>
 					</object>
-					<int key="connectionID">6039</int>
+					<int key="connectionID">6070</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBBindingConnection" key="connection">
@@ -16333,7 +16257,7 @@ AAEAAQAAAT0AAwAAAAEAAgAAAVIAAwAAAAEAAQAAAVMAAwAAAAIAAQABAAAAAA</bytes>
 							<int key="NSNibBindingConnectorVersion">2</int>
 						</object>
 					</object>
-					<int key="connectionID">6034</int>
+					<int key="connectionID">6077</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBBindingConnection" key="connection">
@@ -16885,19 +16809,19 @@ AAEAAQAAAT0AAwAAAAEAAgAAAVIAAwAAAAEAAQAAAVMAAwAAAAIAAQABAAAAAA</bytes>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBBindingConnection" key="connection">
-						<string key="label">value: selection.outputFileInfo.videoFrameSize.overridden</string>
+						<string key="label">value: selection.outputFileInfo.videoWidthHeightOverridden</string>
 						<reference key="source" ref="238563412"/>
 						<reference key="destination" ref="2824"/>
 						<object class="NSNibBindingConnector" key="connector">
 							<reference key="NSSource" ref="238563412"/>
 							<reference key="NSDestination" ref="2824"/>
-							<string key="NSLabel">value: selection.outputFileInfo.videoFrameSize.overridden</string>
+							<string key="NSLabel">value: selection.outputFileInfo.videoWidthHeightOverridden</string>
 							<string key="NSBinding">value</string>
-							<string key="NSKeyPath">selection.outputFileInfo.videoFrameSize.overridden</string>
+							<string key="NSKeyPath">selection.outputFileInfo.videoWidthHeightOverridden</string>
 							<int key="NSNibBindingConnectorVersion">2</int>
 						</object>
 					</object>
-					<int key="connectionID">6041</int>
+					<int key="connectionID">6078</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBBindingConnection" key="connection">
@@ -17080,100 +17004,93 @@ AAEAAQAAAT0AAwAAAAEAAgAAAVIAAwAAAAEAAQAAAVMAAwAAAAIAAQABAAAAAA</bytes>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBBindingConnection" key="connection">
-						<string key="label">enabled: selection.outputFileInfo.videoFrameSize.overridden</string>
+						<string key="label">enabled: selection.outputFileInfo.videoWidth.overridden</string>
 						<reference key="source" ref="1044807582"/>
 						<reference key="destination" ref="2824"/>
 						<object class="NSNibBindingConnector" key="connector">
 							<reference key="NSSource" ref="1044807582"/>
 							<reference key="NSDestination" ref="2824"/>
-							<string key="NSLabel">enabled: selection.outputFileInfo.videoFrameSize.overridden</string>
+							<string key="NSLabel">enabled: selection.outputFileInfo.videoWidth.overridden</string>
 							<string key="NSBinding">enabled</string>
-							<string key="NSKeyPath">selection.outputFileInfo.videoFrameSize.overridden</string>
+							<string key="NSKeyPath">selection.outputFileInfo.videoWidth.overridden</string>
 							<int key="NSNibBindingConnectorVersion">2</int>
 						</object>
 					</object>
-					<int key="connectionID">6045</int>
+					<int key="connectionID">6067</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBBindingConnection" key="connection">
-						<string key="label">value: selection.outputFileInfo.videoFrameSize.overriddenValue</string>
+						<string key="label">value: selection.outputFileInfo.videoHeight.overriddenValue</string>
 						<reference key="source" ref="1044807582"/>
 						<reference key="destination" ref="2824"/>
 						<object class="NSNibBindingConnector" key="connector">
 							<reference key="NSSource" ref="1044807582"/>
 							<reference key="NSDestination" ref="2824"/>
-							<string key="NSLabel">value: selection.outputFileInfo.videoFrameSize.overriddenValue</string>
+							<string key="NSLabel">value: selection.outputFileInfo.videoHeight.overriddenValue</string>
 							<string key="NSBinding">value</string>
-							<string key="NSKeyPath">selection.outputFileInfo.videoFrameSize.overriddenValue</string>
-							<object class="NSDictionary" key="NSOptions">
-								<string key="NS.key.0">NSValueTransformerName</string>
-								<string key="NS.object.0">FrameHeightTransformer</string>
-							</object>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">6055</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">enabled: selection.outputFileInfo.videoFrameSize.overridden</string>
-						<reference key="source" ref="242987953"/>
-						<reference key="destination" ref="2824"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="242987953"/>
-							<reference key="NSDestination" ref="2824"/>
-							<string key="NSLabel">enabled: selection.outputFileInfo.videoFrameSize.overridden</string>
-							<string key="NSBinding">enabled</string>
-							<string key="NSKeyPath">selection.outputFileInfo.videoFrameSize.overridden</string>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">6043</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">value: selection.outputFileInfo.videoFrameSize.overriddenValue</string>
-						<reference key="source" ref="242987953"/>
-						<reference key="destination" ref="2824"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="242987953"/>
-							<reference key="NSDestination" ref="2824"/>
-							<string key="NSLabel">value: selection.outputFileInfo.videoFrameSize.overriddenValue</string>
-							<string key="NSBinding">value</string>
-							<string key="NSKeyPath">selection.outputFileInfo.videoFrameSize.overriddenValue</string>
+							<string key="NSKeyPath">selection.outputFileInfo.videoHeight.overriddenValue</string>
 							<object class="NSDictionary" key="NSOptions">
 								<bool key="EncodedWithXMLCoder">YES</bool>
 								<object class="NSArray" key="dict.sortedKeys">
 									<bool key="EncodedWithXMLCoder">YES</bool>
+									<string>NSContinuouslyUpdatesValue</string>
 									<string>NSValidatesImmediately</string>
-									<string>NSValueTransformerName</string>
 								</object>
 								<object class="NSArray" key="dict.values">
 									<bool key="EncodedWithXMLCoder">YES</bool>
 									<boolean value="YES"/>
-									<string>FrameWidthTransformer</string>
+									<boolean value="YES"/>
 								</object>
 							</object>
 							<int key="NSNibBindingConnectorVersion">2</int>
 						</object>
 					</object>
-					<int key="connectionID">6060</int>
+					<int key="connectionID">6080</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBBindingConnection" key="connection">
-						<string key="label">value: selection.outputFileInfo.videoFrameRate.overriddenValue</string>
-						<reference key="source" ref="110470903"/>
+						<string key="label">value: selection.outputFileInfo.videoWidth.overriddenValue</string>
+						<reference key="source" ref="242987953"/>
 						<reference key="destination" ref="2824"/>
 						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="110470903"/>
+							<reference key="NSSource" ref="242987953"/>
 							<reference key="NSDestination" ref="2824"/>
-							<string key="NSLabel">value: selection.outputFileInfo.videoFrameRate.overriddenValue</string>
+							<string key="NSLabel">value: selection.outputFileInfo.videoWidth.overriddenValue</string>
 							<string key="NSBinding">value</string>
-							<string key="NSKeyPath">selection.outputFileInfo.videoFrameRate.overriddenValue</string>
+							<string key="NSKeyPath">selection.outputFileInfo.videoWidth.overriddenValue</string>
+							<object class="NSDictionary" key="NSOptions">
+								<bool key="EncodedWithXMLCoder">YES</bool>
+								<object class="NSArray" key="dict.sortedKeys">
+									<bool key="EncodedWithXMLCoder">YES</bool>
+									<string>NSContinuouslyUpdatesValue</string>
+									<string>NSValidatesImmediately</string>
+								</object>
+								<object class="NSArray" key="dict.values">
+									<bool key="EncodedWithXMLCoder">YES</bool>
+									<boolean value="YES"/>
+									<boolean value="YES"/>
+								</object>
+							</object>
 							<int key="NSNibBindingConnectorVersion">2</int>
 						</object>
 					</object>
-					<int key="connectionID">6025</int>
+					<int key="connectionID">6064</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">enabled: selection.outputFileInfo.videoWidth.overridden</string>
+						<reference key="source" ref="242987953"/>
+						<reference key="destination" ref="2824"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="242987953"/>
+							<reference key="NSDestination" ref="2824"/>
+							<string key="NSLabel">enabled: selection.outputFileInfo.videoWidth.overridden</string>
+							<string key="NSBinding">enabled</string>
+							<string key="NSKeyPath">selection.outputFileInfo.videoWidth.overridden</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">6071</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBBindingConnection" key="connection">
@@ -17192,12 +17109,33 @@ AAEAAQAAAT0AAwAAAAEAAgAAAVIAAwAAAAEAAQAAAVMAAwAAAAIAAQABAAAAAA</bytes>
 					<int key="connectionID">6028</int>
 				</object>
 				<object class="IBConnectionRecord">
-					<object class="IBOutletConnection" key="connection">
-						<string key="label">delegate</string>
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">value: selection.outputFileInfo.videoFrameRate.overriddenValue</string>
 						<reference key="source" ref="110470903"/>
 						<reference key="destination" ref="2824"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="110470903"/>
+							<reference key="NSDestination" ref="2824"/>
+							<string key="NSLabel">value: selection.outputFileInfo.videoFrameRate.overriddenValue</string>
+							<string key="NSBinding">value</string>
+							<string key="NSKeyPath">selection.outputFileInfo.videoFrameRate.overriddenValue</string>
+							<object class="NSDictionary" key="NSOptions">
+								<bool key="EncodedWithXMLCoder">YES</bool>
+								<object class="NSArray" key="dict.sortedKeys">
+									<bool key="EncodedWithXMLCoder">YES</bool>
+									<string>NSContinuouslyUpdatesValue</string>
+									<string>NSValidatesImmediately</string>
+								</object>
+								<object class="NSArray" key="dict.values">
+									<bool key="EncodedWithXMLCoder">YES</bool>
+									<boolean value="YES"/>
+									<boolean value="YES"/>
+								</object>
+							</object>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
 					</object>
-					<int key="connectionID">6037</int>
+					<int key="connectionID">6082</int>
 				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -19576,7 +19514,6 @@ AAEAAQAAAT0AAwAAAAEAAgAAAVIAAwAAAAEAAQAAAVMAAwAAAAIAAQABAAAAAA</bytes>
 						<reference key="object" ref="488382048"/>
 						<object class="NSMutableArray" key="children">
 							<bool key="EncodedWithXMLCoder">YES</bool>
-							<reference ref="647539474"/>
 						</object>
 						<reference key="parent" ref="903320506"/>
 					</object>
@@ -19868,11 +19805,6 @@ AAEAAQAAAT0AAwAAAAEAAgAAAVIAAwAAAAEAAQAAAVMAAwAAAAIAAQABAAAAAA</bytes>
 						<int key="objectID">2944</int>
 						<reference key="object" ref="391543224"/>
 						<reference key="parent" ref="461287903"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">3017</int>
-						<reference key="object" ref="647539474"/>
-						<reference key="parent" ref="488382048"/>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">3023</int>
@@ -20727,14 +20659,8 @@ AAEAAQAAAT0AAwAAAAEAAgAAAVIAAwAAAAEAAQAAAVMAAwAAAAIAAQABAAAAAA</bytes>
 						<reference key="object" ref="389556013"/>
 						<object class="NSMutableArray" key="children">
 							<bool key="EncodedWithXMLCoder">YES</bool>
-							<reference ref="7689"/>
 						</object>
 						<reference key="parent" ref="6243"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">5069</int>
-						<reference key="object" ref="7689"/>
-						<reference key="parent" ref="389556013"/>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">5231</int>
@@ -24687,9 +24613,6 @@ AAEAAQAAAT0AAwAAAAEAAgAAAVIAAwAAAAEAAQAAAVMAAwAAAAIAAQABAAAAAA</bytes>
 					<string>296.IBPluginDependency</string>
 					<string>297.IBPluginDependency</string>
 					<string>298.IBPluginDependency</string>
-					<string>3017.CustomClassName</string>
-					<string>3017.IBNumberFormatterLocalizesFormatMetadataKey</string>
-					<string>3017.IBPluginDependency</string>
 					<string>3023.CustomClassName</string>
 					<string>3023.IBNumberFormatterLocalizesFormatMetadataKey</string>
 					<string>3023.IBPluginDependency</string>
@@ -25179,9 +25102,6 @@ AAEAAQAAAT0AAwAAAAEAAgAAAVIAAwAAAAEAAQAAAVMAAwAAAAIAAQABAAAAAA</bytes>
 					<string>503.IBPluginDependency</string>
 					<string>5067.IBPluginDependency</string>
 					<string>5068.IBPluginDependency</string>
-					<string>5069.CustomClassName</string>
-					<string>5069.IBNumberFormatterLocalizesFormatMetadataKey</string>
-					<string>5069.IBPluginDependency</string>
 					<string>5231.IBPluginDependency</string>
 					<string>5232.IBPluginDependency</string>
 					<string>5241.IBPluginDependency</string>
@@ -25985,9 +25905,6 @@ AAEAAQAAAT0AAwAAAAEAAgAAAVIAAwAAAAEAAQAAAVMAAwAAAAIAAQABAAAAAA</bytes>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>FrameSizeFormatter</string>
-					<boolean value="YES"/>
-					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>BitrateFormatter</string>
 					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -26696,9 +26613,6 @@ AAEAAQAAAT0AAwAAAAEAAgAAAVIAAwAAAAEAAQAAAVMAAwAAAAIAAQABAAAAAA</bytes>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>FramerateFormatter</string>
-					<boolean value="YES"/>
-					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -27025,7 +26939,7 @@ AAEAAQAAAT0AAwAAAAEAAgAAAVIAAwAAAAEAAQAAAVMAAwAAAAIAAQABAAAAAA</bytes>
 				<reference key="dict.values" ref="0"/>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">6060</int>
+			<int key="maxID">6082</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">

@@ -340,12 +340,4 @@ DAMAGE.
     return nil;
 }
 
-- (void)controlTextDidChange:(NSNotification *)aNotification
-{
-    NSDictionary* info = [[aNotification object]infoForBinding:@"value"];
-    NSString* keyPath = [info valueForKey:NSObservedKeyPathKey];
-    if (keyPath && [keyPath length])
-        [self setValue:[[aNotification object] stringValue] forKeyPath:keyPath];
-}
-
 @end

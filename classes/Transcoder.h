@@ -45,6 +45,7 @@ DAMAGE.
 @class Command;
 @class Metadata;
 @class FileInfoPanelController;
+@class TranscoderFileInfo;
 
     //
     //  FS_INVALID      - File is invalid, we can't encode this file
@@ -66,23 +67,14 @@ typedef enum FileStatus {   FS_INVALID,     // File is invalid, we can't encode 
     id value;
     id overriddenValue;
     BOOL overridden;
+    TranscoderFileInfo* listener;
 }
+
+- (id)initWithListener:(TranscoderFileInfo*)listener;
 
 @property(retain) id value;
 @property(retain) id overriddenValue;
 @property(assign) BOOL overridden;
-
-@end
-
-@interface OverrideableFrameSizeValue : OverrideableValue
-
-@end
-
-@interface FrameWidthTransformer : NSValueTransformer
-
-@end
-
-@interface FrameHeightTransformer : NSValueTransformer
 
 @end
 
@@ -100,7 +92,10 @@ typedef enum FileStatus {   FS_INVALID,     // File is invalid, we can't encode 
     OverrideableValue* videoCodec;
     OverrideableValue* videoProfile;
     BOOL videoInterlaced;
-    OverrideableFrameSizeValue* videoFrameSize;
+    NSString* videoFrameSize;
+    OverrideableValue* videoWidth;
+    OverrideableValue* videoHeight;
+    BOOL videoWidthHeightOverridden;
     double videoBitrate;
     double videoAspectRatio;
     OverrideableValue* videoFrameRate;
@@ -127,7 +122,10 @@ typedef enum FileStatus {   FS_INVALID,     // File is invalid, we can't encode 
 @property(retain) OverrideableValue* videoCodec;
 @property(retain) OverrideableValue* videoProfile;
 @property(assign) BOOL videoInterlaced;
-@property(assign) OverrideableFrameSizeValue* videoFrameSize;
+@property(assign) NSString* videoFrameSize;
+@property(retain) OverrideableValue* videoWidth;
+@property(retain) OverrideableValue* videoHeight;
+@property(assign) BOOL videoWidthHeightOverridden;
 @property(assign) double videoAspectRatio;
 @property(assign) OverrideableValue* videoFrameRate;
 @property(assign) double videoBitrate;
@@ -139,6 +137,8 @@ typedef enum FileStatus {   FS_INVALID,     // File is invalid, we can't encode 
 @property(assign) double audioSampleRate;
 @property(assign) int audioChannels;
 @property(assign) double audioBitrate;
+
+- (void)overrideableValueUdated:(OverrideableValue*)value;
 
 @end
 
