@@ -175,6 +175,8 @@ static void frameSize(NSString* f, int* width, int* height)
 {
     if (self = [super init]) {
         audioCodec = [[OverrideableValue alloc] init];
+        audioChannels = [[OverrideableValue alloc] init];
+        audioSampleRate = [[OverrideableValue alloc] init];
         videoCodec = [[OverrideableValue alloc] init];
         videoProfile = [[OverrideableValue alloc] init];
         videoFrameRate = [[OverrideableValue alloc] init];
@@ -187,6 +189,8 @@ static void frameSize(NSString* f, int* width, int* height)
 - (void)dealloc
 {
     [audioCodec release];
+    [audioChannels release];
+    [audioSampleRate release];
     [videoCodec release];
     [videoProfile release];
     [videoFrameRate release];
@@ -389,8 +393,8 @@ static void logInputFileError(NSString* filename)
 
         info.audioLanguage = [[audio objectAtIndex:1] retain];
         info.audioCodec.value = [[audio objectAtIndex:2] retain];
-        info.audioSampleRate = [[audio objectAtIndex:3] doubleValue];
-        info.audioChannels = [[audio objectAtIndex:4] intValue];
+        info.audioSampleRate.value = [[audio objectAtIndex:3] retain];
+        info.audioChannels.value = [[audio objectAtIndex:4] retain];
         info.audioBitrate = [[audio objectAtIndex:5] doubleValue];
         
         hasAudio = YES;
@@ -592,7 +596,7 @@ static NSImage* getFileStatusImage(FileStatus status)
 
 -(BOOL) hasInputAudio
 {
-    return [[self inputFileInfo] audioSampleRate] != 0;
+    return [self.inputFileInfo.audioSampleRate.value doubleValue] != 0;
 }
 
 -(NSString*) tempAudioFileName
@@ -648,6 +652,9 @@ static NSString* escapePath(NSString* path)
 
     // If we have overrides, set them here.
     [env setValue:self.outputFileInfo.audioCodec.overridden ? self.outputFileInfo.audioCodec.value : @"" forKey: @"output_audio_codec_name_override"];
+    [env setValue:self.outputFileInfo.audioChannels.overridden ? self.outputFileInfo.audioChannels.value : @"" forKey: @"output_audio_channels_override"];
+    [env setValue:self.outputFileInfo.audioSampleRate.overridden ? self.outputFileInfo.audioSampleRate.value : @"" forKey: @"output_audio_sample_rate_override"];
+    [env setValue:@"" forKey: @"output_audio_bitrate_override"];
     [env setValue:self.outputFileInfo.videoCodec.overridden ? self.outputFileInfo.videoCodec.value : @"" forKey: @"output_video_codec_name_override"];
     [env setValue:self.outputFileInfo.videoProfile.overridden ? self.outputFileInfo.videoProfile.value : @"" forKey: @"output_video_profile_name_override"];
     [env setValue:self.outputFileInfo.videoFrameRate.overridden ? self.outputFileInfo.videoFrameRate.value : @"" forKey: @"output_video_frame_rate_override"];
@@ -681,8 +688,8 @@ static NSString* escapePath(NSString* path)
 
     self.outputFileInfo.audioCodec.value = [[[AppController instance] deviceController] paramForKey:@"output_audio_codec_name"];
     self.outputFileInfo.audioBitrate = [[[[AppController instance] deviceController] paramForKey:@"output_audio_bitrate"] floatValue];
-    self.outputFileInfo.audioSampleRate = [[[[AppController instance] deviceController] paramForKey:@"output_audio_sample_rate"] floatValue];
-    self.outputFileInfo.audioChannels = [[[[AppController instance] deviceController] paramForKey:@"output_audio_channels"] intValue];
+    self.outputFileInfo.audioSampleRate.value = [[[AppController instance] deviceController] paramForKey:@"output_audio_sample_rate"];
+    self.outputFileInfo.audioChannels.value = [[[AppController instance] deviceController] paramForKey:@"output_audio_channels"];
 
     self.outputFileInfo.bitrate = self.outputFileInfo.videoBitrate + self.outputFileInfo.audioBitrate;
     self.outputFileInfo.fileSize = self.outputFileInfo.duration * self.outputFileInfo.bitrate / 8;

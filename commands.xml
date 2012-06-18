@@ -354,6 +354,8 @@ DTD
         
         <!-- Advanced menu items -->
         <param id="advanced_audio_codec" value="MP3,AAC,WMA,AC3,MP2,PCM" />
+        <param id="advanced_audio_channels" value="1,2" />
+        <param id="advanced_audio_sample_rate" value="8000,11025,16000,22050,32000,44056,44100,47250,48000,88200,96000" />
         <param id="advanced_video_codec" value="H.264,MPEG-4,WMV,FLV,MPEG-1,MPEG-2,Digital Video" />
         <param id="advanced_video_profile" value="baseline,main" />
 
@@ -538,6 +540,23 @@ DTD
                 if (audio_codec_name == "")
                     audio_codec_name = params.output_audio_codec_name;
 
+                var audio_channels = params.output_audio_channels_override;
+                if (audio_channels == "")
+                    audio_channels = params.output_audio_channels;
+
+                var audio_sample_rate = params.output_audio_sample_rate_override;
+                if (audio_sample_rate == "")
+                    audio_sample_rate = params.output_audio_sample_rate;
+				else if (params.output_audio_bitrate_override == "") {
+					// Make sure audio sample rate is sufficient, unless overridden
+					if (audio_sample_rate >= 44100 && params.output_audio_bitrate < 128000)
+						params.output_audio_bitrate = 128000;
+					else if (audio_sample_rate >= 22050 && params.output_audio_bitrate < 32000)
+						params.output_audio_bitrate = 32000;
+					else if (params.output_audio_bitrate < 16000)
+						params.output_audio_bitrate = 16000;
+				}
+
                 var video_codec_name = params.output_video_codec_name_override;
                 if (video_codec_name == "")
                     video_codec_name = params.output_video_codec_name;
@@ -627,10 +646,10 @@ DTD
                 }
                 addFFMPegParam("acodec");
                 
-                if (params.output_audio_sample_rate > 0)
-                    params.ffmpeg_options += "-ar $output_audio_sample_rate ";
+                if (audio_sample_rate > 0)
+                    params.ffmpeg_options += "-ar " + audio_sample_rate + " ";
                     
-                params.ffmpeg_options += "-ac $output_audio_channels  -ab $output_audio_bitrate ";
+                params.ffmpeg_options += "-ac " + audio_channels + " -ab $output_audio_bitrate ";
                 addFFMPegParam("f"); // '-f vob' for MPEG-2 encode to program stream
             }
 
@@ -1674,7 +1693,6 @@ DTD
                 <param id="output_format_name" value="Digital Video" />
                 <param id="output_video_codec_name" value="Digital Video" />
                 <param id="output_audio_codec_name" value="PCM" />
-                <param id="output_audio_bitrate" value="48000" />
                 <param id="output_audio_channels" value="2" />
                 <param id="output_audio_quality" value="High" />
 

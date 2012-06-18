@@ -65,11 +65,15 @@ typedef enum { ActionEncodeWrite = 0, ActionEncodeOnly, ActionWriteOnly, ActionR
     BOOL m_metadataActionsEnabled;
 
     NSArray* m_audioCodecStrings;
+    NSArray* m_audioChannelsStrings;
+    NSArray* m_audioSampleRateStrings;
     NSArray* m_videoCodecStrings;
     NSArray* m_videoProfileStrings;
 }
 
 @property(readwrite,retain) NSArray* audioCodecStrings;
+@property(readwrite,retain) NSArray* audioChannelsStrings;
+@property(readwrite,retain) NSArray* audioSampleRateStrings;
 @property(readwrite,retain) NSArray* videoCodecStrings;
 @property(readwrite,retain) NSArray* videoProfileStrings;
 
