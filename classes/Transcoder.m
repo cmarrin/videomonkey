@@ -635,7 +635,7 @@ static NSString* escapePath(NSString* path)
     [env setValue: self.inputFileInfo.videoHeight.value forKey: @"input_video_height"];
     [env setValue: self.inputFileInfo.videoFrameRate.value forKey: @"input_frame_rate"];
     [env setValue: self.inputFileInfo.videoAspectRatio.value forKey: @"input_video_aspect"];
-    [env setValue: self.inputFileInfo.videoBitrate forKey: @"input_video_bitrate"];
+    [env setValue: self.inputFileInfo.videoBitrate.value forKey: @"input_video_bitrate"];
     [env setValue: [[NSNumber numberWithDouble: self.inputFileInfo.duration] stringValue] forKey: @"duration"];
     
     
@@ -660,14 +660,14 @@ static NSString* escapePath(NSString* path)
     [env setValue:self.outputFileInfo.audioCodec.overridden ? self.outputFileInfo.audioCodec.value : @"" forKey: @"output_audio_codec_name_override"];
     [env setValue:self.outputFileInfo.audioChannels.overridden ? self.outputFileInfo.audioChannels.value : @"" forKey: @"output_audio_channels_override"];
     [env setValue:self.outputFileInfo.audioSampleRate.overridden ? self.outputFileInfo.audioSampleRate.value : @"" forKey: @"output_audio_sample_rate_override"];
-    [env setValue:self.outputFileInfo.audioBitrate.overridden ? self.outputFileInfo.audioBitrate.value : @"" forKey: @"output_audio_bitrate_override"];
+    [env setValue:self.outputFileInfo.audioBitrate.overridden ? [self.outputFileInfo.audioBitrate.value stringValue] : @"" forKey: @"output_audio_bitrate_override"];
     [env setValue:self.outputFileInfo.videoCodec.overridden ? self.outputFileInfo.videoCodec.value : @"" forKey: @"output_video_codec_name_override"];
     [env setValue:self.outputFileInfo.videoProfile.overridden ? self.outputFileInfo.videoProfile.value : @"" forKey: @"output_video_profile_name_override"];
     [env setValue:self.outputFileInfo.videoFrameRate.overridden ? self.outputFileInfo.videoFrameRate.value : @"" forKey: @"output_video_frame_rate_override"];
     [env setValue:self.outputFileInfo.videoWidth.overridden ? self.outputFileInfo.videoWidth.value : @"" forKey: @"output_video_width_override"];
     [env setValue:self.outputFileInfo.videoHeight.overridden ? self.outputFileInfo.videoHeight.value : @"" forKey: @"output_video_height_override"];
-    [env setValue:self.outputFileInfo.videoBitrate.overridden ? self.outputFileInfo.videoBitrate.value : @"" forKey: @"output_video_bitrate_override"];
-    [env setValue:self.outputFileInfo.videoAspectRatio.overridden ? self.outputFileInfo.videoAspectRatio.value : @"" forKey: @"output_video_aspect_ratio_override"];
+    [env setValue:self.outputFileInfo.videoBitrate.overridden ? [self.outputFileInfo.videoBitrate.value stringValue] : @"" forKey: @"output_video_bitrate_override"];
+    [env setValue:self.outputFileInfo.videoAspectRatio.overridden ? [self.outputFileInfo.videoAspectRatio.value stringValue] : @"" forKey: @"output_video_aspect_ratio_override"];
 
     // set the params
     [[[AppController instance] deviceController] setCurrentParamsWithEnvironment:env];

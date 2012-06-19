@@ -557,6 +557,10 @@ DTD
 						params.output_audio_bitrate = 16000;
 				}
 
+                var audio_bitrate = params.output_audio_bitrate_override;
+                if (audio_bitrate == "")
+                    audio_bitrate = params.output_audio_bitrate;
+
                 var video_codec_name = params.output_video_codec_name_override;
                 if (video_codec_name == "")
                     video_codec_name = params.output_video_codec_name;
@@ -577,6 +581,30 @@ DTD
                 if (video_height == "")
                     video_height = params.output_video_height;
 
+                var video_bitrate = params.output_video_bitrate_override;
+                if (video_bitrate == "")
+                    video_bitrate = params.output_video_bitrate;
+
+                var video_aspect_ratio = params.output_video_aspect_ratio_override;
+                if (video_aspect_ratio == "")
+                    video_aspect_ratio = 1;
+				else {
+					// output_video_aspect_ratio_override is actually an adjustment
+					// -1 mean the widest possible ratio, 1 means the tallest, 0 is unity
+					var minAspectRatio = 0.2;
+					var maxAspectRatio = 5;
+					if (video_aspect_ratio < 0) {
+						video_aspect_ratio = -video_aspect_ratio * minAspectRatio;
+						if (video_aspect_ratio < minAspectRatio)
+							video_aspect_ratio = minAspectRatio;
+					} else if (video_aspect_ratio > 0) {
+						video_aspect_ratio *= maxAspectRatio;
+						if (video_aspect_ratio > maxAspectRatio)
+							video_aspect_ratio = maxAspectRatio;
+					} else
+						video_aspect_ratio = 1;
+				}
+				
                 // set vpre if needed
                 if (video_codec_name == "H.264") {
                     params.ffmpeg_vpre_pass1 = "-vpre ffpresets/$ffmpeg_x264_pass1_preset ";
@@ -598,8 +626,7 @@ DTD
 					video_aspect_y = video_height;
 				}
 				
-				if (params.output_video_aspect_override != "")
-					video_aspect_x *= params.output_video_aspect_override;
+				video_aspect_x *= video_aspect_ratio;
 						
                 if (video_aspect_x > 0 && video_aspect_y > 0)
                     params.ffmpeg_options += "-aspect " + video_aspect_x + ":" + video_aspect_y + " ";
