@@ -66,6 +66,7 @@ typedef enum { ActionEncodeWrite = 0, ActionEncodeOnly, ActionWriteOnly, ActionR
 
     NSArray* m_audioCodecStrings;
     NSArray* m_audioChannelsStrings;
+    NSArray* m_audioBitrateStrings;
     NSArray* m_audioSampleRateStrings;
     NSArray* m_videoCodecStrings;
     NSArray* m_videoProfileStrings;
@@ -73,6 +74,7 @@ typedef enum { ActionEncodeWrite = 0, ActionEncodeOnly, ActionWriteOnly, ActionR
 
 @property(readwrite,retain) NSArray* audioCodecStrings;
 @property(readwrite,retain) NSArray* audioChannelsStrings;
+@property(readwrite,retain) NSArray* audioBitrateStrings;
 @property(readwrite,retain) NSArray* audioSampleRateStrings;
 @property(readwrite,retain) NSArray* videoCodecStrings;
 @property(readwrite,retain) NSArray* videoProfileStrings;

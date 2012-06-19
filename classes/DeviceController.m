@@ -93,6 +93,7 @@ static void addMenuSeparator(NSPopUpButton* button)
 
 @synthesize audioCodecStrings = m_audioCodecStrings;
 @synthesize audioChannelsStrings = m_audioChannelsStrings;
+@synthesize audioBitrateStrings = m_audioBitrateStrings;
 @synthesize audioSampleRateStrings = m_audioSampleRateStrings;
 @synthesize videoCodecStrings = m_videoCodecStrings;
 @synthesize videoProfileStrings = m_videoProfileStrings;
@@ -354,6 +355,8 @@ static JSValueRef _jsLog(JSContextRef ctx, JSObjectRef function, JSObjectRef thi
     self.audioCodecStrings = [string componentsSeparatedByString:@","];
     string = [self paramForKey:@"advanced_audio_channels"];
     self.audioChannelsStrings = [string componentsSeparatedByString:@","];
+    string = [self paramForKey:@"advanced_audio_bitrate"];
+    self.audioBitrateStrings = [string componentsSeparatedByString:@","];
     string = [self paramForKey:@"advanced_audio_sample_rate"];
     self.audioSampleRateStrings = [string componentsSeparatedByString:@","];
     string = [self paramForKey:@"advanced_video_codec"];

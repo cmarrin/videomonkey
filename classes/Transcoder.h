@@ -96,7 +96,7 @@ typedef enum FileStatus {   FS_INVALID,     // File is invalid, we can't encode 
     OverrideableValue* videoWidth;
     OverrideableValue* videoHeight;
     BOOL videoWidthHeightOverridden;
-    OverrideableValue* videoBitrate;
+    double videoBitrate;
     OverrideableValue* videoAspectRatio;
     OverrideableValue* videoFrameRate;
     
@@ -128,7 +128,7 @@ typedef enum FileStatus {   FS_INVALID,     // File is invalid, we can't encode 
 @property(assign) BOOL videoWidthHeightOverridden;
 @property(assign) OverrideableValue* videoAspectRatio;
 @property(assign) OverrideableValue* videoFrameRate;
-@property(assign) OverrideableValue* videoBitrate;
+@property(assign) double videoBitrate;
 
 // Audio
 @property(assign) int audioIndex;
