@@ -96,8 +96,8 @@ typedef enum FileStatus {   FS_INVALID,     // File is invalid, we can't encode 
     OverrideableValue* videoWidth;
     OverrideableValue* videoHeight;
     BOOL videoWidthHeightOverridden;
-    double videoBitrate;
-    double videoAspectRatio;
+    OverrideableValue* videoBitrate;
+    OverrideableValue* videoAspectRatio;
     OverrideableValue* videoFrameRate;
     
     // Audio
@@ -106,7 +106,7 @@ typedef enum FileStatus {   FS_INVALID,     // File is invalid, we can't encode 
     OverrideableValue* audioCodec;
     OverrideableValue* audioSampleRate;
     OverrideableValue* audioChannels;
-    double audioBitrate;
+    OverrideableValue* audioBitrate;
 }
 
 // General
@@ -119,16 +119,16 @@ typedef enum FileStatus {   FS_INVALID,     // File is invalid, we can't encode 
 // Video
 @property(assign) int videoIndex;
 @property(retain) NSString* videoLanguage;
-@property(retain) OverrideableValue* videoCodec;
+@property(readonly) OverrideableValue* videoCodec;
 @property(retain) OverrideableValue* videoProfile;
 @property(assign) BOOL videoInterlaced;
 @property(assign) NSString* videoFrameSize;
 @property(retain) OverrideableValue* videoWidth;
 @property(retain) OverrideableValue* videoHeight;
 @property(assign) BOOL videoWidthHeightOverridden;
-@property(assign) double videoAspectRatio;
+@property(assign) OverrideableValue* videoAspectRatio;
 @property(assign) OverrideableValue* videoFrameRate;
-@property(assign) double videoBitrate;
+@property(assign) OverrideableValue* videoBitrate;
 
 // Audio
 @property(assign) int audioIndex;
@@ -136,7 +136,7 @@ typedef enum FileStatus {   FS_INVALID,     // File is invalid, we can't encode 
 @property(readonly) OverrideableValue* audioCodec;
 @property(assign) OverrideableValue* audioSampleRate;
 @property(assign) OverrideableValue* audioChannels;
-@property(assign) double audioBitrate;
+@property(assign) OverrideableValue* audioBitrate;
 
 - (void)overrideableValueUdated:(OverrideableValue*)value;
 
