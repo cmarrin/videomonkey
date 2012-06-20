@@ -160,6 +160,8 @@ static void frameSize(NSString* f, int* width, int* height)
 @synthesize audioChannels;
 @synthesize audioBitrate;
 
+@synthesize extraOptions;
+
 - (void)setVideoWidthHeightOverridden:(BOOL)v
 {
     self.videoWidth.overridden = v;
@@ -636,7 +638,6 @@ static NSString* escapePath(NSString* path)
     [env setValue: [[NSNumber numberWithDouble: self.inputFileInfo.videoBitrate] stringValue] forKey: @"input_video_bitrate"];
     [env setValue: [[NSNumber numberWithDouble: self.inputFileInfo.duration] stringValue] forKey: @"duration"];
     
-    
     // Set the AV offsets. Positive offsets delay video
     BOOL enableAVOffset = self.inputFileInfo.videoIndex >= 0 && self.inputFileInfo.audioIndex >= 0;
     
@@ -665,6 +666,8 @@ static NSString* escapePath(NSString* path)
     [env setValue:self.outputFileInfo.videoWidth.overridden ? self.outputFileInfo.videoWidth.value : @"" forKey: @"output_video_width_override"];
     [env setValue:self.outputFileInfo.videoHeight.overridden ? self.outputFileInfo.videoHeight.value : @"" forKey: @"output_video_height_override"];
     [env setValue:self.outputFileInfo.videoAspectRatio.overridden ? [self.outputFileInfo.videoAspectRatio.value stringValue] : @"" forKey: @"output_video_aspect_ratio_override"];
+
+    [env setValue:self.outputFileInfo.extraOptions forKey: @"ffmpeg_extra_options"];
 
     // set the params
     [[[AppController instance] deviceController] setCurrentParamsWithEnvironment:env];

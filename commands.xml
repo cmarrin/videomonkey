@@ -242,6 +242,7 @@ ffmpeg_option_g
 ffmpeg_option_maxrate
 ffmpeg_option_qmin
 ffmpeg_option_bf
+ffmpeg_extra_options
 
 apple_tv_format_limit       True if output frame size is limited to 960x540 @ 30hz or 1024x720 @ 24hz (1st gen Apple TV)
 
@@ -662,6 +663,8 @@ DTD
                     
                 params.ffmpeg_options += "-ac " + audio_channels + " -ab " + audio_bitrate + " ";
                 addFFMPegParam("f"); // '-f vob' for MPEG-2 encode to program stream
+
+				params.ffmpeg_options += params.ffmpeg_extra_options + " ";
             }
 
 

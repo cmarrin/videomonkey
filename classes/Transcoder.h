@@ -107,6 +107,8 @@ typedef enum FileStatus {   FS_INVALID,     // File is invalid, we can't encode 
     OverrideableValue* audioSampleRate;
     OverrideableValue* audioChannels;
     OverrideableValue* audioBitrate;
+    
+    NSString* extraOptions;
 }
 
 // General
@@ -137,6 +139,9 @@ typedef enum FileStatus {   FS_INVALID,     // File is invalid, we can't encode 
 @property(assign) OverrideableValue* audioSampleRate;
 @property(assign) OverrideableValue* audioChannels;
 @property(assign) OverrideableValue* audioBitrate;
+
+@property(retain) NSString* extraOptions;
+
 
 - (void)overrideableValueUdated:(OverrideableValue*)value;
 
