@@ -549,15 +549,15 @@ DTD
                 var audio_sample_rate = params.output_audio_sample_rate_override;
                 if (audio_sample_rate == "")
                     audio_sample_rate = params.output_audio_sample_rate;
-				else if (params.output_audio_bitrate_override == "") {
-					// Make sure audio sample rate is sufficient, unless overridden
-					if (audio_sample_rate >= 44100 && params.output_audio_bitrate < 128000)
-						params.output_audio_bitrate = 128000;
-					else if (audio_sample_rate >= 22050 && params.output_audio_bitrate < 32000)
-						params.output_audio_bitrate = 32000;
-					else if (params.output_audio_bitrate < 16000)
-						params.output_audio_bitrate = 16000;
-				}
+                else if (params.output_audio_bitrate_override == "") {
+                    // Make sure audio sample rate is sufficient, unless overridden
+                    if (audio_sample_rate >= 44100 && params.output_audio_bitrate < 128000)
+                        params.output_audio_bitrate = 128000;
+                    else if (audio_sample_rate >= 22050 && params.output_audio_bitrate < 32000)
+                        params.output_audio_bitrate = 32000;
+                    else if (params.output_audio_bitrate < 16000)
+                        params.output_audio_bitrate = 16000;
+                }
 
                 var audio_bitrate = params.output_audio_bitrate_override;
                 if (audio_bitrate == "")
@@ -586,25 +586,25 @@ DTD
                 var video_aspect_ratio = number(params.output_video_aspect_ratio_override);
                 if (video_aspect_ratio == "")
                     video_aspect_ratio = 1;
-				else {
-					// output_video_aspect_ratio_override is actually an adjustment
-					// -1 mean the widest possible ratio, 1 means the tallest, 0 is unity
-					var minAspectRatio = 0.2;
-					var maxAspectRatio = 5;
-					if (video_aspect_ratio < 0) {
+                else {
+                    // output_video_aspect_ratio_override is actually an adjustment
+                    // -1 mean the widest possible ratio, 1 means the tallest, 0 is unity
+                    var minAspectRatio = 0.2;
+                    var maxAspectRatio = 5;
+                    if (video_aspect_ratio < 0) {
 log("video_aspect_ratio=" + video_aspect_ratio + ", minAspectRatio=" + minAspectRatio);
-						video_aspect_ratio = (1 + video_aspect_ratio) * (1 - minAspectRatio) + minAspectRatio;
+                        video_aspect_ratio = (1 + video_aspect_ratio) * (1 - minAspectRatio) + minAspectRatio;
 log("    final ratio=" + video_aspect_ratio);
-						if (video_aspect_ratio < minAspectRatio)
-							video_aspect_ratio = minAspectRatio;
-					} else if (video_aspect_ratio > 0) {
-						video_aspect_ratio = video_aspect_ratio * (maxAspectRatio - 1) + 1;
-						if (video_aspect_ratio > maxAspectRatio)
-							video_aspect_ratio = maxAspectRatio;
-					} else
-						video_aspect_ratio = 1;
-				}
-				
+                        if (video_aspect_ratio < minAspectRatio)
+                            video_aspect_ratio = minAspectRatio;
+                    } else if (video_aspect_ratio > 0) {
+                        video_aspect_ratio = video_aspect_ratio * (maxAspectRatio - 1) + 1;
+                        if (video_aspect_ratio > maxAspectRatio)
+                            video_aspect_ratio = maxAspectRatio;
+                    } else
+                        video_aspect_ratio = 1;
+                }
+                
                 // set vpre if needed
                 if (video_codec_name == "H.264") {
                     params.ffmpeg_vpre_pass1 = "-vpre ffpresets/$ffmpeg_x264_pass1_preset ";
@@ -617,20 +617,20 @@ log("    final ratio=" + video_aspect_ratio);
                 addFFMPegParam("target")
                 params.ffmpeg_options += "-s " + video_width + "x" + video_height + " ";
                 
-				// If the width, height or aspect ratio are overridden, we need to adjust aspect
-				var video_aspect_x = params.ffmpeg_video_aspect_x;
-				var video_aspect_y = params.ffmpeg_video_aspect_y;
-				
-				if (video_aspect_x == 0 || video_aspect_y == 0 || 
-						params.output_video_width_override != "" || params.output_video_height_override != "") {
-					video_aspect_x = video_width;
-					video_aspect_y = video_height;
-				}
-				
-				video_aspect_y *= video_aspect_ratio;
-				
-				params.output_video_aspect_ratio = video_aspect_x / video_aspect_y;
-						
+                // If the width, height or aspect ratio are overridden, we need to adjust aspect
+                var video_aspect_x = params.ffmpeg_video_aspect_x;
+                var video_aspect_y = params.ffmpeg_video_aspect_y;
+                
+                if (video_aspect_x == 0 || video_aspect_y == 0 || 
+                        params.output_video_width_override != "" || params.output_video_height_override != "") {
+                    video_aspect_x = video_width;
+                    video_aspect_y = video_height;
+                }
+                
+                video_aspect_y *= video_aspect_ratio;
+                
+                params.output_video_aspect_ratio = video_aspect_x / video_aspect_y;
+                        
                 params.ffmpeg_options += "-aspect " + video_aspect_x + ":" + video_aspect_y + " ";
                     
                 params.ffmpeg_options += "-r " + video_frame_rate + " ";
