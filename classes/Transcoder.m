@@ -236,6 +236,11 @@ static void frameSize(NSString* f, int* width, int* height)
 @synthesize enabled = m_enabled;
 @synthesize metadata = m_metadata;
 @synthesize fileStatus = m_fileStatus;
+@synthesize paddingLeft = m_paddingLeft;
+@synthesize paddingRight = m_paddingRight;
+@synthesize paddingTop = m_paddingTop;
+@synthesize paddingBottom = m_paddingBottom;
+@synthesize paddingOverridden = m_paddingOverridden;
 
 -(BOOL) enabled
 {

@@ -170,6 +170,9 @@ typedef enum FileStatus {   FS_INVALID,     // File is invalid, we can't encode 
     NSString* m_audioQuality;
     float m_avOffset; // How much video is ahead of audio, in seconds (negative numbers mean audio is ahead of video)
     
+    float m_paddingLeft, m_paddingRight, m_paddingTop, m_paddingBottom;
+    BOOL m_paddingOverridden;
+    
 }
 
 @property (readwrite) float avOffset;
@@ -182,6 +185,12 @@ typedef enum FileStatus {   FS_INVALID,     // File is invalid, we can't encode 
 @property (readonly) TranscoderFileInfo* outputFileInfo;
 @property (retain) Metadata* metadata;
 @property (readonly) FileInfoPanelController* fileInfoPanelController;
+
+@property (assign) float paddingLeft;
+@property (assign) float paddingRight;
+@property (assign) float paddingTop;
+@property (assign) float paddingBottom;
+@property (assign) BOOL paddingOverridden;
 
 - (Transcoder*)initWithFilename:(NSString*) filename;
 
