@@ -151,6 +151,10 @@ static void frameSize(NSString* f, int* width, int* height)
 @synthesize videoAspectRatio;
 @synthesize videoFrameRate;
 @synthesize videoBitrate;
+@synthesize videoPadLeft;
+@synthesize videoPadRight;
+@synthesize videoPadTop;
+@synthesize videoPadBottom;
 
 // Audio
 @synthesize audioIndex;
@@ -173,6 +177,19 @@ static void frameSize(NSString* f, int* width, int* height)
     return self.videoWidth.overridden;
 }
 
+- (void)setVideoPaddingOverridden:(BOOL)v
+{
+    self.videoPadLeft.overridden = v;
+    self.videoPadRight.overridden = v;
+    self.videoPadTop.overridden = v;
+    self.videoPadBottom.overridden = v;
+}
+
+- (BOOL)videoPaddingOverridden
+{
+    return self.videoPadLeft.overridden;
+}
+
 - (id)init
 {
     if (self = [super init]) {
@@ -186,6 +203,10 @@ static void frameSize(NSString* f, int* width, int* height)
         videoWidth = [[OverrideableValue alloc] initWithListener:self];
         videoHeight = [[OverrideableValue alloc] initWithListener:self];
         videoAspectRatio = [[OverrideableValue alloc] init];
+        videoPadLeft = [[OverrideableValue alloc] init];
+        videoPadRight = [[OverrideableValue alloc] init];
+        videoPadTop = [[OverrideableValue alloc] init];
+        videoPadBottom = [[OverrideableValue alloc] init];
     }
     return self;
 }
@@ -202,6 +223,10 @@ static void frameSize(NSString* f, int* width, int* height)
     [videoWidth release];
     [videoHeight release];
     [videoAspectRatio release];
+    [videoPadLeft release];
+    [videoPadRight release];
+    [videoPadTop release];
+    [videoPadBottom release];
     [super dealloc];
 }
 
@@ -236,11 +261,6 @@ static void frameSize(NSString* f, int* width, int* height)
 @synthesize enabled = m_enabled;
 @synthesize metadata = m_metadata;
 @synthesize fileStatus = m_fileStatus;
-@synthesize paddingLeft = m_paddingLeft;
-@synthesize paddingRight = m_paddingRight;
-@synthesize paddingTop = m_paddingTop;
-@synthesize paddingBottom = m_paddingBottom;
-@synthesize paddingOverridden = m_paddingOverridden;
 
 -(BOOL) enabled
 {
@@ -671,6 +691,10 @@ static NSString* escapePath(NSString* path)
     [env setValue:self.outputFileInfo.videoWidth.overridden ? self.outputFileInfo.videoWidth.value : @"" forKey: @"output_video_width_override"];
     [env setValue:self.outputFileInfo.videoHeight.overridden ? self.outputFileInfo.videoHeight.value : @"" forKey: @"output_video_height_override"];
     [env setValue:self.outputFileInfo.videoAspectRatio.overridden ? [self.outputFileInfo.videoAspectRatio.value stringValue] : @"" forKey: @"output_video_aspect_ratio_override"];
+    [env setValue:self.outputFileInfo.videoPadLeft.overridden ? self.outputFileInfo.videoPadLeft.value : @"" forKey: @"output_video_padleft_override"];
+    [env setValue:self.outputFileInfo.videoPadRight.overridden ? self.outputFileInfo.videoPadRight.value : @"" forKey: @"output_video_padright_override"];
+    [env setValue:self.outputFileInfo.videoPadTop.overridden ? self.outputFileInfo.videoPadTop.value : @"" forKey: @"output_video_padtop_override"];
+    [env setValue:self.outputFileInfo.videoPadBottom.overridden ? self.outputFileInfo.videoPadBottom.value : @"" forKey: @"output_video_padbottom_override"];
 
     [env setValue:self.outputFileInfo.extraOptions forKey: @"ffmpeg_extra_options"];
 
@@ -688,7 +712,10 @@ static NSString* escapePath(NSString* path)
     
     self.outputFileInfo.videoFrameRate.value = [[[AppController instance] deviceController] paramForKey:@"output_video_frame_rate"];
     self.outputFileInfo.videoAspectRatio.value = [[[AppController instance] deviceController] paramForKey:@"output_video_aspect_ratio"];
-
+    self.outputFileInfo.videoPadLeft.value = [[[AppController instance] deviceController] paramForKey:@"ffmpeg_option_padleft"];
+    self.outputFileInfo.videoPadRight.value = [[[AppController instance] deviceController] paramForKey:@"ffmpeg_option_padright"];
+    self.outputFileInfo.videoPadTop.value = [[[AppController instance] deviceController] paramForKey:@"ffmpeg_option_padtop"];
+    self.outputFileInfo.videoPadBottom.value = [[[AppController instance] deviceController] paramForKey:@"ffmpeg_option_padbottom"];
     
     // Compose a profile and level
     NSString* profile = [[[AppController instance] deviceController] paramForKey:@"output_video_profile_name"];

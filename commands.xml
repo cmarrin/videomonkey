@@ -583,6 +583,16 @@ DTD
                 var video_height = params.output_video_height_override;
                 if (video_height == "")
                     video_height = params.output_video_height;
+
+                if (    params.output_video_padleft_override != "" || 
+                        params.output_video_padright_override != "" || 
+                        params.output_video_padtop_override != "" || 
+                        params.output_video_padbottom_override != "") {
+                    params.ffmpeg_option_padleft = params.output_video_padleft_override;
+                    params.ffmpeg_option_padright = params.output_video_padright_override;
+                    params.ffmpeg_option_padtop = params.output_video_padtop_override;
+                    params.ffmpeg_option_padbottom = params.output_video_padbottom_override;
+                }
                 
                 // set vpre if needed
                 if (video_codec_name == "H.264") {
@@ -617,10 +627,19 @@ DTD
                 params.ffmpeg_options += "-aspect " + Math.round(video_aspect_x) + ":" + Math.round(video_aspect_y) + " ";
                     
                 params.ffmpeg_options += "-r " + video_frame_rate + " ";
-                addFFMPegParam("padleft");
-                addFFMPegParam("padright");
-                addFFMPegParam("padtop");
-                addFFMPegParam("padbottom");
+                
+                // Add padding
+                if (    params.ffmpeg_option_padleft != "" || params.ffmpeg_option_padright != "" || 
+                        params.ffmpeg_option_padtop != "" || params.ffmpeg_option_padbottom != "") {
+                    var padleft = (params.ffmpeg_option_padleft != "") ? number(params.ffmpeg_option_padleft) : 0;
+                    var padright = (params.ffmpeg_option_padright != "") ? number(params.ffmpeg_option_padright) : 0;
+                    var padtop = (params.ffmpeg_option_padtop != "") ? number(params.ffmpeg_option_padtop) : 0;
+                    var padbottom = (params.ffmpeg_option_padbottom != "") ? number(params.ffmpeg_option_padbottom) : 0;
+                    var padwidth = video_width + padleft + padright;
+                    var padheight = video_height + padtop + padbottom;
+                    var padx = padleft;
+                    params.ffmpeg_options += "-vf pad=" + padwidth + ":" + padheight + ":" + padleft + ":" + padtop + " ";
+                }
 
                 // Set ffmpeg_option_vcodec from output_video_codec_name
                 switch(video_codec_name) {
@@ -664,9 +683,9 @@ DTD
                 params.ffmpeg_options += "-ac " + audio_channels + " -ab " + audio_bitrate + " ";
                 addFFMPegParam("f"); // '-f vob' for MPEG-2 encode to program stream
 
-				params.ffmpeg_options += params.ffmpeg_extra_options + " ";
+                if (params.ffmpeg_extra_options != undefined)
+                    params.ffmpeg_options += params.ffmpeg_extra_options + " ";
             }
-
 
             /*
              *  Setting output params
