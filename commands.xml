@@ -647,20 +647,30 @@ DTD
                 var padbottom = params.ffmpeg_option_padbottom;
                 var padwidth = video_width;
                 var padheight = video_height;
+                var padstring = "";
+                var cropstring = "";
                 if (padleft > 0 || padright > 0 || padtop > 0 || padbottom > 0) {
                     var padx = (padleft > 0) ? padleft : 0;
                     var pady = (padtop > 0) ? padtop : 0;
                     padwidth += padx + ((padright > 0) ? padright : 0);
                     padheight += pady + ((padbottom > 0) ? padbottom : 0);
-                    params.ffmpeg_options += "-vf pad=" + padwidth + ":" + padheight + ":" + padx + ":" + pady + " ";
+                    padstring = "pad=" + padwidth + ":" + padheight + ":" + padx + ":" + pady;
                 }
                 if (padleft < 0 || padright < 0 || padtop < 0 || padbottom < 0) {
                     var cropx = (padleft < 0) ? -padleft : 0;
                     var cropy = (padtop < 0) ? -padtop : 0;
                     padwidth += -cropx + ((padright < 0) ? padright : 0);
                     padheight += -cropy + ((padbottom < 0) ? padbottom : 0);
-                    params.ffmpeg_options += "-vf crop=" + padwidth + ":" + padheight + ":" + cropx + ":" + cropy + " ";
+                    cropstring = "crop=" + padwidth + ":" + padheight + ":" + cropx + ":" + cropy;
                 }
+
+                if (padstring != "")
+                    if (cropstring == "")
+                        params.ffmpeg_options += "-vf " + padstring + " ";
+                    else
+                        params.ffmpeg_options += "-vf " + padstring + "," + cropstring + " ";
+                else if (cropstring != "")
+                    params.ffmpeg_options += "-vf " + cropstring + " ";
 
                 // padding needs to go back to app as strings
                 params.ffmpeg_option_padleft = string(params.ffmpeg_option_padleft);
