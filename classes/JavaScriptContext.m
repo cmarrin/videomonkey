@@ -72,6 +72,15 @@ DAMAGE.
 
 @end
 
+@implementation NSNumber (JavaScriptConversion)
+
+	/* return a new JavaScriptCore string value for the string */
+- (JSStringRef)jsStringValue {
+	return JSStringCreateWithCFString( (CFStringRef) [self stringValue]);
+}
+
+@end
+
 @implementation JavaScriptObject
 
 @synthesize context = m_context;
@@ -538,7 +547,7 @@ the function,  or NULL if an error occured.  */
 -(void) addParams: (NSDictionary*) params
 {
     for (NSString* key in params) {
-        NSString* value = (NSString*) [params objectForKey:key];
+        id value = (NSString*) [params objectForKey:key];
         if (value)
             [self setStringParam:value forKey:key];
     }
