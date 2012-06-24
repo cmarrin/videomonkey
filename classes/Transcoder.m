@@ -92,6 +92,7 @@ static void frameSize(NSString* f, int* width, int* height)
         if (overridden && !overriddenValue)
             self.overriddenValue = value;
         self.value = value; // Update value in GUI
+        [[AppController instance] uiChanged];    
     }
 }
 
@@ -121,6 +122,7 @@ static void frameSize(NSString* f, int* width, int* height)
     overriddenValue = [v retain];
     if (overridden)
         self.value = value;
+    [[AppController instance] uiChanged];    
 }
 
 - (id)overriddenValue
@@ -690,7 +692,7 @@ static NSString* escapePath(NSString* path)
     [env setValue:self.outputFileInfo.videoFrameRate.overridden ? self.outputFileInfo.videoFrameRate.value : @"" forKey: @"output_video_frame_rate_override"];
     [env setValue:self.outputFileInfo.videoWidth.overridden ? self.outputFileInfo.videoWidth.value : @"" forKey: @"output_video_width_override"];
     [env setValue:self.outputFileInfo.videoHeight.overridden ? self.outputFileInfo.videoHeight.value : @"" forKey: @"output_video_height_override"];
-    [env setValue:self.outputFileInfo.videoAspectRatio.overridden ? [self.outputFileInfo.videoAspectRatio.value stringValue] : @"" forKey: @"output_video_aspect_ratio_override"];
+    [env setValue:self.outputFileInfo.videoAspectRatio.overridden ? self.outputFileInfo.videoAspectRatio.value : @"" forKey: @"output_video_aspect_ratio_override"];
     [env setValue:self.outputFileInfo.videoPadLeft.overridden ? self.outputFileInfo.videoPadLeft.value : @"" forKey: @"output_video_padleft_override"];
     [env setValue:self.outputFileInfo.videoPadRight.overridden ? self.outputFileInfo.videoPadRight.value : @"" forKey: @"output_video_padright_override"];
     [env setValue:self.outputFileInfo.videoPadTop.overridden ? self.outputFileInfo.videoPadTop.value : @"" forKey: @"output_video_padtop_override"];
@@ -734,6 +736,14 @@ static NSString* escapePath(NSString* path)
 
     self.outputFileInfo.bitrate = self.outputFileInfo.videoBitrate + [self.outputFileInfo.audioBitrate.value doubleValue];
     self.outputFileInfo.fileSize = self.outputFileInfo.duration * self.outputFileInfo.bitrate / 8;
+    
+    [[AppController instance].moviePanelController setWidth:[self.outputFileInfo.videoWidth.value intValue]
+                                                     height:[self.outputFileInfo.videoHeight.value intValue]
+                                                     aspect:[self.outputFileInfo.videoAspectRatio.value doubleValue]
+                                                     padLeft:[self.outputFileInfo.videoPadLeft.value intValue]
+                                                     padRight:[self.outputFileInfo.videoPadRight.value intValue]
+                                                     padTop:[self.outputFileInfo.videoPadTop.value intValue]
+                                                     padBottom:[self.outputFileInfo.videoPadBottom.value intValue]];
 }
 
 -(void) finish: (int) status

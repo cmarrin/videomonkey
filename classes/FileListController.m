@@ -214,10 +214,13 @@ DAMAGE.
     // If we have only one item selected, set it otherwise set nothing
     int index = ([m_fileListView numberOfSelectedRows] != 1) ? -1 : [m_fileListView selectedRow];
     Transcoder* transcoder = (index < 0) ? nil : [m_fileList objectAtIndex:index];
-    
+
     // Set the current movie
-    NSString* filename = transcoder ? transcoder.inputFileInfo.filename : nil;
-    [[AppController instance].moviePanelController setMovie:filename withAvOffset:transcoder ? transcoder.avOffset : nan(0)];
+    MoviePanelController* movie = [AppController instance].moviePanelController;
+    if (transcoder)
+        [movie setMovie:transcoder.inputFileInfo.filename withAvOffset:transcoder.avOffset];
+    else
+        [movie setMovie:nil withAvOffset:nan(0)];
 
     // Update metadata panel
     [self updateState];
