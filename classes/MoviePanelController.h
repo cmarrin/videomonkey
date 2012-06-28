@@ -54,12 +54,14 @@ DAMAGE.
     BOOL m_avOffsetValid;
     int m_width, m_height, m_padLeft, m_padRight, m_padTop, m_padBottom;
     double m_aspect;
-    
+        
     NSMutableDictionary* m_currentTimeDictionary;
 }
 
 @property(assign) CGFloat avOffset;
 @property(assign) BOOL avOffsetValid;
+@property(assign) BOOL play;
+@property(assign) NSTimeInterval currentTime;
 
 -(IBAction)startSelection:(id)sender;
 -(IBAction)endSelection:(id)sender;

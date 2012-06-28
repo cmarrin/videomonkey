@@ -44,6 +44,35 @@ DAMAGE.
 
 @synthesize avOffsetValid = m_avOffsetValid;
 
+- (BOOL) play
+{
+    QTMovie* movie = [m_movieView movie];
+    return [movie rate] > 0;
+}
+
+- (void) setPlay:(BOOL)v
+{
+    QTMovie* movie = [m_movieView movie];
+    [movie setRate:v ? 1 : 0];
+}
+
+- (NSTimeInterval)currentTime
+{
+    QTMovie* movie = [m_movieView movie];
+    QTTime curt = [movie currentTime];
+    NSTimeInterval t;
+    QTGetTimeInterval(curt, &t);
+
+    return t;
+}
+
+- (void)setCurrentTime:(NSTimeInterval)t
+{
+    QTMovie* movie = [m_movieView movie];
+    QTTime curt = QTMakeTimeWithTimeInterval(t);
+    [movie setCurrentTime:curt];
+}
+
 - (void)removeAvOffset
 {
     if (!m_movieIsSet)
