@@ -56,16 +56,19 @@ DAMAGE.
     double m_aspect;
         
     NSMutableDictionary* m_currentTimeDictionary;
+    BOOL m_isPlaying;
+    BOOL m_isScrubbing;
 }
 
 @property(assign) CGFloat avOffset;
 @property(assign) BOOL avOffsetValid;
 @property(assign) BOOL play;
-@property(assign) NSTimeInterval currentTime;
+@property(assign) double currentTime;
 
 -(IBAction)startSelection:(id)sender;
 -(IBAction)endSelection:(id)sender;
 -(IBAction)encodeSelection:(id)sender;
+-(IBAction)sliderChanged:(id)sender;
 
 -(void) setMovie:(NSString*) filename withAvOffset:(float) avOffset;
 

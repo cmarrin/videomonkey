@@ -52,24 +52,37 @@ DAMAGE.
 
 - (void) setPlay:(BOOL)v
 {
+    m_isPlaying = v;
+    if (m_isScrubbing)
+        return;
     QTMovie* movie = [m_movieView movie];
     [movie setRate:v ? 1 : 0];
+    if (m_isPlaying)
+        [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(updateSlider) userInfo:nil repeats:NO];
 }
 
-- (NSTimeInterval)currentTime
+- (double)currentTime
 {
     QTMovie* movie = [m_movieView movie];
+    QTTime durt = [movie duration];
+    NSTimeInterval duration;
+    QTGetTimeInterval(durt, &duration);
     QTTime curt = [movie currentTime];
     NSTimeInterval t;
     QTGetTimeInterval(curt, &t);
-
-    return t;
+    
+    return duration ? (t / duration) : 0;
 }
 
-- (void)setCurrentTime:(NSTimeInterval)t
+- (void)setCurrentTime:(double)t
 {
+    if (!m_isScrubbing)
+        return;
     QTMovie* movie = [m_movieView movie];
-    QTTime curt = QTMakeTimeWithTimeInterval(t);
+    QTTime durt = [movie duration];
+    NSTimeInterval duration;
+    QTGetTimeInterval(durt, &duration);
+    QTTime curt = QTMakeTimeWithTimeInterval(t * duration);
     [movie setCurrentTime:curt];
 }
 
@@ -195,6 +208,35 @@ DAMAGE.
 
 -(IBAction)encodeSelection:(id)sender
 {
+}
+
+- (void)sliderDone:(id)sender
+{
+    m_isScrubbing = NO;
+    if (m_isPlaying) {
+        QTMovie* movie = [m_movieView movie];
+        [movie setRate:1];
+    }
+}
+
+- (void)updateSlider
+{
+    [self setCurrentTime:self.currentTime];
+    if (m_isPlaying && !m_isScrubbing)
+        [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(updateSlider) userInfo:nil repeats:NO];
+}
+
+-(IBAction)sliderChanged:(id)sender
+{
+    if (m_isScrubbing)
+        return;
+    m_isScrubbing = YES;
+    if (m_isPlaying) {
+        QTMovie* movie = [m_movieView movie];
+        [movie setRate:0];
+    }
+    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(sliderDone:) object:sender];
+    [self performSelector:@selector(sliderDone:) withObject:sender afterDelay:0.0];
 }
 
 -(void) saveCurrentTime
