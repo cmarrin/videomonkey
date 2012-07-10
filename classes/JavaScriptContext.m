@@ -482,7 +482,7 @@ the function,  or NULL if an error occured.  */
     JSStringRef jsstring = JSValueToStringCopy(m_jsContext, jsValue, NULL);
     NSString* string = [[NSString stringWithJSString:jsstring] retain];
     JSStringRelease(jsstring);
-    return string;
+    return [string autorelease];
 }
 
 -(void) setPropertyInObject: (JavaScriptObject*) obj forKey:(NSString*) key toJSValue: (JSValueRef) jsValue

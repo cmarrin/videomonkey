@@ -58,7 +58,6 @@ DAMAGE.
     NSString* m_metadataStatus;
     int m_metadataSearchCount;
     NSArray* m_searcherStrings;
-    NSString* m_currentSearcher;
     BOOL m_metadataSearchSucceeded;
     BOOL m_searchFieldIsEditing;
     

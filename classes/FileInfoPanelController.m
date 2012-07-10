@@ -166,12 +166,11 @@ DAMAGE.
 {
     NSString* searchString = [[sender stringValue] retain];
     
-    if ([searchString length] == 0)
-        return;
-        
-    m_metadataSearchCount = 0;
-    m_metadataSearchSucceeded = YES;
-    [m_fileListController searchSelectedFilesForString:searchString];
+    if ([searchString length]) {
+        m_metadataSearchCount = 0;
+        m_metadataSearchSucceeded = YES;
+        [m_fileListController searchSelectedFilesForString:searchString];
+    }
     [searchString release];
 }
 

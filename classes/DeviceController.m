@@ -46,10 +46,10 @@ DAMAGE.
 -(void) uiChanged;
 @end
  
-static NSImage* getImage(NSString* name)
+static NSImage* imageForResourceName(NSString* name)
 {
     NSString* path = [[NSBundle mainBundle] pathForResource:name ofType:@"png"];
-    return [[NSImage alloc] initWithContentsOfFile:path];
+    return [[[NSImage alloc] initWithContentsOfFile:path] autorelease];
 }
 
 static void addMenuItem(NSPopUpButton* button, NSString* title, NSString* icon, int tag, BOOL enabled)
@@ -64,6 +64,7 @@ static void addMenuItem(NSPopUpButton* button, NSString* title, NSString* icon, 
                                     [NSColor blackColor], NSForegroundColorAttributeName,
                                     nil]];
         [item setAttributedTitle:s];
+        [s release];
     }
     else {
         [item setIndentationLevel:1];
@@ -71,7 +72,7 @@ static void addMenuItem(NSPopUpButton* button, NSString* title, NSString* icon, 
         [item setEnabled:enabled];
         if (icon) {
             NSString* iconName = [NSString stringWithFormat:@"tiny%@", icon];
-            NSImage* image = getImage(iconName);
+            NSImage* image = imageForResourceName(iconName);
             if (!image)
                 NSRunAlertPanel(@"Image not found", [NSString stringWithFormat:@"Image file '%@' does not exist", iconName], nil, nil, nil);
             else
@@ -80,6 +81,7 @@ static void addMenuItem(NSPopUpButton* button, NSString* title, NSString* icon, 
     }
         
     [[button menu] addItem:item];
+    [item release];
 }
 
 static void addMenuSeparator(NSPopUpButton* button)
@@ -150,7 +152,7 @@ static void addMenuSeparator(NSPopUpButton* button)
         return nil;
         
     NSString* string = recipeString;
-    NSMutableString* tmpString = [[NSMutableString alloc] init];
+    NSMutableString* tmpString = [[[NSMutableString alloc] init] autorelease];
     BOOL didSubstitute = YES;
     
     while (didSubstitute) {
@@ -254,7 +256,7 @@ static void addMenuSeparator(NSPopUpButton* button)
 
 	// set the device name and image
     if (m_currentDevice) {
-        [m_deviceImageView setImage:getImage([m_currentDevice icon])];
+        [m_deviceImageView setImage:imageForResourceName([m_currentDevice icon])];
         [m_deviceName setStringValue:[m_currentDevice title]];
     }
 }
@@ -277,6 +279,7 @@ static JSValueRef _jsLog(JSContextRef ctx, JSObjectRef function, JSObjectRef thi
     
     if ([delegate respondsToSelector: @selector(log:)])
         [delegate log:[NSString stringWithFormat:@"JS log: %@\n", string]];
+    [string release];
     
     return JSValueMakeUndefined(ctx);
 }

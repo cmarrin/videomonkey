@@ -148,7 +148,7 @@ DAMAGE.
 
 +(MetadataSearch*) metadataSearch:(Metadata*) metadata
 {
-    MetadataSearch* metadataSearch = [[MetadataSearch alloc] init];
+    MetadataSearch* metadataSearch = [[[MetadataSearch alloc] init] autorelease];
     metadataSearch->m_searchers = [[NSDictionary dictionaryWithObjectsAndKeys:
                                     [TVDBMetadataSearcher metadataSearcher:metadataSearch], @"thetvdb.com",
                                     [MovieDBMetadataSearcher metadataSearcher:metadataSearch], @"themoviedb.org",
@@ -206,7 +206,7 @@ static BOOL isValidInteger(NSString* s)
     
     NSArray* array = [string componentsSeparatedByCharactersInSet:
                                     [[NSCharacterSet alphanumericCharacterSet] invertedSet]];
-    NSMutableString* outputString = [[NSMutableString alloc] init];
+    NSMutableString* outputString = [[[NSMutableString alloc] init] autorelease];
 
     BOOL firstTime = YES;
     int maybeEpisode = -1;

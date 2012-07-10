@@ -343,6 +343,8 @@ static void logInputFileError(NSString* filename)
     [task waitUntilExit];
     if (!isReadable([pipe fileHandleForReading])) {
         logInputFileError([info filename]);
+        [task release];
+        [pipe release];
         return NO;
     }
     
@@ -392,14 +394,14 @@ static void logInputFileError(NSString* filename)
             return NO;
         }
             
-        info.videoLanguage = [[video objectAtIndex:1] retain];
-        info.videoCodec.value = [[video objectAtIndex:2] retain];
-        info.videoProfile.value = [[video objectAtIndex:3] retain];
+        info.videoLanguage = [video objectAtIndex:1];
+        info.videoCodec.value = [video objectAtIndex:2];
+        info.videoProfile.value = [video objectAtIndex:3];
         info.videoInterlaced = [[video objectAtIndex:4] isEqualToString:@"Interlace"];
-        info.videoWidth.value = [[video objectAtIndex:6] retain];
-        info.videoHeight.value = [[video objectAtIndex:7] retain];
-        info.videoAspectRatio.value = [[video objectAtIndex:9] retain];
-        info.videoFrameRate.value = [[video objectAtIndex:10] retain];
+        info.videoWidth.value = [video objectAtIndex:6];
+        info.videoHeight.value = [video objectAtIndex:7];
+        info.videoAspectRatio.value = [video objectAtIndex:9];
+        info.videoFrameRate.value = [video objectAtIndex:10];
         info.videoBitrate = [[video objectAtIndex:11] doubleValue];
         
         if (!info.videoBitrate)
@@ -424,11 +426,11 @@ static void logInputFileError(NSString* filename)
             return NO;
         }
 
-        info.audioLanguage = [[audio objectAtIndex:1] retain];
-        info.audioCodec.value = [[audio objectAtIndex:2] retain];
-        info.audioSampleRate.value = [[audio objectAtIndex:3] retain];
-        info.audioChannels.value = [[audio objectAtIndex:4] retain];
-        info.audioBitrate.value = [[audio objectAtIndex:5] retain];
+        info.audioLanguage = [audio objectAtIndex:1];
+        info.audioCodec.value = [audio objectAtIndex:2];
+        info.audioSampleRate.value = [audio objectAtIndex:3];
+        info.audioChannels.value = [audio objectAtIndex:4];
+        info.audioBitrate.value = [audio objectAtIndex:5];
         
         hasAudio = YES;
     }
@@ -477,7 +479,7 @@ static void logInputFileError(NSString* filename)
     return YES;
 }
 
-static NSImage* getFileStatusImage(FileStatus status)
+static NSImage* fileStatusImage(FileStatus status)
 {
     NSString* name = nil;
     switch(status)
@@ -494,7 +496,7 @@ static NSImage* getFileStatusImage(FileStatus status)
         return nil;
         
     NSString* path = [[NSBundle mainBundle] pathForResource:name ofType:@"png"];
-    return [[NSImage alloc] initWithContentsOfFile:path]; 
+    return [[[NSImage alloc] initWithContentsOfFile:path] autorelease]; 
 }
 
 - (void)updateOutputFileName
@@ -533,28 +535,29 @@ static NSImage* getFileStatusImage(FileStatus status)
 
 - (Transcoder*)initWithFilename:(NSString*) filename;
 {
-    m_inputFiles = [[NSMutableArray alloc] init];
-    m_outputFileInfo = [[TranscoderFileInfo alloc] init];
-    m_fileStatus = FS_INVALID;
-    m_enabled = YES;
-    m_tempAudioFileName = [[NSString stringWithFormat:@"/tmp/%p-tmpaudio.wav", self] retain];
-    
-    // init the progress indicator
-    m_progressIndicator = [[NSProgressIndicator alloc] init];
-    [m_progressIndicator setMinValue:0];
-    [m_progressIndicator setMaxValue:1];
-    [m_progressIndicator setIndeterminate: NO];
-    [m_progressIndicator setBezeled: NO];
-    
-    // init the status image view
-    m_statusImageView = [[NSImageView alloc] init];
-    [m_statusImageView setImage: getFileStatusImage(m_fileStatus)];
-    
-    [self addInputFile:filename];
-    [self updateOutputFileName];
+    if (self = [super init]) {
+        m_inputFiles = [[NSMutableArray alloc] init];
+        m_outputFileInfo = [[TranscoderFileInfo alloc] init];
+        m_fileStatus = FS_INVALID;
+        m_enabled = YES;
+        m_tempAudioFileName = [[NSString stringWithFormat:@"/tmp/%p-tmpaudio.wav", self] retain];
+        
+        // init the progress indicator
+        m_progressIndicator = [[NSProgressIndicator alloc] init];
+        [m_progressIndicator setMinValue:0];
+        [m_progressIndicator setMaxValue:1];
+        [m_progressIndicator setIndeterminate: NO];
+        [m_progressIndicator setBezeled: NO];
+        
+        // init the status image view
+        m_statusImageView = [[NSImageView alloc] init];
+        [m_statusImageView setImage: fileStatusImage(m_fileStatus)];
+        
+        [self addInputFile:filename];
+        [self updateOutputFileName];
 
-    self.outputFileInfo.duration = self.inputFileInfo.duration;
-
+        self.outputFileInfo.duration = self.inputFileInfo.duration;
+    }
     return self;
 }
 
@@ -583,7 +586,7 @@ static NSImage* getFileStatusImage(FileStatus status)
     
     m_fileStatus = [self _validateInputFile: file] ? FS_VALID : FS_INVALID;
     m_enabled = m_fileStatus == FS_VALID;
-    [m_statusImageView setImage: getFileStatusImage(m_fileStatus)];
+    [m_statusImageView setImage: fileStatusImage(m_fileStatus)];
     [m_inputFiles addObject: file];
     [file release];
     
@@ -608,7 +611,7 @@ static NSImage* getFileStatusImage(FileStatus status)
     // This gives the encoder a chance to run, just in case we were wrong about it.
     if (m_enabled) {
         m_fileStatus = FS_VALID;
-        [m_statusImageView setImage: getFileStatusImage(m_fileStatus)];
+        [m_statusImageView setImage: fileStatusImage(m_fileStatus)];
     }
 }
 
@@ -702,6 +705,7 @@ static NSString* escapePath(NSString* path)
 
     // set the params
     [[[AppController instance] deviceController] setCurrentParamsWithEnvironment:env];
+    [env release];
     
     // save some of the values
     self.outputFileInfo.videoWidth.value = [[[AppController instance] deviceController] paramForKey:@"output_video_width"];
@@ -771,7 +775,7 @@ static NSString* escapePath(NSString* path)
         [[AppController instance] log: @"FAILED with error code: %d\n", status];
     }
         
-    [m_statusImageView setImage: getFileStatusImage(m_fileStatus)];
+    [m_statusImageView setImage: fileStatusImage(m_fileStatus)];
     if (m_fileStatus != FS_VALID)
         m_enabled = false;
     m_progress = (status == 0) ? 1 : 0;
@@ -995,7 +999,7 @@ static void addCommandElement(NSMutableArray* elements, NSString* command, NSStr
                 [[AppController instance] log: msg];
                 [[AppController instance] log: @"Nothing to do.\n"];
                 NSBeginAlertSheet(@"Nothing to do", nil, nil, nil, [[NSApplication sharedApplication] mainWindow], 
-                            nil, nil, nil, nil, msg);
+                            nil, nil, nil, nil, @"%@", msg);
 
                 [self finish:255];
                 return YES;
@@ -1009,7 +1013,7 @@ static void addCommandElement(NSMutableArray* elements, NSString* command, NSStr
         [self startNextCommands];
 
         m_fileStatus = FS_ENCODING;
-        [m_statusImageView setImage: getFileStatusImage(m_fileStatus)];
+        [m_statusImageView setImage: fileStatusImage(m_fileStatus)];
         return YES;
     }
     else {
@@ -1117,6 +1121,7 @@ static void addCommandElement(NSMutableArray* elements, NSString* command, NSStr
     va_start(args, format);
     NSString* string = [[NSString alloc] initWithFormat:format arguments:args];
     [[AppController instance] log: @"    [Command %@] %@\n", [[NSNumber numberWithInt:index] stringValue], string];
+    [string release];
 }
 
 -(void) log: (NSString*) format, ...
@@ -1125,6 +1130,7 @@ static void addCommandElement(NSMutableArray* elements, NSString* command, NSStr
     va_start(args, format);
     NSString* s = [[NSString alloc] initWithFormat:format arguments: args];
     [[AppController instance] log: s];
+    [s release];
 }
 
 - (id)valueForUndefinedKey:(NSString *)key

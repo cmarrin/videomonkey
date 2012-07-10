@@ -49,33 +49,33 @@ DAMAGE.
 
 -(XMLElement*) initWithNSXMLElement:(NSXMLElement*) e
 {
-    // Set name
-    m_name = [[e name] retain];
-    
-    // Add the elements and content, in order
-    NSArray* kids = [e children];
-    NSMutableArray* children = [[NSMutableArray alloc] init];
-    m_children = children;
-    
-    for (NSXMLNode* node in kids) {
-        if ([node kind] == NSXMLTextKind)
-            [children addObject:[node stringValue]];
-        else if ([node kind] == NSXMLElementKind) {
-            XMLElement* element = [[XMLElement alloc] initWithNSXMLElement:(NSXMLElement*) node];
-            [children addObject:element];
-            [element release];
-        }
-    }
-    
-    
-    // Add the attributes
-    NSArray* a = [e attributes];
-    NSMutableDictionary* attributes = [[NSMutableDictionary alloc] init];
-    m_attributes = attributes;
-    
-    for (NSXMLNode* node in a)
-        [attributes setValue:[node stringValue] forKey:[node name]];
+    if (self = [super init]) {
+        // Set name
+        m_name = [[e name] retain];
         
+        // Add the elements and content, in order
+        NSArray* kids = [e children];
+        NSMutableArray* children = [[NSMutableArray alloc] init];
+        m_children = children;
+        
+        for (NSXMLNode* node in kids) {
+            if ([node kind] == NSXMLTextKind)
+                [children addObject:[node stringValue]];
+            else if ([node kind] == NSXMLElementKind) {
+                XMLElement* element = [[XMLElement alloc] initWithNSXMLElement:(NSXMLElement*) node];
+                [children addObject:element];
+                [element release];
+            }
+        }
+        
+        // Add the attributes
+        NSArray* a = [e attributes];
+        NSMutableDictionary* attributes = [[NSMutableDictionary alloc] init];
+        m_attributes = attributes;
+        
+        for (NSXMLNode* node in a)
+            [attributes setValue:[node stringValue] forKey:[node name]];
+    }
     return self;
 }
 
@@ -99,14 +99,14 @@ DAMAGE.
 // elements
 -(NSString*) content
 {
-    NSMutableString* string = [[NSMutableString alloc] init];
+    NSMutableString* string = [[[NSMutableString alloc] init] autorelease];
     
     for (id obj in m_children) {
         if ([obj isKindOfClass:[NSString class]])
             [string appendString:obj];
     }
     
-    return [[string stringByTrimmingCharactersInSet: [NSCharacterSet whitespaceAndNewlineCharacterSet]] retain];
+    return [string stringByTrimmingCharactersInSet: [NSCharacterSet whitespaceAndNewlineCharacterSet]];
 }
 
 -(NSString*) name
@@ -116,7 +116,7 @@ DAMAGE.
 
 -(NSArray*) elementsForName:(NSString*) name
 {
-    NSMutableArray* array = [[NSMutableArray alloc] init];
+    NSMutableArray* array = [[[NSMutableArray alloc] init] autorelease];
     
     for (id child in m_children) {
         if ([child isKindOfClass:[XMLElement class]] && [[child name] isEqualToString:name])

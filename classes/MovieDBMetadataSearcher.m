@@ -44,7 +44,7 @@ static NSDictionary* g_moviedbMap = nil;
 
 +(MetadataSearcher*) metadataSearcher:(MetadataSearch*) metadataSearch
 {
-    MetadataSearcher* searcher = [[MovieDBMetadataSearcher alloc] init];
+    MetadataSearcher* searcher = [[[MovieDBMetadataSearcher alloc] init] autorelease];
     [searcher initWithMetadataSearch:metadataSearch];
     return searcher;
 }
@@ -148,6 +148,7 @@ static NSDictionary* g_moviedbMap = nil;
                 NSMutableArray* artwork = [[NSMutableArray alloc] init];
                 [self collectArtwork:movie toArray:artwork];
                 [m_dictionary setValue:artwork forKey:@"artwork"];
+                [artwork release];
                 
                 success = YES;
             }

@@ -63,7 +63,7 @@ DAMAGE.
 	[m_fileListView registerForDraggedTypes:[NSArray arrayWithObjects:NSFilenamesPboardType, FileListItemType, nil]];
 
     // Setup ProgressCell
-    [[m_fileListView tableColumnWithIdentifier: @"progress"] setDataCell: [[ProgressCell alloc] init]];
+    [[m_fileListView tableColumnWithIdentifier: @"progress"] setDataCell:[[[ProgressCell alloc] init] autorelease]];
 }
 
 - (void)dealloc
@@ -96,11 +96,8 @@ DAMAGE.
 -(void) searchSelectedFiles
 {
     NSArray* selectedObjects = [self selectedObjects];
-    Transcoder* lastTranscoder = nil;
-    for (Transcoder* transcoder in selectedObjects) {
-        lastTranscoder = transcoder;
+    for (Transcoder* transcoder in selectedObjects)
         [transcoder.metadata searchAgain];
-    }
 }
 
 -(void) searchAllFiles

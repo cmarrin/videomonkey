@@ -112,12 +112,19 @@ static NSDictionary* g_tagMap = nil;
 
 +(ArtworkItem*) artworkItemWithImage:(NSImage*) image sourceIcon:(NSImage*) icon checked:(BOOL) checked
 {
-    ArtworkItem* item = [[ArtworkItem alloc] init];
+    ArtworkItem* item = [[[ArtworkItem alloc] init] autorelease];
     
     item->m_image = [image retain];
     item->m_sourceIcon = [icon retain];
     item->m_checked = checked;
     return item;
+}
+
+- (void)dealloc
+{
+    [m_sourceIcon release];
+    [m_image release];
+    [super dealloc];
 }
 
 @end
@@ -152,7 +159,7 @@ static NSDictionary* g_tagMap = nil;
 
 +(TagItem*) tagItem;
 {
-    TagItem* item = [[TagItem alloc] init];
+    TagItem* item = [[[TagItem alloc] init] autorelease];
     item->m_typeShowing = OUTPUT_TAG;
     return item;
 }
@@ -481,7 +488,7 @@ static NSDictionary* g_tagMap = nil;
 
 -(NSString*) atomicParsleyParams
 {
-    NSMutableString* params = [[NSMutableString alloc] init];
+    NSMutableString* params = [[[NSMutableString alloc] init] autorelease];
     
     for (NSString* key in g_tagMap) {
         NSString* param = [g_tagMap valueForKey: key];
@@ -648,7 +655,7 @@ static NSDictionary* g_tagMap = nil;
         g_sourceUserIcon = [[NSImage alloc] initWithContentsOfFile:path];
     }
     
-    Metadata* metadata = [[Metadata alloc] init];
+    Metadata* metadata = [[[Metadata alloc] init] autorelease];
     metadata->m_transcoder = transcoder;
     metadata->m_task = [[NSTask alloc] init];
     metadata->m_messagePipe = [NSPipe pipe];
@@ -661,7 +668,7 @@ static NSDictionary* g_tagMap = nil;
     
     // setup the bindings to the metadata panel
     [metadata->m_transcoder.fileInfoPanelController.metadataPanel setupMetadataPanelBindings];
-    metadata->m_search = [MetadataSearch metadataSearch:metadata];
+    metadata.search = [MetadataSearch metadataSearch:metadata];
     
     return metadata;
 }

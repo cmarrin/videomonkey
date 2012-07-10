@@ -356,23 +356,6 @@ static void setButton(NSButton* button, MyButton* item)
 
 - (void)setComboboxes: (NSArray*) comboboxes
 {
-    int size = [comboboxes count];
-
-    for (int i = 0; i < size; ++i) {
-        // FIXME: Comboboxes don't work yet
-        // Combobox* combobox = [comboboxes objectAtIndex:i];
-        NSComboBox* comboboxButton;
-        
-        switch(i) {
-            case 0: comboboxButton = m_frameWidthComboBox; break;
-            case 1: comboboxButton = m_frameHeightComboBox; break;
-            case 2: comboboxButton = m_frameRateComboBox; break;
-            case 3: comboboxButton = m_extraParamsComboBox; break;
-            default: continue;
-        }
-            
-        // init combobox
-    }
 }
 
 - (int)menuState:(int) index
@@ -408,7 +391,7 @@ static void setButton(NSButton* button, MyButton* item)
 
 + (QualityStop*)qualityStopWithElement: (XMLElement*) element
 {
-    QualityStop* obj = [[QualityStop alloc] init];
+    QualityStop* obj = [[[QualityStop alloc] init] autorelease];
 
     obj->m_title = [[element stringAttribute:@"title"] retain];
     return obj;
@@ -430,7 +413,7 @@ static void setButton(NSButton* button, MyButton* item)
 
 +(PerformanceItem*) performanceItemWithElement: (XMLElement*) element
 {
-    PerformanceItem* obj = [[PerformanceItem alloc] init];
+    PerformanceItem* obj = [[[PerformanceItem alloc] init] autorelease];
 
     obj->m_title = [[element stringAttribute:@"title"] retain];
     
@@ -497,8 +480,7 @@ static void setButton(NSButton* button, MyButton* item)
 
 +(Checkbox*) checkboxWithElement: (XMLElement*) element
 {
-    Checkbox* obj = [[Checkbox alloc] init];
-    [obj initWithElement: element];
+    Checkbox* obj = [[[Checkbox alloc] initWithElement:element] autorelease];
 
     obj->m_checkedParams = [[NSMutableDictionary alloc] init];
     obj->m_uncheckedParams = [[NSMutableDictionary alloc] init];
@@ -545,8 +527,7 @@ static void setButton(NSButton* button, MyButton* item)
 
 +(Menu*) menuWithElement: (XMLElement*) element
 {
-    Menu* obj = [[Menu alloc] init];
-    [obj initWithElement: element];
+    Menu* obj = [[[Menu alloc] initWithElement: element] autorelease];
 
     // parse all the items
     obj->m_itemTitles = [[NSMutableArray alloc] init];
@@ -561,6 +542,7 @@ static void setButton(NSButton* button, MyButton* item)
         NSMutableDictionary* params = [[NSMutableDictionary alloc] init];
         [obj->m_itemParams addObject: params];
         parseParams(itemElement, params);
+        [params release];
         
         [obj->m_itemScripts addObject: parseScripts(itemElement)];
     }
@@ -594,8 +576,7 @@ static void setButton(NSButton* button, MyButton* item)
 
 +(Combobox*) comboboxWithElement: (XMLElement*) element
 {
-    Combobox* obj = [[Combobox alloc] init];
-    [obj initWithElement: element];
+    Combobox* obj = [[[Combobox alloc] initWithElement: element] autorelease];
 
     obj->m_params = [[NSMutableDictionary alloc] init];
     
@@ -681,55 +662,72 @@ static void setButton(NSButton* button, MyButton* item)
 
 +(DeviceEntry*) deviceEntryWithElement: (XMLElement*) element inGroup: (NSString*) group withDefaults: (DeviceEntry*) defaults
 {
-    return [[DeviceEntry alloc] initWithElement: element inGroup: group withDefaults: defaults];
+    return [[[DeviceEntry alloc] initWithElement: element inGroup: group withDefaults: defaults] autorelease];
 }
 
 -(DeviceEntry*) initWithElement: (XMLElement*) element inGroup: (NSString*) group withDefaults: (DeviceEntry*) defaults;
 {
-    m_defaultDevice = [defaults retain];
-    m_icon = [[element stringAttribute:@"icon"] retain];
-    m_title = [[element stringAttribute:@"title"] retain];
-    m_groupTitle = [group retain];
-    m_enabled = [element boolAttribute:@"enabled" withDefault: true];
-    
-    m_qualityStops = [[NSMutableArray alloc] init];
-    m_performanceItems = [[NSMutableArray alloc] init];
-    m_recipes = [[NSMutableArray alloc] init];
-    m_params = [[NSMutableDictionary alloc] init];
-    m_checkboxes = [[NSMutableDictionary alloc] init];
-    m_menus = [[NSMutableDictionary alloc] init];
-    m_comboboxes = [[NSMutableDictionary alloc] init];
-    
-    // handle quality
-    [self parseQualityStops:[[element lastElementForName:@"quality"] elementsForName: @"quality_stop"]];
-    
-    // handle performance
-    [self parsePerformanceItems:[[element lastElementForName:@"performance"] elementsForName: @"performance_item"]];
-    
-    // handle params
-    parseParams(element, m_params);
-    
-    // handle scripts
-    m_script = parseScripts(element);
-    
-    // handle checkboxes
-    [self parseCheckboxes:[element elementsForName:@"checkbox"]];
-    
-    // handle menus
-    [self parseMenus:[element elementsForName:@"menu"]];
-	
-    // handle comboboxes
-    [self parseComboboxes:[element elementsForName:@"combobox"]];
-	
-    // Set the device tab enum
-    if ([m_icon isEqualToString:@"custom"])
-        m_deviceTabName = DT_CUSTOM;
-    else if ([m_menus count] == 0)
-        m_deviceTabName = DT_NO_MENUS;
-    else
-        m_deviceTabName = DT_RADIO_MENU;
-    
+    if (self = [super init]) {
+        m_defaultDevice = [defaults retain];
+        m_icon = [[element stringAttribute:@"icon"] retain];
+        m_title = [[element stringAttribute:@"title"] retain];
+        m_groupTitle = [group retain];
+        m_enabled = [element boolAttribute:@"enabled" withDefault: true];
+        
+        m_qualityStops = [[NSMutableArray alloc] init];
+        m_performanceItems = [[NSMutableArray alloc] init];
+        m_recipes = [[NSMutableArray alloc] init];
+        m_params = [[NSMutableDictionary alloc] init];
+        m_checkboxes = [[NSMutableDictionary alloc] init];
+        m_menus = [[NSMutableDictionary alloc] init];
+        m_comboboxes = [[NSMutableDictionary alloc] init];
+        
+        // handle quality
+        [self parseQualityStops:[[element lastElementForName:@"quality"] elementsForName: @"quality_stop"]];
+        
+        // handle performance
+        [self parsePerformanceItems:[[element lastElementForName:@"performance"] elementsForName: @"performance_item"]];
+        
+        // handle params
+        parseParams(element, m_params);
+        
+        // handle scripts
+        m_script = parseScripts(element);
+        
+        // handle checkboxes
+        [self parseCheckboxes:[element elementsForName:@"checkbox"]];
+        
+        // handle menus
+        [self parseMenus:[element elementsForName:@"menu"]];
+        
+        // handle comboboxes
+        [self parseComboboxes:[element elementsForName:@"combobox"]];
+        
+        // Set the device tab enum
+        if ([m_icon isEqualToString:@"custom"])
+            m_deviceTabName = DT_CUSTOM;
+        else if ([m_menus count] == 0)
+            m_deviceTabName = DT_NO_MENUS;
+        else
+            m_deviceTabName = DT_RADIO_MENU;
+    }
     return self;
+}
+
+- (void)dealloc
+{
+    [m_defaultDevice release];
+    [m_icon release];
+    [m_title  release];
+    [m_groupTitle  release];
+    [m_qualityStops  release];
+    [m_performanceItems  release];
+    [m_recipes  release];
+    [m_params  release];
+    [m_checkboxes  release];
+    [m_menus  release];
+    [m_comboboxes  release];
+    [super dealloc];
 }
 
 -(NSString*) group
@@ -848,6 +846,7 @@ static void setButton(NSButton* button, MyButton* item)
         [menuItem setTag:i];
         [menuItem setTitle:[item title]];
         [[button menu] addItem:menuItem];
+        [menuItem release];
     }
 
     // FIXME: Ultimately performance should be saved in user defaults on a per-device basis. For now we'll

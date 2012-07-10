@@ -55,8 +55,8 @@ DAMAGE.
 
 -(id) initWithIcon:(NSImage*) icon
 {
-    m_icon = [icon retain];
-    [super init];
+    if (self = [super init])
+        m_icon = [icon retain];
     return self;
 }
 
@@ -559,6 +559,7 @@ static AppController *g_appController;
     [sameFolderItem setTarget: self];
     [sameFolderItem setAction: @selector(setDefaultSavePath:)];
     [menu insertItem:sameFolderItem atIndex:1];
+    [sameFolderItem release];
 }
 
 -(IBAction)changeAddToMediaLibrary:(id)sender
@@ -637,7 +638,8 @@ static AppController *g_appController;
     
     // scroll to the end
     NSRange range = NSMakeRange ([[m_consoleView string] length], 0);
-    [m_consoleView scrollRangeToVisible: range];    
+    [m_consoleView scrollRangeToVisible: range];
+    [s release];
 }
 
 -(void) updateFileInfo

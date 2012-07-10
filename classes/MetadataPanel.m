@@ -200,9 +200,9 @@ DAMAGE.
 {
     // add a context menu
     NSMenu* menu = [[NSMenu alloc]init];
-    [menu addItem:[[NSMenuItem alloc] initWithTitle:@"Use this value for all files" 
+    [menu addItem:[[[NSMenuItem alloc] initWithTitle:@"Use this value for all files" 
                                         action:@selector(useThisValueForAllFiles:) 
-                                        keyEquivalent:@""]];
+                                        keyEquivalent:@""] autorelease]];
     [m_title setMenu:menu];
     [menu release];
 
@@ -463,13 +463,14 @@ DAMAGE.
     
     // Add a context menu for the artwork
     NSMenu* menu = [[NSMenu alloc]init];
-    [menu addItem:[[NSMenuItem alloc] initWithTitle:@"Add this image to all files" 
+    [menu addItem:[[[NSMenuItem alloc] initWithTitle:@"Add this image to all files" 
                                         action:@selector(addThisImageToAllFiles:) 
-                                        keyEquivalent:@""]];
-    [menu addItem:[[NSMenuItem alloc] initWithTitle:@"Uncheck all artwork on all files" 
+                                        keyEquivalent:@""] autorelease]];
+    [menu addItem:[[[NSMenuItem alloc] initWithTitle:@"Uncheck all artwork on all files" 
                                         action:@selector(uncheckAllArtworkOnAllFiles:) 
-                                        keyEquivalent:@""]];
+                                        keyEquivalent:@""] autorelease]];
     [m_artworkTitle setMenu:menu];
+    [menu release];
 }
 
 -(void) setMetadataSearchSpinner:(BOOL) spinning

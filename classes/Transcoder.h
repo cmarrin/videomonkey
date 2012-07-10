@@ -160,19 +160,15 @@ typedef enum FileStatus {   FS_INVALID,     // File is invalid, we can't encode 
   @private
     NSMutableArray* m_inputFiles;
     TranscoderFileInfo* m_outputFileInfo;
-    TranscoderFileInfo* m_outputFileInfoOverrides;
     Metadata* m_metadata;
     double m_progress;
     BOOL m_enabled;
     FileStatus m_fileStatus;
     
-    NSTask* m_task;
-    NSPipe* m_pipe;
     NSMutableArray* m_commands;
     int m_currentCommandIndex;
     NSProgressIndicator* m_progressIndicator;
     NSImageView* m_statusImageView;
-    BOOL m_wroteMetadata;
     
     NSFileHandle* m_logFile;
     NSString* m_tempAudioFileName;

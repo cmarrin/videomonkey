@@ -59,8 +59,8 @@ DAMAGE.
         thisCommand->index = index;
         thisCommand->m_buffer = [[NSMutableString alloc] init];
         
-        thisCommand.task = [[NSTask alloc] init];
-        thisCommand.messagePipe = [[NSPipe pipe] retain];
+        thisCommand.task = [[[NSTask alloc] init] autorelease];
+        thisCommand.messagePipe = [NSPipe pipe];
         
         if (thisCommand->m_outputType == OT_PIPE)
             thisCommand.outputPipe = [NSPipe pipe];

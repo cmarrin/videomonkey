@@ -47,7 +47,7 @@ static NSDictionary* g_tvdbSeriesMap = nil;
 
 +(MetadataSearcher*) metadataSearcher:(MetadataSearch*) metadataSearch
 {
-    MetadataSearcher* searcher = [[TVDBMetadataSearcher alloc] init];
+    MetadataSearcher* searcher = [[[TVDBMetadataSearcher alloc] init] autorelease];
     [searcher initWithMetadataSearch:metadataSearch];
     return searcher;
 }
@@ -152,12 +152,12 @@ static NSDictionary* g_tvdbSeriesMap = nil;
 {
     if (![m_seasons valueForKey:season]) {
         // add season
-        [m_seasons setValue:[[NSMutableDictionary alloc] init] forKey: season];
+        [m_seasons setValue:[[[NSMutableDictionary alloc] init] autorelease] forKey: season];
     }
     
     if (![[m_seasons valueForKey:season] valueForKey:episode]) {
         // add episode
-        [[m_seasons valueForKey:season] setValue:[[NSMutableDictionary alloc] init] forKey:episode];
+        [[m_seasons valueForKey:season] setValue:[[[NSMutableDictionary alloc] init] autorelease] forKey:episode];
     }
 
     return [[m_seasons valueForKey:season] valueForKey:episode];
@@ -240,6 +240,7 @@ static NSArray* numericallySortedArray(NSArray* array)
     [self collectArtwork: [series elementsForName:@"fanart"] toArray:artwork];
     [self collectArtwork: [series elementsForName:@"banner"] toArray:artwork];
     [dictionary setValue:artwork forKey:@"artwork"];
+    [artwork release];
 }
 
 -(int) seasonOrEpisodeAsInt:(NSString*) value
@@ -263,6 +264,7 @@ static NSArray* numericallySortedArray(NSArray* array)
         for (NSString* key in m_seasons)
             [foundSeasons addObject: key];
         m_foundSeasons = [numericallySortedArray(foundSeasons) retain];
+        [foundSeasons release];
 
         if (m_season < 0 && [m_foundSeasons count] > 0) {
             // If possible return season 1, otherwise, return the first one in the list
@@ -283,6 +285,7 @@ static NSArray* numericallySortedArray(NSArray* array)
             for (NSString* key in episodes)
                 [foundEpisodes addObject: key];
             m_foundEpisodes = [numericallySortedArray(foundEpisodes) retain];
+            [foundEpisodes release];
 
             if (m_episode < 0 && [m_foundEpisodes count] > 0) {
                 // If possible return episode 1, otherwise, return the first one in the list
@@ -314,7 +317,7 @@ static NSArray* numericallySortedArray(NSArray* array)
         // We found our show. Fill in the details
         // This show may have no episodes, in which case we will fake an array with
         // season 0, episode 0 (we can still fill in the series info)
-        self.seasons = [[NSMutableDictionary alloc] init];
+        self.seasons = [[[NSMutableDictionary alloc] init] autorelease];
             
         if (episodes && [episodes count] > 0)
             for (XMLElement* episodeElement in episodes)
