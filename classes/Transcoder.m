@@ -47,7 +47,7 @@ DAMAGE.
 
 static NSString* makeFrameSize(int width, int height)
 {
-    return [NSString stringWithFormat:@"%dx%d", width, height];
+    return [[NSString stringWithFormat:@"%dx%d", width, height] retain];
 }
 
 static void frameSize(NSString* f, int* width, int* height)

@@ -3,7 +3,7 @@
 	<data>
 		<int key="IBDocument.SystemTarget">1060</int>
 		<string key="IBDocument.SystemVersion">12A256</string>
-		<string key="IBDocument.InterfaceBuilderVersion">2538</string>
+		<string key="IBDocument.InterfaceBuilderVersion">2816</string>
 		<string key="IBDocument.AppKitVersion">1185</string>
 		<string key="IBDocument.HIToolboxVersion">622.00</string>
 		<object class="NSMutableDictionary" key="IBDocument.PluginVersions">
@@ -15,8 +15,8 @@
 			</object>
 			<object class="NSArray" key="dict.values">
 				<bool key="EncodedWithXMLCoder">YES</bool>
-				<string>2538</string>
-				<string>1457</string>
+				<string>2816</string>
+				<string>1804</string>
 			</object>
 		</object>
 		<object class="NSArray" key="IBDocument.IntegratedClassDependencies">
@@ -2752,6 +2752,7 @@
 																<int key="NSvFlags">292</int>
 																<string key="NSFrame">{{487, 9}, {101, 18}}</string>
 																<reference key="NSSuperview" ref="582696165"/>
+																<reference key="NSNextKeyView" ref="956886143"/>
 																<bool key="NSEnabled">YES</bool>
 																<object class="NSButtonCell" key="NSCell" id="677745648">
 																	<int key="NSCellFlags">-2080374784</int>
