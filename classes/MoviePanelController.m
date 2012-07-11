@@ -156,10 +156,12 @@ DAMAGE.
     m_isVisible = NO;
     m_movieIsSet = NO;
     NSRect frame = [[m_movieView superview] frame];
-    m_extraContentWidth = [[[m_movieView window] contentView] frame].size.width - frame.size.width;
-    m_extraContentHeight = [[[m_movieView window] contentView] frame].size.height - frame.size.height;
-    m_extraFrameWidth = [[m_movieView window] frame].size.width - frame.size.width;
-    m_extraFrameHeight = [[m_movieView window] frame].size.height - frame.size.height;
+    m_currentWidth = frame.size.width;
+    m_currentHeight = frame.size.height;
+    m_extraContentWidth = [[[m_movieView window] contentView] frame].size.width - m_currentWidth;
+    m_extraContentHeight = [[[m_movieView window] contentView] frame].size.height - m_currentHeight;
+    m_extraFrameWidth = [[m_movieView window] frame].size.width - m_currentWidth;
+    m_extraFrameHeight = [[m_movieView window] frame].size.height - m_currentHeight;
 
     m_selectionStart = -1;
     m_selectionEnd = -1;
@@ -259,27 +261,34 @@ DAMAGE.
 
 - (float)aspectRatio
 {
-    float aspectRatio = m_height ? ((float) (m_aspect ? ((float) m_height * (float) m_aspect) : (float) m_width) / m_height) : 1;
-    if (!aspectRatio)
+    float totalWidth = m_width + m_padLeft + m_padRight;
+    float totalHeight = m_height + m_padTop + m_padBottom;
+    float aspectRatio = totalWidth / totalHeight;
+    if (!aspectRatio || isnan(aspectRatio) || aspectRatio < 0 || aspectRatio > 20)
         aspectRatio = 1;
     return aspectRatio;
 }
 
--(void) updateWindow
+- (void)updateFrame
+{
+    float multiplier = m_currentWidth / m_width;
+    NSRect frame = NSMakeRect(m_padLeft * multiplier, m_padBottom * multiplier,
+                              (m_currentWidth - m_padLeft - m_padRight) * multiplier,
+                              (m_currentHeight - m_padTop - m_padBottom) * multiplier);
+    [m_movieView setFrame:frame];
+}
+
+- (void)updateWindow
 {
     // set the aspect ratio of its window
     float aspectRatio = [self aspectRatio];
+    m_currentWidth = m_currentHeight * aspectRatio;
     
-    // The desired width of the movie is the current width minus the extra width
-    NSSize size = [[[m_movieView window] contentView] frame].size;
-    NSSize desiredMovieSize;
-    desiredMovieSize.width = size.width - m_extraContentWidth;
-    desiredMovieSize.height = desiredMovieSize.width / aspectRatio;
-    size.height = desiredMovieSize.height + m_extraContentHeight;
-    
+    NSSize size;
+    size.width = m_currentWidth + m_extraContentWidth;
+    size.height = m_currentHeight + m_extraContentHeight;
     [[m_movieView window] setContentSize:size];
-    NSRect frame = [[m_movieView superview] frame];
-    [m_movieView setFrame:frame];
+    [self updateFrame];
     [m_movieView setEditable:YES];
 }
 
@@ -339,11 +348,10 @@ DAMAGE.
         m_movieIsSet = NO;
 }
 
--(void) setWidth:(int) width height:(int)height aspect:(double)aspect padLeft:(int)padLeft padRight:(int)padRight padTop:(int)padTop padBottom:(int)padBottom
+-(void) setWidth:(int) width height:(int)height padLeft:(int)padLeft padRight:(int)padRight padTop:(int)padTop padBottom:(int)padBottom
 {
     m_width = width;
     m_height = height;
-    m_aspect = aspect;
     m_padLeft = padLeft;
     m_padRight = padRight;
     m_padTop = padTop;
@@ -394,13 +402,10 @@ DAMAGE.
     float aspectRatio = [self aspectRatio];
     
     // The desired width of the movie is the current width minus the extra width
-    NSSize desiredMovieSize;
-    desiredMovieSize.width = proposedFrameSize.width - m_extraFrameWidth;
-    desiredMovieSize.height = desiredMovieSize.width / aspectRatio;
-    proposedFrameSize.height = desiredMovieSize.height + m_extraFrameHeight;
-    
-    NSRect frame = NSMakeRect(0, 0, desiredMovieSize.width, desiredMovieSize.height);
-    [m_movieView setFrame:frame];
+    m_currentHeight = proposedFrameSize.height - m_extraFrameHeight;
+    m_currentWidth = m_currentHeight * aspectRatio;
+    proposedFrameSize.width = m_currentWidth + m_extraFrameWidth;
+    [self updateFrame];
     return proposedFrameSize;
 }
 

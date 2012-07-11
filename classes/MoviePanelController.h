@@ -53,7 +53,7 @@ DAMAGE.
     CGFloat m_avOffset;
     BOOL m_avOffsetValid;
     int m_width, m_height, m_padLeft, m_padRight, m_padTop, m_padBottom;
-    double m_aspect;
+    int m_currentWidth, m_currentHeight;
         
     NSMutableDictionary* m_currentTimeDictionary;
     BOOL m_isPlaying;
@@ -72,6 +72,6 @@ DAMAGE.
 
 -(void) setMovie:(NSString*) filename withAvOffset:(float) avOffset;
 
--(void) setWidth:(int) width height:(int)height aspect:(double)aspect padLeft:(int)padLeft padRight:(int)padRight padTop:(int)padTop padBottom:(int)padBottom;
+-(void) setWidth:(int) width height:(int)height padLeft:(int)padLeft padRight:(int)padRight padTop:(int)padTop padBottom:(int)padBottom;
 
 @end
