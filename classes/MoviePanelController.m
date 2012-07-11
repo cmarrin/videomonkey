@@ -155,10 +155,11 @@ DAMAGE.
     
     m_isVisible = NO;
     m_movieIsSet = NO;
-    m_extraContentWidth = [[[m_movieView window] contentView] frame].size.width - [m_movieView frame].size.width;
-    m_extraContentHeight = [[[m_movieView window] contentView] frame].size.height - [m_movieView frame].size.height;
-    m_extraFrameWidth = [[m_movieView window] frame].size.width - [m_movieView frame].size.width;
-    m_extraFrameHeight = [[m_movieView window] frame].size.height - [m_movieView frame].size.height;
+    NSRect frame = [[m_movieView superview] frame];
+    m_extraContentWidth = [[[m_movieView window] contentView] frame].size.width - frame.size.width;
+    m_extraContentHeight = [[[m_movieView window] contentView] frame].size.height - frame.size.height;
+    m_extraFrameWidth = [[m_movieView window] frame].size.width - frame.size.width;
+    m_extraFrameHeight = [[m_movieView window] frame].size.height - frame.size.height;
 
     m_selectionStart = -1;
     m_selectionEnd = -1;
@@ -268,16 +269,17 @@ DAMAGE.
 {
     // set the aspect ratio of its window
     float aspectRatio = [self aspectRatio];
-    float movieControllerHeight = [m_movieView controllerBarHeight];
     
     // The desired width of the movie is the current width minus the extra width
     NSSize size = [[[m_movieView window] contentView] frame].size;
     NSSize desiredMovieSize;
     desiredMovieSize.width = size.width - m_extraContentWidth;
     desiredMovieSize.height = desiredMovieSize.width / aspectRatio;
-    size.height = desiredMovieSize.height + m_extraContentHeight + movieControllerHeight;
+    size.height = desiredMovieSize.height + m_extraContentHeight;
     
     [[m_movieView window] setContentSize:size];
+    NSRect frame = [[m_movieView superview] frame];
+    [m_movieView setFrame:frame];
     [m_movieView setEditable:YES];
 }
 
@@ -390,15 +392,15 @@ DAMAGE.
 {
     // maintain aspect ratio
     float aspectRatio = [self aspectRatio];
-    float movieControllerHeight = [m_movieView controllerBarHeight];
     
     // The desired width of the movie is the current width minus the extra width
     NSSize desiredMovieSize;
     desiredMovieSize.width = proposedFrameSize.width - m_extraFrameWidth;
     desiredMovieSize.height = desiredMovieSize.width / aspectRatio;
-    proposedFrameSize.height = desiredMovieSize.height + m_extraFrameHeight + movieControllerHeight;
+    proposedFrameSize.height = desiredMovieSize.height + m_extraFrameHeight;
     
-    // determine the aspect ratio
+    NSRect frame = NSMakeRect(0, 0, desiredMovieSize.width, desiredMovieSize.height);
+    [m_movieView setFrame:frame];
     return proposedFrameSize;
 }
 
