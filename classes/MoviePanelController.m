@@ -271,10 +271,10 @@ DAMAGE.
 
 - (void)updateFrame
 {
-    float multiplier = (float) m_currentWidth / (float) m_width;
+    float multiplier = (float) m_currentWidth / (float) (m_width + m_padLeft + m_padRight);
     NSRect frame = NSMakeRect(m_padLeft * multiplier, m_padBottom * multiplier,
-                              m_currentWidth - (m_padLeft - m_padRight) * multiplier,
-                              m_currentHeight - (m_padTop - m_padBottom) * multiplier);
+                              m_width * multiplier,
+                              m_height * multiplier);
     [m_movieView setFrame:frame];
 }
 
@@ -405,8 +405,12 @@ DAMAGE.
     m_currentHeight = proposedFrameSize.height - m_extraFrameHeight;
     m_currentWidth = m_currentHeight * aspectRatio;
     proposedFrameSize.width = m_currentWidth + m_extraFrameWidth;
-    [self updateFrame];
     return proposedFrameSize;
+}
+
+- (void)windowDidResize:(NSNotification *)notification
+{
+    [self updateFrame];
 }
 
 @end
