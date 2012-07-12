@@ -741,7 +741,7 @@ static NSString* escapePath(NSString* path)
     self.outputFileInfo.bitrate = self.outputFileInfo.videoBitrate + [self.outputFileInfo.audioBitrate.value doubleValue];
     self.outputFileInfo.fileSize = self.outputFileInfo.duration * self.outputFileInfo.bitrate / 8;
     
-    [[AppController instance].moviePanelController setWidth:[self.outputFileInfo.videoWidth.value intValue] * [self.outputFileInfo.videoAspectRatio.value doubleValue]
+    [[AppController instance].moviePanelController setWidth:[self.outputFileInfo.videoHeight.value intValue] * [self.outputFileInfo.videoAspectRatio.value doubleValue]
                                                      height:[self.outputFileInfo.videoHeight.value intValue]
                                                      padLeft:[self.outputFileInfo.videoPadLeft.value intValue]
                                                      padRight:[self.outputFileInfo.videoPadRight.value intValue]

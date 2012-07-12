@@ -271,10 +271,10 @@ DAMAGE.
 
 - (void)updateFrame
 {
-    float multiplier = m_currentWidth / m_width;
+    float multiplier = (float) m_currentWidth / (float) m_width;
     NSRect frame = NSMakeRect(m_padLeft * multiplier, m_padBottom * multiplier,
-                              (m_currentWidth - m_padLeft - m_padRight) * multiplier,
-                              (m_currentHeight - m_padTop - m_padBottom) * multiplier);
+                              m_currentWidth - (m_padLeft - m_padRight) * multiplier,
+                              m_currentHeight - (m_padTop - m_padBottom) * multiplier);
     [m_movieView setFrame:frame];
 }
 
