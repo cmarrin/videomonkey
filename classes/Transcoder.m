@@ -297,8 +297,14 @@ static int ffmpegIndexFromString(NSString* string, NSString* codec)
         if ([line hasPrefix:@"    Stream #"]) {
             NSString* streamIndex = [line substringFromIndex:12];
             NSArray* array = [streamIndex componentsSeparatedByString:@" "];
-            if ([[array objectAtIndex:1] isEqualToString:codec])
-                return [[[[array objectAtIndex:0] componentsSeparatedByString:@"."] objectAtIndex:1] intValue];
+            if ([[array objectAtIndex:1] isEqualToString:codec]) {
+                NSArray* streamIndexes = [[array objectAtIndex:0] componentsSeparatedByString:@"."];
+                if ([streamIndexes count] < 2)
+                    streamIndexes = [[array objectAtIndex:0] componentsSeparatedByString:@":"];
+                if ([streamIndexes count] < 2)
+                    return -1;
+                return [[streamIndexes objectAtIndex:1] intValue];
+            }
         }
     }
     

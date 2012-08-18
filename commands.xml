@@ -692,7 +692,7 @@ DTD
                 addFFMPegParam("vcodec");
                 
                 if (params.output_video_bitrate > 0)
-                    params.ffmpeg_options += "-b $(output_video_bitrate) ";
+                    params.ffmpeg_options += "-b:v $(output_video_bitrate) ";
                     
                 addFFMPegParam("pix_fmt");
                 addFFMPegParam("vtag");
@@ -705,7 +705,7 @@ DTD
                 // Set ffmpeg_option_acodec from output_audio_codec_name
                 switch(audio_codec_name) {
                     case "MP3": params.ffmpeg_option_acodec = "libmp3lame"; break;
-                    case "AAC": params.ffmpeg_option_acodec = "libfaac"; break;
+                    case "AAC": params.ffmpeg_option_acodec = "libvo_aacenc"; break;
                     case "WMA": params.ffmpeg_option_acodec = "wmav2"; break;
                     case "AC3": params.ffmpeg_option_acodec = "ac3"; break;
                     case "MP2": params.ffmpeg_option_acodec = "mp2"; break;
