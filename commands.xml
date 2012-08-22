@@ -733,7 +733,7 @@ DTD
                 switch(type) {
                     case "low":
                         params.output_audio_bitrate =  16000;
-                        params.output_audio_sample_rate = 11025;
+                        params.output_audio_sample_rate = 16000;
                         params.output_audio_channels = 1;
                         params.output_audio_quality = "Low";
                         break;
@@ -1265,11 +1265,11 @@ DTD
                     
                     var qminMap = {
                         //                          0   1   2   3   4
-                        "AVI":                  [    9,  7,  5,  3,  2 ],
-                        "MP4":                  [    8,  7,  5,  3,  0 ],
-                        "WMV":                  [    9,  8,  7,  6,  3 ],
-                        "MPEG":                 [    5,  7,  5,  3,  0 ],
-                        "Flash":                [    8,  7,  5,  3,  2 ]
+                        "AVI":                  [    9,  7,  5,  3,  2, 2 ],
+                        "MP4":                  [    8,  7,  5,  3,  0, 0 ],
+                        "WMV":                  [    9,  8,  7,  6,  3, 3 ],
+                        "MPEG":                 [    5,  7,  5,  3,  0, 0 ],
+                        "Flash":                [    8,  7,  5,  3,  2, 2 ]
                     };
                     
                     var mpegbitrateQualityMap = {
@@ -1556,7 +1556,7 @@ DTD
                     </unchecked_item>
                 </checkbox>
                 <param id="output_format_name" value="MPEG-4" />
-                <param id="output_audio_codec_name" value="MP3" />
+                <param id="output_audio_codec_name" value="AAC" />
             </device>
             
             <!-- QuickTime -->
@@ -1759,12 +1759,16 @@ DTD
             
             <!-- DV -->
             <device title="DV" icon="dv" enabled="true">
+                <script>
+                    <![CDATA[
+                        setAudioParams("hd");
+                        setRecipe();
+                    ]]>
+                </script>
                 <param id="video_suffix" value="dv" />
                 <param id="output_format_name" value="Digital Video" />
                 <param id="output_video_codec_name" value="Digital Video" />
                 <param id="output_audio_codec_name" value="PCM" />
-                <param id="output_audio_channels" value="2" />
-                <param id="output_audio_quality" value="High" />
 
                 <checkbox which="0" title="Force Anamorphic 16:9" enabled="false">
                     <checked_item>
