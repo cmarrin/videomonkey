@@ -116,8 +116,6 @@ DAMAGE.
 
 - (void)setAvOffset:(CGFloat) value
 {
-    self.avOffsetValid = !isnan(m_avOffset);
-    
     if (!m_movieIsSet)
         return;
     
@@ -125,9 +123,12 @@ DAMAGE.
     [self removeAvOffset];
 
     m_avOffset = value;
-    
+    self.avOffsetValid = NO;
+
     if (isnan(m_avOffset))
         return;
+
+    self.avOffsetValid = YES;
 
     // Get the track to modify
     QTMovie* movie = [m_movieView movie];
@@ -301,7 +302,6 @@ DAMAGE.
     
     [m_filename release];
     m_filename = [filename retain];
-    [self setAvOffset:avOffset];
 
     // add it to the dictionary if needed
     NSNumber* ct = nil;
@@ -319,6 +319,8 @@ DAMAGE.
         currentTime = -currentTime;
     if (currentTime == 0)
         isPaused = YES;
+        
+    self.currentTime = currentTime;
 
     if (m_isVisible) {
         if (m_filename && ![QTMovie canInitWithFile: filename]) {
@@ -346,6 +348,7 @@ DAMAGE.
     }
     else
         m_movieIsSet = NO;
+    [self setAvOffset:avOffset];
 }
 
 -(void) setWidth:(int) width height:(int)height padLeft:(int)padLeft padRight:(int)padRight padTop:(int)padTop padBottom:(int)padBottom
