@@ -40,6 +40,8 @@ DAMAGE.
 #import <QTKit/QTMovie.h>
 #import <QTKit/QTTimeRange.h>
 
+#define MinimumFrameSize 300
+
 @implementation MoviePanelController
 
 @synthesize avOffsetValid = m_avOffsetValid;
@@ -163,6 +165,8 @@ DAMAGE.
     m_extraContentHeight = [[[m_movieView window] contentView] frame].size.height - m_currentHeight;
     m_extraFrameWidth = [[m_movieView window] frame].size.width - m_currentWidth;
     m_extraFrameHeight = [[m_movieView window] frame].size.height - m_currentHeight;
+    m_width = m_currentWidth;
+    m_height = m_currentHeight;
 
     m_selectionStart = -1;
     m_selectionEnd = -1;
@@ -272,6 +276,8 @@ DAMAGE.
 
 - (void)updateFrame
 {
+    if (!m_width || !m_height)
+        return;
     float multiplier = (float) m_currentWidth / (float) (m_width + m_padLeft + m_padRight);
     NSRect frame = NSMakeRect(m_padLeft * multiplier, m_padBottom * multiplier,
                               m_width * multiplier,
@@ -405,9 +411,11 @@ DAMAGE.
     float aspectRatio = [self aspectRatio];
     
     // The desired width of the movie is the current width minus the extra width
-    m_currentHeight = proposedFrameSize.height - m_extraFrameHeight;
-    m_currentWidth = m_currentHeight * aspectRatio;
-    proposedFrameSize.width = m_currentWidth + m_extraFrameWidth;
+    if (proposedFrameSize.width < MinimumFrameSize)
+        proposedFrameSize.width = m_currentWidth + m_extraFrameWidth;
+    m_currentWidth = proposedFrameSize.width - m_extraFrameWidth;
+    m_currentHeight = m_currentWidth / aspectRatio;
+    proposedFrameSize.height = m_currentHeight + m_extraFrameHeight;
     return proposedFrameSize;
 }
 
