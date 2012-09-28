@@ -88,7 +88,6 @@
 		494917A90EDE07AF0083743F /* VideoMonkey.icns in Resources */ = {isa = PBXBuildFile; fileRef = 494917A80EDE07AF0083743F /* VideoMonkey.icns */; };
 		495444D60F853B9800B046F4 /* Metadata.m in Sources */ = {isa = PBXBuildFile; fileRef = 495444D50F853B9800B046F4 /* Metadata.m */; };
 		495493830F17C8620007EC0E /* JavaScriptContext.m in Sources */ = {isa = PBXBuildFile; fileRef = 495493820F17C8620007EC0E /* JavaScriptContext.m */; };
-		495493890F18078B0007EC0E /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 495493880F18078B0007EC0E /* JavaScriptCore.framework */; };
 		495DBF950F616C64000E5D62 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 495DBF940F616C64000E5D62 /* Sparkle.framework */; };
 		49636A490EE7078200F7B6D2 /* invalid.png in Resources */ = {isa = PBXBuildFile; fileRef = 49636A460EE7078200F7B6D2 /* invalid.png */; };
 		49636A4A0EE7078200F7B6D2 /* ready.png in Resources */ = {isa = PBXBuildFile; fileRef = 49636A470EE7078200F7B6D2 /* ready.png */; };
@@ -105,13 +104,19 @@
 		4997693A13D9DF7E00B35BBA /* Growl Registration Ticket.growlRegDict in Resources */ = {isa = PBXBuildFile; fileRef = 4997693913D9DF7E00B35BBA /* Growl Registration Ticket.growlRegDict */; };
 		499A31770EDD97EB000C0AAF /* Transcoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 499A31760EDD97EB000C0AAF /* Transcoder.m */; };
 		499A31D30EDEE3E4000C0AAF /* mediainfo-inform.csv in Resources */ = {isa = PBXBuildFile; fileRef = 499A31D20EDEE3E4000C0AAF /* mediainfo-inform.csv */; };
-		49A9DD3F0F8907A000CCDDEB /* Quartz.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 49A9DD3E0F8907A000CCDDEB /* Quartz.framework */; };
+		49A2935C15E73D1C00090590 /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 49A2935B15E73D1C00090590 /* AppKit.framework */; };
+		49A2935E15E73D2700090590 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 49A2935D15E73D2700090590 /* Cocoa.framework */; };
+		49A2936015E73D3000090590 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 49A2935F15E73D3000090590 /* CoreData.framework */; };
+		49A2936215E73D4300090590 /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 49A2936115E73D4300090590 /* JavaScriptCore.framework */; };
+		49A2936415E73D5900090590 /* QTKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 49A2936315E73D5900090590 /* QTKit.framework */; };
+		49A2936615E73D9900090590 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 49A2936515E73D9900090590 /* Foundation.framework */; };
+		49A2936815E73DA700090590 /* Quartz.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 49A2936715E73DA700090590 /* Quartz.framework */; };
+		49A2936A15E73DCE00090590 /* ScriptingBridge.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 49A2936915E73DCE00090590 /* ScriptingBridge.framework */; };
 		49A9E00F0F8CE71100CCDDEB /* ArtworkListController.m in Sources */ = {isa = PBXBuildFile; fileRef = 49A9E00E0F8CE71100CCDDEB /* ArtworkListController.m */; };
 		49AAD9A70F1C232B0098F087 /* Console.png in Resources */ = {isa = PBXBuildFile; fileRef = 49AAD9A60F1C232B0098F087 /* Console.png */; };
 		49AADAC60F1D12950098F087 /* tinyitunesfile.png in Resources */ = {isa = PBXBuildFile; fileRef = 49AADAC50F1D12950098F087 /* tinyitunesfile.png */; };
 		49AADBE10F1E55C80098F087 /* DeviceController.m in Sources */ = {isa = PBXBuildFile; fileRef = 49AADBE00F1E55C80098F087 /* DeviceController.m */; };
 		49B007A50F6FD9C700D0EFF2 /* VideoMonkeyDevel.icns in Resources */ = {isa = PBXBuildFile; fileRef = 49B007A40F6FD9C700D0EFF2 /* VideoMonkeyDevel.icns */; };
-		49B007F20F7124D200D0EFF2 /* ScriptingBridge.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 49B007F10F7124D200D0EFF2 /* ScriptingBridge.framework */; };
 		49B00E7712D3609400ABAAB3 /* custom.png in Resources */ = {isa = PBXBuildFile; fileRef = 49B00E7512D3609400ABAAB3 /* custom.png */; };
 		49B00E7812D3609400ABAAB3 /* tinycustom.png in Resources */ = {isa = PBXBuildFile; fileRef = 49B00E7612D3609400ABAAB3 /* tinycustom.png */; };
 		49B0117212DA60FC00ABAAB3 /* appletv2.png in Resources */ = {isa = PBXBuildFile; fileRef = 49B0117012DA60FC00ABAAB3 /* appletv2.png */; };
@@ -135,10 +140,8 @@
 		49DA64130F8D60FD004DDDD8 /* tinypencil.png in Resources */ = {isa = PBXBuildFile; fileRef = 49DA64110F8D60FD004DDDD8 /* tinypencil.png */; };
 		49DA64140F8D60FD004DDDD8 /* tinyspotlight.png in Resources */ = {isa = PBXBuildFile; fileRef = 49DA64120F8D60FD004DDDD8 /* tinyspotlight.png */; };
 		49E9119B0EF86C3F009D0CAF /* ffpresets in Resources */ = {isa = PBXBuildFile; fileRef = 49E911930EF86C3F009D0CAF /* ffpresets */; };
-		49FC93830ECB3CCD0058CDBB /* QTKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 49FC93820ECB3CCD0058CDBB /* QTKit.framework */; };
 		8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165CFE840E0CC02AAC07 /* InfoPlist.strings */; };
 		8D11072D0486CEB800E47090 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; settings = {ATTRIBUTES = (); }; };
-		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -158,11 +161,7 @@
 
 /* Begin PBXFileReference section */
 		089C165DFE840E0CC02AAC07 /* English */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
-		13E42FB307B3F0F600E4EEF1 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = /System/Library/Frameworks/CoreData.framework; sourceTree = "<absolute>"; };
 		29B97316FDCFA39411CA2CEA /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		29B97324FDCFA39411CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
-		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
 		32CA4F630368D1EE00C91783 /* VideoMonkey_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoMonkey_Prefix.pch; sourceTree = "<group>"; };
 		4908A3B60F302179003B65E0 /* releasenotes.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = releasenotes.html; sourceTree = "<group>"; };
 		491001890ECBE470001B578B /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = English.lproj/MainMenu.nib; sourceTree = "<group>"; };
@@ -249,7 +248,6 @@
 		495444D50F853B9800B046F4 /* Metadata.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Metadata.m; path = classes/Metadata.m; sourceTree = "<group>"; };
 		495493810F17C8620007EC0E /* JavaScriptContext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JavaScriptContext.h; path = classes/JavaScriptContext.h; sourceTree = "<group>"; };
 		495493820F17C8620007EC0E /* JavaScriptContext.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JavaScriptContext.m; path = classes/JavaScriptContext.m; sourceTree = "<group>"; };
-		495493880F18078B0007EC0E /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = /System/Library/Frameworks/JavaScriptCore.framework; sourceTree = "<absolute>"; };
 		495DBF940F616C64000E5D62 /* Sparkle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Sparkle.framework; path = sparkle/Sparkle.framework; sourceTree = "<group>"; };
 		49636A460EE7078200F7B6D2 /* invalid.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = invalid.png; path = icons/invalid.png; sourceTree = "<group>"; };
 		49636A470EE7078200F7B6D2 /* ready.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = ready.png; path = icons/ready.png; sourceTree = "<group>"; };
@@ -271,7 +269,14 @@
 		499A31750EDD97EB000C0AAF /* Transcoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Transcoder.h; path = classes/Transcoder.h; sourceTree = "<group>"; };
 		499A31760EDD97EB000C0AAF /* Transcoder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Transcoder.m; path = classes/Transcoder.m; sourceTree = "<group>"; };
 		499A31D20EDEE3E4000C0AAF /* mediainfo-inform.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; lineEnding = 2; path = "mediainfo-inform.csv"; sourceTree = "<group>"; };
-		49A9DD3E0F8907A000CCDDEB /* Quartz.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Quartz.framework; path = /System/Library/Frameworks/Quartz.framework; sourceTree = "<absolute>"; };
+		49A2935B15E73D1C00090590 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
+		49A2935D15E73D2700090590 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
+		49A2935F15E73D3000090590 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		49A2936115E73D4300090590 /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
+		49A2936315E73D5900090590 /* QTKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QTKit.framework; path = System/Library/Frameworks/QTKit.framework; sourceTree = SDKROOT; };
+		49A2936515E73D9900090590 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		49A2936715E73DA700090590 /* Quartz.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Quartz.framework; path = System/Library/Frameworks/Quartz.framework; sourceTree = SDKROOT; };
+		49A2936915E73DCE00090590 /* ScriptingBridge.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ScriptingBridge.framework; path = System/Library/Frameworks/ScriptingBridge.framework; sourceTree = SDKROOT; };
 		49A9E00D0F8CE71100CCDDEB /* ArtworkListController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ArtworkListController.h; path = classes/ArtworkListController.h; sourceTree = "<group>"; };
 		49A9E00E0F8CE71100CCDDEB /* ArtworkListController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ArtworkListController.m; path = classes/ArtworkListController.m; sourceTree = "<group>"; };
 		49AAD9A60F1C232B0098F087 /* Console.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Console.png; path = icons/Console.png; sourceTree = "<group>"; };
@@ -279,7 +284,6 @@
 		49AADBDF0F1E55C80098F087 /* DeviceController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DeviceController.h; path = classes/DeviceController.h; sourceTree = "<group>"; };
 		49AADBE00F1E55C80098F087 /* DeviceController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DeviceController.m; path = classes/DeviceController.m; sourceTree = "<group>"; };
 		49B007A40F6FD9C700D0EFF2 /* VideoMonkeyDevel.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = VideoMonkeyDevel.icns; path = icons/VideoMonkeyDevel.icns; sourceTree = "<group>"; };
-		49B007F10F7124D200D0EFF2 /* ScriptingBridge.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ScriptingBridge.framework; path = /System/Library/Frameworks/ScriptingBridge.framework; sourceTree = "<absolute>"; };
 		49B008190F712A2600D0EFF2 /* iTunes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iTunes.h; sourceTree = "<group>"; };
 		49B00E7512D3609400ABAAB3 /* custom.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = custom.png; path = images/custom.png; sourceTree = "<group>"; };
 		49B00E7612D3609400ABAAB3 /* tinycustom.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = tinycustom.png; path = images/tinycustom.png; sourceTree = "<group>"; };
@@ -309,7 +313,6 @@
 		49DA64110F8D60FD004DDDD8 /* tinypencil.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = tinypencil.png; path = images/tinypencil.png; sourceTree = "<group>"; };
 		49DA64120F8D60FD004DDDD8 /* tinyspotlight.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = tinyspotlight.png; path = images/tinyspotlight.png; sourceTree = "<group>"; };
 		49E911930EF86C3F009D0CAF /* ffpresets */ = {isa = PBXFileReference; lastKnownFileType = folder; path = ffpresets; sourceTree = "<group>"; };
-		49FC93820ECB3CCD0058CDBB /* QTKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QTKit.framework; path = /System/Library/Frameworks/QTKit.framework; sourceTree = "<absolute>"; };
 		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8D1107320486CEB800E47090 /* VideoMonkey.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VideoMonkey.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -319,12 +322,15 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */,
-				49FC93830ECB3CCD0058CDBB /* QTKit.framework in Frameworks */,
-				495493890F18078B0007EC0E /* JavaScriptCore.framework in Frameworks */,
+				49A2936A15E73DCE00090590 /* ScriptingBridge.framework in Frameworks */,
+				49A2936815E73DA700090590 /* Quartz.framework in Frameworks */,
+				49A2936615E73D9900090590 /* Foundation.framework in Frameworks */,
+				49A2936415E73D5900090590 /* QTKit.framework in Frameworks */,
+				49A2936215E73D4300090590 /* JavaScriptCore.framework in Frameworks */,
+				49A2936015E73D3000090590 /* CoreData.framework in Frameworks */,
+				49A2935E15E73D2700090590 /* Cocoa.framework in Frameworks */,
+				49A2935C15E73D1C00090590 /* AppKit.framework in Frameworks */,
 				495DBF950F616C64000E5D62 /* Sparkle.framework in Frameworks */,
-				49B007F20F7124D200D0EFF2 /* ScriptingBridge.framework in Frameworks */,
-				49A9DD3F0F8907A000CCDDEB /* Quartz.framework in Frameworks */,
 				4997693713D9DE5F00B35BBA /* Growl-WithInstaller.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -379,12 +385,7 @@
 			isa = PBXGroup;
 			children = (
 				4997693613D9DE5F00B35BBA /* Growl-WithInstaller.framework */,
-				49A9DD3E0F8907A000CCDDEB /* Quartz.framework */,
-				49B007F10F7124D200D0EFF2 /* ScriptingBridge.framework */,
 				495DBF940F616C64000E5D62 /* Sparkle.framework */,
-				495493880F18078B0007EC0E /* JavaScriptCore.framework */,
-				49FC93820ECB3CCD0058CDBB /* QTKit.framework */,
-				1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */,
 			);
 			name = "Linked Frameworks";
 			sourceTree = "<group>";
@@ -392,9 +393,14 @@
 		1058C7A2FEA54F0111CA2CBB /* Other Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				29B97324FDCFA39411CA2CEA /* AppKit.framework */,
-				13E42FB307B3F0F600E4EEF1 /* CoreData.framework */,
-				29B97325FDCFA39411CA2CEA /* Foundation.framework */,
+				49A2936915E73DCE00090590 /* ScriptingBridge.framework */,
+				49A2936715E73DA700090590 /* Quartz.framework */,
+				49A2936515E73D9900090590 /* Foundation.framework */,
+				49A2936315E73D5900090590 /* QTKit.framework */,
+				49A2936115E73D4300090590 /* JavaScriptCore.framework */,
+				49A2935F15E73D3000090590 /* CoreData.framework */,
+				49A2935D15E73D2700090590 /* Cocoa.framework */,
+				49A2935B15E73D1C00090590 /* AppKit.framework */,
 			);
 			name = "Other Frameworks";
 			sourceTree = "<group>";
@@ -799,7 +805,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				COPY_PHASE_STRIP = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -814,7 +819,6 @@
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
 				PRODUCT_NAME = VideoMonkey;
-				SDKROOT = macosx;
 			};
 			name = Debug;
 		};
@@ -822,7 +826,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -835,37 +838,40 @@
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
 				PRODUCT_NAME = VideoMonkey;
-				SDKROOT = macosx;
 			};
 			name = Release;
 		};
 		C01FCF4F08A954540054247B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = "";
 				LIBRARY_SEARCH_PATHS = "";
+				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = "";
 				PRODUCT_NAME = VideoMonkey;
-				SDKROOT = macosx;
+				SDKROOT = macosx10.7;
+				VALID_ARCHS = x86_64;
 			};
 			name = Debug;
 		};
 		C01FCF5008A954540054247B /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = VideoMonkey;
-				SDKROOT = macosx;
+				SDKROOT = macosx10.7;
+				VALID_ARCHS = x86_64;
 			};
 			name = Release;
 		};
