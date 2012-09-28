@@ -13,10 +13,58 @@
 			<dict>
 				<key>PublishingManifest</key>
 				<dict>
+					<key>rw:document:resources</key>
+					<dict>
+						<key>CreationDate</key>
+						<date>2012-09-07T14:56:52Z</date>
+						<key>DigestAlgorithm</key>
+						<string>MD5</string>
+						<key>DocumentGUID</key>
+						<string>D3620340-95D6-4CC8-90EC-9FE5B8ED23CB</string>
+						<key>PageDigests</key>
+						<dict>
+							<key>film.png</key>
+							<dict>
+								<key>Digest</key>
+								<data>
+								AqzCuVfvWmWD
+								vMbCeVLdBA==
+								</data>
+								<key>Size</key>
+								<integer>19032</integer>
+							</dict>
+							<key>filmstrip_small.png</key>
+							<dict>
+								<key>Digest</key>
+								<data>
+								yCo1Hk6aTil3
+								7nQY9Q9rUg==
+								</data>
+								<key>Size</key>
+								<integer>35908</integer>
+							</dict>
+							<key>newspaper.png</key>
+							<dict>
+								<key>Digest</key>
+								<data>
+								JQeKvnAyBPRv
+								0C8qOuofyQ==
+								</data>
+								<key>Size</key>
+								<integer>62559</integer>
+							</dict>
+						</dict>
+						<key>PageID</key>
+						<string>rw:document:resources</string>
+						<key>SiteRoot</key>
+						<string>resources</string>
+						<key>Version</key>
+						<integer>3</integer>
+					</dict>
 					<key>rw:plugin:blog</key>
 					<dict>
 						<key>CreationDate</key>
-						<date>2012-06-10T18:24:08Z</date>
+						<date>2012-09-01T16:30:32Z</date>
 						<key>DigestAlgorithm</key>
 						<string>MD5</string>
 						<key>DocumentGUID</key>
@@ -124,7 +172,7 @@
 					<key>rw:plugin:stacks</key>
 					<dict>
 						<key>CreationDate</key>
-						<date>2012-06-10T18:24:07Z</date>
+						<date>2012-09-01T16:30:30Z</date>
 						<key>DigestAlgorithm</key>
 						<string>MD5</string>
 						<key>DocumentGUID</key>
@@ -162,7 +210,7 @@
 					<key>rw:theme:flexture</key>
 					<dict>
 						<key>CreationDate</key>
-						<date>2012-06-10T18:24:13Z</date>
+						<date>2012-09-05T11:51:57Z</date>
 						<key>DigestAlgorithm</key>
 						<string>MD5</string>
 						<key>DocumentGUID</key>
@@ -979,6 +1027,16 @@
 								<key>Size</key>
 								<integer>45</integer>
 							</dict>
+							<key>css/colourtag-page14.css</key>
+							<dict>
+								<key>Digest</key>
+								<data>
+								73KUlOoFa0kA
+								1rScTiyE/w==
+								</data>
+								<key>Size</key>
+								<integer>5141</integer>
+							</dict>
 							<key>css/colourtag-theme-default.css</key>
 							<dict>
 								<key>Digest</key>
@@ -993,8 +1051,8 @@
 							<dict>
 								<key>Digest</key>
 								<data>
-								5WPjnp6a+baZ
-								qDqWNHGIXw==
+								73KUlOoFa0kA
+								1rScTiyE/w==
 								</data>
 								<key>Size</key>
 								<integer>5141</integer>
@@ -2929,6 +2987,16 @@
 								<key>Size</key>
 								<integer>195846</integer>
 							</dict>
+							<key>images/editable_images/image27.png</key>
+							<dict>
+								<key>Digest</key>
+								<data>
+								trXt95tBj2z4
+								A513QBK85Q==
+								</data>
+								<key>Size</key>
+								<integer>42186</integer>
+							</dict>
 							<key>images/editable_images/image3.jpg</key>
 							<dict>
 								<key>Digest</key>
@@ -3480,30 +3548,112 @@
 				</dict>
 				<key>Site Resources</key>
 				<data>
-				YnBsaXN0MDDUAQIDBAUIVVZUJHRvcFgkb2JqZWN0c1gk
-				dmVyc2lvblkkYXJjaGl2ZXLRBgdUcm9vdIABrxAQCQoR
-				HSAnLDA0ODxASEtPU1UkbnVsbNILDA0QWk5TLm9iamVj
-				dHNWJGNsYXNzog4PgAKAC4AP1hITFAwVFhcYGRobHFhO
-				b2RlIE1hcFlSZXNvdXJjZXNYUGF0aCBNYXBeSWRlbnRp
-				ZmllciBNYXBYUGFnZSBNYXCAB4ADgAmACoAFgAjSCwwe
-				H6CABNIhIiMkWCRjbGFzc2VzWiRjbGFzc25hbWWjJCUm
-				XE5TTXV0YWJsZVNldFVOU1NldFhOU09iamVjdNMLKAwp
-				KitXTlMua2V5c6CggAbSISItLqMuLyZfEBNOU011dGFi
-				bGVEaWN0aW9uYXJ5XE5TRGljdGlvbmFyedMLKAwxMiug
-				oIAG0wsoDDU2K6CggAbTCygMOToroKCABtIhIj0/oj4m
-				XxASUldSZXNvdXJjZURhdGFiYXNlXxASUldSZXNvdXJj
-				ZURhdGFiYXNl1EEMQkNERUZGWENoaWxkcmVuXxASUmVw
-				cmVzZW50ZWQgT2JqZWN0VlBhcmVudIAMgA6AAIAA0gsM
-				SUqggA3SISJMTaNNTiZeTlNNdXRhYmxlQXJyYXlXTlNB
-				cnJhedIhIlBSolEmXxAQUldTb3VyY2VMaXN0Tm9kZV8Q
-				EFJXU291cmNlTGlzdE5vZGXSISJUTqJOJhIAAYagXxAP
-				TlNLZXllZEFyY2hpdmVyAAgAEQAWAB8AKAAyADUAOgA8
-				AE8AVQBaAGUAbABvAHEAcwB1AIIAiwCVAJ4ArQC2ALgA
-				ugC8AL4AwADCAMcAyADKAM8A2ADjAOcA9AD6AQMBCgES
-				ARMBFAEWARsBHwE1AUIBSQFKAUsBTQFUAVUBVgFYAV8B
-				YAFhAWMBaAFrAYABlQGeAacBvAHDAcUBxwHJAcsB0AHR
-				AdMB2AHcAesB8wH4AfsCDgIhAiYCKQIuAAAAAAAAAgEA
-				AAAAAAAAVwAAAAAAAAAAAAAAAAAAAkA=
+				YnBsaXN0MDDUAQIDBAUI7e5UJHRvcFgkb2JqZWN0c1gk
+				dmVyc2lvblkkYXJjaGl2ZXLRBgdUcm9vdIABrxAyCQoR
+				HSM1OT1ESElKTlFVX2JlZmdqdHd6e3x/g46SnKSnq7C2
+				u77Cx8rO2Nna29/j5+tVJG51bGzSCwwNDlYkY2xhc3Na
+				TlMub2JqZWN0c4Axog8QgAKAIdYSEwsUFRYXGBkaGxxY
+				UGFnZSBNYXBZUmVzb3VyY2VzWFBhdGggTWFwXklkZW50
+				aWZpZXIgTWFwWE5vZGUgTWFwgCiAA4AwgCmAG4Ad0gsM
+				Hh+AGqMgISKABIAOgBTZJCULJicoKSorLC0uLzAxLy80
+				V0NoYW5nZWRVQWxpYXNcUHVibGlzaGVkVVJMVE5hbWVa
+				SWRlbnRpZmllclRTbHVnXVB1Ymxpc2hlZERhdGVZVGlt
+				ZVN0YW1wCIAFgA2AAIAKgAmAAIAAgAvSCzY3OFIkMIAI
+				gAbSOgs7PFdOUy5kYXRhTxEB0AAAAAAB0AACAAAMTWFj
+				aW50b3NoIEhEAAAAAAAAAAAAAAAAAAAAyR6wqkgrAAAA
+				26K3DW5ld3NwYXBlci5wbmcAAAAAAAAAAAAAAAAAAAAA
+				AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+				AALn2afJfzSmAAAAAAAAAAD/////AAAJIAAAAAAAAAAA
+				AAAAAAAAAAd3ZWJzaXRlAAAQAAgAAMkfISoAAAARAAgA
+				AMl/pSYAAAABABwA26K3ANuf3wDZ46EA1jBaANLfcQDO
+				9/kAAJMsAAIAWU1hY2ludG9zaCBIRDpVc2VyczoAY21h
+				cnJpbjoAUGVyc29uYWw6AFByb2plY3RzOgBnaXQ6AHZp
+				ZGVvbW9ua2V5OgB3ZWJzaXRlOgBuZXdzcGFwZXIucG5n
+				AAAOABwADQBuAGUAdwBzAHAAYQBwAGUAcgAuAHAAbgBn
+				AA8AGgAMAE0AYQBjAGkAbgB0AG8AcwBoACAASABEABIA
+				RVVzZXJzL2NtYXJyaW4vUGVyc29uYWwvUHJvamVjdHMv
+				Z2l0L3ZpZGVvbW9ua2V5L3dlYnNpdGUvbmV3c3BhcGVy
+				LnBuZwAAEwABLwAAFQACAA7//wAAgAfSPj9AQVgkY2xh
+				c3Nlc1okY2xhc3NuYW1lo0FCQ11OU011dGFibGVEYXRh
+				Vk5TRGF0YVhOU09iamVjdNI+P0VHokZDV0JEQWxpYXNX
+				QkRBbGlhc18QJDYzRTkzOTY0LTRBQzYtNDZEQy04MDk1
+				LTRFMTYwRDUyOTU5OF1uZXdzcGFwZXIucG5n0gtLTE1X
+				TlMudGltZYAMI0G1+kLDlvkS0j4/T1CiUENWTlNEYXRl
+				0j4/UlSiU0NeUldTaXRlUmVzb3VyY2VeUldTaXRlUmVz
+				b3VyY2XZJCULJicoKSorLFcuL1pbLy9eCIAPgA2AAIAS
+				gBGAAIAAgBPSCzY3YYAIgBDSOgtjPE8RAboAAAAAAboA
+				AgAADE1hY2ludG9zaCBIRAAAAAAAAAAAAAAAAAAAAMke
+				sKpIKwAAANuitwhmaWxtLnBuZwAAAAAAAAAAAAAAAAAA
+				AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+				AAAAAAAAAAAA26LDyXgZwgAAAAAAAAAA/////wAACSAA
+				AAAAAAAAAAAAAAAAAAAHd2Vic2l0ZQAAEAAIAADJHyEq
+				AAAAEQAIAADJeIpCAAAAAQAcANuitwDbn98A2eOhANYw
+				WgDS33EAzvf5AACTLAACAFRNYWNpbnRvc2ggSEQ6VXNl
+				cnM6AGNtYXJyaW46AFBlcnNvbmFsOgBQcm9qZWN0czoA
+				Z2l0OgB2aWRlb21vbmtleToAd2Vic2l0ZToAZmlsbS5w
+				bmcADgASAAgAZgBpAGwAbQAuAHAAbgBnAA8AGgAMAE0A
+				YQBjAGkAbgB0AG8AcwBoACAASABEABIAQFVzZXJzL2Nt
+				YXJyaW4vUGVyc29uYWwvUHJvamVjdHMvZ2l0L3ZpZGVv
+				bW9ua2V5L3dlYnNpdGUvZmlsbS5wbmcAEwABLwAAFQAC
+				AA7//wAAgAdfECREOTAwNUFDMy1FMERDLTQwREYtQjAw
+				RC1ENTIwRUYzOEE4NTlYZmlsbS5wbmfSC0tMaYAMI0G1
+				+kLDlvmH2SQlCyYnKCkqKyxsLi9vcC8vcwiAFYANgACA
+				GIAXgACAAIAZ0gs2N3aACIAW0joLeDxPEQHoAAAAAAHo
+				AAIAAAxNYWNpbnRvc2ggSEQAAAAAAAAAAAAAAAAAAADJ
+				HrCqSCsAAADborcTZmlsbXN0cmlwX3NtYWxsLnBuZwAA
+				AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+				AAAAAAAAAAAAAuf5jMxvWIIAAAAAAAAAAP////8AAAkg
+				AAAAAAAAAAAAAAAAAAAAB3dlYnNpdGUAABAACAAAyR8h
+				KgAAABEACAAAzG+68gAAAAEAHADborcA25/fANnjoQDW
+				MFoA0t9xAM73+QAAkywAAgBfTWFjaW50b3NoIEhEOlVz
+				ZXJzOgBjbWFycmluOgBQZXJzb25hbDoAUHJvamVjdHM6
+				AGdpdDoAdmlkZW9tb25rZXk6AHdlYnNpdGU6AGZpbG1z
+				dHJpcF9zbWFsbC5wbmcAAA4AKAATAGYAaQBsAG0AcwB0
+				AHIAaQBwAF8AcwBtAGEAbABsAC4AcABuAGcADwAaAAwA
+				TQBhAGMAaQBuAHQAbwBzAGgAIABIAEQAEgBLVXNlcnMv
+				Y21hcnJpbi9QZXJzb25hbC9Qcm9qZWN0cy9naXQvdmlk
+				ZW9tb25rZXkvd2Vic2l0ZS9maWxtc3RyaXBfc21hbGwu
+				cG5nAAATAAEvAAAVAAIADv//AACAB18QJEM5MDc2QjMy
+				LTREQ0UtNEI0Ni05MEYxLUFFQ0IxRjIwMkQ0MF8QE2Zp
+				bG1zdHJpcF9zbWFsbC5wbmfSC0tMfoAMI0G1+kLDlvm6
+				0j4/gIGjgYJDXE5TTXV0YWJsZVNldFVOU1NldNMMC4SF
+				iYpXTlMua2V5c6MgISKABIAOgBSAHKMxW3CACYARgBfS
+				Pj+PkKOQkUNfEBNOU011dGFibGVEaWN0aW9uYXJ5XE5T
+				RGljdGlvbmFyedMMC4STiZijlJWWgB6AI4AmgByjMVtw
+				gAmAEYAX1J2enwsQoSCjVlBhcmVudFhDaGlsZHJlbl8Q
+				ElJlcHJlc2VudGVkIE9iamVjdIAhgB+ABIAl0gsMpaaA
+				IKDSPj+oqaOpqkNeTlNNdXRhYmxlQXJyYXlXTlNBcnJh
+				edSdnp8LL60vo4AAgCKAAIAl0gsMpbKAIKOUlZaAHoAj
+				gCbUnZ6fCxC4IaOAIYAkgA6AJdILDKW9gCCg0j4/v8Gi
+				wENfEBBSV1NvdXJjZUxpc3ROb2RlXxAQUldTb3VyY2VM
+				aXN0Tm9kZdSdnp8LEMQio4AhgCeAFIAl0gsMpcmAIKDT
+				DAuEy4nNoIAcoNMMC4TPidSj0NHSgC2ALoAvgByj1dbX
+				gCqAK4AsXxBBL1VzZXJzL2NtYXJyaW4vUGVyc29uYWwv
+				UHJvamVjdHMvZ2l0L3ZpZGVvbW9ua2V5L3dlYnNpdGUv
+				ZmlsbS5wbmdfEEwvVXNlcnMvY21hcnJpbi9QZXJzb25h
+				bC9Qcm9qZWN0cy9naXQvdmlkZW9tb25rZXkvd2Vic2l0
+				ZS9maWxtc3RyaXBfc21hbGwucG5nXxBGL1VzZXJzL2Nt
+				YXJyaW4vUGVyc29uYWwvUHJvamVjdHMvZ2l0L3ZpZGVv
+				bW9ua2V5L3dlYnNpdGUvbmV3c3BhcGVyLnBuZ9ILDB7d
+				gBqhIYAO0gsMHuGAGqEigBTSCwwe5YAaoSCABNI+P+jq
+				oulDXxASUldSZXNvdXJjZURhdGFiYXNlXxASUldSZXNv
+				dXJjZURhdGFiYXNl0j4/7KqiqkMSAAGGoF8QD05TS2V5
+				ZWRBcmNoaXZlcgAIABEAFgAfACgAMgA1ADoAPABxAHcA
+				fACDAI4AkACTAJUAlwCkAK0AtwDAAM8A2ADaANwA3gDg
+				AOIA5ADpAOsA7wDxAPMA9QEIARABFgEjASgBMwE4AUYB
+				UAFRAVMBVQFXAVkBWwFdAV8BYQFmAWkBawFtAXIBegNO
+				A1ADVQNeA2kDbQN7A4IDiwOQA5MDmwOjA8oD2APdA+UD
+				5wPwA/UD+AP/BAQEBwQWBCUEOAQ5BDsEPQQ/BEEEQwRF
+				BEcESQROBFAEUgRXBhUGFwY+BkcGTAZOBlcGagZrBm0G
+				bwZxBnMGdQZ3BnkGewaABoIGhAaJCHUIdwieCLQIuQi7
+				CMQIyQjNCNoI4AjnCO8I8wj1CPcI+Qj7CP8JAQkDCQUJ
+				CgkOCSQJMQk4CTwJPglACUIJRAlICUoJTAlOCVcJXgln
+				CXwJfgmACYIJhAmJCYsJjAmRCZUJpAmsCbUJtwm5CbsJ
+				vQnCCcQJyAnKCcwJzgnXCdkJ2wndCd8J5AnmCecJ7Anv
+				CgIKFQoeCiAKIgokCiYKKwotCi4KNQo2CjgKOQpACkQK
+				RgpICkoKTApQClIKVApWCpoK6QsyCzcLOQs7Cz0LQgtE
+				C0YLSAtNC08LUQtTC1gLWwtwC4ULiguNC5IAAAAAAAAC
+				AQAAAAAAAADvAAAAAAAAAAAAAAAAAAALpA==
 				</data>
 				<key>SiteAttributes</key>
 				<dict>

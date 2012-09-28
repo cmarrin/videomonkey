@@ -7,6 +7,8 @@
 		<dict>
 			<key>Dictionary</key>
 			<dict>
+				<key>Changed</key>
+				<false/>
 				<key>ColourStyles</key>
 				<dict>
 					<key>Flexture v1.3</key>
@@ -59,18 +61,28 @@
 				</dict>
 				<key>CreditRapidWeaver</key>
 				<true/>
+				<key>CustomCopyrightUsed</key>
+				<false/>
+				<key>CustomSiteTitleUsed</key>
+				<false/>
+				<key>CustomSloganUsed</key>
+				<false/>
 				<key>DefaultLinkTarget</key>
 				<string>self</string>
 				<key>FilenameExtension</key>
 				<string>html</string>
+				<key>FolderName</key>
+				<string>blog</string>
 				<key>HasCustomThemeStyle</key>
 				<true/>
+				<key>Hidden</key>
+				<false/>
 				<key>ImageFormat</key>
 				<string>Original</string>
 				<key>ImageQuality</key>
 				<string>High</string>
 				<key>IndexFilename</key>
-				<string></string>
+				<string>blog.html</string>
 				<key>OutputFormat</key>
 				<string>Default</string>
 				<key>OutputXMLDeclaration</key>
@@ -83,11 +95,9 @@
 				<dict>
 					<key>Flexture v1.3</key>
 					<array>
-						<string>Advanced Site Options.Advanced Site Options - Hide iPhone Header Image</string>
-						<string>Advanced Site Options.Advanced Site Options - iPad Support</string>
 						<string>Advanced Site Options.Advanced Site Options - iPhone Support</string>
 						<string>Advanced Site Options.Advanced Site Options - Javascript Animations for Drop Down Main Menu</string>
-						<string>Advanced Site Options.Advanced Site Options - Optimize Stacks for iPhone</string>
+						<string>Advanced Site Options.Advanced Site Options - jQuery Cycle Support</string>
 						<string>Advanced Site Options.Advanced Site Options - Remove Main Menu Text Shadow</string>
 						<string>Advanced VIP Options.Advanced VIP Options - Customize VIP Functions</string>
 						<string>Background Graphic.Background - Noise</string>
@@ -125,12 +135,14 @@
 						<string>Title - Font Size.Title - Font Size - Medium</string>
 						<string>Upper Background Height.Upper Background Height - 400px</string>
 						<string>VIP (Visitor Interaction Panel) Display &amp; Color Options.VIP Align Right</string>
-						<string>VIP Behavior.VIP Behavior - Solid VIP</string>
+						<string>VIP Behavior.VIP Behavior - Pulse VIP</string>
 					</array>
 				</dict>
 			</dict>
 			<key>Files</key>
-			<array/>
+			<array>
+				<string>Sidebar.as</string>
+			</array>
 			<key>Subsandwiches</key>
 			<array/>
 		</dict>
