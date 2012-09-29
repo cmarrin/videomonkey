@@ -5,19 +5,20 @@
   <meta http-equiv="Content-Style-Type" content="text/css">
   <title>Release Notes</title>
   <meta name="Generator" content="Cocoa HTML Writer">
-  <meta name="CocoaVersion" content="1138.1">
+  <meta name="CocoaVersion" content="1185">
   <style type="text/css">
     p.p2 {margin: 0.0px 0.0px 14.0px 0.0px; font: 18.0px Times}
     p.p3 {margin: 0.0px 0.0px 12.0px 0.0px; font: 14.0px Times}
-    p.p4 {margin: 0.0px 0.0px 14.0px 0.0px; font: 16.0px Times}
+    p.p4 {margin: 0.0px 0.0px 12.0px 0.0px; font: 16.0px Times}
     p.p5 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Times}
     p.p6 {margin: 0.0px 0.0px 0.0px 0.0px; font: 16.0px Times; min-height: 19.0px}
-    p.p7 {margin: 0.0px 0.0px 14.0px 0.0px; font: 18.0px Times; min-height: 23.0px}
-    p.p9 {margin: 0.0px 0.0px 0.0px 72.0px; text-indent: -72.0px; font: 14.0px Times; min-height: 18.0px}
-    p.p10 {margin: 0.0px 0.0px 14.0px 0.0px; font: 16.0px Times; min-height: 19.0px}
-    p.p11 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Times; min-height: 14.0px}
+    p.p7 {margin: 0.0px 0.0px 14.0px 0.0px; font: 16.0px Times}
+    p.p8 {margin: 0.0px 0.0px 14.0px 0.0px; font: 18.0px Times; min-height: 23.0px}
+    p.p10 {margin: 0.0px 0.0px 0.0px 72.0px; text-indent: -72.0px; font: 14.0px Times; min-height: 18.0px}
+    p.p11 {margin: 0.0px 0.0px 14.0px 0.0px; font: 16.0px Times; min-height: 19.0px}
+    p.p12 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Times; min-height: 14.0px}
     li.li5 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Times}
-    li.li8 {margin: 0.0px 0.0px 0.0px 0.0px; font: 16.0px Times}
+    li.li9 {margin: 0.0px 0.0px 0.0px 0.0px; font: 16.0px Times}
     span.s1 {font: 16.0px Times}
     span.s2 {color: #0000ee}
     ul.ul1 {list-style-type: disc}
@@ -26,32 +27,53 @@
 </head>
 <body>
 <h1 style="margin: 0.0px 0.0px 16.0px 0.0px; font: 24.0px Times"><b>Release Notes For Video Monkey</b></h1>
+<p class="p2"><b>Version 0.13 (9/12/2012)</b></p>
+<p class="p3">There are 2 major enhancements in this release. First, all major encoding parameters can now be overridden. Just head over to the Output section of the Info Panel and you'll see a check box to the right of each item that can be overridden. The Movie Panel now shows the results of the current padding settings. Open the Movie Panel while you adjust padding and you can interactively see the results.</p>
+<p class="p3">Note: some combinations of override setting will result in invalid output files. Please exercise care when using this feature. Remember, with great power comes great responsibility.<span class="Apple-converted-space"> </span></p>
+<p class="p3">Video Monkey is now a 64 bit application. This includes the ffmpeg executable used for encoding. As a result, encoding speeds are significantly improved. It also means that this release requires Snow Leopard.</p>
+<p class="p4"><b>New in this release:</b></p>
+<ul class="ul1">
+  <li class="li5">All major encoding parameters can now be customized for more flexibility in encoding output.</li>
+  <li class="li5">Padding can now be set on video output with padding results visible in the Movie Panel.</li>
+  <li class="li5">Replaced controls on movie player for greater flexibility in resizing.</li>
+  <li class="li5">Make the application 64 bit clean, including 64 bit version of <i>ffmpeg</i>.</li>
+</ul>
+<p class="p6"><br></p>
+<p class="p7"><b>Bugs fixed:</b></p>
+<ul class="ul1">
+  <li class="li5">Made scrubbing, play and pause more consistent in movie player.</li>
+  <li class="li5">Fixed a couple of crashing bugs caused by overreleasing objects</li>
+  <li class="li5">Made movie player resize more consistently.</li>
+  <li class="li5">Fixed display of aspect ratio in output panel.</li>
+  <li class="li5">Fixed a bug where H.264 override for AVI didn't work</li>
+</ul>
+<p class="p8"><br></p>
 <p class="p2"><b>Version 0.12 (8/9/2011)</b></p>
 <p class="p3">This is a quick release to fix the problem that 0.11 used the Lion SDK to build and therefore would not run on Leopard systems (but it does run on Snow Leopard). I've added a few other nifty fixes as well</p>
-<p class="p4"><b>New in this release:</b></p>
+<p class="p7"><b>New in this release:</b></p>
 <ul class="ul1">
   <li class="li5">Changed how bitrate is computed to give better results at more frame sizes</li>
   <li class="li5">Made all formats (except DV) using half framerate at lowest quality setting</li>
   <li class="li5">Make performance button always start out as <i>normal</i> to avoid it annoyingly always coming up as <i>fastest</i></li>
 </ul>
 <p class="p6"><br></p>
-<p class="p4"><b>Bugs fixed:</b></p>
+<p class="p7"><b>Bugs fixed:</b></p>
 <ul class="ul1">
   <li class="li5">http://bugs.marrin.org/show_bug.cgi?id=7 - Failure to encode dual pass in OS X 10.7 Lion</li>
   <li class="li5">http://bugs.marrin.org/show_bug.cgi?id=5 - Crash for AVI with Lion</li>
   <li class="li5">Use 10.5 SDK so VideoMonkey runs on Leopard</li>
   <li class="li5">Fixed bug where quality slider was sometimes disabled in error</li>
 </ul>
-<p class="p7"><b></b><br></p>
+<p class="p8"><br></p>
 <p class="p2"><b>Version 0.11 (8/6/2011)</b></p>
 <p class="p3">This is an intermediate release to fix many bugs causing issues for new formats (and some old ones). Added Growl support (thanks to Lars Koerkemeier). Added UI for advanced settings which is operational yet. This notably does not fix a couple of reported issues with certain file formats on Lion. Still waiting for responses from reporters. But I wanted to get the current fixes out.</p>
-<p class="p4"><b>New in this release:</b></p>
+<p class="p7"><b>New in this release:</b></p>
 <ul class="ul1">
   <li class="li5">Added Growl support</li>
   <li class="li5">Added ability for many video formats (all non-Apple formats except DV and certain MPEG-1/2 formats) to encode to various frame sizes, up to full frame size</li>
 </ul>
 <p class="p6"><br></p>
-<p class="p4"><b>Bugs fixed:</b></p>
+<p class="p7"><b>Bugs fixed:</b></p>
 <ul class="ul1">
   <li class="li5">https://github.com/cmarrin/videomonkey/issues/52 - No video on original appleTV</li>
   <li class="li5">https://github.com/cmarrin/videomonkey/issues/61 - Overall Progress spelled incorrectly</li>
@@ -60,28 +82,28 @@
   <li class="li5">Javascript error when trying to move slider to high quality for Tivo</li>
   <li class="li5">Tolerate missing video bitrate in input file. Use overall bitrate instead.</li>
 </ul>
-<p class="p7"><br></p>
+<p class="p8"><br></p>
 <p class="p2"><b>Version 0.10 (3/17/2011)</b></p>
 <p class="p3">Changed back to 32 bit intel-only application, but still with the latest ffmpeg. Also fixed several bugs in the new Video Formats feature.</p>
-<p class="p4"><b>New in this release:</b></p>
+<p class="p7"><b>New in this release:</b></p>
 <ul class="ul1">
   <li class="li5">New version of ffmpeg, but 32 bit only</li>
-  <li class="li8"></li>
+  <li class="li9"></li>
 </ul>
-<p class="p4"><b>Bugs fixed:</b></p>
+<p class="p7"><b>Bugs fixed:</b></p>
 <ul class="ul1">
   <li class="li5">https://github.com/cmarrin/videomonkey/issues/closed#issue/57 - Output Framerate stuck at 10fps</li>
   <li class="li5">https://github.com/cmarrin/videomonkey/issues/closed#issue/42 - ffprobe and ffmpeg crashes with videomonkey 0.9</li>
   <li class="li5">https://github.com/cmarrin/videomonkey/issues/closed#issue/44 - All Video Formats are obeying 320 Pixels Wide flag</li>
   <li class="li5">https://github.com/cmarrin/videomonkey/issues/closed#issue/41 - resizing info box</li>
 </ul>
-<p class="p7"><br></p>
+<p class="p8"><br></p>
 <p class="p2"><b>Version 0.9 (2/15/2011)</b></p>
 <p class="p3">New video formats and AV sync supported, plus a newer version of ffmpeg.</p>
 <p class="p3"><span class="s1"><b><i>Note 1: </i></b></span><b>New video format support is very fresh, so it may have kinks to be worked out. Try it out and see! Don't forget to let me know if it does or doesn't work for you.</b></p>
 <p class="p5"><span class="s1"><b><i>Note 2: </i></b></span><b>Now that Video Monkey supports more file formats, it is more important than ever to download and install Perian if you haven'talready. This adds support for all the new formats to Quicktime player. This not only lets you preview your newly encoded files, but it also lets you view files in the Show Movie panel and set their AV offset. Download it from </b><a href="http://www.perian.org/"><span class="s2"><b>http://www.perian.org/</b></span></a></p>
-<p class="p9"><br></p>
-<p class="p4"><b>New in this release:</b></p>
+<p class="p10"><br></p>
+<p class="p7"><b>New in this release:</b></p>
 <ul class="ul1">
   <li class="li5">Added new output video formats: AVI, MP4, Quicktime, WMV, Flash, MPEG, DV</li>
   <li class="li5">New AV offset UI in Movie panel. Offsets audio relative to video to fix lip sync problems</li>
@@ -96,17 +118,17 @@
   <li class="li5">Can now select multiple files and type an entry in the search box. The search will be applied to all files</li>
   <li class="li5">Even with multiple files selected, the search box will show a list of results from most recent search.</li>
   <li class="li5">Fixed frame size setting bugs for Apple TV.</li>
-  <li class="li8"></li>
+  <li class="li9"></li>
 </ul>
-<p class="p4"><b>Bugs fixed:</b></p>
+<p class="p7"><b>Bugs fixed:</b></p>
 <ul class="ul1">
   <li class="li5">2984591 - Metadata error message</li>
   <li class="li5">3037146 - First time searching for metadata for multile files fails</li>
 </ul>
-<p class="p7"><br></p>
+<p class="p8"><br></p>
 <p class="p2"><b>Version 0.8 (4/8/2010)</b></p>
 <p class="p3">This fixes serious metadata search bugs and makes the metadata search feature easier to use.</p>
-<p class="p4"><b>New in this release:</b></p>
+<p class="p7"><b>New in this release:</b></p>
 <ul class="ul1">
   <li class="li5">Metadata search now fails more gracefully with better error reporting.</li>
   <li class="li5">Uses episode and season info from file name, even when searching using search box</li>
@@ -115,28 +137,28 @@
   <li class="li5">Select all button on metadata panel for easier selection</li>
   <li class="li5">Uses search results from typed in search string for all selected files.</li>
 </ul>
-<p class="p10"><br></p>
-<p class="p4"><b>Bugs fixed:</b></p>
+<p class="p11"><br></p>
+<p class="p7"><b>Bugs fixed:</b></p>
 <ul class="ul1">
   <li class="li5">encoding parameters would get confused when metadata search failed</li>
 </ul>
-<p class="p7"><br></p>
+<p class="p8"><br></p>
 <p class="p2"><b>Version 0.7 (3/29/2010)</b></p>
 <p class="p3">This is a small release to fixes crashes when encoding multiple files. It also does search in background to avoid stalling Video Monkey</p>
-<p class="p4"><b>New in this release:</b></p>
+<p class="p7"><b>New in this release:</b></p>
 <ul class="ul1">
   <li class="li5">Metadata is now searched in the background to avoid stalling VideoMonkey.</li>
   <li class="li5">New icon during encoding. Shows number of files to encode.</li>
 </ul>
-<p class="p10"><br></p>
-<p class="p4"><b>Bugs fixed:</b></p>
+<p class="p11"><br></p>
+<p class="p7"><b>Bugs fixed:</b></p>
 <ul class="ul1">
   <li class="li5">Crash caused by dangling pointers and memory leaks when encoding more than about 3 files.</li>
 </ul>
-<p class="p7"><br></p>
+<p class="p8"><br></p>
 <p class="p2"><b>Version 0.6 (12/17/09)</b></p>
 <p class="p3">This release adds the ability to search for metadata on demand rather than automatically. This avoids problems when the metadata search sites are down. It also fixes several bugs</p>
-<p class="p4"><b>New in this release:</b></p>
+<p class="p7"><b>New in this release:</b></p>
 <ul class="ul1">
   <li class="li5">UI to search metadata manually. You can search the selected file or all files.</li>
   <li class="li5">New preferences panel. Currently allows control of automatic/manual metadata search and number of cpus to use.</li>
@@ -151,29 +173,29 @@
   <li class="li5">Fixed suspend/resume</li>
   <li class="li5">Fixed show/hide of windows</li>
 </ul>
-<p class="p10"><br></p>
-<p class="p4"><b>Bugs fixed:</b></p>
+<p class="p11"><br></p>
+<p class="p7"><b>Bugs fixed:</b></p>
 <ul class="ul1">
   <li class="li5">Problem converting files with '*' or '?'</li>
   <li class="li5">VM produces movies that don't play on Apple TV</li>
 </ul>
-<p class="p7"><br></p>
+<p class="p8"><br></p>
 <p class="p2"><b>Version 0.5 (8/26/09)</b></p>
 <p class="p3">This release adds Snow Leopard support and fixes a couple of bugs. With the imminent release of Snow Leopard, I thought it would be a good idea to get this out now.</p>
-<p class="p4"><b>New in this release:</b></p>
+<p class="p7"><b>New in this release:</b></p>
 <ul class="ul1">
   <li class="li5">Snow Leopard support</li>
 </ul>
-<p class="p10"><br></p>
-<p class="p4"><b>Bugs fixed:</b></p>
+<p class="p11"><br></p>
+<p class="p7"><b>Bugs fixed:</b></p>
 <ul class="ul1">
   <li class="li5">Problem converting files with '*' or '?'</li>
   <li class="li5">VM produces movies that don't play on Apple TV</li>
 </ul>
-<p class="p7"><br></p>
+<p class="p8"><br></p>
 <p class="p2"><b>Version 0.4 (7/30/09)</b></p>
 <p class="p3">This release adds full metadata support. The metadata tab of the info panel shows the metadata for each input file. You can then manually add or change the data. You can also type in the name of a TV show or movie and Video Monkey will search thetvdb.com or themoviedb.org and fill in the metadata it finds. Video Monkey tries to figure out the title from the file name or input metadata and automatically search for metadata. For each field you can select between input, user, or search metadata.</p>
-<p class="p4"><b>New in this release:</b></p>
+<p class="p7"><b>New in this release:</b></p>
 <ul class="ul1">
   <li class="li5">Metadata in input files is read and shown in metadata panel<span class="Apple-converted-space"> </span></li>
   <li class="li5">Metadata search from thetvdb.com and themoviedb.org</li>
@@ -186,8 +208,8 @@
   <li class="li5">Added tools menu which allows selecting whether to use input, user or search metadata for all fields in current file or all files</li>
   <li class="li5">New menu on main page allows write metadata after encoding output file, encode only, write metadata only to input file or rewrite metadata to output file</li>
 </ul>
-<p class="p10"><br></p>
-<p class="p4"><b>Bugs fixed:</b></p>
+<p class="p11"><br></p>
+<p class="p7"><b>Bugs fixed:</b></p>
 <ul class="ul1">
   <li class="li5">Make audio and video sync better</li>
   <li class="li5">Adjust output size to ensure square pixels, even when input is not</li>
@@ -218,8 +240,8 @@
   <li class="li5">2694849 - Files converted for iPhone/iPod are not legal</li>
   <li class="li5">2695089 - File Size overflowed</li>
 </ul>
-<p class="p11"><br></p>
-<p class="p11"><br></p>
+<p class="p12"><br></p>
+<p class="p12"><br></p>
 <h2 style="margin: 0.0px 0.0px 14.0px 0.0px; font: 18.0px Times"><b>Version 0.1 (3/12/09)</b></h2>
 <p class="p3">This is the first public release of VideoMonkey. It has a lot of functionality, but is not nearly complete.</p>
 <h3 style="margin: 0.0px 0.0px 14.0px 0.0px; font: 16.0px Times"><b>New in this release:</b></h3>
