@@ -10,12 +10,12 @@
             <sparkle:releaseNotesLink>
                 http://videomonkey.org/releases/releasenotes.html
             </sparkle:releaseNotesLink>
-            <pubDate>Wed Sep 12 10:00:15 PDT 2012</pubDate>
+            <pubDate>Fri Sep 28 18:34:45 PDT 2012</pubDate>
             <enclosure  url="http://videomonkey.org/releases/videomonkey-0.13.zip"
                         sparkle:version="0.13" 
-                        length="25432873"
+                        length="29225059"
                         type="application/octet-stream" 
-                        sparkle:dsaSignature="MCwCFHPPBYnhrYhnghikcU9bhI4WWlp6AhRXAOrWMMnyoN0YOUBnY78bQpiT6A=="
+                        sparkle:dsaSignature="MCwCFBGhCroBV9iGYdJ8FO02UwxzQpP6AhROn/a/OQwDzXfmISuyLe+Fj/t/nA=="
             />
         </item>
         <item>
