@@ -27,7 +27,7 @@
 				<key>PublishingManifest</key>
 				<dict>
 					<key>CreationDate</key>
-					<date>2012-09-07T14:56:54Z</date>
+					<date>2012-09-29T02:03:49Z</date>
 					<key>DigestAlgorithm</key>
 					<string>MD5</string>
 					<key>DocumentGUID</key>
@@ -168,11 +168,11 @@
 						<dict>
 							<key>Digest</key>
 							<data>
-							V2Lgq0ceiKySF0LhlnHf
-							6A==
+							pNdODlEeLo8U5kVqlen+
+							9A==
 							</data>
 							<key>Size</key>
-							<integer>16077</integer>
+							<integer>17916</integer>
 						</dict>
 						<key>files/boxturtlecamp-300x230.png</key>
 						<dict>
@@ -203,6 +203,16 @@
 							</data>
 							<key>Size</key>
 							<integer>16036</integer>
+						</dict>
+						<key>files/d59a54f56dab436140835473b2040ee9-17.html</key>
+						<dict>
+							<key>Digest</key>
+							<data>
+							Hfrz3YI5hboUVMbs98ND
+							4Q==
+							</data>
+							<key>Size</key>
+							<integer>15979</integer>
 						</dict>
 						<key>files/directional-traffic-signs-deliveries-with-left-arrow-l4099-ba.png</key>
 						<dict>
@@ -278,11 +288,11 @@
 						<dict>
 							<key>Digest</key>
 							<data>
-							vAlUxaJMtEd76PwTSIJh
-							aA==
+							qjwEIPOVD27w2TZRpYI2
+							gA==
 							</data>
 							<key>Size</key>
-							<integer>35308</integer>
+							<integer>36239</integer>
 						</dict>
 						<key>rw_common/version.txt</key>
 						<dict>
