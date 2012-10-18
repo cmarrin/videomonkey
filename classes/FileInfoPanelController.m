@@ -162,16 +162,25 @@ DAMAGE.
     [m_fileListController rearrangeObjects];
 }
 
--(IBAction)searchBoxSelected:(id)sender
+- (void)searchStringSelected:(NSString*)searchString
 {
-    NSString* searchString = [[sender stringValue] retain];
-    
     if ([searchString length]) {
         m_metadataSearchCount = 0;
         m_metadataSearchSucceeded = YES;
         [m_fileListController searchSelectedFilesForString:searchString];
     }
+}
+
+-(IBAction)searchBoxSelected:(id)sender
+{
+    NSString* searchString = [[sender stringValue] retain];
+    [self searchStringSelected:searchString];
     [searchString release];
+}
+
+- (void)comboBoxSelectionDidChange:(NSNotification *)notification
+{
+    [self searchStringSelected:[notification.object objectValueOfSelectedItem]];
 }
 
 - (IBAction)useSeasonValueForAllFiles:(id)sender

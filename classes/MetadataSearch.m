@@ -289,6 +289,7 @@ static BOOL isValidInteger(NSString* s)
         [self checkString:filename forSeason:&m_season episode:&m_episode];
     }
     
+    /*
     // Get the season and episode out of the string and use it if needed
     int season;
     int episode;
@@ -299,7 +300,8 @@ static BOOL isValidInteger(NSString* s)
         
     if (m_episode < 0 && episode >= 0)
         m_episode = episode;
-        
+    */
+    
     // see if the search string in in our list already
     int i = 0;
     for (NSString* name in self.foundShowNames) {
@@ -318,7 +320,7 @@ static BOOL isValidInteger(NSString* s)
     self.foundShowIds = nil;
     self.foundSearcher = nil;
     
-    [self _searchForShows: newString withSelector:@selector(searchWithStringComplete:)];
+    [self _searchForShows: string withSelector:@selector(searchWithStringComplete:)];
 }
 
 -(void) searchWithFilenameCallback:(NSNumber*) success
