@@ -73,7 +73,7 @@
 	<key>CFBundleExecutable</key>
 	<string>${EXECUTABLE_NAME}</string>
 	<key>CFBundleIconFile</key>
-	<string>VideoMonkeyDevel</string>
+	<string>VideoMonkey</string>
 	<key>CFBundleIdentifier</key>
 	<string>org.VideoMonkey.${PRODUCT_NAME:identifier}</string>
 	<key>CFBundleInfoDictionaryVersion</key>
@@ -85,7 +85,7 @@
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>0.14x</string>
+	<string>0.14</string>
 	<key>CFBundleTypeRole</key>
 	<string>Editor</string>
 	<key>NSMainNibFile</key>
