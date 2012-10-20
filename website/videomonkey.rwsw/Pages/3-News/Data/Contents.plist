@@ -83,6 +83,22 @@
 							<integer>4</integer>
 						</array>
 						<key>GUID</key>
+						<string>0175499ef57de8ee0833e2b83ff28ea7</string>
+						<key>ID</key>
+						<integer>18</integer>
+						<key>Posted</key>
+						<date>2012-10-20T21:15:05Z</date>
+						<key>PublishStatus</key>
+						<integer>1</integer>
+						<key>Title</key>
+						<string>Quick release of 0.14 to fix a few issues</string>
+					</dict>
+					<dict>
+						<key>CategoryIDs</key>
+						<array>
+							<integer>4</integer>
+						</array>
+						<key>GUID</key>
 						<string>d59a54f56dab436140835473b2040ee9</string>
 						<key>ID</key>
 						<integer>17</integer>
@@ -275,9 +291,9 @@
 				<key>GenerateRSSEntriesForMainPageOnly</key>
 				<false/>
 				<key>LastBuildDate</key>
-				<date>2012-04-24T14:58:35Z</date>
+				<date>2012-10-20T21:24:08Z</date>
 				<key>LastID</key>
-				<integer>18</integer>
+				<integer>19</integer>
 				<key>LastSavedBuildDate</key>
 				<date>2012-04-24T14:58:35Z</date>
 				<key>NumberOfFrontPagePosts</key>
@@ -360,6 +376,8 @@
 				<string>11-Summary.as</string>
 				<string>12-Body.as</string>
 				<string>12-Summary.as</string>
+				<string>13-Body.as</string>
+				<string>13-Summary.as</string>
 			</array>
 			<key>Subsandwiches</key>
 			<array/>
