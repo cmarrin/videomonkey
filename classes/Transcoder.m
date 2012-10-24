@@ -143,7 +143,6 @@ static void frameSize(NSString* f, int* width, int* height)
 
 // Video
 @synthesize videoIndex;
-@synthesize videoLanguage;
 @synthesize videoCodec;
 @synthesize videoProfile;
 @synthesize videoInterlaced;
@@ -160,7 +159,6 @@ static void frameSize(NSString* f, int* width, int* height)
 
 // Audio
 @synthesize audioIndex;
-@synthesize audioLanguage;
 @synthesize audioCodec;
 @synthesize audioSampleRate;
 @synthesize audioChannels;
@@ -400,7 +398,6 @@ static void logInputFileError(NSString* filename)
             return NO;
         }
             
-        info.videoLanguage = [video objectAtIndex:1];
         info.videoCodec.value = [video objectAtIndex:2];
         info.videoProfile.value = [video objectAtIndex:3];
         info.videoInterlaced = [[video objectAtIndex:4] isEqualToString:@"Interlace"];
@@ -432,7 +429,6 @@ static void logInputFileError(NSString* filename)
             return NO;
         }
 
-        info.audioLanguage = [audio objectAtIndex:1];
         info.audioCodec.value = [audio objectAtIndex:2];
         info.audioSampleRate.value = [audio objectAtIndex:3];
         info.audioChannels.value = [audio objectAtIndex:4];
