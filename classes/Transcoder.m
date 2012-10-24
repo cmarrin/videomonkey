@@ -286,6 +286,35 @@ static void frameSize(NSString* f, int* width, int* height)
     return [[AppController instance] fileInfoPanelController];
 }
 
+static double ffmpegFramerateFromString(NSString* string)
+{
+    // split into lines
+    NSArray* lines = [string componentsSeparatedByString:@"\n"];
+    
+    for (NSString* line in lines) {
+        if ([line hasPrefix:@"    Stream #"]) {
+            NSString* substring = [line substringFromIndex:12];
+            NSArray* array = [substring componentsSeparatedByString:@" "];
+            if ([[array objectAtIndex:1] isEqualToString:@"Video:"]) {
+                // find a value that is "fps", "tbr" or "tb(r)", framerate is the value before that
+                NSUInteger index = [array indexOfObjectPassingTest:^(id obj, NSUInteger idx, BOOL *stop)
+                {
+                    if ([obj caseInsensitiveCompare:@"fps,"] == NSOrderedSame || [obj caseInsensitiveCompare:@"tbr,"] == NSOrderedSame || 
+                            [obj caseInsensitiveCompare:@"tb(r),"] == NSOrderedSame || [obj caseInsensitiveCompare:@"fps"] == NSOrderedSame || 
+                            [obj caseInsensitiveCompare:@"tbr"] == NSOrderedSame || [obj caseInsensitiveCompare:@"tb(r)"] == NSOrderedSame) {
+                        *stop = YES;
+                        return YES;
+                    }
+                    return NO;
+                }];
+                return (index < [array count]) ? [[array objectAtIndex:index - 1] doubleValue] : 0;
+            }
+        }
+    }
+    
+    return 0;
+}
+
 static int ffmpegIndexFromString(NSString* string, NSString* codec)
 {
     // split into lines
@@ -407,9 +436,6 @@ static void logInputFileError(NSString* filename)
         info.videoFrameRate.value = [video objectAtIndex:10];
         info.videoBitrate = [[video objectAtIndex:11] doubleValue];
         
-        if (!info.videoBitrate)
-            info.videoBitrate = overallBitrate;
-        
         // standardize video codec name
         if ([info.videoCodec.value caseInsensitiveCompare:@"vc-1"] == NSOrderedSame || [info.videoCodec.value caseInsensitiveCompare:@"wmv3"] == NSOrderedSame)
             info.videoCodec.value = VC_WMV3;
@@ -437,47 +463,58 @@ static void logInputFileError(NSString* filename)
         hasAudio = YES;
     }
     
-    // compute some values
-    info.bitrate = info.videoBitrate + [info.audioBitrate.value doubleValue];
-    
     info.videoIndex = -1;
     info.audioIndex = -1;
-    m_avOffset = nan(0);
-
-    if (hasAudio) {
-        m_avOffset = 0;
-        
-        // mediainfo doesn't interpret stream indexes the same as ffmpeg. We need these indexes
-        // to know how to map streams from the input to the output. Run ffprobe and pick out
-        // the index values for the video and audio streams
-        NSMutableString* ffmpegPath = [NSMutableString stringWithString: [[NSBundle mainBundle] resourcePath]];
-        [ffmpegPath appendString:@"/bin/ffmpeg"];
-        args = [NSMutableArray arrayWithObjects: @"-i", [info filename], nil];
-        
-        task = [[NSTask alloc] init];
-        [task setArguments: args];
-        [task setLaunchPath: ffmpegPath];
-        
-        pipe = [[NSPipe alloc] init];
-        [task setStandardError:[pipe fileHandleForWriting]];
-        [task launch];
-        [task waitUntilExit];
+    m_avOffset = hasAudio ? 0 : nan(0);
+    double ffmpegFramerate = 0;
+    double mediaInfoFramerate = [info.videoFrameRate.value doubleValue];
+    
+    // We need some things mediainfo doesn't provide (at least not accurately). This includes:
+    //
+    //      - Stream indexes
+    //      - framerate
             
-        if (!isReadable([pipe fileHandleForReading]))
-            [[AppController instance] log: [NSString stringWithFormat:@"Unable to obtain stream index data from the file '%@'. "
-                                                                       "The A/V offset feature will not be available. \n", info.filename]];
-        else {
-            data = [[NSString alloc] initWithData:[[pipe fileHandleForReading] availableData] encoding: NSASCIIStringEncoding];
+    NSMutableString* ffmpegPath = [NSMutableString stringWithString: [[NSBundle mainBundle] resourcePath]];
+    [ffmpegPath appendString:@"/bin/ffmpeg"];
+    args = [NSMutableArray arrayWithObjects: @"-i", [info filename], nil];
+    
+    task = [[NSTask alloc] init];
+    [task setArguments: args];
+    [task setLaunchPath: ffmpegPath];
+    
+    pipe = [[NSPipe alloc] init];
+    [task setStandardError:[pipe fileHandleForWriting]];
+    [task launch];
+    [task waitUntilExit];
         
+    if (!isReadable([pipe fileHandleForReading]))
+        [[AppController instance] log: [NSString stringWithFormat:@"Unable to obtain stream index data from the file '%@'. "
+                                                                   "The A/V offset feature will not be available. \n", info.filename]];
+    else {
+        data = [[NSString alloc] initWithData:[[pipe fileHandleForReading] availableData] encoding: NSASCIIStringEncoding];
+    
+        if (hasAudio) {
             info.videoIndex = ffmpegIndexFromString(data, @"Video:");
             info.audioIndex = ffmpegIndexFromString(data, @"Audio:");
-            [data release];
         }
-        
-        [task release];
-        [pipe release];
+        ffmpegFramerate = ffmpegFramerateFromString(data);
+        [data release];
     }
     
+    [task release];
+    [pipe release];
+    
+    // compute some values
+    if (!mediaInfoFramerate) {
+        if (ffmpegFramerate)
+            info.videoFrameRate.value = [NSString stringWithFormat:@"%f", ffmpegFramerate];
+        else 
+            info.videoFrameRate.value = @"30"; // Set something reasonable, probably wrong
+    }
+    if (!info.videoBitrate)
+        info.videoBitrate = overallBitrate - [info.audioBitrate.value doubleValue];
+        
+    info.bitrate = info.videoBitrate + [info.audioBitrate.value doubleValue];
     return YES;
 }
 
