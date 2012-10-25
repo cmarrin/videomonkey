@@ -1,5 +1,5 @@
 General;-General-,%Format%,%Format_Profile%,%PlayTime%,%OverallBitRate%,%FileSize%
-Video;\r\n-Video-,%Language%,%Format%,%Codec_Profile%,%ScanType%,%ScanOrder%,%Width%,%Height%,%PixelAspectRatio%,%DisplayAspectRatio%,%FrameRate%,%BitRate%
+Video;\r\n-Video-,%Language%,%Format%,%Codec_Profile%,%ScanType%,%ScanOrder%,%Width%,%Height%,%PixelAspectRatio%,%DisplayAspectRatio%,%FrameRate%,%BitRate%,%FrameRate_Original%,%FrameRate_Nominal%
 Audio;\r\n-Audio-,%Language%,%Format%,%SamplingRate%,%Channels%,%BitRate%
 Text;\r\n-Text-,%StreamKindID%,%ID%,%Language%,%Format%
 Chapters;\r\n-Chapters-,%StreamKindID%,%ID%,%Total%

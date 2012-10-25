@@ -416,13 +416,17 @@ static void logInputFileError(NSString* filename)
         
     // Do video if it's there
     int offset = 1;
+    double originalFramerate = 0;
+    double nominalFramerate = 0;
+    double ffmpegFramerate = 0;
+    double mediaInfoFramerate = 0;
     if ([components count] > offset && [[components objectAtIndex:offset] hasPrefix: @"-Video-"]) {
         NSArray* video = [[components objectAtIndex:offset] componentsSeparatedByString:@","];
         offset = 2;
         
         // -Video-,%StreamKindID%,%ID%,%Language%,%Format%,%Codec_Profile%,%ScanType%,%ScanOrder%,%Width%,%Height%,%PixelAspectRatio%,%DisplayAspectRatio%,%FrameRate%.%Bitrate%
 
-        if ([video count] != 12) {
+        if ([video count] != 14) {
             logInputFileError([info filename]);
             return NO;
         }
@@ -433,8 +437,10 @@ static void logInputFileError(NSString* filename)
         info.videoWidth.value = [video objectAtIndex:6];
         info.videoHeight.value = [video objectAtIndex:7];
         info.videoAspectRatio.value = [video objectAtIndex:9];
-        info.videoFrameRate.value = [video objectAtIndex:10];
         info.videoBitrate = [[video objectAtIndex:11] doubleValue];
+        mediaInfoFramerate = [[video objectAtIndex:10] doubleValue];
+        originalFramerate = [[video objectAtIndex:12] doubleValue];
+        nominalFramerate = [[video objectAtIndex:13] doubleValue];
         
         // standardize video codec name
         if ([info.videoCodec.value caseInsensitiveCompare:@"vc-1"] == NSOrderedSame || [info.videoCodec.value caseInsensitiveCompare:@"wmv3"] == NSOrderedSame)
@@ -466,8 +472,6 @@ static void logInputFileError(NSString* filename)
     info.videoIndex = -1;
     info.audioIndex = -1;
     m_avOffset = hasAudio ? 0 : nan(0);
-    double ffmpegFramerate = 0;
-    double mediaInfoFramerate = [info.videoFrameRate.value doubleValue];
     
     // We need some things mediainfo doesn't provide (at least not accurately). This includes:
     //
@@ -505,12 +509,23 @@ static void logInputFileError(NSString* filename)
     [pipe release];
     
     // compute some values
-    if (!mediaInfoFramerate) {
-        if (ffmpegFramerate)
-            info.videoFrameRate.value = [NSString stringWithFormat:@"%f", ffmpegFramerate];
-        else 
-            info.videoFrameRate.value = @"30"; // Set something reasonable, probably wrong
-    }
+    double framerate = 0;
+    if (!mediaInfoFramerate)
+        if (!originalFramerate)
+            if (!nominalFramerate)
+                if (!ffmpegFramerate)
+                    framerate = 30;
+                else
+                    framerate = ffmpegFramerate;
+            else
+                framerate = nominalFramerate;
+        else
+            framerate = originalFramerate;
+    else
+        framerate = mediaInfoFramerate;
+            
+    info.videoFrameRate.value = [NSString stringWithFormat:@"%f", framerate];
+
     if (!info.videoBitrate)
         info.videoBitrate = overallBitrate - [info.audioBitrate.value doubleValue];
         
