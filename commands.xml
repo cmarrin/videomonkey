@@ -933,6 +933,7 @@ DTD
         <param id="output_video_codec_name" value="H.264" />
         <param id="output_audio_codec_name" value="AAC" />
         <param id="video_suffix" value="mp4" />
+        <param id="ffmpeg_option_pix_fmt" value="yuv420p" />
     </default_device>
     
     <devices>
@@ -1602,7 +1603,6 @@ DTD
                     </unchecked_item>
                 </checkbox>
                 <param id="num_cpus" value="1" /> <!-- WMV encoding fails if num_cpus is not 1 -->
-                <param id="ffmpeg_option_pix_fmt" value="yuv420p" />
                 <param id="ffmpeg_option_qmin" value="7" />
                 <param id="ffmpeg_option_g" value="15" />
                 <param id="extras" value="" />
@@ -1791,14 +1791,12 @@ DTD
                         <param id="output_video_height" value="480" />
                         <param id="ffmpeg_video_aspect_x" value="3" />
                         <param id="ffmpeg_video_aspect_y" value="2" />
-                        <param id="ffmpeg_option_pix_fmt" value="yuv411p" />
                     </menu_item>
                     <menu_item title="PAL">
                         <param id="output_video_frame_rate" value="25" />
                         <param id="output_video_width" value="720" />
                         <param id="output_video_height" value="576" />
                         <param id="aspect" value="" />
-                        <param id="ffmpeg_option_pix_fmt" value="yuv420p" />
                     </menu_item>
                 </menu>
                 <quality>
