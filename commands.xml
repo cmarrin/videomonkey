@@ -338,7 +338,6 @@ DTD
         <param id="ffmpeg_option_padright" value="" />
         <param id="ffmpeg_option_padtop" value="" />
         <param id="ffmpeg_option_padbottom" value="" />
-        <param id="ffmpeg_option_pix_fmt" value="" />
         <param id="ffmpeg_option_vtag" value="" />
         <param id="ffmpeg_option_g" value="" />
         <param id="ffmpeg_option_maxrate" value="" />
