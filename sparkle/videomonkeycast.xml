@@ -15,9 +15,10 @@
                         sparkle:version="0.15" 
                         length="33382420"
                         type="application/octet-stream" 
-                        sparkle:dsaSignature="MCwCFEkZIZuoZ88ew+xFASM+tETdtmouAhRwsG6o3SccE9E2MW8jwda5EdD5Tg=="
+                        sparkle:dsaSignature="MCwCFHHdNi3KjcfWHzMyfaFfXuhJ6KKjAhQKAkwGojic/tG6N5jYxB1fFVQBqQ=="
             />
         </item>
+        <item>
             <title>Version 0.14</title>
             <sparkle:releaseNotesLink>
                 http://videomonkey.org/releases/releasenotes.html
