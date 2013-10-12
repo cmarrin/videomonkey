@@ -857,8 +857,10 @@ DTD
                 }
                 
                 // Make frame size divisible by 16
-                requestedWidth = Math.round(requestedWidth / 16) * 16;
-                requestedHeight = Math.round(requestedHeight / 16) * 16;
+                if (!bool(params.no_framesize_snap)) {
+                    requestedWidth = Math.round(requestedWidth / 16) * 16;
+                    requestedHeight = Math.round(requestedHeight / 16) * 16;
+                }
                 
                 // One more problem. If we are frame size limited then 
                 // rounding could have pushed us over that limit.

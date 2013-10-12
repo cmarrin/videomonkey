@@ -262,6 +262,17 @@ static void frameSize(NSString* f, int* width, int* height)
 @synthesize metadata = m_metadata;
 @synthesize fileStatus = m_fileStatus;
 
+- (BOOL)noFrameSizeSnap
+{
+    return m_noFrameSizeSnap;
+}
+
+- (void)setNoFrameSizeSnap:(BOOL)v
+{
+    m_noFrameSizeSnap = v;
+    [[AppController instance] uiChanged];    
+}
+
 -(BOOL) enabled
 {
     return m_enabled;    
@@ -735,6 +746,7 @@ static NSString* escapePath(NSString* path)
     [env setValue: self.inputFileInfo.format forKey: @"input_format"];
     [env setValue: ([self hasInputAudio] ? @"true" : @"false") forKey: @"has_audio"];
     [env setValue: ([[AppController instance] limitParams] ? @"true" : @"false") forKey: @"limit_output_params"];
+    [env setValue: m_noFrameSizeSnap ? @"true" : @"false" forKey: @"no_framesize_snap"];
     
     // set the number of CPUs
     [env setValue: [[NSNumber numberWithInt: [[AppController instance] numCPUs]] stringValue] forKey: @"num_cpus"];
