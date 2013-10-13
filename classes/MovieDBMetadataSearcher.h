@@ -39,6 +39,7 @@ DAMAGE.
 @interface MovieDBMetadataSearcher : MetadataSearcher {
     int m_loadedShowId;
     NSMutableDictionary* m_dictionary;
+    NSString* m_baseURL;
 }
 
 +(MetadataSearcher*) metadataSearcher:(MetadataSearch*) metadataSearch;

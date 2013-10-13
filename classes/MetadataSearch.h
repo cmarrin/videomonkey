@@ -37,7 +37,6 @@ DAMAGE.
 #import <Cocoa/Cocoa.h>
 
 @class MetadataSearch;
-@class XMLDocument;
 
 @interface MetadataSearcher : NSObject {
     NSArray* m_foundShowNames;
@@ -45,7 +44,6 @@ DAMAGE.
     NSArray* m_foundSeasons;
     NSArray* m_foundEpisodes;
     MetadataSearch* m_metadataSearch;
-    XMLDocument* m_currentSearchDocument;
 }
 
 @property(readwrite,retain) NSArray* foundShowNames;
@@ -54,8 +52,6 @@ DAMAGE.
 @property(readwrite,retain) NSArray* foundEpisodes;
 
 -(void) initWithMetadataSearch:(MetadataSearch*) metadataSearch;
--(NSString*) makeSearchURLString:(NSString*) searchString;
--(BOOL) loadShowData:(XMLDocument*) document;
 
 -(void) searchForShow:(NSString*) searchString;
 

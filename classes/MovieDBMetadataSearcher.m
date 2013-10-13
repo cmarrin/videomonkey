@@ -35,7 +35,7 @@ DAMAGE.
 */
 
 #import "MovieDBMetadataSearcher.h"
-#import "XMLDocument.h"
+#import <Foundation/NSJSONSerialization.h>
 
 // Map from MovieDB tag name to Dictionary tag name
 static NSDictionary* g_moviedbMap = nil;
@@ -49,34 +49,45 @@ static NSDictionary* g_moviedbMap = nil;
     return searcher;
 }
 
--(NSString*) makeSearchURLString:(NSString*) searchString
+- (void) startLoadWithString:(NSString*) string completionHandler:(void (^)(NSDictionary*)) handler
 {
-    return [NSString stringWithFormat:@"http://api.themoviedb.org/2.1/Movie.search/en/xml/ae6c3dcf41e60014a3d0508e7f650884/%@", searchString];
+    NSURL* url = [NSURL URLWithString:string];
+    NSOperationQueue *queue = [[NSOperationQueue alloc] init];
+    NSURLRequest *request = [NSURLRequest requestWithURL:url];
+    [NSURLConnection sendAsynchronousRequest:request queue:queue completionHandler:^(NSURLResponse *response, NSData *data, NSError *error)
+    {
+        if ([data length] > 0 && error == nil) {
+            NSError* error = nil;
+            NSDictionary* document = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&error];
+            if (!document || error) {
+                // FIXME: implement error handling
+            } else {
+                assert([document isKindOfClass:[NSDictionary class]]);
+                handler(document);
+            }
+        } else {
+            // FIXME: implement error handling
+        }
+    }];
+    [queue release];
 }
 
--(BOOL) loadShowData:(XMLDocument*) document
+-(BOOL) loadShowData:(NSDictionary*) document
 {
-    if (![[[document rootElement] name] isEqualToString:@"OpenSearchDescription"])
+    NSArray* results = [document valueForKey:@"results"];
+    if (!results) {
         return NO;
-        
-    XMLElement* matches = [[document rootElement] lastElementForName:@"movies"];
-    if (!matches)
-        return NO;
-        
-    NSArray* movies = [matches elementsForName:@"movie"];
-    if ([movies count] == 0)
-        return NO;
-        
+    }
     NSMutableArray* foundShowNames = [[NSMutableArray alloc] init];
     NSMutableArray* foundShowIds = [[NSMutableArray alloc] init];
 
-    for (XMLElement* element in movies) {
-        NSString* name = [[element lastElementForName:@"name"] content];
-        NSString* idString = [[element lastElementForName:@"id"] content];
-        int id = (idString && [idString length] > 0) ? [idString intValue] : -1;
-        if (name && [name length] > 0 && id >= 0) {
+    for (NSDictionary* result in results) {
+        NSString* name = [result valueForKey:@"original_title"];
+        NSNumber* idObject = [result valueForKey:@"id"];
+        int idValue = [idObject intValue];
+        if (name && [name length] > 0 && idValue >= 0) {
             [foundShowNames addObject:name];
-            [foundShowIds addObject:[NSNumber numberWithInt:id]];
+            [foundShowIds addObject:[NSNumber numberWithInt:idValue]];
         }
     }
     
@@ -92,73 +103,116 @@ static NSDictionary* g_moviedbMap = nil;
     return YES;
 }
 
+-(void) searchForShow:(NSString*) searchString
+{
+    self.foundShowNames = nil;
+    self.foundShowIds = nil;
+    self.foundSeasons = nil;
+    self.foundEpisodes = nil;
+
+    NSString* urlString = [NSString stringWithFormat:@"http://api.themoviedb.org/3/search/movie?api_key=ae6c3dcf41e60014a3d0508e7f650884&query=%@", searchString];
+    urlString = [urlString stringByAddingPercentEscapesUsingEncoding:NSASCIIStringEncoding];
+    [self startLoadWithString:urlString completionHandler:^(NSDictionary* document)
+    {
+        BOOL success = [self loadShowData:document];
+        [m_metadataSearch searchForShowsComplete:success];
+    }];
+}
+
 -(id) init
 {
     // init the tag map, if needed
     if (!g_moviedbMap) {
         g_moviedbMap = [[NSDictionary dictionaryWithObjectsAndKeys:
-            @"title",       	@"name", 
+            @"title",       	@"title", 
             @"description", 	@"overview", 
-            @"year",        	@"released",
-            @"contentRating",   @"certification",
+            @"year",        	@"release_date",
             nil ] retain];
     }
     
     return self;
 }
 
--(void) collectArtwork:(XMLElement*) parent toArray:(NSMutableArray*) toArray
+-(void) collectArtwork:(NSDictionary*) document
 {
-    NSArray* images = [[parent lastElementForName:@"images"] elementsForName:@"image"];
-    for (XMLElement* image in images) {
-        if ([[image stringAttribute:@"size"] isEqualToString:@"original"] && 
-                [[image stringAttribute:@"type"] isEqualToString:@"poster"]) {
-            NSString* s = [image stringAttribute:@"url"];
-            if (s && [s length] > 0)
-                [toArray addObject:s];
-        }
+    // Collect the images (5 max)
+    NSMutableArray* imageArray = [[NSMutableArray alloc]init];
+    NSDictionary* images = [document valueForKey:@"images"];
+    if (!images) {
+        [m_metadataSearch detailsLoaded:m_dictionary success:YES];
+        return;
     }
+    
+    NSArray* posters = [images valueForKey:@"posters"];
+    if (!posters) {
+        [m_metadataSearch detailsLoaded:m_dictionary success:YES];
+        return;
+    }
+    
+    int i = 0;
+    for (NSDictionary*poster in posters) {
+        if (++i > 5) {
+            break;
+        }
+        [imageArray addObject:[poster valueForKey:@"file_path"]];
+    }
+
+    // Get the baseURL
+    NSString* urlString = [NSString stringWithFormat:@"http://api.themoviedb.org/3/configuration?api_key=ae6c3dcf41e60014a3d0508e7f650884"];
+    [self startLoadWithString:urlString completionHandler:^(NSDictionary* configDocument)
+    {
+        NSDictionary* images = [configDocument valueForKey:@"images"];
+        if (!images) {
+            [m_metadataSearch detailsLoaded:m_dictionary success:YES];
+            return;
+        }
+        NSString* baseURL = [images valueForKey:@"base_url"];
+        if (!baseURL) {
+            [m_metadataSearch detailsLoaded:m_dictionary success:YES];
+            return;
+        }
+        NSMutableArray* artwork = [[NSMutableArray alloc]init];
+        for (NSString* filePath in imageArray) {
+            [artwork addObject:[NSString stringWithFormat:@"%@original%@", baseURL, filePath]];
+        }
+        [m_dictionary setValue:artwork forKey:@"artwork"];
+        [artwork release];
+        [m_metadataSearch detailsLoaded:m_dictionary success:YES];
+    }];
 }
 
--(void) loadDetailsCallback:(XMLDocument*) document
+-(void) loadDetailsCallback:(NSDictionary*) document
 {
-    BOOL success = NO;
+    // this is a movie
+    [m_dictionary setValue:@"Movie" forKey:@"stik"];
     
-    if (document && [[[document rootElement] name] isEqualToString:@"OpenSearchDescription"]) {
-        assert(document == m_currentSearchDocument);
+    NSString* value;
     
-        XMLElement* matches = [[document rootElement] lastElementForName:@"movies"];
-        if (matches) {
-            XMLElement* movie = [matches lastElementForName:@"movie"];
-            if (movie) {
-                // this is a movie
-                [m_dictionary setValue:@"Movie" forKey:@"stik"];
+    // get the movie info
+    for (NSString* key in g_moviedbMap) {
+        NSString* dictionaryKey = [g_moviedbMap valueForKey:key];
+        value = [document valueForKey:key];
+        if (value)
+            [m_dictionary setValue:value forKey:dictionaryKey];
+    }
                 
-                NSString* value;
-                
-                // get the movie info
-                for (NSString* key in g_moviedbMap) {
-                    NSString* dictionaryKey = [g_moviedbMap valueForKey:key];
-                    value = [[movie lastElementForName:key] content];
-                    if (value)
-                        [m_dictionary setValue:value forKey:dictionaryKey];
+    // Get content rating (for US)
+    NSDictionary* releases = [document valueForKey:@"releases"];
+    if (releases) {
+        NSArray* countries = [releases valueForKey:@"countries"];
+        if (countries) {
+            for (NSDictionary* country in countries) {
+                NSString* code = [country valueForKey:@"iso_3166_1"];
+                if ([code isEqualToString:@"US"] || [code isEqualToString:@"us"]) {
+                    [m_dictionary setValue:[country valueForKey:@"certification"] forKey:@"contentRating"];
+                    break;
                 }
-                
-                // collect the artwork
-                NSMutableArray* artwork = [[NSMutableArray alloc] init];
-                [self collectArtwork:movie toArray:artwork];
-                [m_dictionary setValue:artwork forKey:@"artwork"];
-                [artwork release];
-                
-                success = YES;
             }
         }
     }
 
-    [m_currentSearchDocument release];
-    m_currentSearchDocument = nil;
-    
-    [m_metadataSearch detailsLoaded:m_dictionary success:success];
+    // collect the artwork
+    [self collectArtwork:document];
 }
 
 -(void) detailsForShow:(int) showId season:(int) season episode:(int) episode
@@ -169,13 +223,12 @@ static NSDictionary* g_moviedbMap = nil;
     [m_dictionary release];
     m_dictionary = [[NSMutableDictionary alloc] init];
     m_loadedShowId = showId;
-    
-    NSString* urlString = [NSString stringWithFormat:@"http://api.themoviedb.org/2.1/Movie.getInfo/en/xml/ae6c3dcf41e60014a3d0508e7f650884/%d", showId];
-    NSURL* url = [NSURL URLWithString:urlString];
-    assert(!m_currentSearchDocument);
-    m_currentSearchDocument = [[XMLDocument xmlDocumentWithContentsOfURL:url
-                    withInfo:[NSString stringWithFormat:@"searching for movie with ID %d", showId] 
-                    target:self selector:@selector(loadDetailsCallback:)] retain];
+
+    NSString* urlString = [NSString stringWithFormat:@"http://api.themoviedb.org/3/movie/%d?api_key=ae6c3dcf41e60014a3d0508e7f650884&append_to_response=releases,images", showId];
+    [self startLoadWithString:urlString completionHandler:^(NSDictionary* document)
+    {
+        [self loadDetailsCallback:document];
+    }];
 }
 
 @end

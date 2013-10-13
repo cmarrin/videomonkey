@@ -40,9 +40,6 @@ DAMAGE.
 #import "Metadata.h"
 #import "MovieDBMetadataSearcher.h"
 #import "TVDBMetadataSearcher.h"
-#import "XMLDocument.h"
-
-@class XMLDocument;
 
 @implementation MetadataSearcher
 
@@ -57,38 +54,7 @@ DAMAGE.
     m_metadataSearch = metadataSearch;
 }
 
--(NSString*) makeSearchURLString:(NSString*) searchString { return nil; }
--(BOOL) loadShowData:(XMLDocument*) document { return NO; }
-
--(void) searchForShowCallback:(XMLDocument*) document
-{
-    BOOL success = document != nil;
-    if (success) {
-        assert(document == m_currentSearchDocument);
-        success = [self loadShowData:document];
-    }
-    
-    [m_currentSearchDocument release];
-    m_currentSearchDocument = nil;
-    [m_metadataSearch searchForShowsComplete:success];
-}
-
--(void) searchForShow:(NSString*) searchString
-{
-    self.foundShowNames = nil;
-    self.foundShowIds = nil;
-    self.foundSeasons = nil;
-    self.foundEpisodes = nil;
-
-    NSString* urlString = [self makeSearchURLString:searchString];
-    urlString = [urlString stringByAddingPercentEscapesUsingEncoding:NSASCIIStringEncoding];
-    NSURL* url = [NSURL URLWithString:urlString];
-    
-    assert(!m_currentSearchDocument);
-    m_currentSearchDocument = [[XMLDocument xmlDocumentWithContentsOfURL:url 
-                    withInfo:[NSString stringWithFormat:@"searching for \"%@\"", searchString] 
-                    target:self selector:@selector(searchForShowCallback:)] retain];
-}
+-(void) searchForShow:(NSString*) searchString { }
 
 -(void) detailsForShow:(int) showId season:(int) season episode:(int) episode { }
 
@@ -302,17 +268,22 @@ static BOOL isValidInteger(NSString* s)
         m_episode = episode;
     */
     
-    // see if the search string in in our list already
-    int i = 0;
-    for (NSString* name in self.foundShowNames) {
-        if ([string isEqualToString:name]) {
-            self.currentShowName = [m_foundShowNames objectAtIndex:i];
-            m_showId = [[m_foundShowIds objectAtIndex:i] intValue];
-            [self details];
-            return;
+    // If searcher has changed, do a full search
+    MetadataSearcher* searcher = [m_searchers valueForKey:[[[AppController instance] fileInfoPanelController] currentSearcher]];
+    
+    if (searcher == self.foundSearcher) {
+        // see if the search string in in our list already
+        int i = 0;
+        for (NSString* name in self.foundShowNames) {
+            if ([string isEqualToString:name]) {
+                self.currentShowName = [m_foundShowNames objectAtIndex:i];
+                m_showId = [[m_foundShowIds objectAtIndex:i] intValue];
+                [self details];
+                return;
+            }
+            
+            i++;
         }
-        
-        i++;
     }
     
     // not found, we need to do a full search

@@ -91,6 +91,31 @@ static NSDictionary* g_tvdbSeriesMap = nil;
     return YES;
 }
 
+-(void) searchForShowCallback:(XMLDocument*) document
+{
+    BOOL success = document != nil;
+    if (success) {
+        success = [self loadShowData:document];
+    }
+    [m_metadataSearch searchForShowsComplete:success];
+}
+
+-(void) searchForShow:(NSString*) searchString
+{
+    self.foundShowNames = nil;
+    self.foundShowIds = nil;
+    self.foundSeasons = nil;
+    self.foundEpisodes = nil;
+
+    NSString* urlString = [self makeSearchURLString:searchString];
+    urlString = [urlString stringByAddingPercentEscapesUsingEncoding:NSASCIIStringEncoding];
+    NSURL* url = [NSURL URLWithString:urlString];
+    
+    [[XMLDocument xmlDocumentWithContentsOfURL:url 
+                    withInfo:[NSString stringWithFormat:@"searching for \"%@\"", searchString] 
+                    target:self selector:@selector(searchForShowCallback:)] retain];
+}
+
 -(id) init
 {
     m_loadedShowId = -1;
@@ -308,8 +333,6 @@ static NSArray* numericallySortedArray(NSArray* array)
     BOOL success = document && [[[document rootElement] name] isEqualToString:@"Data"];
     
     if (success) {
-        assert(document == m_currentSearchDocument);
-        
         // find the season and episode
         XMLElement* series = [[document rootElement] lastElementForName:@"Series"];
         NSArray* episodes = [[document rootElement] elementsForName:@"Episode"];
@@ -325,10 +348,6 @@ static NSArray* numericallySortedArray(NSArray* array)
         else
             [self _addEpisode:nil forSeries:series];
     }
-    
-    [m_currentSearchDocument release];
-    m_currentSearchDocument = nil;
-    
     [self completeLoadDetails:success];
 }
 
@@ -347,8 +366,7 @@ static NSArray* numericallySortedArray(NSArray* array)
         
     NSString* urlString = [NSString stringWithFormat:@"http://www.thetvdb.com/data/series/%d/all/en.xml", showId];
     NSURL* url = [NSURL URLWithString:urlString];
-    assert(!m_currentSearchDocument);
-    m_currentSearchDocument = [[XMLDocument xmlDocumentWithContentsOfURL:url
+    [[XMLDocument xmlDocumentWithContentsOfURL:url
                     withInfo:[NSString stringWithFormat:@"searching for TV show ID %d", showId] 
                     target:self selector:@selector(loadDetailsCallback:)] retain];
 }
