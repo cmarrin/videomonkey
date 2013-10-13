@@ -184,7 +184,7 @@ static NSDictionary* g_moviedbMap = nil;
 -(void) loadDetailsCallback:(NSDictionary*) document
 {
     // this is a movie
-    [m_dictionary setValue:@"Movie" forKey:@"stik"];
+    [m_dictionary setValue:@"Short Film" forKey:@"stik"];
     
     NSString* value;
     
