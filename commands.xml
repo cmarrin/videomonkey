@@ -1810,58 +1810,6 @@ DTD
                 </script>
             </device>
         </device_group>
-        <!--
-        
-            Other Conversions
-            
-        -->
-        <device_group title="Other Conversions">
-            <common_device>
-                 <script>
-                    <![CDATA[
-                    ]]>
-                </script>
-            </common_device>
-            
-            <!-- DVD -->
-            <device title="Create a DVD Image" icon="cd" enabled="false">
-               <checkbox which="0" title="Dual layer">
-                    <checked_item>
-                        <param id="output_video_codec_name" value="H.264" />
-                    </checked_item>
-                    <unchecked_item>
-                        <param id="output_video_codec_name" value="MPEG-4" />
-                    </unchecked_item>
-                </checkbox>
-                <checkbox which="1" title="Add chapter for each file">
-                    <checked_item>
-                        <param id="output_video_codec_name" value="H.264" />
-                    </checked_item>
-                    <unchecked_item>
-                        <param id="output_video_codec_name" value="MPEG-4" />
-                    </unchecked_item>
-                </checkbox>
-                <menu which="0" title="Format:">
-                    <menu_item title="NTSC">
-                        <param id="output_video_codec_name" value="H.264" />
-                    </menu_item>
-                    <menu_item title="PAL">
-                        <param id="output_video_codec_name" value="MPEG-4" />
-                    </menu_item>
-                </menu>
-                <menu which="1" title="Create:">
-                    <menu_item title="Burnable Image">
-                        <param id="output_video_codec_name" value="H.264" />
-                    </menu_item>
-                    <menu_item title="VIDEO_TS Folder">
-                        <param id="output_video_codec_name" value="MPEG-4" />
-                    </menu_item>
-                    <menu_item title="Plain .VOB Files">
-                        <param id="output_video_codec_name" value="MPEG-4" />
-                    </menu_item>
-                </menu>
-            </device>
-        </device_group>
     </devices>
 </videomonkey>
 
