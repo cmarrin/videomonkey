@@ -5,7 +5,7 @@
   <meta http-equiv="Content-Style-Type" content="text/css">
   <title>Release Notes</title>
   <meta name="Generator" content="Cocoa HTML Writer">
-  <meta name="CocoaVersion" content="1185">
+  <meta name="CocoaVersion" content="1246.11">
   <style type="text/css">
     p.p2 {margin: 0.0px 0.0px 14.0px 0.0px; font: 18.0px Times}
     p.p3 {margin: 0.0px 0.0px 12.0px 0.0px; font: 14.0px Times}
@@ -27,6 +27,18 @@
 </head>
 <body>
 <h1 style="margin: 0.0px 0.0px 16.0px 0.0px; font: 24.0px Times"><b>Release Notes For Video Monkey</b></h1>
+<p class="p2"><b>Version 0.16 (10/12/2013)</b></p>
+<p class="p3">The main motivation for this release is to fix the fact that themoviedb.org has changed its API. This gets that working again, and I’ve fixed a couple other bugs as well.</p>
+<p class="p3"><b>Note: Video Monkey now require OSX 10.7 (Lion)</b></p>
+<p class="p4"><b>Bugs fixed:</b></p>
+<ul class="ul1">
+  <li class="li5">Switched to themoviedb.org v 3.0 API. Movie metadata searches work again. It’s faster and doesn’t hang, too.</li>
+  <li class="li5">Fixed bug where switch between themoviedb and thetvdb would not do a new search.</li>
+  <li class="li5">Added a check box to turn off the feature of snapping the video size to a 16 pixel boundary.</li>
+  <li class="li5">Removed DVD Image as an output format. I’ve decided that feature is out of scope for Video Monkey. DVDs are so 5 years ago.</li>
+  <li class="li5">Fixed bug where movies were getting placed in the Home Video category when adding to iTunes.</li>
+</ul>
+<p class="p6"><br></p>
 <p class="p2"><b>Version 0.15 (10/27/2012)</b></p>
 <p class="p3">Another quick release, this time to fix a problem with encoding mkv files. The new version of mediainfo was not getting the correct framerate from the input file and was therefore setting it to 0, resulting in a bad encoding. So I added much more robust framerate detection, which will hopefully avoid all problems of this kind in the future. Also fixed a pix_fmt bug found during more extensive testing. Also switched to a 1.0 version of ffmpeg. I fear that this will have different problems than previous versions. But since it is a 1.0 version, I'm hoping it will be a reliable version going forward.</p>
 <p class="p4"><b>Bugs fixed:</b></p>
@@ -35,7 +47,7 @@
   <li class="li5">Switched to 1.0 version of ffmpeg</li>
   <li class="li5">Added pix_fmt yuv420p for all formats. This format can be read by Quicktime while others cannot.</li>
 </ul>
-<p class="p6"><b></b><br></p>
+<p class="p6"><br></p>
 <p class="p2"><b>Version 0.14 (10/20/2012)</b></p>
 <p class="p3">Quick release to fix some bugs introduced in 0.13. The <i>fastest</i> encoding speed is now fixed. And a bug in selecting entries from the metadata search ComboBox, introduced by switching to a newer SDK, works again. I also switched to a newer version of <i>mediainfo</i> to fix a crash when examining some MP4 files. I also got rid of the logic which removed all non-alphanumeric characters from a typed-in search string. Thetvdb.com is very picky and leaving out special characters can sometimes make it not find a show.</p>
 <p class="p4"><b>Bugs fixed:</b></p>
