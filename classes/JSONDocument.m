@@ -7,12 +7,31 @@
 //
 
 #import "JSONDocument.h"
+#import "JSONKit.h"
 
 @implementation JSONDocument
 
-+ (id)JSONObjectWithData:(NSData *)data options:(JSONReadingOptions)readingOptions error:(NSError **)error
++ (NSDictionary *)JSONObjectWithData:(NSData *)data options:(JSONReadingOptions)readingOptions error:(NSError **)error
 {
-    return [NSJSONSerialization JSONObjectWithData:data options:(NSJSONReadingOptions)readingOptions error:error];
-}
+    if (NSClassFromString(@"NSJSONSerialization") && !(readingOptions & JSONUseOlderDecoder) )
+    {
+        // MacOSX 10.7 and up
+        return [NSJSONSerialization JSONObjectWithData:data options:(NSJSONReadingOptions)readingOptions error:error];
+    }
 
+    // Use non-system decoder
+    JSONDecoder *decoder = [JSONDecoder decoder];
+    id document = nil;
+    if (readingOptions == JSONReadingMutableContainers)
+    {
+        document = [decoder mutableObjectWithData:data error:error];
+    }
+    else
+    {
+        document = [decoder objectWithData:data error:error];
+    }
+
+    return document;
+}
+        
 @end

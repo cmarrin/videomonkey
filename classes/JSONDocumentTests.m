@@ -32,11 +32,37 @@
     NSData *testData = [@"{ \"shop\" : \"s-mart\", \"boom-stick\" : 1 }" dataUsingEncoding:NSUTF8StringEncoding];
     NSDictionary *expected = @{ @"shop" : @"s-mart", @"boom-stick" : @1 };
 
-    NSDictionary *result;
-    NSError *error;
+    NSDictionary *result = nil;
+    NSError *error = nil;
 
     STAssertNoThrow(result = [JSONDocument JSONObjectWithData:testData options:JSONReadingMutableContainers error:&error], @"");
     STAssertEqualObjects(result, expected, @"");
+    STAssertNil(error, @"");
+
+    STAssertNoThrow(result = [JSONDocument JSONObjectWithData:testData options:JSONReadingMutableContainers | JSONUseOlderDecoder error:&error], @"");
+    STAssertEqualObjects(result, expected, @"");
+    STAssertNil(error, @"");
+}
+
+- (void)testSampleData
+{
+    NSString *folderName = [NSStringFromClass([self class]) stringByAppendingString:@"Data"];
+    NSURL *dataURL = [[NSBundle bundleForClass:[self class]] URLForResource:@"moviedb" withExtension:@"json" subdirectory:folderName];
+    NSData *data = [NSData dataWithContentsOfURL:dataURL];
+    STAssertNotNil(data, @"");
+
+    NSDictionary *systemResult = nil;
+    NSDictionary *olderResult = nil;
+    NSError *error = nil;
+
+    // Test with System decoder
+    STAssertNoThrow(systemResult = [JSONDocument JSONObjectWithData:data options:JSONReadingMutableContainers error:&error], @"");
+    STAssertNotNil(systemResult, @"");
+    STAssertNil(error, @"");
+
+    // Test with Older decoder
+    STAssertNoThrow(olderResult = [JSONDocument JSONObjectWithData:data options:JSONReadingMutableContainers | JSONUseOlderDecoder error:&error], @"");
+    STAssertEqualObjects(systemResult, olderResult, @"");
     STAssertNil(error, @"");
 }
 

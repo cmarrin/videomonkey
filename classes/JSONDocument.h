@@ -12,7 +12,8 @@
 typedef NS_OPTIONS(NSUInteger, JSONReadingOptions) {
     JSONReadingMutableContainers = NSJSONReadingMutableContainers,
     JSONReadingMutableLeaves = NSJSONReadingMutableLeaves,
-    JSONReadingAllowFragments = NSJSONReadingAllowFragments
+    JSONReadingAllowFragments = NSJSONReadingAllowFragments,
+    JSONUseOlderDecoder = (1UL << 7)
 };
 
 @interface JSONDocument : NSObject

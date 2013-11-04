@@ -11,6 +11,8 @@
 		37D8F398182756CA003129FD /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 37D8F396182756CA003129FD /* InfoPlist.strings */; };
 		37D8F3A318275759003129FD /* JSONDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = 37D8F3A218275759003129FD /* JSONDocument.m */; };
 		37D8F3A51827598C003129FD /* JSONDocumentTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 37D8F3A41827598C003129FD /* JSONDocumentTests.m */; };
+		37D8F3AD18275CC2003129FD /* JSONKit.m in Sources */ = {isa = PBXBuildFile; fileRef = 37D8F3AA18275CC2003129FD /* JSONKit.m */; };
+		37D8F3B018276116003129FD /* JSONDocumentTestsData in Resources */ = {isa = PBXBuildFile; fileRef = 37D8F3AF18276116003129FD /* JSONDocumentTestsData */; };
 		4908A3B70F302179003B65E0 /* releasenotes.html in Resources */ = {isa = PBXBuildFile; fileRef = 4908A3B60F302179003B65E0 /* releasenotes.html */; };
 		491000000EC87BB3001B578B /* tinyipod.png in Resources */ = {isa = PBXBuildFile; fileRef = 4910FFCB0EC87BB3001B578B /* tinyipod.png */; };
 		491000020EC87BB3001B578B /* tinynano.png in Resources */ = {isa = PBXBuildFile; fileRef = 4910FFCD0EC87BB3001B578B /* tinynano.png */; };
@@ -185,6 +187,11 @@
 		37D8F3A118275759003129FD /* JSONDocument.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JSONDocument.h; path = classes/JSONDocument.h; sourceTree = "<group>"; };
 		37D8F3A218275759003129FD /* JSONDocument.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JSONDocument.m; path = classes/JSONDocument.m; sourceTree = "<group>"; };
 		37D8F3A41827598C003129FD /* JSONDocumentTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JSONDocumentTests.m; path = classes/JSONDocumentTests.m; sourceTree = "<group>"; };
+		37D8F3A818275CC2003129FD /* CHANGELOG.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = CHANGELOG.md; path = JSONKit/CHANGELOG.md; sourceTree = "<group>"; };
+		37D8F3A918275CC2003129FD /* JSONKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JSONKit.h; path = JSONKit/JSONKit.h; sourceTree = "<group>"; };
+		37D8F3AA18275CC2003129FD /* JSONKit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JSONKit.m; path = JSONKit/JSONKit.m; sourceTree = "<group>"; };
+		37D8F3AB18275CC2003129FD /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = README.md; path = JSONKit/README.md; sourceTree = "<group>"; };
+		37D8F3AF18276116003129FD /* JSONDocumentTestsData */ = {isa = PBXFileReference; lastKnownFileType = folder; name = JSONDocumentTestsData; path = classes/JSONDocumentTestsData; sourceTree = "<group>"; };
 		4908A3B60F302179003B65E0 /* releasenotes.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = releasenotes.html; sourceTree = "<group>"; };
 		491001890ECBE470001B578B /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = English.lproj/MainMenu.nib; sourceTree = "<group>"; };
 		491001D50ECBEEBC001B578B /* AppController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppController.h; path = classes/AppController.h; sourceTree = "<group>"; };
@@ -392,6 +399,7 @@
 				37D8F3A118275759003129FD /* JSONDocument.h */,
 				37D8F3A218275759003129FD /* JSONDocument.m */,
 				37D8F3A41827598C003129FD /* JSONDocumentTests.m */,
+				37D8F3AF18276116003129FD /* JSONDocumentTestsData */,
 				495444D40F853B9800B046F4 /* Metadata.h */,
 				495444D50F853B9800B046F4 /* Metadata.m */,
 				49CF7A230FA020EA0080F5E7 /* MetadataPanel.h */,
@@ -451,6 +459,7 @@
 			isa = PBXGroup;
 			children = (
 				080E96DDFE201D6D7F000001 /* Classes */,
+				37D8F3A618275C8A003129FD /* Third Party */,
 				29B97315FDCFA39411CA2CEA /* Other Sources */,
 				29B97317FDCFA39411CA2CEA /* Resources */,
 				37D8F393182756CA003129FD /* VideoMonkey Tests */,
@@ -517,6 +526,25 @@
 				37D8F39B182756CA003129FD /* VideoMonkey Tests-Prefix.pch */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		37D8F3A618275C8A003129FD /* Third Party */ = {
+			isa = PBXGroup;
+			children = (
+				37D8F3A718275CAC003129FD /* JSONKit */,
+			);
+			name = "Third Party";
+			sourceTree = "<group>";
+		};
+		37D8F3A718275CAC003129FD /* JSONKit */ = {
+			isa = PBXGroup;
+			children = (
+				37D8F3A818275CC2003129FD /* CHANGELOG.md */,
+				37D8F3A918275CC2003129FD /* JSONKit.h */,
+				37D8F3AA18275CC2003129FD /* JSONKit.m */,
+				37D8F3AB18275CC2003129FD /* README.md */,
+			);
+			name = JSONKit;
 			sourceTree = "<group>";
 		};
 		4910FE7F0EC7B304001B578B /* Images */ = {
@@ -707,6 +735,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				37D8F398182756CA003129FD /* InfoPlist.strings in Resources */,
+				37D8F3B018276116003129FD /* JSONDocumentTestsData in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -857,6 +886,7 @@
 				37D8F3A318275759003129FD /* JSONDocument.m in Sources */,
 				49BC89A90ECD245F00027F1D /* MoviePanelController.m in Sources */,
 				499A31770EDD97EB000C0AAF /* Transcoder.m in Sources */,
+				37D8F3AD18275CC2003129FD /* JSONKit.m in Sources */,
 				497E65AA0EE4F284000372EC /* ProgressCell.m in Sources */,
 				497E67170EEC5DD8000372EC /* Command.m in Sources */,
 				495493830F17C8620007EC0E /* JavaScriptContext.m in Sources */,
