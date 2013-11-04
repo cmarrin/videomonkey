@@ -9,7 +9,8 @@
 /* Begin PBXBuildFile section */
 		37D8F392182756CA003129FD /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 37D8F391182756CA003129FD /* SenTestingKit.framework */; };
 		37D8F398182756CA003129FD /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 37D8F396182756CA003129FD /* InfoPlist.strings */; };
-		37D8F39A182756CA003129FD /* VideoMonkey_Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = 37D8F399182756CA003129FD /* VideoMonkey_Tests.m */; };
+		37D8F3A318275759003129FD /* JSONDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = 37D8F3A218275759003129FD /* JSONDocument.m */; };
+		37D8F3A51827598C003129FD /* JSONDocumentTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 37D8F3A41827598C003129FD /* JSONDocumentTests.m */; };
 		4908A3B70F302179003B65E0 /* releasenotes.html in Resources */ = {isa = PBXBuildFile; fileRef = 4908A3B60F302179003B65E0 /* releasenotes.html */; };
 		491000000EC87BB3001B578B /* tinyipod.png in Resources */ = {isa = PBXBuildFile; fileRef = 4910FFCB0EC87BB3001B578B /* tinyipod.png */; };
 		491000020EC87BB3001B578B /* tinynano.png in Resources */ = {isa = PBXBuildFile; fileRef = 4910FFCD0EC87BB3001B578B /* tinynano.png */; };
@@ -180,8 +181,10 @@
 		37D8F391182756CA003129FD /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
 		37D8F395182756CA003129FD /* VideoMonkey Tests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "VideoMonkey Tests-Info.plist"; sourceTree = "<group>"; };
 		37D8F397182756CA003129FD /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		37D8F399182756CA003129FD /* VideoMonkey_Tests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = VideoMonkey_Tests.m; sourceTree = "<group>"; };
 		37D8F39B182756CA003129FD /* VideoMonkey Tests-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "VideoMonkey Tests-Prefix.pch"; sourceTree = "<group>"; };
+		37D8F3A118275759003129FD /* JSONDocument.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JSONDocument.h; path = classes/JSONDocument.h; sourceTree = "<group>"; };
+		37D8F3A218275759003129FD /* JSONDocument.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JSONDocument.m; path = classes/JSONDocument.m; sourceTree = "<group>"; };
+		37D8F3A41827598C003129FD /* JSONDocumentTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JSONDocumentTests.m; path = classes/JSONDocumentTests.m; sourceTree = "<group>"; };
 		4908A3B60F302179003B65E0 /* releasenotes.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = releasenotes.html; sourceTree = "<group>"; };
 		491001890ECBE470001B578B /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = English.lproj/MainMenu.nib; sourceTree = "<group>"; };
 		491001D50ECBEEBC001B578B /* AppController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppController.h; path = classes/AppController.h; sourceTree = "<group>"; };
@@ -386,6 +389,9 @@
 				4983960C0F269AC400C23782 /* Formatters.m */,
 				495493810F17C8620007EC0E /* JavaScriptContext.h */,
 				495493820F17C8620007EC0E /* JavaScriptContext.m */,
+				37D8F3A118275759003129FD /* JSONDocument.h */,
+				37D8F3A218275759003129FD /* JSONDocument.m */,
+				37D8F3A41827598C003129FD /* JSONDocumentTests.m */,
 				495444D40F853B9800B046F4 /* Metadata.h */,
 				495444D50F853B9800B046F4 /* Metadata.m */,
 				49CF7A230FA020EA0080F5E7 /* MetadataPanel.h */,
@@ -498,7 +504,6 @@
 		37D8F393182756CA003129FD /* VideoMonkey Tests */ = {
 			isa = PBXGroup;
 			children = (
-				37D8F399182756CA003129FD /* VideoMonkey_Tests.m */,
 				37D8F394182756CA003129FD /* Supporting Files */,
 			);
 			path = "VideoMonkey Tests";
@@ -839,7 +844,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				37D8F39A182756CA003129FD /* VideoMonkey_Tests.m in Sources */,
+				37D8F3A51827598C003129FD /* JSONDocumentTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -849,6 +854,7 @@
 			files = (
 				8D11072D0486CEB800E47090 /* main.m in Sources */,
 				491001D70ECBEEBC001B578B /* AppController.m in Sources */,
+				37D8F3A318275759003129FD /* JSONDocument.m in Sources */,
 				49BC89A90ECD245F00027F1D /* MoviePanelController.m in Sources */,
 				499A31770EDD97EB000C0AAF /* Transcoder.m in Sources */,
 				497E65AA0EE4F284000372EC /* ProgressCell.m in Sources */,
@@ -1009,6 +1015,7 @@
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = VideoMonkey_Prefix.pch;
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
 				MACOSX_DEPLOYMENT_TARGET = 10.6;
@@ -1032,6 +1039,7 @@
 				GCC_MODEL_TUNING = G5;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = VideoMonkey_Prefix.pch;
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
 				MACOSX_DEPLOYMENT_TARGET = 10.6;

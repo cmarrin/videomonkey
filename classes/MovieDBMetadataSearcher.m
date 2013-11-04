@@ -35,7 +35,7 @@ DAMAGE.
 */
 
 #import "MovieDBMetadataSearcher.h"
-#import <Foundation/NSJSONSerialization.h>
+#import "JSONDocument.h"
 
 // Map from MovieDB tag name to Dictionary tag name
 static NSDictionary* g_moviedbMap = nil;
@@ -58,7 +58,7 @@ static NSDictionary* g_moviedbMap = nil;
     {
         if ([data length] > 0 && error == nil) {
             NSError* error = nil;
-            NSDictionary* document = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&error];
+            NSDictionary* document = [JSONDocument JSONObjectWithData:data options:JSONReadingMutableContainers error:&error];
             if (!document || error) {
                 // FIXME: implement error handling
             } else {
