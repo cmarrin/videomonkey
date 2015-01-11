@@ -364,7 +364,7 @@ static NSArray* numericallySortedArray(NSArray* array)
     self.seasons = nil;
     m_loadedShowId = showId;
         
-    NSString* urlString = [NSString stringWithFormat:@"http://www.thetvdb.com/data/series/%d/all/en.xml", showId];
+    NSString* urlString = [NSString stringWithFormat:@"http://www.thetvdb.com/api/75D1299AD9C7876E/series/%d/all/en.xml", showId];
     NSURL* url = [NSURL URLWithString:urlString];
     [[XMLDocument xmlDocumentWithContentsOfURL:url
                     withInfo:[NSString stringWithFormat:@"searching for TV show ID %d", showId] 
