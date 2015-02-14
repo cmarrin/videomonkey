@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="4510" systemVersion="13A538g" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="4514" systemVersion="13A598" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
     <dependencies>
         <deployment version="1060" defaultVersion="1070" identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="4510"/>
-        <plugIn identifier="com.apple.QTKitIBPlugin" version="3336"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="4514"/>
+        <plugIn identifier="com.apple.QTKitIBPlugin" version="3338"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="NSApplication"/>
@@ -654,7 +654,7 @@ CA
                                                 </binding>
                                             </connections>
                                         </tableColumn>
-                                        <tableColumn identifier="filesize" editable="NO" width="85" minWidth="85" maxWidth="77" id="1959">
+                                        <tableColumn identifier="filesize" editable="NO" width="77" minWidth="85" maxWidth="77" id="1959">
                                             <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="File Size">
                                                 <font key="font" metaFont="smallSystem"/>
                                                 <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
@@ -804,11 +804,11 @@ CA
                             </subviews>
                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                         </clipView>
-                        <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" id="474">
+                        <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="474">
                             <rect key="frame" x="-100" y="-100" width="450" height="15"/>
                             <autoresizingMask key="autoresizingMask"/>
                         </scroller>
-                        <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" id="473">
+                        <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="NO" id="473">
                             <rect key="frame" x="451" y="17" width="15" height="278"/>
                             <autoresizingMask key="autoresizingMask"/>
                         </scroller>
@@ -1155,7 +1155,7 @@ CA
                                         <tabViewItem label="No Menus" identifier="nomenus" id="953" userLabel="No Menus" customClass="DeviceTab">
                                             <view key="view" id="954">
                                                 <rect key="frame" x="0.0" y="0.0" width="702" height="109"/>
-                                                <autoresizingMask key="autoresizingMask"/>
+                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <button id="959">
                                                         <rect key="frame" x="18" y="9" width="101" height="18"/>
@@ -1915,27 +1915,27 @@ CA
                     <rect key="frame" x="0.0" y="0.0" width="379" height="275"/>
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                     <clipView key="contentView" id="Lzf-ZQ-7HV">
-                        <rect key="frame" x="1" y="1" width="377" height="273"/>
+                        <rect key="frame" x="1" y="1" width="362" height="273"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
                             <textView importsGraphics="NO" findStyle="panel" usesRuler="YES" usesFontPanel="YES" verticallyResizable="YES" spellingCorrection="YES" smartInsertDelete="YES" id="2154">
-                                <rect key="frame" x="0.0" y="0.0" width="377" height="273"/>
+                                <rect key="frame" x="0.0" y="0.0" width="362" height="273"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <size key="minSize" width="377" height="273"/>
+                                <size key="minSize" width="362" height="273"/>
                                 <size key="maxSize" width="741" height="10000000"/>
                                 <color key="insertionPointColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
-                                <size key="minSize" width="377" height="273"/>
+                                <size key="minSize" width="362" height="273"/>
                                 <size key="maxSize" width="741" height="10000000"/>
                             </textView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </clipView>
-                    <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" doubleValue="1" id="2153">
+                    <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" doubleValue="1" horizontal="YES" id="2153">
                         <rect key="frame" x="-100" y="-100" width="87" height="18"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </scroller>
-                    <scroller key="verticalScroller" verticalHuggingPriority="750" id="2152">
+                    <scroller key="verticalScroller" verticalHuggingPriority="750" horizontal="NO" id="2152">
                         <rect key="frame" x="363" y="1" width="15" height="273"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </scroller>
@@ -1995,8 +1995,8 @@ CA
                                         <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                     </textFieldCell>
                                     <connections>
-                                        <binding destination="1028" name="enabled" keyPath="avOffsetValid" id="5774"/>
                                         <binding destination="1028" name="value" keyPath="avOffset" id="5445"/>
+                                        <binding destination="1028" name="enabled" keyPath="avOffsetValid" id="5774"/>
                                     </connections>
                                 </textField>
                                 <stepper horizontalHuggingPriority="750" verticalHuggingPriority="750" id="5426">
@@ -2004,8 +2004,8 @@ CA
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     <stepperCell key="cell" continuous="YES" alignment="left" increment="0.050000000000000003" minValue="-99.989999999999995" maxValue="99.989999999999995" id="5429"/>
                                     <connections>
-                                        <binding destination="1028" name="enabled" keyPath="avOffsetValid" id="5776"/>
                                         <binding destination="1028" name="value" keyPath="avOffset" id="5448"/>
+                                        <binding destination="1028" name="enabled" keyPath="avOffsetValid" id="5776"/>
                                     </connections>
                                 </stepper>
                                 <textField verticalHuggingPriority="750" id="5430">
@@ -2089,11 +2089,11 @@ CA
                         <tabViewItems>
                             <tabViewItem label="Input Info" identifier="input_info" id="2654" userLabel="Input Info View Item">
                                 <view key="view" id="2655" userLabel="Input Info View">
-                                    <rect key="frame" x="10" y="33" width="484" height="521"/>
+                                    <rect key="frame" x="10" y="33" width="484" height="560"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <textField verticalHuggingPriority="750" id="2808">
-                                            <rect key="frame" x="6" y="504" width="323" height="14"/>
+                                            <rect key="frame" x="6" y="543" width="323" height="14"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Select a file in the list to view information about it " id="2809">
                                                 <font key="font" metaFont="smallSystem"/>
@@ -2102,7 +2102,7 @@ CA
                                             </textFieldCell>
                                         </textField>
                                         <box autoresizesSubviews="NO" title="Container Info" borderType="line" id="2807">
-                                            <rect key="frame" x="6" y="357" width="468" height="139"/>
+                                            <rect key="frame" x="6" y="396" width="468" height="139"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                             <view key="contentView">
                                                 <rect key="frame" x="1" y="1" width="466" height="123"/>
@@ -2246,7 +2246,7 @@ CA
                                             <color key="fillColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </box>
                                         <box autoresizesSubviews="NO" title="Video Info" borderType="line" id="2827">
-                                            <rect key="frame" x="6" y="170" width="468" height="183"/>
+                                            <rect key="frame" x="6" y="209" width="468" height="183"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                             <view key="contentView">
                                                 <rect key="frame" x="1" y="1" width="466" height="167"/>
@@ -2441,7 +2441,7 @@ CA
                                             <color key="fillColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </box>
                                         <box autoresizesSubviews="NO" title="Audio Info" borderType="line" id="2856">
-                                            <rect key="frame" x="6" y="48" width="468" height="118"/>
+                                            <rect key="frame" x="6" y="87" width="468" height="118"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                             <view key="contentView">
                                                 <rect key="frame" x="1" y="1" width="466" height="102"/>
@@ -3070,9 +3070,9 @@ CA
                                                             <menu key="menu" title="OtherViews" id="5830"/>
                                                         </popUpButtonCell>
                                                         <connections>
-                                                            <binding destination="982" name="contentValues" keyPath="videoCodecStrings" id="5990"/>
                                                             <binding destination="2178" name="enabled" keyPath="selection.outputFileInfo.videoCodec.overridden" id="5997"/>
                                                             <binding destination="2178" name="selectedObject" keyPath="selection.outputFileInfo.videoCodec.overriddenValue" previousBinding="5990" id="5994"/>
+                                                            <binding destination="982" name="contentValues" keyPath="videoCodecStrings" id="5990"/>
                                                         </connections>
                                                     </popUpButton>
                                                     <popUpButton verticalHuggingPriority="750" id="5832" userLabel="Format Button">
@@ -3084,9 +3084,9 @@ CA
                                                             <menu key="menu" title="OtherViews" id="5834"/>
                                                         </popUpButtonCell>
                                                         <connections>
-                                                            <binding destination="982" name="contentValues" keyPath="videoProfileStrings" id="6004"/>
                                                             <binding destination="2178" name="enabled" keyPath="selection.outputFileInfo.videoProfile.overridden" id="6010"/>
                                                             <binding destination="2178" name="selectedObject" keyPath="selection.outputFileInfo.videoProfile.overriddenValue" previousBinding="6004" id="6007"/>
+                                                            <binding destination="982" name="contentValues" keyPath="videoProfileStrings" id="6004"/>
                                                         </connections>
                                                     </popUpButton>
                                                     <textField verticalHuggingPriority="750" id="5837">
@@ -3107,13 +3107,13 @@ CA
                                                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                         </textFieldCell>
                                                         <connections>
-                                                            <binding destination="2178" name="enabled" keyPath="selection.outputFileInfo.videoWidth.overridden" id="6067"/>
                                                             <binding destination="2178" name="value" keyPath="selection.outputFileInfo.videoHeight.overriddenValue" id="6080">
                                                                 <dictionary key="options">
                                                                     <bool key="NSContinuouslyUpdatesValue" value="YES"/>
                                                                     <bool key="NSValidatesImmediately" value="YES"/>
                                                                 </dictionary>
                                                             </binding>
+                                                            <binding destination="2178" name="enabled" keyPath="selection.outputFileInfo.videoWidth.overridden" id="6067"/>
                                                         </connections>
                                                     </textField>
                                                     <textField verticalHuggingPriority="750" id="6018">
@@ -4203,11 +4203,11 @@ CA
                                                                                                                     </subviews>
                                                                                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                                                                                 </clipView>
-                                                                                                                <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" doubleValue="1" id="2716">
+                                                                                                                <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" doubleValue="1" horizontal="YES" id="2716">
                                                                                                                     <rect key="frame" x="-100" y="-100" width="87" height="18"/>
                                                                                                                     <autoresizingMask key="autoresizingMask"/>
                                                                                                                 </scroller>
-                                                                                                                <scroller key="verticalScroller" verticalHuggingPriority="750" id="2717">
+                                                                                                                <scroller key="verticalScroller" verticalHuggingPriority="750" horizontal="NO" id="2717">
                                                                                                                     <rect key="frame" x="423" y="1" width="15" height="119"/>
                                                                                                                     <autoresizingMask key="autoresizingMask"/>
                                                                                                                 </scroller>
@@ -4690,7 +4690,7 @@ CA
                                                                                                                     <menu key="menu" title="OtherViews" autoenablesItems="NO" id="4684">
                                                                                                                         <items>
                                                                                                                             <menuItem state="on" indentationLevel="1" id="4700"/>
-                                                                                                                            <menuItem title="Clean Content" tag="-1" enabled="NO" id="4690">
+                                                                                                                            <menuItem title="Movies" tag="-1" enabled="NO" id="4690">
                                                                                                                                 <attributedString key="attributedTitle">
                                                                                                                                     <fragment content="Movies">
                                                                                                                                         <attributes>
@@ -4824,11 +4824,11 @@ CA
                                                                                                                     </subviews>
                                                                                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                                                                                 </clipView>
-                                                                                                                <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" doubleValue="1" id="4604">
+                                                                                                                <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" doubleValue="1" horizontal="YES" id="4604">
                                                                                                                     <rect key="frame" x="-100" y="-100" width="87" height="18"/>
                                                                                                                     <autoresizingMask key="autoresizingMask"/>
                                                                                                                 </scroller>
-                                                                                                                <scroller key="verticalScroller" verticalHuggingPriority="750" doubleValue="1" id="4603">
+                                                                                                                <scroller key="verticalScroller" verticalHuggingPriority="750" doubleValue="1" horizontal="NO" id="4603">
                                                                                                                     <rect key="frame" x="423" y="1" width="15" height="119"/>
                                                                                                                     <autoresizingMask key="autoresizingMask"/>
                                                                                                                 </scroller>
@@ -5346,11 +5346,11 @@ CA
                                                                             </customView>
                                                                         </subviews>
                                                                     </clipView>
-                                                                    <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" id="2660">
+                                                                    <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="2660">
                                                                         <rect key="frame" x="-100" y="-100" width="399" height="15"/>
                                                                         <autoresizingMask key="autoresizingMask"/>
                                                                     </scroller>
-                                                                    <scroller key="verticalScroller" verticalHuggingPriority="750" id="2661">
+                                                                    <scroller key="verticalScroller" verticalHuggingPriority="750" doubleValue="0.99501246882793015" horizontal="NO" id="2661">
                                                                         <rect key="frame" x="472" y="1" width="15" height="499"/>
                                                                         <autoresizingMask key="autoresizingMask"/>
                                                                         <connections>
@@ -5424,8 +5424,8 @@ CA
                                                                         <menu key="menu" title="OtherViews" id="4993"/>
                                                                     </popUpButtonCell>
                                                                     <connections>
-                                                                        <binding destination="2826" name="contentValues" keyPath="searcherStrings" id="5369"/>
                                                                         <binding destination="2826" name="selectedValue" keyPath="currentSearcher" previousBinding="5369" id="5378"/>
+                                                                        <binding destination="2826" name="contentValues" keyPath="searcherStrings" id="5369"/>
                                                                     </connections>
                                                                 </popUpButton>
                                                                 <textField verticalHuggingPriority="750" id="3228">
@@ -5463,12 +5463,12 @@ CA
                                                                         </menu>
                                                                     </popUpButtonCell>
                                                                     <connections>
-                                                                        <binding destination="2178" name="contentValues" keyPath="selection.metadata.search.foundSeasons" id="4074">
+                                                                        <binding destination="2178" name="selectedValue" keyPath="selection.metadata.search.currentSeason" previousBinding="4074" id="5389">
                                                                             <dictionary key="options">
                                                                                 <bool key="NSRaisesForNotApplicableKeys" value="NO"/>
                                                                             </dictionary>
                                                                         </binding>
-                                                                        <binding destination="2178" name="selectedValue" keyPath="selection.metadata.search.currentSeason" previousBinding="4074" id="5389">
+                                                                        <binding destination="2178" name="contentValues" keyPath="selection.metadata.search.foundSeasons" id="4074">
                                                                             <dictionary key="options">
                                                                                 <bool key="NSRaisesForNotApplicableKeys" value="NO"/>
                                                                             </dictionary>
@@ -5489,12 +5489,12 @@ CA
                                                                         </menu>
                                                                     </popUpButtonCell>
                                                                     <connections>
-                                                                        <binding destination="2178" name="contentValues" keyPath="selection.metadata.search.foundEpisodes" id="4079">
+                                                                        <binding destination="2178" name="selectedValue" keyPath="selection.metadata.search.currentEpisode" previousBinding="4079" id="4080">
                                                                             <dictionary key="options">
                                                                                 <bool key="NSRaisesForNotApplicableKeys" value="NO"/>
                                                                             </dictionary>
                                                                         </binding>
-                                                                        <binding destination="2178" name="selectedValue" keyPath="selection.metadata.search.currentEpisode" previousBinding="4079" id="4080">
+                                                                        <binding destination="2178" name="contentValues" keyPath="selection.metadata.search.foundEpisodes" id="4079">
                                                                             <dictionary key="options">
                                                                                 <bool key="NSRaisesForNotApplicableKeys" value="NO"/>
                                                                             </dictionary>
@@ -5668,7 +5668,7 @@ CA
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <popUpButtonCell key="cell" type="push" title="8" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="5330" id="5290">
                             <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
-                            <font key="font" metaFont="system"/>
+                            <font key="font" metaFont="menu"/>
                             <menu key="menu" title="OtherViews" id="5291">
                                 <items>
                                     <menuItem title="Auto" id="5297">
@@ -5703,7 +5703,7 @@ CA
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <popUpButtonCell key="cell" type="push" title="thetvdb.com" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="5285" id="5282">
                             <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
-                            <font key="font" metaFont="system"/>
+                            <font key="font" metaFont="menu"/>
                             <menu key="menu" title="OtherViews" id="5283">
                                 <items>
                                     <menuItem title="thetvdb.com" state="on" id="5285"/>
@@ -5820,11 +5820,11 @@ CA
                         </subviews>
                         <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                     </clipView>
-                    <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" id="3770">
+                    <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="3770">
                         <rect key="frame" x="-100" y="-100" width="386" height="15"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </scroller>
-                    <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" id="3769">
+                    <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="NO" id="3769">
                         <rect key="frame" x="237" y="1" width="15" height="248"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </scroller>
@@ -5849,6 +5849,7 @@ CA
     </objects>
     <resources>
         <image name="Console" width="32" height="32"/>
+        <image name="ECA4D688-8CFF-479B-B437-A61B802868FB" width="128" height="128"/>
         <image name="NSActionTemplate" width="14" height="14"/>
         <image name="NSRightFacingTriangleTemplate" width="9" height="9"/>
         <image name="Pause" width="32" height="32"/>

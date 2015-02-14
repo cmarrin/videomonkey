@@ -315,7 +315,8 @@ static AppController *g_appController;
             else if ([fileList count] > m_currentEncoding) {
                 m_fileConvertingIndex++;
                 m_finishedEncodedFileSize += m_currentEncodedFileSize;
-                m_currentEncodedFileSize = [[fileList objectAtIndex: m_currentEncoding] outputFileInfo].fileSize;
+                TranscoderFileInfo* fileInfo = [[fileList objectAtIndex: m_currentEncoding] outputFileInfo];
+                m_currentEncodedFileSize = fileInfo.fileSize;
                 
             }
             return;

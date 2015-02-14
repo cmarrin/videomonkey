@@ -177,6 +177,7 @@ static BOOL isValidInteger(NSString* s)
     BOOL firstTime = YES;
     int maybeEpisode = -1;
     BOOL seeIfNextItemIsEpisode = NO;
+    BOOL have4DigitSeasonEpisode = NO;
     
     for (NSString* item in array) {
         item = [item lowercaseString];
@@ -189,6 +190,14 @@ static BOOL isValidInteger(NSString* s)
             }
         }
 
+        // See if it is exactly 4 digits
+        if ([item length] == 4 && isValidInteger(item) & !have4DigitSeasonEpisode) {
+            *season = [[item substringToIndex:2] intValue];
+            *episode = [[item substringFromIndex:2] intValue];
+            have4DigitSeasonEpisode = YES;
+            continue;
+        }
+        
         // see if this is of the form s<number>e<number>
         if ([item hasPrefix:@"s"]) {
             NSArray* seArray = [[item substringFromIndex: 1] componentsSeparatedByString:@"e"];
