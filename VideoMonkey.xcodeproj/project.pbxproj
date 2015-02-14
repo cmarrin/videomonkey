@@ -855,7 +855,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = "";
 				PRODUCT_NAME = VideoMonkey;
-				SDKROOT = macosx10.7;
+				SDKROOT = macosx10.9;
 				VALID_ARCHS = x86_64;
 			};
 			name = Debug;
@@ -870,7 +870,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = VideoMonkey;
-				SDKROOT = macosx10.7;
+				SDKROOT = macosx10.9;
 				VALID_ARCHS = x86_64;
 			};
 			name = Release;
