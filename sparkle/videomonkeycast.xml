@@ -6,6 +6,19 @@
         <description>Most recent changes with links to updates.</description>
         <language>en</language>
         <item>
+            <title>Version 0.17</title>
+            <sparkle:releaseNotesLink>
+                http://videomonkey.org/releases/releasenotes.html
+            </sparkle:releaseNotesLink>
+            <pubDate>Sat Feb 14 09:11:32 PST 2015</pubDate>
+            <enclosure  url="http://videomonkey.org/releases/videomonkey-0.17.zip"
+                        sparkle:version="0.17" 
+                        length="33393518"
+                        type="application/octet-stream" 
+                        sparkle:dsaSignature="MC4CFQCiMl30eoUvGXJ8/IXEsvRykXLGvwIVALTyNR1PcamX/9TEt6bt5Yjwfuqk"
+            />
+        </item>
+        <item>
             <title>Version 0.16</title>
             <sparkle:releaseNotesLink>
                 http://videomonkey.org/releases/releasenotes.html
