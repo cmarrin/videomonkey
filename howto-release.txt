@@ -24,10 +24,13 @@ This assumes the Video Monkey icon is VideoMonkeyDevel.icns (VideoMonkeyDevel in
     - ruby sparkle/SparkleExtras/Signing\ Tools/sign_update.rb <application zip file> dsa_priv.pem
     - The result of the above will be the signature. Copy it to the sparkle:dsaSignature of the videomonkeycast.xml
     
-8. Upload videomonkey-x.y.zip, releasenotes.html and videomonkeycast.xml to the website, using Cyberduck
-    - Upload files to sftp://web@marrin.org/home/web/videomonkey.org/public_html/releases
+8. Upload videomonkey-x.y.zip, releasenotes.html and videomonkeycast.xml to the website using Downloads section of WordPress
+    - Delete releasenotes.html and videomonkeycast.xml
+    - Add new releasenotes.html and videomonkeycast.xml with Allowed to Download: Hidden
+    - Add new videomonkey-x.y.zip
+    - Change previous release File Category: Previous Releases
 
-9. Add new download link to videomonkey.org
+9. Update website to announce new version
     
 10. Tag the tree as version x.y
     git tag -a vx.y -m"Version x.y release"
