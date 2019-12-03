@@ -42,7 +42,7 @@ DAMAGE.
 @interface FileListController : NSArrayController <NSTableViewDelegate> {
     IBOutlet NSTableView* m_fileListView;
 
-    int m_draggedRow;
+    NSUInteger m_draggedRow;
     NSArray* m_lastFoundShowNames;
     NSString* m_lastShowName;
     NSMutableArray* m_fileList;

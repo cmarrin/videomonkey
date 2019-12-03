@@ -118,6 +118,7 @@ static NSDictionary* g_tvdbSeriesMap = nil;
 
 -(id) init
 {
+    [super init];
     m_loadedShowId = -1;
     
     // init the tag map, if needed

@@ -294,12 +294,12 @@ static void setButton(NSButton* button, MyButton* item)
 {
     if (index == 0 && m_radio)
         // return -1 if radio is hidden or index of selected item
-        return [m_radio isHidden] ? -1 : [m_radio selectedRow];
+        return [m_radio isHidden] ? -1 : (int)[m_radio selectedRow];
         
     NSPopUpButton* button = (NSPopUpButton*) ((index == 1) ? m_menu : nil);
     
     // return -1 if button is hidden or index of selected item
-    return button ? ([button isHidden] ? -1 : [button indexOfSelectedItem]) : -1;
+    return button ? ([button isHidden] ? -1 : (int)[button indexOfSelectedItem]) : -1;
 }
 
 @end
@@ -330,7 +330,7 @@ static void setButton(NSButton* button, MyButton* item)
 
 - (void)setMenus: (NSArray*) menus
 {
-    int size = [menus count];
+    NSUInteger size = [menus count];
 
     for (int i = 0; i < size; ++i) {
         Menu* menu = [menus objectAtIndex:i];
@@ -361,11 +361,11 @@ static void setButton(NSButton* button, MyButton* item)
 - (int)menuState:(int) index
 {
     switch (index) {
-        case 0: return [m_containerFormatMenu indexOfSelectedItem];
-        case 1: return [m_videoCodecMenu indexOfSelectedItem];
-        case 2: return [m_audioCodecMenu indexOfSelectedItem];
-        case 3: return [m_audioQualityMenu indexOfSelectedItem];
-        case 4: return [m_extrasMenu indexOfSelectedItem];
+        case 0: return (int)[m_containerFormatMenu indexOfSelectedItem];
+        case 1: return (int)[m_videoCodecMenu indexOfSelectedItem];
+        case 2: return (int)[m_audioCodecMenu indexOfSelectedItem];
+        case 3: return (int)[m_audioQualityMenu indexOfSelectedItem];
+        case 4: return (int)[m_extrasMenu indexOfSelectedItem];
         default: return 0;
     }
 }
@@ -614,7 +614,7 @@ static void setButton(NSButton* button, MyButton* item)
     
     // The only legal number of quality stops is 0, 1, 2, 3, and 5
 	// 1 is Disabled
-    int count = [m_qualityStops count];
+    NSUInteger count = [m_qualityStops count];
     if (count != 1 && count != 2 && count != 3 && count != 5)
         [m_qualityStops removeAllObjects];
 }
@@ -767,7 +767,7 @@ static void setButton(NSButton* button, MyButton* item)
 
 -(int) qualityStop
 {
-    int count = [[self qualityStops] count];
+    NSUInteger count = [[self qualityStops] count];
     double sliderValue = [m_deviceTab sliderValue];
     
     if (sliderValue > 1)
@@ -775,12 +775,12 @@ static void setButton(NSButton* button, MyButton* item)
     else if (sliderValue < 0)
         sliderValue = 0;
     
-    return (sliderValue == 1) ? (count-1) : ((int) (sliderValue * (count-1)));
+    return (sliderValue == 1) ? (int)(count-1) : ((int)(sliderValue * (count-1)));
 }
 
 -(void) quality: (double*) q withStop: (int*) stop
 {
-    int count = [[self qualityStops] count];
+    NSUInteger count = [[self qualityStops] count];
     double sliderValue = [m_deviceTab sliderValue];
     
     if (sliderValue > 1)
@@ -789,7 +789,7 @@ static void setButton(NSButton* button, MyButton* item)
         sliderValue = 0;
     
     if (sliderValue == 1) {
-        *stop = count-1;
+        *stop = (int)(count - 1);
         *q = 1;
     }
     else {

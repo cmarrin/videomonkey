@@ -35,10 +35,10 @@ DAMAGE.
 */
 
 #import <Cocoa/Cocoa.h>
-#import <QTKit/QTKit.h>
+#import <AVKit/AVKit.h>
 
 @interface MoviePanelController : NSObjectController {
-    IBOutlet QTMovieView* m_movieView;
+    IBOutlet AVPlayerView* m_movieView;
     
 @private
     BOOL m_isVisible;

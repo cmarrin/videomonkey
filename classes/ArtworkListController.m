@@ -52,27 +52,24 @@ DAMAGE.
 }
 
 // dragging methods
-- (BOOL)tableView: (NSTableView *)aTableView
-    writeRows: (NSArray *)rows
-    toPasteboard: (NSPasteboard *)pboard
+- (BOOL)tableView:(NSTableView *)aTableView
+    writeRowsWithIndexes:(NSIndexSet *)rowIndexes
+    toPasteboard:(NSPasteboard *)pboard;
 {
     // This method is called after it has been determined that a drag should begin, but before the drag has been started.  
     // To refuse the drag, return NO.  To start a drag, return YES and place the drag data onto the pasteboard (data, owner, etc...).  
     // The drag image and other drag related information will be set up and provided by the table view once this call returns with YES.  
     // The rows array is the list of row numbers that will be participating in the drag.
-    if ([rows count] > 1)	// don't allow dragging with more than one row
+    if ([rowIndexes count] > 1)	// don't allow dragging with more than one row
         return NO;
     
     // get rid of any selections
     [m_artworkListView deselectAll:nil];
-    m_draggedRow = [[rows objectAtIndex: 0] intValue];
+    m_draggedRow = [rowIndexes firstIndex];
     // the NSArray "rows" is actually an array of the indecies dragged
     
     // declare our dragged type in the paste board
     [pboard declareTypes: [NSArray arrayWithObjects: NSFilenamesPboardType, ArtworkListItemType, nil] owner: self];
-    
-    // put the string value into the paste board
-    //[pboard setString: [[[[AppController instance] fileList] objectAtIndex: m_draggedRow] inputFileInfo].filename forType: FileListItemType];
     
     return YES;
 }

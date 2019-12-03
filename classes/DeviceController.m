@@ -73,10 +73,16 @@ static void addMenuItem(NSPopUpButton* button, NSString* title, NSString* icon, 
         if (icon) {
             NSString* iconName = [NSString stringWithFormat:@"tiny%@", icon];
             NSImage* image = imageForResourceName(iconName);
-            if (!image)
-                NSRunAlertPanel(@"Image not found", [NSString stringWithFormat:@"Image file '%@' does not exist", iconName], nil, nil, nil);
-            else
+            if (!image) {
+                NSString* alertString = [NSString stringWithFormat:@"Image file '%@' does not exist", iconName];
+                NSAlert *alert = [[NSAlert alloc] init];
+                [alert setMessageText:@"Image not found"];
+                [alert setInformativeText:alertString];
+                [alert setAlertStyle:NSWarningAlertStyle];
+                [alert runModal];
+            } else {
                 [item setImage: image];
+            }
         }
     }
         
@@ -377,7 +383,7 @@ static JSValueRef _jsLog(JSContextRef ctx, JSObjectRef function, JSObjectRef thi
 
 - (IBAction)selectDevice:(id)sender
 {
-    int deviceIndex = [[sender selectedItem] tag];
+    int deviceIndex = (int)[[sender selectedItem] tag];
     [[[NSUserDefaultsController sharedUserDefaultsController] values] setValue:[NSNumber numberWithInt:deviceIndex] forKey:@"currentDeviceIndex"];
     [self setCurrentDevice:[self findDeviceEntryWithIndex:deviceIndex]];
     [self uiChanged];
@@ -398,7 +404,7 @@ static JSValueRef _jsLog(JSContextRef ctx, JSObjectRef function, JSObjectRef thi
     if (env)
         [m_context addParams:env];
         
-    [m_currentDevice setCurrentParamsInJavaScriptContext:m_context performanceIndex:[m_performanceButton indexOfSelectedItem]];
+    [m_currentDevice setCurrentParamsInJavaScriptContext:m_context performanceIndex:(int)[m_performanceButton indexOfSelectedItem]];
 }
 
 -(NSString*) recipe
@@ -426,7 +432,7 @@ static JSValueRef _jsLog(JSContextRef ctx, JSObjectRef function, JSObjectRef thi
 - (void)uiChanged
 {
     [m_delegate uiChanged];
-    [m_currentDevice setCurrentParamsInJavaScriptContext:m_context performanceIndex:[m_performanceButton indexOfSelectedItem]];
+    [m_currentDevice setCurrentParamsInJavaScriptContext:m_context performanceIndex:(int)[m_performanceButton indexOfSelectedItem]];
     
     // Update the actions
     if (![self hasParamForKey:@"output_format_name"])

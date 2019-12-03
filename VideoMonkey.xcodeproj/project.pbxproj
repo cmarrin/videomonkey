@@ -80,7 +80,7 @@
 		4910FFFD0EC87BB3001B578B /* tinyflac.png in Resources */ = {isa = PBXBuildFile; fileRef = 4910FFC80EC87BB3001B578B /* tinyflac.png */; };
 		4910FFFE0EC87BB3001B578B /* tinyflash.png in Resources */ = {isa = PBXBuildFile; fileRef = 4910FFC90EC87BB3001B578B /* tinyflash.png */; };
 		4910FFFF0EC87BB3001B578B /* tinyiphone.png in Resources */ = {isa = PBXBuildFile; fileRef = 4910FFCA0EC87BB3001B578B /* tinyiphone.png */; };
-		492BCAC40F61F03E00BCBF24 /* Sparkle.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 495DBF940F616C64000E5D62 /* Sparkle.framework */; };
+		492BCAC40F61F03E00BCBF24 /* Sparkle.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 495DBF940F616C64000E5D62 /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		492BCAD80F61F08300BCBF24 /* videomonkeycast.xml in Resources */ = {isa = PBXBuildFile; fileRef = 492BCAD70F61F08300BCBF24 /* videomonkeycast.xml */; };
 		492D327E0EF18D8000AEB740 /* bin in Resources */ = {isa = PBXBuildFile; fileRef = 492D327D0EF18D8000AEB740 /* bin */; };
 		492E8F9013200DCE00A5EE9E /* Credits.html in Resources */ = {isa = PBXBuildFile; fileRef = 492E8F8F13200DCE00A5EE9E /* Credits.html */; };
@@ -100,7 +100,7 @@
 		4983960D0F269AC400C23782 /* Formatters.m in Sources */ = {isa = PBXBuildFile; fileRef = 4983960C0F269AC400C23782 /* Formatters.m */; };
 		498397370F278F2400C23782 /* FileListController.m in Sources */ = {isa = PBXBuildFile; fileRef = 498397360F278F2400C23782 /* FileListController.m */; };
 		4997693713D9DE5F00B35BBA /* Growl-WithInstaller.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4997693613D9DE5F00B35BBA /* Growl-WithInstaller.framework */; };
-		4997693813D9DEF900B35BBA /* Growl-WithInstaller.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 4997693613D9DE5F00B35BBA /* Growl-WithInstaller.framework */; };
+		4997693813D9DEF900B35BBA /* Growl-WithInstaller.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 4997693613D9DE5F00B35BBA /* Growl-WithInstaller.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		4997693A13D9DF7E00B35BBA /* Growl Registration Ticket.growlRegDict in Resources */ = {isa = PBXBuildFile; fileRef = 4997693913D9DF7E00B35BBA /* Growl Registration Ticket.growlRegDict */; };
 		499A31770EDD97EB000C0AAF /* Transcoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 499A31760EDD97EB000C0AAF /* Transcoder.m */; };
 		499A31D30EDEE3E4000C0AAF /* mediainfo-inform.csv in Resources */ = {isa = PBXBuildFile; fileRef = 499A31D20EDEE3E4000C0AAF /* mediainfo-inform.csv */; };
@@ -160,11 +160,9 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		089C165DFE840E0CC02AAC07 /* English */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		29B97316FDCFA39411CA2CEA /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		32CA4F630368D1EE00C91783 /* VideoMonkey_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoMonkey_Prefix.pch; sourceTree = "<group>"; };
 		4908A3B60F302179003B65E0 /* releasenotes.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = releasenotes.html; sourceTree = "<group>"; };
-		491001890ECBE470001B578B /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = English.lproj/MainMenu.nib; sourceTree = "<group>"; };
 		491001D50ECBEEBC001B578B /* AppController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppController.h; path = classes/AppController.h; sourceTree = "<group>"; };
 		491001D60ECBEEBC001B578B /* AppController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppController.m; path = classes/AppController.m; sourceTree = "<group>"; };
 		4910A5870F69CBAC00453837 /* XMLDocument.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = XMLDocument.h; path = classes/XMLDocument.h; sourceTree = "<group>"; };
@@ -254,6 +252,8 @@
 		49636A480EE7078200F7B6D2 /* readyunknown.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = readyunknown.png; path = icons/readyunknown.png; sourceTree = "<group>"; };
 		49636A4C0EE707BA00F7B6D2 /* error.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = error.png; path = icons/error.png; sourceTree = "<group>"; };
 		49636A4E0EE707E300F7B6D2 /* ok.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = ok.png; path = icons/ok.png; sourceTree = "<group>"; };
+		496C431D2395963900C059C5 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		496C431F2395964500C059C5 /* Base */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Base; path = Base.lproj/MainMenu.nib; sourceTree = "<group>"; };
 		497E65A80EE4F284000372EC /* ProgressCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ProgressCell.h; path = classes/ProgressCell.h; sourceTree = "<group>"; };
 		497E65A90EE4F284000372EC /* ProgressCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ProgressCell.m; path = classes/ProgressCell.m; sourceTree = "<group>"; };
 		497E67150EEC5DD8000372EC /* Command.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Command.h; path = classes/Command.h; sourceTree = "<group>"; };
@@ -601,17 +601,18 @@
 		29B97313FDCFA39411CA2CEA /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0420;
+				LastUpgradeCheck = 1120;
 			};
 			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "VideoMonkey" */;
 			compatibilityVersion = "Xcode 3.2";
-			developmentRegion = English;
+			developmentRegion = en;
 			hasScannedForEncodings = 1;
 			knownRegions = (
-				English,
-				Japanese,
-				French,
-				German,
+				en,
+				ja,
+				fr,
+				de,
+				Base,
 			);
 			mainGroup = 29B97314FDCFA39411CA2CEA /* VideoMonkey */;
 			projectDirPath = "";
@@ -785,7 +786,7 @@
 		089C165CFE840E0CC02AAC07 /* InfoPlist.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
-				089C165DFE840E0CC02AAC07 /* English */,
+				496C431D2395963900C059C5 /* en */,
 			);
 			name = InfoPlist.strings;
 			sourceTree = "<group>";
@@ -793,7 +794,7 @@
 		491001880ECBE470001B578B /* MainMenu.nib */ = {
 			isa = PBXVariantGroup;
 			children = (
-				491001890ECBE470001B578B /* English */,
+				496C431F2395964500C059C5 /* Base */,
 			);
 			name = MainMenu.nib;
 			sourceTree = "<group>";
@@ -805,6 +806,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_IDENTITY = "-";
 				COPY_PHASE_STRIP = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -818,7 +821,9 @@
 				GCC_PREFIX_HEADER = VideoMonkey_Prefix.pch;
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.VideoMonkey.${PRODUCT_NAME:identifier}";
 				PRODUCT_NAME = VideoMonkey;
+				SDKROOT = macosx;
 			};
 			name = Debug;
 		};
@@ -826,6 +831,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_IDENTITY = "-";
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -837,17 +844,43 @@
 				GCC_PREFIX_HEADER = VideoMonkey_Prefix.pch;
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.VideoMonkey.${PRODUCT_NAME:identifier}";
 				PRODUCT_NAME = VideoMonkey;
+				SDKROOT = macosx;
 			};
 			name = Release;
 		};
 		C01FCF4F08A954540054247B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = c99;
+				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = "";
 				LIBRARY_SEARCH_PATHS = "";
@@ -855,7 +888,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = "";
 				PRODUCT_NAME = VideoMonkey;
-				SDKROOT = macosx10.9;
+				SDKROOT = macosx;
 				VALID_ARCHS = x86_64;
 			};
 			name = Debug;
@@ -863,14 +896,37 @@
 		C01FCF5008A954540054247B /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = c99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = VideoMonkey;
-				SDKROOT = macosx10.9;
+				SDKROOT = macosx;
 				VALID_ARCHS = x86_64;
 			};
 			name = Release;

@@ -121,6 +121,8 @@ static NSDictionary* g_moviedbMap = nil;
 
 -(id) init
 {
+    [super init];
+    
     // init the tag map, if needed
     if (!g_moviedbMap) {
         g_moviedbMap = [[NSDictionary dictionaryWithObjectsAndKeys:

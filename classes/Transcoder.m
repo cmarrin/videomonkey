@@ -50,13 +50,6 @@ static NSString* makeFrameSize(int width, int height)
     return [[NSString stringWithFormat:@"%dx%d", width, height] retain];
 }
 
-static void frameSize(NSString* f, int* width, int* height)
-{
-    NSArray* values = [f componentsSeparatedByString:@"x"];
-    *width = [[values objectAtIndex:0] intValue];
-    *height = [[values objectAtIndex:1] intValue];
-}
-
 @implementation OverrideableValue
 
 @synthesize overriddenValue;
@@ -662,7 +655,7 @@ static NSImage* fileStatusImage(FileStatus status)
             [self.metadata searchAgain];
     }
     
-    return (m_fileStatus == FS_VALID) ? ([m_inputFiles count] - 1) : -1;    
+    return (m_fileStatus == FS_VALID) ? (int)([m_inputFiles count] - 1) : -1;
 }
 
 -(NSValue*) progressCell
@@ -913,9 +906,11 @@ static void addCommandElement(NSMutableArray* elements, NSString* command, NSStr
 
     // Make sure the output file doesn't exist
     if ([[NSFileManager defaultManager] fileExistsAtPath: self.outputFileInfo.filename]) {
-        NSRunAlertPanel(@"Internal Error", 
-                        [NSString stringWithFormat:@"The output file '%@' exists. Video Monkey should never write to an existing file.", self.outputFileInfo.filename], 
-                        nil, nil, nil);
+        NSAlert *alert = [[NSAlert alloc] init];
+        [alert setMessageText:@"Internal Error"];
+        [alert setInformativeText:[NSString stringWithFormat:@"The output file '%@' exists. Video Monkey should never write to an existing file.", self.outputFileInfo.filename]];
+        [alert setAlertStyle:NSWarningAlertStyle];
+        [alert runModal];
         return NO;
     }
 
@@ -1017,7 +1012,7 @@ static void addCommandElement(NSMutableArray* elements, NSString* command, NSStr
             [m_commands addObject:[Command commandWithTranscoder:self 
                                 command:[entry objectForKey:@"recipe"]
                                 outputType:type 
-                                index:[m_commands count]]];
+                                index:(int)[m_commands count]]];
         }
         
         [elements release];
@@ -1047,7 +1042,7 @@ static void addCommandElement(NSMutableArray* elements, NSString* command, NSStr
             if (canWrite) {
                 // Add command for writing metadata
                 [m_commands addObject:[Command commandWithTranscoder:self command:metadataCommand
-                            outputType:OT_WAIT index:[m_commands count]]];
+                            outputType:OT_WAIT index:(int)[m_commands count]]];
             }
             else {
                 // Can't write metadata to this type of file

@@ -34,7 +34,7 @@ ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF S
 DAMAGE.
 */
 
-#import "JavascriptContext.h"
+#import "JavaScriptContext.h"
 
 @implementation NSString (JavaScriptConversion)
 
@@ -156,7 +156,11 @@ DAMAGE.
             snippet = [script substringToIndex:length];
         
         NSString* alertString = [NSString stringWithFormat: @"%@ at line %d\n\nWhile parsing script starting with:\n\n%@", errorString, (int) lineNumber, snippet];
-        NSRunAlertPanel(@"JavaScript error in evaluation", alertString, nil, nil, nil);
+        NSAlert *alert = [[NSAlert alloc] init];
+        [alert setMessageText:@"JavaScript error in evaluation"];
+        [alert setInformativeText:alertString];
+        [alert setAlertStyle:NSWarningAlertStyle];
+        [alert runModal];
     }
 }
 
@@ -440,13 +444,22 @@ the function,  or NULL if an error occured.  */
     if (!JSValueIsNull(m_jsContext, error)) {
         if (showError) {
             NSString* errorString = [NSString stringWithJSValue: error fromContext: m_jsContext];
-            NSRunAlertPanel(@"JavaScript error in property get", errorString, nil, nil, nil);
+            NSAlert *alert = [[NSAlert alloc] init];
+            [alert setMessageText:@"JavaScript error in property get"];
+            [alert setInformativeText:errorString];
+            [alert setAlertStyle:NSWarningAlertStyle];
+            [alert runModal];
         }
         jsValue = JSValueMakeUndefined(m_jsContext);
     }
     else if (JSValueIsUndefined(m_jsContext, jsValue)) {
         if (showError) {
-            NSRunAlertPanel(@"JavaScript error in property get", [NSString stringWithFormat:@"Property '%@' does not exist", key], nil, nil, nil);
+            NSString* errorString = [NSString stringWithFormat:@"Property '%@' does not exist", key];
+            NSAlert *alert = [[NSAlert alloc] init];
+            [alert setMessageText:@"JavaScript error in property get"];
+            [alert setInformativeText:errorString];
+            [alert setAlertStyle:NSWarningAlertStyle];
+            [alert runModal];
             jsValue = JSValueMakeUndefined(m_jsContext);
         }
     }

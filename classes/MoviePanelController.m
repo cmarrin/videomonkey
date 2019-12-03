@@ -37,8 +37,6 @@ DAMAGE.
 #import "MoviePanelController.h"
 
 #import "AppController.h"
-#import <QTKit/QTMovie.h>
-#import <QTKit/QTTimeRange.h>
 
 #define MinimumFrameSize 300
 

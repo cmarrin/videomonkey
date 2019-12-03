@@ -91,7 +91,7 @@ DAMAGE.
     int m_showId;
     Metadata* m_metadata;
     NSString* m_currentShowName;
-    NSArray* m_searchers;
+    NSDictionary* m_searchers;
     
     NSMutableArray* m_searchWithFilenameArray;
     

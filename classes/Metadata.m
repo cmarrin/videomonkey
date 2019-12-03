@@ -517,7 +517,7 @@ static NSDictionary* g_tagMap = nil;
         if ([artwork checked]) {
             NSString* filename = [NSString stringWithFormat:@"%@_%d.jpg", tmpArtworkPath, i];
             NSBitmapImageRep* rep = [NSBitmapImageRep imageRepWithData:[[artwork image] TIFFRepresentation]];
-            [[rep representationUsingType:NSJPEGFileType properties:nil] writeToFile: filename atomically: YES];
+            [[rep representationUsingType:NSJPEGFileType properties:[NSDictionary dictionary]] writeToFile: filename atomically: YES];
         
             // write the param
             [params appendFormat:@" --artwork %@", filename];

@@ -236,7 +236,11 @@ DAMAGE.
         
         if (!m_metadataSearchSucceeded) {
             // If we failed, show an alert
-            NSRunAlertPanel(@"One or more metadata searches failed", @"See console for more information", nil, nil, nil);
+            NSAlert *alert = [[NSAlert alloc] init];
+            [alert setMessageText:@"One or more metadata searches failed"];
+            [alert setInformativeText:@"See console for more information"];
+            [alert setAlertStyle:NSWarningAlertStyle];
+            [alert runModal];
         }
     }
 }

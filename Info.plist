@@ -75,7 +75,7 @@
 	<key>CFBundleIconFile</key>
 	<string>VideoMonkeyDevel</string>
 	<key>CFBundleIdentifier</key>
-	<string>org.VideoMonkey.${PRODUCT_NAME:identifier}</string>
+	<string>org.VideoMonkey.VideoMonkey</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
@@ -84,10 +84,10 @@
 	<string>APPL</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
-	<key>CFBundleVersion</key>
-	<string>0.18x</string>
 	<key>CFBundleTypeRole</key>
 	<string>Editor</string>
+	<key>CFBundleVersion</key>
+	<string>0.18x</string>
 	<key>NSMainNibFile</key>
 	<string>MainMenu</string>
 	<key>NSPrincipalClass</key>

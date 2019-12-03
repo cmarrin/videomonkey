@@ -39,7 +39,7 @@ DAMAGE.
 @interface ArtworkListController : NSArrayController {
     IBOutlet NSTableView* m_artworkListView;
 
-    int m_draggedRow;
+    NSUInteger m_draggedRow;
 }
 
 -(void) reloadData;
